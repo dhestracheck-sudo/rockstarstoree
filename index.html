@@ -251,9 +251,11 @@ const brainrotCategories = [
     name: "Grow A Garden (ready token)",
     img: "Screenshot 2026-04-14 010233.png",
     items: [
-      {name: "Grow A Garden (ready token) - v1", price: 50000},
-      {name: "Grow A Garden (ready token) - v2", price: 55000},
-      {name: "Grow A Garden (ready token) - v3", price: 60000},
+      {name: "ice golem titan(prismatic)", price: 30000, originalPrice: 50000, img: "Screenshot 2026-04-15 003533.png", stock: 1},
+      {name: "ice golem titan(prismatic)", price: 30000, originalPrice: 50000, img: "Screenshot 2026-04-15 003533.png", stock: 1},
+      {name: "ice golem titan(prismatic)", price: 30000, originalPrice: 50000, img: "Screenshot 2026-04-15 003533.png", stock: 1},
+       
+     
   
     ]
   },
@@ -598,7 +600,7 @@ function showItems(i){
         <img src="${item.img || category.img}">
         <h3>${item.name}</h3>
         ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
-        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : ''}
+        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : item.stock ? `<div style="color: #4CAF50; font-weight: bold; margin: 5px 0;">Stock: ${item.stock}</div>` : ''}
         <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Tambah</button>
       </div>
     `;} ).join("")}
