@@ -598,7 +598,7 @@ function showItems(i){
         <img src="${item.img || category.img}">
         <h3>${item.name}</h3>
         ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
-        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : (item.stock ? `<div style="color: #4CAF50; font-weight: bold; margin: 5px 0;">📦 Stock: ${item.stock}</div>` : '')}
+        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : ''}
         <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Tambah</button>
       </div>
     `;} ).join("")}
@@ -723,12 +723,11 @@ function sendToAdmin(){
   const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
   const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
   const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
-  const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
   
   let adminNumber = "6289664299571"; // Default: Admin 1
   
-  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, Steal a brainrot, atau Token, arahkan ke Admin 2
-  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal || hasToken){
+  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, atau Steal a brainrot, arahkan ke Admin 2
+  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal){
     adminNumber = "6283114900053";
   }
 
