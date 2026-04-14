@@ -733,11 +733,12 @@ function sendToAdmin(){
   const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
   const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
   const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
+  const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
   
   let adminNumber = "6289664299571"; // Default: Admin 1
   
-  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, atau Steal a brainrot, arahkan ke Admin 2
-  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal){
+  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, Steal a brainrot, atau Token, arahkan ke Admin 2
+  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal || hasToken){
     adminNumber = "6283114900053";
   }
 
