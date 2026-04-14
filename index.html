@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin:0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  color:white;
+  min-height: 100vh;
+}
+
+nav {
+  display:flex;
+  justify-content:space-between;
+  padding:15px 30px;
+  background:#111;
+}
+
+.logo {
+  color:white;
+  font-weight:bold;
+}
+
+.hero {
+  text-align:center;
+  padding:100px 20px;
+  background: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,255,0,0.1), rgba(0,0,255,0.1));
+  border-radius: 20px;
+  margin: 20px;
+  box-shadow: inset 0 0 50px rgba(255,255,255,0.1);
+}
+
+.hero h1 {
+  font-size:50px;
+  font-weight: 700;
+  font-family: 'Oswald', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.products {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+  padding:40px;
+}
+
+.card {
+  background: linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-radius:15px;
+  overflow:hidden;
+  text-align:center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+}
+
+.card img {
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.btn {
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  color:black;
+  border:none;
+  padding:12px;
+  margin:10px;
+  cursor:pointer;
+  width:90%;
+  font-weight:600;
+  border-radius:8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,107,107,0.5);
+}
+
+.cart-box {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background: linear-gradient(45deg, #2c3e50, #34495e);
+  color:white;
+  padding:15px 20px;
+  border-radius:10px;
+  font-size:16px;
+  border:2px solid rgba(255,255,255,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+}
+
+.back-btn {
+  background: black;
+  color:white;
+  border:2px solid white;
+  padding:10px 18px;
+  margin:10px 0 20px 20px;
+  cursor:pointer;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600;
+  transition:all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.back-btn:hover {
+  background: linear-gradient(45deg, #ff3838, #ff2828);
+  transform:scale(1.05);
+  box-shadow: 0 6px 20px rgba(255,71,87,0.5);
+}
+
+.back-btn:active {
+  transform:scale(0.98);
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="logo">ROCKSTAR.STORE</div>
+  <input type="text" id="searchInput" placeholder="Cari katalog..." style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 200px; font-family: 'Poppins', sans-serif;">
+  <div>Keranjang: <span id="cart">0</span></div>
+</nav>
+
+<section class="hero">
+  <h1>Rockstar.Store</h1>
+  <div style="font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 700; color: #ff0000; margin: -40px 10px 0;">solusi sepuh roblox kamu</div>
+  <p style="font-family: 'Oswald', sans-serif;">Item murah<br>Proses cepat<br>Memiliki 10.000+ testi amanah<br>akun tiktok @rockstarstoree</p>
+  <p style="font-family: 'Poppins', sans-serif; font-size: 14px; margin-top: 15px;">
+    Jangan lupa join saluran WhatsApp Rockstar.Store: 
+    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" style="color: #25D366; text-decoration: underline; font-weight: bold;">Klik untuk Join</a>
+  </p>
+</section>
+
+<section class="products" id="products"></section>
+
+<style>
+.house-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.house-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  color: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.house-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.house-card h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  font-family: 'Oswald', sans-serif;
+}
+
+.house-card p {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+}
+</style>
+
+<div id="cartModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000;">
+  <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:white; padding:20px; border-radius:10px; width:90%; max-width:500px; max-height:70vh; overflow-y:auto;">
+    <h2 style="margin-top:0; color:white;">📋 Keranjang Saya</h2>
+    <div id="cartList"></div>
+    <div style="text-align:center; margin-top:15px;">
+      <button onclick="closeCartModal()" style="background:#4CAF50; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-right:10px;">Lanjut Belanja</button>
+      <button onclick="checkout()" style="background:#2196F3; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<div class="cart-box">
+  🛒 <span id="total">0</span> item<br>
+  <button onclick="openCartModal()">Lihat Keranjang</button>
+  <button onclick="checkout()">Checkout</button>
+  <button onclick="cancelCheckout()" style="background-color: #d32f2f;">Batalkan</button>
+</div>
+
+<script>
+let cart = [];
+let currentPage = 'home'; // home, brainrot, topup
+
+const brainrotCategories = [
+  {    name: "Tsunami brainrot (ready token)",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Tsunami brainrot  - infinity block", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-14 042813.png"},
+      {name: "Tsunami brainrot  - skin base gamer", price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 042856.png"},
+      {name: "Tsunami brainrot  - v3", price: 60000, stock: 0},
+      {name: "Tsunami brainrot  - v4", price: 65000, stock: 0},
+      {name: "Tsunami brainrot  - v5", price: 70000},
+      {name: "Tsunami brainrot  - v6", price: 75000},
+      {name: "Tsunami brainrot  - v7", price: 80000},
+      {name: "Tsunami brainrot  - v8", price: 85000},
+      {name: "Tsunami brainrot  - v9", price: 90000},
+      {name: "Tsunami brainrot  - v10", price: 95000}
+    ]
+  },
+  {
+    name: "Tab tab simulator (ready token)",
+    img: "Screenshot 2026-04-14 011309.png",
+    items: [
+      {name: "pet 700m/s", price: 10000, img: "Screenshot 2026-04-14 150034.png"},
+      {name: "Tab tab simulator (ready token) - v2", price: 55000},
+      {name: "Tab tab simulator (ready token) - v3", price: 60000},
+      {name: "Tab tab simulator (ready token) - v4", price: 65000},
+  
+    ]
+  },
+  {
+    name: "Grow A Garden (ready token)",
+    img: "Screenshot 2026-04-14 010233.png",
+    items: [
+      {name: "Grow A Garden (ready token) - v1", price: 50000},
+      {name: "Grow A Garden (ready token) - v2", price: 55000},
+      {name: "Grow A Garden (ready token) - v3", price: 60000},
+  
+    ]
+  },
+  {
+    name: "Survive lava",
+    img: "Screenshot 2026-04-14 011139.png",
+    items: [
+      {name: "surgawi 20qd/s", price: 15000, originalPrice: 20000, img: "Screenshot 2026-04-14 150137.png"},
+      {name: "Survive lava - v2", price: 55000},
+      {name: "Survive lava - v3", price: 60000},
+    
+    ]
+  },
+  {
+    name: "+1 speed obby for dragon riders",
+    img: "Screenshot 2026-04-14 150202.png",
+    items: [
+      {name: "divine naga/dino(mutasi blood moon)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 150313.png"},
+      {name: "divine naga/dino(no mutasi)", price: 10000, originalPrice: 20000, img: "Screenshot 2026-04-14 150331.png"},
+      {name: "kosong", price: 60000},
+      {name: "kosong", price: 60000},
+      {name: "kosong", price: 70000},
+      {name: "kosong", price: 60000},
+      
+    ]
+  },
+  {
+    name: "Catch and time",
+    img: "Screenshot 2026-04-14 011325.png",
+    items: [
+      {name: "Catch and time - v1", price: 50000},
+      {name: "Catch and time - v2", price: 55000},
+      {name: "Catch and time - v3", price: 60000},
+ 
+    ]
+  },
+  {
+    name: "Tumbuhkan kacang kedelai",
+    img: "Screenshot 2026-04-14 011537.png",
+    items: [
+      {name: "Tumbuhkan kacang kedelai - v1", price: 50000},
+      {name: "Tumbuhkan kacang kedelai - v2", price: 55000},
+      {name: "Tumbuhkan kacang kedelai - v3", price: 60000},
+  
+    ]
+  },
+  {
+    name: "Swing obby for brainrot",
+    img: "Screenshot 2026-04-14 011113.png",
+    items: [
+      {name: "Swing obby for brainrot - naga sepuh lv 500.000(langsung tamat)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 055828.png"},
+      {name: "Swing obby for brainrot - v4", price: 65000},
+      {name: "Swing obby for brainrot - v5", price: 70000},
+
+    ]
+  },
+  {
+    name: "Be a lucky block",
+    img: "Screenshot 2026-04-14 005748.png",
+    items: [
+      {name: "Be a lucky block - admin brainrot mutasi harga chat admin aja", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 061220.png"},
+      {name: "Be a lucky block - gajah", price: 20000, originalPrice: 25000, img: "Screenshot 2026-04-14 061248.png"},
+      {name: "Be a lucky block - v3", price: 60000},
+      {name: "Be a lucky block - v4", price: 65000},
+      {name: "Be a lucky block - v5", price: 70000},
+  
+    ]
+  },
+  {
+    name: "Potong rumput for brainrot",
+    img: "Screenshot 2026-04-14 010221.png",
+    items: [
+      {name: "Potong rumput for brainrot - gajah divine mutasi listrik (langsung tamat)", price: 15000,originalPrice: 25000, img: "Screenshot 2026-04-14 052259.png"},
+      {name: "Potong rumput for brainrot - v2", price: 55000},
+      {name: "Potong rumput for brainrot - v3", price: 60000},
+    
+    ]
+  },
+  {
+    name: "Enter brainrot head",
+    img: "Screenshot 2026-04-14 010137.png",
+    items: [
+      {name: "tung tung titan nighmare", price: 10000, img: "Screenshot 2026-04-14 145931.png"},
+      {name: "Enter brainrot head - v2", price: 55000},
+ 
+    ]
+  },
+  {
+    name: "Double jump brainrot",
+    img: "Screenshot 2026-04-14 011555.png",
+    items: [
+      {name: "Double jump brainrot - gajah void sepuh 636de/s (langsung tamat)", price: 15000, originalPrice: 25000, img: "Screenshot 2026-04-14 063655.png"},
+      {name: "Double jump brainrot - v2", price: 55000},
+      {name: "Double jump brainrot - v3", price: 60000},
+    
+    ]
+  },
+  {
+    name: "Open sea for brainrot",
+    img: "Screenshot 2026-04-14 010123.png",
+    items: [
+      {name: "Open sea for brainrot - 4 naga void lv max", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-14 063633.png"},
+      {name: "Open sea for brainrot - v3", price: 60000},
+      {name: "Open sea for brainrot - v4", price: 65000},
+   
+    ]
+  },
+  {
+    name: "FISH IT!",
+    img: "Screenshot 2026-04-14 010603.png",
+    items: [
+      {name: "FISH IT! - skin fish it/CEK OUT AJA HARGA TANYA ADMIN", price: 0, img: "WhatsApp Image 2026-04-14 at 07.11.00.png"},
+      {name: "FISH IT! - v2", price: 55000},
+      {name: "FISH IT! - v3", price: 60000},
+      {name: "FISH IT! - v4", price: 65000},
+   
+    ]
+  },
+  {
+    name: "Terbang untuk brainrot",
+    img: "Screenshot 2026-04-14 011610.png",
+    items: [
+      {name: "Terbang untuk brainrot - brainrot asendent lv max qn/s sepuh", price: 15000, originalPrice: 25000, img: "Screenshot 2026-04-14 055946.png"},
+      {name: "Terbang untuk brainrot - v3", price: 60000},
+      {name: "Terbang untuk brainrot - v4", price: 65000},
+  
+    ]
+  },
+  {
+    name: "+1 kecepatan be a lucky block",
+    img: "Screenshot 2026-04-14 010727.png",
+    items: [
+      {name: "+1 kecepatan be a lucky block - troll face sepuh 22sx/s (langsung tamat)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 060636.png"},
+      {name: "+1 kecepatan be a lucky block - v2", price: 55000},
+
+    ]
+  },
+  {
+    name: "Parkour for brainrot",
+    img: "Screenshot 2026-04-14 010152.png",
+    items: [
+      {name: "Parkour for brainrot - lumba sepuh 1s/s", price: 15000, originalPrice: 25000, img: "Screenshot 2026-04-14 060716.png"},
+      {name: "Parkour for brainrot - v2", price: 55000},
+      {name: "Parkour for brainrot - v3", price: 60000},
+    
+    ]
+  },
+  {
+    name: "Ganti brainrot",
+    img: "Screenshot 2026-04-14 010631.png",
+    items: [
+      {name: "Ganti brainrot - v1", price: 50000},
+      {name: "Ganti brainrot - v2", price: 55000},
+      {name: "Ganti brainrot - v3", price: 60000},
+   
+    ]
+  },
+  {
+    name: "Skate for brainrot",
+    img: "Screenshot 2026-04-14 010617.png",
+    items: [
+      {name: "Skate for brainrot - naga hidra sepuh(langsung tamat)", price: 15000, originalPrice: 25000, img:"Screenshot 2026-04-14 053254.png"},
+      {name: "Skate for brainrot - v3", price: 60000, img: "Screenshot 2026-04-14 010617.png"},
+      {name: "Skate for brainrot - v4", price: 65000, img: "Screenshot 2026-04-14 010617.png"},
+   
+    ]
+  },
+  {
+    name: "Be a brainrot",
+    img: "Screenshot 2026-04-14 005804.png",
+    items: [
+      {name: "Be a brainrot - los brainrot 20q/s trait", price: 15000, originalPrice: 20000, img:"Screenshot 2026-04-14 051804.png"},
+      {name: "Be a brainrot - v2", price: 55000},
+      {name: "Be a brainrot - v3", price: 60000},
+ 
+    ]
+  },
+  {
+    name: "steal a brainrot",
+    img: "Screenshot 2026-04-14 161623.png",
+    items: [
+      {name: "steal a brainrot chat admin", price: 0, img: "WhatsApp Image 2026-04-14 at 08.02.58.png"},
+      {name: "steal a brainrot - v2", price: 55000},
+   
+    ]
+  },
+  {
+    name: "Katalog Kosong 2",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 2 - v1", price: 50000},
+      {name: "Katalog Kosong 2 - v2", price: 55000},
+      {name: "Katalog Kosong 2 - v3", price: 60000},
+      {name: "Katalog Kosong 2 - v4", price: 65000},
+      {name: "Katalog Kosong 2 - v5", price: 70000},
+      {name: "Katalog Kosong 2 - v6", price: 75000},
+      {name: "Katalog Kosong 2 - v7", price: 80000},
+      {name: "Katalog Kosong 2 - v8", price: 85000},
+      {name: "Katalog Kosong 2 - v9", price: 90000},
+      {name: "Katalog Kosong 2 - v10", price: 95000}
+    ]
+  },
+  {
+    name: "Katalog Kosong 3",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 3 - v1", price: 50000},
+      {name: "Katalog Kosong 3 - v2", price: 55000},
+      {name: "Katalog Kosong 3 - v3", price: 60000},
+      {name: "Katalog Kosong 3 - v4", price: 65000},
+      {name: "Katalog Kosong 3 - v5", price: 70000},
+      {name: "Katalog Kosong 3 - v6", price: 75000},
+      {name: "Katalog Kosong 3 - v7", price: 80000},
+      {name: "Katalog Kosong 3 - v8", price: 85000},
+      {name: "Katalog Kosong 3 - v9", price: 90000},
+      {name: "Katalog Kosong 3 - v10", price: 95000}
+    ]
+  },
+  {
+    name: "Katalog Kosong 4",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 4 - v1", price: 50000},
+      {name: "Katalog Kosong 4 - v2", price: 55000},
+      {name: "Katalog Kosong 4 - v3", price: 60000},
+      {name: "Katalog Kosong 4 - v4", price: 65000},
+      {name: "Katalog Kosong 4 - v5", price: 70000},
+      {name: "Katalog Kosong 4 - v6", price: 75000},
+      {name: "Katalog Kosong 4 - v7", price: 80000},
+      {name: "Katalog Kosong 4 - v8", price: 85000},
+      {name: "Katalog Kosong 4 - v9", price: 90000},
+      {name: "Katalog Kosong 4 - v10", price: 95000}
+    ]
+  },
+  {
+    name: "Katalog Kosong 5",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 5 - v1", price: 50000},
+      {name: "Katalog Kosong 5 - v2", price: 55000},
+      {name: "Katalog Kosong 5 - v3", price: 60000},
+      {name: "Katalog Kosong 5 - v4", price: 65000},
+      {name: "Katalog Kosong 5 - v5", price: 70000},
+      {name: "Katalog Kosong 5 - v6", price: 75000},
+      {name: "Katalog Kosong 5 - v7", price: 80000},
+      {name: "Katalog Kosong 5 - v8", price: 85000},
+      {name: "Katalog Kosong 5 - v9", price: 90000},
+      {name: "Katalog Kosong 5 - v10", price: 95000}
+    ]
+  }
+];
+
+const topupCategories = [
+  {
+    name: "Top Up robux(via login)",
+    img: "7c726f08f1884ffdb0cb7d02ec4420ee.png",
+    items: [
+      {name: "robux chat admin", price: 0000, img: "Screenshot 2026-04-14 161219.png"},
+      {name: "chat admin", price: 40000, img: "Screenshot 2026-04-14 161219.png"},
+    
+    
+    ]
+  },
+  {
+    name: "gamepass(all game)",
+    img: "7c726f08f1884ffdb0cb7d02ec4420ee.png",
+    items: [
+      {name: "Gamepasschat admin", price: 0000, img: "Screenshot 2026-04-14 161219.png"},
+   
+
+    ]
+  },
+  {
+    name: "Bundle Premium",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Bundle Hemat 500K", price: 450000},
+      {name: "Bundle Hemat 1M", price: 900000},
+      {name: "Bundle Hemat 2M", price: 1800000},
+      {name: "Bundle Hemat 5M", price: 4500000},
+
+    ]
+  }
+];
+
+function getCurrentCategories(){
+  if(currentPage === 'brainrot') return brainrotCategories;
+  if(currentPage === 'topup') return topupCategories;
+  return [];
+}
+
+function render(){
+  const el = document.getElementById("products");
+  
+  if(currentPage === 'home'){
+    el.innerHTML = `
+      <div class="house-container">
+        <div class="house-card" onclick="goToBrainrot()">
+          <h2>🧠 Brainrot</h2>
+          <p>Solusi sepuh roblox kamu</p>
+        </div>
+        <div class="house-card" onclick="goToTopUp()">
+          <h2>💰 Top Up</h2>
+          <p>Top up Robux dengan harga terbaik</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  const categories = getCurrentCategories();
+  let html = '<button class="back-btn" onclick="goHome()">← Kembali ke Beranda</button>';
+  html += categories.map((c,i)=>`
+    <div class="card" onclick="showItems(${i})" style="cursor:pointer;">
+      <img src="${c.img}">
+      <h3>${c.name}</h3>
+    </div>
+  `).join("");
+  
+  el.innerHTML = html;
+}
+
+function searchCatalog(){
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const el = document.getElementById("products");
+  
+  if(searchInput === ""){
+    render();
+    return;
+  }
+  
+  const filtered = categories.filter(c => c.name.toLowerCase().includes(searchInput));
+  
+  if(filtered.length === 0){
+    el.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Katalog tidak ditemukan</p>';
+    return;
+  }
+  
+  const categoryIndex = categories.indexOf(filtered[0]);
+  el.innerHTML = filtered.map((c,idx)=>`
+    <div class="card" onclick="showItems(${categories.indexOf(c)})" style="cursor:pointer;">
+      <img src="${c.img}">
+      <h3>${c.name}</h3>
+    </div>
+  `).join("");
+}
+
+function showItems(i){
+  const categories = getCurrentCategories();
+  const category = categories[i];
+  const el = document.getElementById("products");
+  el.innerHTML = `
+    <button class="back-btn" onclick="render()">Kembali</button>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px;">
+    ${category.items.map((item,j)=>{
+      const hidePrice = item.name.toLowerCase().includes("admin brainrot");
+      return `
+      <div class="card">
+        <img src="${item.img || category.img}">
+        <h3>${item.name}</h3>
+        ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
+        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : ''}
+        <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Tambah</button>
+      </div>
+    `;} ).join("")}
+    </div>
+  `;
+}
+
+function chatAdmin(){
+  window.open("https://wa.me/6289664299571?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
+}
+
+function goHome(){
+  currentPage = 'home';
+  render();
+}
+
+function goToBrainrot(){
+  currentPage = 'brainrot';
+  render();
+}
+
+function goToTopUp(){
+  currentPage = 'topup';
+  render();
+}
+
+function addItem(i,j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  if(item.stock === 0){
+    alert("Maaf, item ini sudah habis!");
+    return;
+  }
+  // Tambahkan kategori gambar sebagai fallback
+  const itemToAdd = {...item, categoryImg: categories[i].img};
+  cart.push(itemToAdd);
+  document.getElementById("cart").innerText = cart.length;
+  document.getElementById("total").innerText = cart.length;
+}
+
+function checkout(){
+  if(cart.length==0){
+    alert("Keranjang kosong!");
+    return;
+  }
+
+  // Tampilkan preview checkout dengan gambar
+  let previewHTML = '<h3 style="margin-top:0; color:white;">📸 Preview Pesanan Anda</h3>';
+  let totalPrice = 0;
+  
+  cart.forEach((item, index) => {
+    totalPrice += item.price;
+    // Gunakan item.img jika ada, fallback ke categoryImg
+    let itemImage = item.img || item.categoryImg || 'Screenshot 2026-04-14 004434.png';
+    
+    previewHTML += `
+      <div style="background:#333; padding:15px; margin:10px 0; border-radius:8px; display:flex; gap:15px;">
+        <img src="${itemImage}" style="width:80px; height:80px; border-radius:5px; object-fit:cover;" onerror="this.src='Screenshot 2026-04-14 004434.png';">
+        <div style="flex:1; color:white;">
+          <strong>${index+1}. ${item.name}</strong><br>
+          Rp ${item.price.toLocaleString()}
+        </div>
+      </div>
+    `;
+  });
+  
+  previewHTML += `
+    <div style="border-top:2px solid #555; padding-top:10px; margin-top:10px; color:white;">
+      <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
+      <strong>📦 Total Item: ${cart.length}</strong>
+    </div>
+  `;
+  
+  // Tampilkan modal preview
+  const checkoutModal = document.createElement('div');
+  checkoutModal.id = 'checkoutModal';
+  checkoutModal.style.cssText = 'display:block; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000;';
+  checkoutModal.innerHTML = `
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:white; padding:20px; border-radius:10px; width:90%; max-width:500px; max-height:70vh; overflow-y:auto;">
+      ${previewHTML}
+      <div style="text-align:center; margin-top:20px; display:flex; gap:10px; justify-content:center;">
+        <button onclick="closeCheckoutPreview()" style="background:#d32f2f; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:600;">Batal</button>
+        <button onclick="sendToAdmin()" style="background:#25D366; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:600;">✓ Kirim ke Admin</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(checkoutModal);
+  checkoutModal.addEventListener('click', function(e){
+    if(e.target === checkoutModal){
+      closeCheckoutPreview();
+    }
+  });
+}
+
+function closeCheckoutPreview(){
+  const modal = document.getElementById('checkoutModal');
+  if(modal) modal.remove();
+}
+
+function sendToAdmin(){
+  if(cart.length==0){
+    alert("Keranjang kosong!");
+    return;
+  }
+
+  let text = "Halo saya mau beli:%0A";
+  cart.forEach(p=>{
+    text += "- "+p.name+" (Rp "+p.price+")%0A";
+  });
+
+  // Jika jumlah item lebih dari 3, arahkan ke Admin 1
+  if(cart.length > 3){
+    closeCheckoutPreview();
+    window.open("https://wa.me/6289664299571?text="+text);
+    return;
+  }
+
+  // Cek tipe item di keranjang - KHUSUS ADMIN 2
+  const hasFishIt = cart.some(item => item.name.toLowerCase().includes("fish it"));
+  const hasSab = cart.some(item => item.name.toLowerCase().includes("sab"));
+  const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
+  const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
+  const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
+  
+  let adminNumber = "6289664299571"; // Default: Admin 1
+  
+  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, atau Steal a brainrot, arahkan ke Admin 2
+  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal){
+    adminNumber = "6283114900053";
+  }
+
+  closeCheckoutPreview();
+  window.open("https://wa.me/"+adminNumber+"?text="+text);
+}
+
+function openCartModal(){
+  if(cart.length==0){
+    alert("Keranjang kosong!");
+    return;
+  }
+
+  let cartHTML = '';
+  let totalPrice = 0;
+  
+  cart.forEach((item, index) => {
+    totalPrice += item.price;
+    cartHTML += `
+      <div style="background:#333; padding:10px; margin:10px 0; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="color:white;">
+          <strong>${index+1}. ${item.name}</strong><br>
+          Rp ${item.price.toLocaleString()}
+        </div>
+        <button onclick="removeFromCart(${index})" style="background:#d32f2f; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer;">Hapus</button>
+      </div>
+    `;
+  });
+  
+  cartHTML += `
+    <div style="border-top:2px solid #555; padding-top:10px; margin-top:10px; color:white;">
+      <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
+      <strong>📦 Total Item: ${cart.length}</strong>
+    </div>
+  `;
+  
+  document.getElementById("cartList").innerHTML = cartHTML;
+  document.getElementById("cartModal").style.display = "block";
+}
+
+function removeFromCart(index){
+  cart.splice(index, 1);
+  document.getElementById("cart").innerText = cart.length;
+  document.getElementById("total").innerText = cart.length;
+  
+  if(cart.length === 0){
+    document.getElementById("cartModal").style.display = "none";
+    alert("Keranjang sekarang kosong");
+    return;
+  }
+  
+  openCartModal();
+}
+
+function closeCartModal(){
+  document.getElementById("cartModal").style.display = "none";
+}
+
+// Close modal kalau klik di luar modal
+document.addEventListener('click', function(e){
+  const modal = document.getElementById("cartModal");
+  if(e.target === modal){
+    closeCartModal();
+  }
+});
+
+function cancelCheckout(){
+  if(cart.length==0){
+    alert("Keranjang sudah kosong!");
+    return;
+  }
+  
+  if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus dari keranjang.")){
+    cart = [];
+    document.getElementById("cart").innerText = "0";
+    document.getElementById("total").innerText = "0";
+    alert("Checkout dibatalkan. Keranjang sudah dikosongkan.");
+  }
+}
+
+render();
+
+// Search functionality
+document.getElementById("searchInput").addEventListener("input", function(){
+  searchCatalog();
+});
+</script>
+
+<footer style="text-align:center; padding:20px; background:#111; color:white; margin-top:40px; overflow:hidden;">
+  <p style="font-size:24px; font-weight:600; font-family: 'Oswald', sans-serif; animation: scrollText 10s linear infinite;">No WA Admin: 089664299571 | TikTok: @rockstarstoree</p>
+</footer>
+
+<style>
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+
+</body>
+</html>
