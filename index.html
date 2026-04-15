@@ -227,7 +227,7 @@ let cart = [];
 let currentPage = 'home'; // home, brainrot, topup
 
 const brainrotCategories = [
-  {    name: "Tsunami brainrot (ready token)",
+  {    name: "Tsunami brainrot",
     img: "Screenshot 2026-04-14 004434.png",
     items: [
       {name: "infinity block", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-14 042813.png"},
@@ -238,7 +238,7 @@ const brainrotCategories = [
     ]
   },
   {
-    name: "Tab tab simulator (ready token)",
+    name: "Tab tab simulator",
     img: "Screenshot 2026-04-14 011309.png",
     items: [
       {name: "pet 700m/s", price: 10000, img: "Screenshot 2026-04-14 150034.png"},
@@ -248,7 +248,7 @@ const brainrotCategories = [
     ]
   },
   {
-    name: "Grow A Garden (ready token)",
+    name: "Grow A Garden",
     img: "Screenshot 2026-04-14 010233.png",
     items: [
       {name: "ice golem titan(prismatic)", price: 30000, originalPrice: 50000, img: "Screenshot 2026-04-15 003533.png", stock: 1},
@@ -386,9 +386,8 @@ const brainrotCategories = [
     name: "+1 kecepatan be a lucky block",
     img: "Screenshot 2026-04-14 010727.png",
     items: [
-      {name: "+1 kecepatan be a lucky block - troll face sepuh 22sx/s (langsung tamat)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 060636.png"},
- {name: "+1 kecepatan be a lucky block - troll face sepuh 22sx/s (langsung tamat)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 060636.png"},
-
+      {name: "+1 kecepatan be a lucky block - troll face sepuh 20+SPD/s ", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-15 213655.png"},
+      {name: "+1 kecepatan be a lucky block - troll face sepuh 20+SPD/s ", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-15 213655.png"},
     ]
   },
   {
@@ -405,9 +404,9 @@ const brainrotCategories = [
     name: "Ganti brainrot",
     img: "Screenshot 2026-04-14 010631.png",
     items: [
-      {name: "Ganti brainrot - v1", price: 50000},
-      {name: "Ganti brainrot - v2", price: 55000},
-      {name: "Ganti brainrot - v3", price: 60000},
+      {name: "Ganti brainrot - 5 SECRET BRAINROT", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-15 215047.png"},
+      {name: "Ganti brainrot - 2 KOSMIK BRAINROT", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-15 215025.png"},
+      {name: "Ganti brainrot - 1 ABADI BRAINROT", price: 15000, originalPrice: 25000, img: "Screenshot 2026-04-15 215058.png"},
    
     ]
   },
@@ -424,9 +423,9 @@ const brainrotCategories = [
     name: "Be a brainrot",
     img: "Screenshot 2026-04-14 005804.png",
     items: [
-      {name: "Be a brainrot - los brainrot 20q/s trait", price: 15000, originalPrice: 20000, img:"Screenshot 2026-04-14 051804.png"},
-      {name: "Be a brainrot - los brainrot 20q/s trait", price: 15000, originalPrice: 20000, img:"Screenshot 2026-04-14 051804.png"},
-       {name: "Be a brainrot - los brainrot 20q/s trait", price: 15000, originalPrice: 20000, img:"Screenshot 2026-04-14 051804.png"},
+      {name: "Be a brainrot - los brainrot 50q/s trait", price: 15000, originalPrice: 20000, img:"Screenshot 2026-04-14 051804.png"},
+      {name: "Be a brainrot - los brainrot 50q/s NO trait", price: 10000, originalPrice: 15000, img:"Screenshot 2026-04-14 051804.png"},
+       
     ]
   },
   {
@@ -450,7 +449,7 @@ const brainrotCategories = [
     name: "lunch plane for brainrot",
     img: "Screenshot 2026-04-14 220359.png",
     items: [
-      {name: "kelinci cerberus 57b/s (langsung sepuh)",price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 220316.png",stock: 5},
+      {name: "kelinci cerberus 57b/s (langsung sepuh)",price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 220316.png",stock: 5 },
       {name: "kelinci cerberus 57b/s (langsung sepuh)",price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 220316.png",stock: 5},
       {name: "kelinci cerberus 57b/s (langsung sepuh)",price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 220316.png",stock: 5},
       
@@ -726,6 +725,8 @@ function sendToAdmin(){
   const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
   const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
   const hasGrowAGarden = cart.some(item => item.name.toLowerCase().includes("grow a garden"));
+  const hasIceGolem = cart.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
+  const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
   
   let adminNumber = "6289664299571"; // Default: Admin 1
   
@@ -737,6 +738,16 @@ function sendToAdmin(){
   // Jika ada Grow A Garden di keranjang, selalu arahkan ke nomor 6289664299571
   if(hasGrowAGarden){
     adminNumber = "6289664299571";
+  }
+  
+  // Jika ada Ice Golem Titan (Prismatic) di keranjang, arahkan ke nomor 6289664299571
+  if(hasIceGolem){
+    adminNumber = "6289664299571";
+  }
+  
+  // Jika ada Token di keranjang, arahkan ke nomor 6283114900053
+  if(hasToken){
+    adminNumber = "6283114900053";
   }
 
   closeCheckoutPreview();
