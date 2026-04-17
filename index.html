@@ -315,9 +315,9 @@ const brainrotCategories = [
     name: "Be a lucky block",
     img: "Screenshot 2026-04-14 005748.png",
     items: [
-      {name: "Be a lucky block - mutasi harga chat admin aja",price: 00000,originalPrice: 00000, img: "Screenshot 2026-04-14 061220.png"},
+      {name: "Be a lucky block - admin brainrot (mutasi)",price: 30000,originalPrice: 50000, img: "Screenshot 2026-04-14 061220.png"},
       {name: "Be a lucky block - gajah", price: 20000, originalPrice: 25000, img: "Screenshot 2026-04-14 061248.png"},
-      {name: "Be a lucky block - v3", price: 60000, stock: 0},
+      {name: "Be a lucky block - admin brainrot (no mutasi)",price: 25000,originalPrice: 40000, img: "Screenshot 2026-04-17 142756.png"},
       
   
     ]
@@ -604,7 +604,7 @@ function showItems(i){
     <button class="back-btn" onclick="render()">Kembali</button>
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px;">
     ${category.items.map((item,j)=>{
-      const hidePrice = item.name.toLowerCase().includes("admin brainrot");
+      const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block");
       return `
       <div class="card">
         <img src="${item.img || category.img}">
