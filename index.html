@@ -141,6 +141,76 @@ nav {
 .back-btn:active {
   transform:scale(0.98);
 }
+
+.carousel {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background: #0a0a0a;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+.carousel-button:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  background: #0a0a0a;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.carousel-dot.active {
+  background: #4ecdc4;
+}
 </style>
 
 </head>
@@ -225,6 +295,7 @@ nav {
 <script>
 let cart = [];
 let currentPage = 'home'; // home, brainrot, topup
+let carouselState = {}; // Track carousel positions
 
 const brainrotCategories = [
   {    name: "Tsunami brainrot",
@@ -253,7 +324,7 @@ const brainrotCategories = [
     items: [
       {name: "ice golem mega(60kg)", price: 30000, originalPrice: 50000, img: "Screenshot 2026-04-15 003533.png", stock: 1},
       {name: "kitsune mega(70kg)", price: 50000, originalPrice: 80000, img: "Screenshot 2026-04-16 221610.png", stock: 0},
-      {name: "mimic 15s (70kg)", price: 60000, originalPrice: 100000, img: "Screenshot 2026-04-18 001100.png", stock: 1},
+      {name: "mimic 15s (70kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-18 001100.png", "Screenshot 2026-04-18 001921.png"],stock: 1},
      
        
      
@@ -444,7 +515,7 @@ const brainrotCategories = [
     items: [
       {name: "token tsunami brainrot(300)", price: 10000, img: "token.png"},
       {name: "token tsunami brainrot(1000)", price: 30000, img: "token.png"},
-      {name: "token grow a garden(chat admin)", price: 0, img: "token.png"},
+      {name: "token grow a garden(250)", price: 10000, img: "token.png"},
       {name: "fish it(chat admin)", price: 0000, img: "token.png"},
     ]
   },
@@ -606,9 +677,23 @@ function showItems(i){
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px;">
     ${category.items.map((item,j)=>{
       const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block");
+      const hasCarousel = item.images && item.images.length > 1;
+      const itemImg = item.img || item.images?.[0] || category.img;
+      
       return `
       <div class="card">
-        <img src="${item.img || category.img}">
+        ${hasCarousel ? `
+          <div class="carousel">
+            <div class="carousel-container">
+              <img src="${item.images[0]}" class="carousel-image" id="carousel-${i}-${j}" alt="${item.name}">
+            </div>
+            <button class="carousel-button prev" onclick="carouselPrev(${i}, ${j})">❮</button>
+            <button class="carousel-button next" onclick="carouselNext(${i}, ${j})">❯</button>
+            <div class="carousel-dots" id="dots-${i}-${j}">
+              ${item.images.map((_, idx) => `<span class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="carouselGoto(${i}, ${j}, ${idx})"></span>`).join('')}
+            </div>
+          </div>
+        ` : `<img src="${itemImg}">`}
         <h3>${item.name}</h3>
         ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
         ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : item.stock ? `<div style="color: #4CAF50; font-weight: bold; margin: 5px 0;">Stock: ${item.stock}</div>` : ''}
@@ -621,6 +706,49 @@ function showItems(i){
 
 function chatAdmin(){
   window.open("https://wa.me/6289664299571?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
+}
+
+function carouselNext(i, j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const key = `${i}-${j}`;
+  const currentIndex = carouselState[key] || 0;
+  const nextIndex = (currentIndex + 1) % item.images.length;
+  carouselState[key] = nextIndex;
+  updateCarousel(i, j, nextIndex);
+}
+
+function carouselPrev(i, j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const key = `${i}-${j}`;
+  const currentIndex = carouselState[key] || 0;
+  const prevIndex = (currentIndex - 1 + item.images.length) % item.images.length;
+  carouselState[key] = prevIndex;
+  updateCarousel(i, j, prevIndex);
+}
+
+function carouselGoto(i, j, index){
+  carouselState[`${i}-${j}`] = index;
+  updateCarousel(i, j, index);
+}
+
+function updateCarousel(i, j, index){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const imgEl = document.getElementById(`carousel-${i}-${j}`);
+  const dotsContainer = document.getElementById(`dots-${i}-${j}`);
+  
+  if(imgEl){
+    imgEl.src = item.images[index];
+  }
+  
+  if(dotsContainer){
+    const dots = dotsContainer.querySelectorAll('.carousel-dot');
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === index);
+    });
+  }
 }
 
 function goHome(){
