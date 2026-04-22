@@ -32,18 +32,30 @@ nav {
   background:#111;
 }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-weight: bold;
+}
+
+.logo-img {
+  max-height: 45px;
+  width: auto;
+}
+
 .logo {
-  color:white;
-  font-weight:bold;
+  display: none;
 }
 
 .hero {
   text-align:center;
   padding:100px 20px;
-  background: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,255,0,0.1), rgba(0,0,255,0.1));
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(0,255,0,0.1), rgba(0,0,255,0.1));
   border-radius: 20px;
   margin: 20px;
-  box-shadow: inset 0 0 50px rgba(255,255,255,0.1);
+  box-shadow: inset 0 0 50px rgba(150, 132, 132, 0.1);
 }
 
 .hero h1 {
@@ -51,7 +63,7 @@ nav {
   font-weight: 700;
   font-family: 'Oswald', sans-serif;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+  background: linear-gradient(45deg, #000000, #0f24df, #000000);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -86,8 +98,8 @@ nav {
 }
 
 .btn {
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  color:black;
+  background: linear-gradient(45deg, #000000, #0400ff);
+  color:rgb(255, 255, 255);
   border:none;
   padding:12px;
   margin:10px;
@@ -109,19 +121,19 @@ nav {
   bottom:20px;
   right:20px;
   background: linear-gradient(45deg, #2c3e50, #34495e);
-  color:white;
+  color:rgb(0, 0, 0);
   padding:15px 20px;
   border-radius:10px;
   font-size:16px;
-  border:2px solid rgba(255,255,255,0.2);
+  border:2px solid rgb(3, 28, 252);
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
   backdrop-filter: blur(10px);
 }
 
 .back-btn {
   background: black;
-  color:white;
-  border:2px solid white;
+  color:rgb(255, 255, 255);
+  border:2px solid rgb(0, 0, 0);
   padding:10px 18px;
   margin:10px 0 20px 20px;
   cursor:pointer;
@@ -133,9 +145,9 @@ nav {
 }
 
 .back-btn:hover {
-  background: linear-gradient(45deg, #ff3838, #ff2828);
+  background: linear-gradient(45deg, #1709e0, #000000);
   transform:scale(1.05);
-  box-shadow: 0 6px 20px rgba(255,71,87,0.5);
+  box-shadow: 0 6px 20px rgba(255, 0, 21, 0.5);
 }
 
 .back-btn:active {
@@ -175,7 +187,7 @@ nav {
   top: 50%;
   transform: translateY(-50%);
   background: rgba(0,0,0,0.5);
-  color: white;
+  color: rgb(0, 140, 255);
   border: none;
   padding: 10px 15px;
   cursor: pointer;
@@ -223,14 +235,17 @@ nav {
 <body>
 
 <nav>
-  <div class="logo">ROCKSTAR.STORE</div>
+  <div class="logo-container">
+    <img src="ROCKSTARLOGO.png" alt="Rockstar.Store" class="logo-img">
+    <span>ROCKSTAR.STORE</span>
+  </div>
   <input type="text" id="searchInput" placeholder="Cari katalog..." style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 200px; font-family: 'Poppins', sans-serif;">
   <div>Keranjang: <span id="cart">0</span></div>
 </nav>
 
 <section class="hero">
   <h1>Rockstar.Store</h1>
-  <div style="font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 700; color: #ff0000; margin: -40px 10px 0;">solusi sepuh roblox kamu</div>
+  <div style="font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 700; color: #000000; margin: -40px 10px 0;">solusi sepuh roblox kamu</div>
   <p style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: bold;">Item murah💰<br>Proses cepat⚡ <br>tersedia all payment🌍 <br>Memiliki 10.000+ testi amanah<br><p style="font-family: 'Poppins', sans-serif; font-size: 25px; font-weight:bold;">tiktok @rockstarstoree</p>
   <p style="font-family: 'Poppins', sans-serif; font-size: 100px; margin-top: 100px;">
    <div style="font: size 100px; font-weight: 900;""> Jangan lupa join saluran WhatsApp Rockstar.Store: 
