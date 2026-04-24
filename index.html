@@ -323,11 +323,11 @@ const brainrotCategories = [
   {    name: "Tsunami brainrot",
     img: "Screenshot 2026-04-14 004434.png",
     items: [
-      {name: "infinity block", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-14 042813.png", stock: 0}, 
-      {name: "skin base gamer", price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 042856.png", stock: 0},
-      {name: "meta diamond/gamer(big)", price: 40000, originalPrice: 60000, images: ["Screenshot 2026-04-20 232622.png", "Screenshot 2026-04-20 233045.png"], stock: 2},
-      {name: "meta diamond(titan)", price: 60000, originalPrice: 80000, img: "Screenshot 2026-04-20 232705.png", stock: 0},
-      {name: "meta doom(normal)", price: 25000, originalPrice: 40000, img: "Screenshot 2026-04-20 233130.png", stock: 0},
+      {name: "infinity block", price: 10000, originalPrice: 15000, img: "Screenshot 2026-04-14 042813.png", stock: 0, sold: 156}, 
+      {name: "skin base gamer", price: 20000, originalPrice: 30000, img: "Screenshot 2026-04-14 042856.png", stock: 0, sold: 342},
+      {name: "meta diamond/gamer(big)", price: 40000, originalPrice: 60000, images: ["Screenshot 2026-04-20 232622.png", "Screenshot 2026-04-20 233045.png"], stock: 0, sold: 89},
+      {name: "meta diamond(titan)", price: 60000, originalPrice: 80000, img: "Screenshot 2026-04-20 232705.png", stock: 0, sold: 45},
+      {name: "meta doom(normal)", price: 25000, originalPrice: 40000, img: "Screenshot 2026-04-20 233130.png", stock: 0, sold: 127},
     ]
   },
   {
@@ -344,15 +344,15 @@ const brainrotCategories = [
     name: "Grow A Garden",
     img: "Screenshot 2026-04-14 010233.png",
     items: [
-      {name: "1 peacock nighmare (114kg)", price: 100000, originalPrice: 200000, img: "Screenshot 2026-04-18 214406.png", stock: 0},
-      {name: "1 kitsune mega/nightmare(60kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-16 221610.png","Screenshot 2026-04-18 214333.png"], stock: 0},
-      {name: "1 mimic 15s (70kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-18 001100.png", "Screenshot 2026-04-18 001921.png"],stock: 0},
-      {name: "1 everchanted peryton(60kg)", price: 50000, originalPrice: 100000, images: ["Screenshot 2026-04-21 131112.png","Screenshot 2026-04-21 131130.png"], stock: 1},
-      {name: "1 kitsune VENOM/inverted(60kg)", price: 50000, originalPrice: 70000, images: ["Screenshot 2026-04-21 213842.png","Screenshot 2026-04-21 213857.png"], stock: 0},
-      {name: "1 mimic VENOM (60kg)", price: 30000, originalPrice: 70000, images: ["Screenshot 2026-04-21 213758.png", "Screenshot 2026-04-21 213810.png"],stock: 3},
-      {name: "1 Headless Horseman(3 kg/age 5)", price: 15000, originalPrice: 30000, images: ["Screenshot 2026-04-21 213951.png", "Screenshot 2026-04-21 214006.png"],stock: 3},
-      {name: "1 mimic jumbo (60kg)", price: 40000, originalPrice: 100000, images: ["Screenshot 2026-04-21 215057.png", "Screenshot 2026-04-21 215112.png"],stock: 1},
-      {name: "1 RACOON(60kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-22 200517.png","Screenshot 2026-04-22 200528.png"], stock: 0},
+      {name: "1 peacock nighmare (114kg)", price: 100000, originalPrice: 200000, img: "Screenshot 2026-04-18 214406.png", stock: 0, sold: 47},
+      {name: "1 kitsune mega/nightmare(60kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-16 221610.png","Screenshot 2026-04-18 214333.png"], stock: 0, sold: 77},
+      {name: "1 mimic 15s (70kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-18 001100.png", "Screenshot 2026-04-18 001921.png"],stock: 0, sold: 12},
+      {name: "1 everchanted peryton(60kg)", price: 50000, originalPrice: 100000, images: ["Screenshot 2026-04-21 131112.png","Screenshot 2026-04-21 131130.png"], stock: 1, sold: 5},
+      {name: "1 kitsune VENOM/inverted(60kg)", price: 50000, originalPrice: 70000, images: ["Screenshot 2026-04-21 213842.png","Screenshot 2026-04-21 213857.png"], stock: 0, sold: 8},
+      {name: "1 mimic VENOM (60kg)", price: 30000, originalPrice: 70000, images: ["Screenshot 2026-04-21 213758.png", "Screenshot 2026-04-21 213810.png"],stock: 3, sold: 25},
+      {name: "1 Headless Horseman(3 kg/age 5)", price: 15000, originalPrice: 30000, images: ["Screenshot 2026-04-21 213951.png", "Screenshot 2026-04-21 214006.png"],stock: 3, sold: 7},
+      {name: "1 mimic jumbo (60kg)", price: 40000, originalPrice: 100000, images: ["Screenshot 2026-04-21 215057.png", "Screenshot 2026-04-21 215112.png"],stock: 1, sold: 3},
+      {name: "1 RACOON(60kg)", price: 60000, originalPrice: 100000, images: ["Screenshot 2026-04-22 200517.png","Screenshot 2026-04-22 200528.png"], stock: 0, sold: 6},
     ]
   },
   {
@@ -719,6 +719,7 @@ function showItems(i){
           </div>
         ` : `<img src="${itemImg}">`}
         <h3>${item.name}</h3>
+        ${item.sold ? `<div style="color: #FF6B6B; font-weight: bold; margin: 5px 0; font-size: 14px;">🔥 Terjual: ${item.sold}</div>` : ''}
         ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
         ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : item.stock ? `<div style="color: #4CAF50; font-weight: bold; margin: 5px 0;">Stock: ${item.stock}</div>` : ''}
         <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Tambah</button>
