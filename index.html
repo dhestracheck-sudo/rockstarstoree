@@ -408,11 +408,11 @@ const brainrotCategories = [
     ]
   },
   {
-    name: "Survive lava",
-    img: "Screenshot 2026-04-14 011139.png",
+    name: "be flash for brainrot",
+    img: "BE FALSH DISPLAY.png",
     items: [
-      {name: "surgawi 20qd/s", price: 15000, originalPrice: 20000, img: "Screenshot 2026-04-14 150137.png",sold: 15},
-      
+      {name: "be flash for brainrot - 1 ADMIN BRAINROT 10T/S", price: 15000, originalPrice: 30000, img: "BE FLASH 10 T.png", stock: 20, sold: 2},
+      {name: "be flash for brainrot - 1 ADMIN BRAINROT 20T/S", price: 20000, originalPrice: 50000, img: "BE FALSH 20 T.png", stock: 20, sold: 3},
     
     ]
   },
@@ -598,7 +598,7 @@ const brainrotCategories = [
     img: "Screenshot 2026-04-16 192032.png",
     items: [
       {name: "tendang block keberuntungan -1 brainrot gajah og lv max 186t/s(RAINBOW) sepuh ", price: 20000, originalPrice: 100000, img: "GAJAH RAINBOW.png",stock: 0, sold: 400},
-      {name: "tendang block keberuntungan -1 brainrot gajah og lv max 74t/s(VOID) sepuh ", price: 15000, originalPrice: 50000, img: "gajah void 70t.png",stock: 20, sold: 5},
+      {name: "tendang block keberuntungan -1 brainrot gajah og lv max 74t/s(VOID) sepuh ", price: 15000, originalPrice: 50000, img: "gajah void 70t.png",stock: 20, sold: 50},
       {name: "tendang block keberuntungan -1 brainrot gajah og lv max 37t/s(cair) sepuh ", price: 10000, originalPrice: 30000, img: "gajah og cari 37t.png",stock: 30, sold: 600},
       {name: "tendang block keberuntungan -1 brainrot gajah og lv max 49t/s(RADIOAKTIF) sepuh ", price: 15000, originalPrice: 40000, img: "GAJAH RADIOAKTIF.png",stock: 0, sold: 200},
       {name: "tendang block keberuntungan -1 brainrot CELESTIAL lv max (MUTASI) ", price: 10000, originalPrice: 20000, img: "celes mutasi .png",stock: 10, sold: 120},
@@ -743,7 +743,7 @@ function showItems(i){
     <button class="back-btn" onclick="render()">Kembali</button>
     <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px;">
     ${category.items.map((item,j)=>{
-      const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block");
+      const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
       const hasCarousel = item.images && item.images.length > 1;
       const itemImg = item.img || item.images?.[0] || category.img;
       
