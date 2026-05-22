@@ -784,7 +784,7 @@ function showItems(i){
 }
 
 function chatAdmin(){
-  window.open("https://wa.me/6289521023786?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
+  window.open("https://wa.me/628133026625?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
 }
 
 function carouselNext(i, j){
@@ -933,7 +933,7 @@ function sendToAdmin(){
   // Jika jumlah item lebih dari 3, arahkan ke Admin 1
   if(cart.length > 3){
     closeCheckoutPreview();
-    window.open("https://wa.me/6289521023786?text="+text);
+    window.open("https://wa.me/628133026625?text="+text);
     return;
   }
 
@@ -947,21 +947,21 @@ function sendToAdmin(){
   const hasIceGolem = cart.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
   const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
   
-  let adminNumber = "6289521023786"; // Default: Admin 1
+  let adminNumber = "628133026625"; // Default: Admin 1
   
   // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, atau Steal a brainrot, arahkan ke Admin 2
   if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal){
     adminNumber = "6283114900053";
   }
   
-  // Jika ada Grow A Garden di keranjang, selalu arahkan ke nomor 6289521023786
+  // Jika ada Grow A Garden di keranjang, selalu arahkan ke nomor 628133026625
   if(hasGrowAGarden){
-    adminNumber = "6289521023786";
+    adminNumber = "628133026625";
   }
   
-  // Jika ada Ice Golem Titan (Prismatic) di keranjang, arahkan ke nomor 6289521023786
+  // Jika ada Ice Golem Titan (Prismatic) di keranjang, arahkan ke nomor 628133026625
   if(hasIceGolem){
-    adminNumber = "6289521023786";
+    adminNumber = "628133026625";
   }
   
   // Jika ada Token di keranjang, arahkan ke nomor 6283114900053
