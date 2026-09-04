@@ -17,156 +17,355 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg: #0b0b0f;
+  --bg-soft: #14141c;
+  --card: #181823;
+  --card-hover: #1f1f2e;
+  --border: rgba(255,255,255,0.08);
+  --text: #f5f5f7;
+  --muted: #9b9ba6;
+  --accent: #6c5ce7;
+  --accent-2: #a29bfe;
+  --green: #2ecc71;
+  --red: #ff6b6b;
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
   margin:0;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
-  color:white;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ---------- NAVBAR ---------- */
 nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  padding:15px 30px;
-  background:#111;
+  gap:16px;
+  padding:14px 32px;
+  background: rgba(11,11,15,0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: white;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.3px;
 }
 
 .logo-img {
-  max-height: 45px;
+  max-height: 42px;
   width: auto;
+  border-radius: 8px;
 }
 
-.logo {
-  display: none;
+.logo { display: none; }
+
+nav input {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  width: 220px;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
+nav input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108,92,231,0.2);
+}
+
+nav input::placeholder { color: var(--muted); }
+
+.cart-badge {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.cart-badge span { color: var(--accent-2); }
+
+/* ---------- HERO ---------- */
 .hero {
   text-align:center;
-  padding:100px 20px;
-  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(0,255,0,0.1), rgba(0,0,255,0.1));
-  border-radius: 20px;
-  margin: 20px;
-  box-shadow: inset 0 0 50px rgba(150, 132, 132, 0.1);
+  padding: 90px 24px 70px;
+  margin: 24px 24px 8px;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,92,231,0.22), transparent),
+    var(--bg-soft);
+  position: relative;
+  overflow: hidden;
 }
 
 .hero h1 {
-  font-size:50px;
+  font-size: 56px;
   font-weight: 700;
   font-family: 'Oswald', sans-serif;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  background: linear-gradient(45deg, #000000, #0f24df, #000000);
+  letter-spacing: 1px;
+  margin: 0 0 8px;
+  background: linear-gradient(90deg, #ffffff, var(--accent-2), #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+.hero-tagline {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 8px 0 24px;
+}
+
+.hero-points {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 24px;
+  margin: 0 0 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hero-points b { color: var(--accent-2); }
+
+.hero-brand {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.hero-wa {
+  margin-top: 28px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.hero-wa a {
+  color: #25d366;
+  text-decoration: none;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(37,211,102,0.3);
+  transition: border-color 0.2s ease;
+}
+
+.hero-wa a:hover { border-color: #25d366; }
+
+/* ---------- SECTION: KATA PENGANTAR ---------- */
+.pengantar {
+  background: var(--bg-soft);
+  padding: 44px 24px;
+  margin: 4px 24px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+}
+
+.pengantar h2 {
+  color: var(--accent-2);
+  font-size: 30px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px;
+}
+
+.pengantar p.lead {
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.8;
+  margin: 0 0 24px;
+}
+
+.pengantar p.lead strong { color: var(--accent-2); }
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.benefit {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  padding: 18px;
+  border-radius: 12px;
+  border-left: 3px solid var(--accent);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.benefit:hover { transform: translateY(-3px); background: rgba(108,92,231,0.08); }
+
+.benefit h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+.benefit p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.benefit.green { border-left-color: #2ecc71; } .benefit.green h4 { color: #2ecc71; }
+.benefit.wa   { border-left-color: #25d366; } .benefit.wa h4 { color: #25d366; }
+.benefit.blue { border-left-color: var(--accent); } .benefit.blue h4 { color: var(--accent-2); }
+.benefit.yellow { border-left-color: #f1c40f; } .benefit.yellow h4 { color: #f1c40f; }
+.benefit.red { border-left-color: var(--red); } .benefit.red h4 { color: var(--red); }
+.benefit.purple { border-left-color: #9b59b6; } .benefit.purple h4 { color: #9b59b6; }
+
+.pengantar .closing {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 20px 0 0;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* ---------- KATALOG ---------- */
 .products {
   display:grid;
-  border-radius: 999px;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:20px;
-  padding:40px;
+  padding:24px 24px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .card {
-  background: linear-gradient(145deg, #1a1a1a 0%, #2a2a2a 100%);
-  border-radius:15px;
+  background: linear-gradient(160deg, var(--card) 0%, var(--bg-soft) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   overflow:hidden;
   text-align:center;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
+  border-color: rgba(108,92,231,0.5);
 }
 
-.card img {
+.card img, .card-item img {
   width:100%;
-  height:300px;
+  height:280px;
   object-fit:cover;
+  background-color: #0a0a0f;
+  display:block;
 }
 
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  padding: 16px 16px 6px;
+  margin: 0;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+.card-item { text-align: left; }
+.card-item h3 { font-size: 14px; padding: 14px 16px 6px; }
+
+.price-row {
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.price-row .ori {
+  text-decoration: line-through;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.stock-tag { font-size: 13px; font-weight: 600; padding: 2px 16px; }
+.stock-tag.ok { color: var(--green); }
+.stock-tag.soldout { color: var(--red); }
+.sold-tag { color: var(--red); font-size: 13px; font-weight: 700; padding: 0 16px; }
+.admin-tag { color: var(--red); font-weight: 700; font-size: 13px; padding: 4px 16px; }
+
+/* ---------- TOMBOL ---------- */
 .btn {
-  background: linear-gradient(45deg, #000000, #0400ff);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(135deg, var(--accent), #5a4bd1);
+  color: #fff;
   border:none;
-  padding:12px;
-  margin:10px;
+  padding: 12px 20px;
+  margin: 12px 16px 16px;
   cursor:pointer;
-  width:90%;
-  font-weight:600;
-  border-radius:8px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255,107,107,0.3);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255,107,107,0.5);
-}
-
-.cart-box {
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background: linear-gradient(45deg, #2c3e50, #34495e);
-  color:rgb(0, 0, 0);
-  padding:15px 20px;
+  width: calc(100% - 32px);
+  font-weight:700;
+  font-family: 'Poppins', sans-serif;
   border-radius:10px;
-  font-size:16px;
-  border:2px solid rgb(3, 28, 252);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 6px 18px rgba(108,92,231,0.35);
+}
+
+.btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 10px 24px rgba(108,92,231,0.45); }
+
+.btn:disabled {
+  background:#2a2a35;
+  color: var(--muted);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
 .back-btn {
-  background: black;
-  color:rgb(255, 255, 255);
-  border:2px solid rgb(0, 0, 0);
-  padding:10px 18px;
-  margin:10px 0 20px 20px;
+  background: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  margin: 16px 24px 0;
   cursor:pointer;
-  border-radius:8px;
-  font-size:16px;
+  border-radius:10px;
+  font-size:14px;
   font-weight:600;
-  transition:all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  font-family:'Poppins', sans-serif;
+  transition: all 0.2s ease;
 }
 
 .back-btn:hover {
-  background: linear-gradient(45deg, #1709e0, #000000);
-  transform:scale(1.05);
-  box-shadow: 0 6px 20px rgba(255, 0, 21, 0.5);
+  border-color: var(--accent);
+  color: var(--accent-2);
+  transform: translateX(-2px);
 }
 
-.back-btn:active {
-  transform:scale(0.98);
-}
-
+/* ---------- CAROUSEL ---------- */
 .carousel {
   position: relative;
-  background: #1a1a1a;
-  border-radius: 10px;
+  background: #0a0a0f;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 0;
 }
 
-.carousel-container {
-  width: 100%;
-  height: 18;
-}
+.carousel-container { width: 100%; height: 280px; }
 
 .carousel-image {
   width: 100%;
@@ -175,60 +374,142 @@ nav {
   transition: opacity 0.3s ease;
 }
 
-.card-item img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-  background-color: #0a0a0a;
-}
-
 .carousel-button {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: rgb(0, 140, 255);
+  background: rgba(0,0,0,0.55);
+  color: #fff;
   border: none;
-  padding: 10px 15px;
+  padding: 10px 13px;
   cursor: pointer;
-  font-size: 18px;
-  border-radius: 5px;
+  font-size: 16px;
+  border-radius: 8px;
   z-index: 10;
-  transition: background 0.3s ease;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease;
 }
 
-.carousel-button:hover {
-  background: rgba(0,0,0,0.8);
-}
-
-.carousel-button.prev {
-  left: 10px;
-}
-
-.carousel-button.next {
-  right: 10px;
-}
+.carousel-button:hover { background: rgba(0,0,0,0.85); }
+.carousel-button.prev { left: 10px; }
+.carousel-button.next { right: 10px; }
 
 .carousel-dots {
   display: flex;
   justify-content: center;
   gap: 8px;
-  padding: 10px;
-  background: #0a0a0a;
+  padding: 8px;
+  background: #0a0a0f;
 }
 
 .carousel-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.carousel-dot.active {
-  background: #4ecdc4;
+.carousel-dot.active { background: var(--accent-2); transform: scale(1.2); }
+
+/* ---------- CONTAINER KARTU ITEM ---------- */
+.items-container {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:20px;
+  padding:24px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
+
+/* ---------- HOME CARDS ---------- */
+.house-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.house-card {
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, var(--card) 0%, var(--bg-soft) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 220px;
+  padding: 24px;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.house-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent);
+  box-shadow: 0 20px 45px rgba(108,92,231,0.25);
+}
+
+.house-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.house-card p { font-size: 14px; margin: 0; color: var(--muted); }
+
+/* ---------- RESPONSIVE NAV ---------- */
+@media (max-width: 640px) {
+  nav { flex-wrap: wrap; padding: 12px 18px; }
+  nav input { width: 100%; order: 3; }
+  .hero { margin: 14px 14px 8px; padding: 60px 18px 48px; }
+  .hero h1 { font-size: 40px; }
+  .products, .items-container { padding: 14px 14px 32px; }
+  .pengantar { margin: 4px 14px 8px; padding: 28px 18px; }
+  .cart-badge { font-size: 13px; }
+}
+
+/* ---------- CART BOX (floating) ---------- */
+.cart-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(14px);
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 90;
+}
+
+.cart-box button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  transition: filter 0.2s ease;
+}
+
+.cart-box button:hover { filter: brightness(1.1); }
+.cart-box button:last-child { background: var(--red); }
 </style>
 
 </head>
@@ -239,128 +520,86 @@ nav {
     <img src="ROCKSTARLOGO.png" alt="Rockstar.Store" class="logo-img">
     <span>ROCKSTAR.STORE</span>
   </div>
-  <input type="text" id="searchInput" placeholder="Cari katalog..." style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ddd; width: 200px; font-family: 'Poppins', sans-serif;">
-  <div>Keranjang: <span id="cart">0</span></div>
+  <input type="text" id="searchInput" placeholder="Cari katalog...">
+  <div class="cart-badge">Keranjang: <span id="cart">0</span></div>
 </nav>
 
 <section class="hero">
   <h1>Rockstar.Store</h1>
-  <div style="font-family: 'Poppins', sans-serif; font-size: 40px; font-weight: 700; color: #000000; margin: -40px 10px 0;">solusi sepuh roblox kamu</div><div CLASS="FLAG-ID">
-  <p style="font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: bold;">Item murah💰<br>Proses cepat⚡ <br>tersedia all payment🌍 <br>Memiliki 100.000+ testi amanah<br>#1 STORE BRAINROT TERLENGKAP DI INDONESIA<p style="font-family: 'Poppins', sans-serif; font-size: 25px; font-weight:bold;">tiktok @rockstarstoree</p>
-  <p style="font-family: 'Poppins', sans-serif; font-size: 100px; margin-top: 100px;">
-   <div style="font: size 100px; font-weight: 900;""> Jangan lupa join saluran WhatsApp Rockstar.Store: 
-    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" style="color: #25D366; text-decoration: underline; font-weight: bold;font-size: 20px;">Klik untuk Join</a>
-  </p>
+  <div class="hero-tagline">solusi sepuh roblox kamu</div>
+  <div class="hero-points">
+    <span>Item murah <b>💰</b></span>
+    <span>Proses cepat <b>⚡</b></span>
+    <span>Semua payment <b>🌍</b></span>
+    <span>100.000+ testimoni <b>✅</b></span>
+    <span>#1 Store Brainrot Terlengkap di Indonesia</span>
+  </div>
+  <div class="hero-brand">tiktok @rockstarstoree</div>
+  <div class="hero-wa">
+    Jangan lupa join saluran WhatsApp Rockstar.Store:
+    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Klik untuk Join</a>
+  </div>
 </section>
 
 <!-- KATA PENGANTAR SECTION -->
-<section style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); padding: 40px 20px; margin: 30px 20px; border-radius: 15px; border-left: 5px solid #0400ff;">
-  <div style="max-width: 900px; margin: 0 auto;">
-    <h2 style="color: #0400ff; font-size: 32px; font-family: 'Oswald', sans-serif; margin: 0 0 20px 0;">Kenapa Harus Beli di Rockstar.Store?</h2>
-    
-    <p style="color: white; font-size: 18px; font-family: 'Poppins', sans-serif; line-height: 1.8; margin: 0 0 20px 0;">
-      Rockstar.Store adalah <strong style="color: #0400ff;">solusi sepuh roblox kamu</strong> yang paling terpercaya dan terjangkau! Kami menyediakan berbagai item dan pet roblox dengan harga yang sangat murah, proses yang super cepat, dan layanan pelanggan yang ramah.
+<section class="pengantar">
+  <div style="max-width: 960px; margin: 0 auto;">
+    <h2>Kenapa Harus Beli di Rockstar.Store?</h2>
+    <p class="lead">
+      Rockstar.Store adalah <strong>solusi sepuh roblox kamu</strong> yang paling terpercaya dan terjangkau! Kami menyediakan berbagai item dan pet roblox dengan harga yang sangat murah, proses yang super cepat, dan layanan pelanggan yang ramah.
     </p>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 25px 0;">
-      
-      <div style="background: rgba(4, 0, 255, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #0400ff;">
-        <p style="color: #0400ff; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">💰 Harga Termurah</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">Harga paling kompetitif di pasaran dengan kualitas terjamin!</p>
+    <div class="benefit-grid">
+      <div class="benefit blue">
+        <h4>💰 Harga Termurah</h4>
+        <p>Harga paling kompetitif di pasaran dengan kualitas terjamin!</p>
       </div>
-
-      <div style="background: rgba(0, 255, 0, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #00ff00;">
-        <p style="color: #00ff00; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">⚡ Proses Cepat</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">Admin siap melayani dalam hitungan menit, bukan jam!</p>
+      <div class="benefit green">
+        <h4>⚡ Proses Cepat</h4>
+        <p>Admin siap melayani dalam hitungan menit, bukan jam!</p>
       </div>
-
-      <div style="background: rgba(37, 211, 102, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #25D366;">
-        <p style="color: #25D366; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">✅ Terpercaya</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">100.000+ customer puas dengan testimoni asli dan amanah!</p>
+      <div class="benefit wa">
+        <h4>✅ Terpercaya</h4>
+        <p>100.000+ customer puas dengan testimoni asli dan amanah!</p>
       </div>
-
-      <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #FFC107;">
-        <p style="color: #FFC107; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">💳 Banyak Pilihan Pembayaran</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">Transfer bank, e-wallet,QR Code semua payment method tersedia!</p>
+      <div class="benefit yellow">
+        <h4>💳 Banyak Pilihan Pembayaran</h4>
+        <p>Transfer bank, e-wallet, QR Code — semua payment method tersedia!</p>
       </div>
-
-      <div style="background: rgba(255, 107, 107, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #ff6b6b;">
-        <p style="color: #ff6b6b; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">🎁 Katalog Lengkap</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">Ribuan item dan pet dari berbagai game roblox favorit!</p>
+      <div class="benefit red">
+        <h4>🎁 Katalog Lengkap</h4>
+        <p>Ribuan item dan pet dari berbagai game roblox favorit!</p>
       </div>
-
-      <div style="background: rgba(156, 39, 176, 0.1); padding: 15px; border-radius: 8px; border-left: 3px solid #9c27b0;">
-        <p style="color: #9c27b0; font-weight: bold; font-size: 16px; margin: 0 0 5px 0;">🤝 Admin Ramah</p>
-        <p style="color: #ccc; font-size: 14px; margin: 0;">Siap membantu dan menjawab semua pertanyaanmu dengan baik!</p>
+      <div class="benefit purple">
+        <h4>🤝 Admin Ramah</h4>
+        <p>Siap membantu dan menjawab semua pertanyaanmu dengan baik!</p>
       </div>
-
     </div>
 
-    <p style="color: #ccc; font-size: 16px; font-family: 'Poppins', sans-serif; line-height: 1.6; margin: 20px 0; padding: 15px; background: rgba(255, 255, 255, 0.05); border-radius: 8px;">
-      Jadi tunggu apa lagi? Mulai berbelanja sekarang dan jadikan robloxmu lebih sepuh,bikin tetanggamu dan temanmu iri. ! 🚀 masalah hidup hilang jika roblox mu sepuh adios!
+    <p class="closing">
+      Jadi tunggu apa lagi? Mulai berbelanja sekarang dan jadikan robloxmu lebih sepuh, bikin tetanggamu dan temanmu iri! 🚀 Masalah hidup hilang jika roblox-mu sepuh — adios!
     </p>
   </div>
 </section>
 
 <section class="products" id="products"></section>
 
-<style>
-.house-container {
-  display: grid
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  padding: 12px;
- 
-}
-
-.house-card {
-  aspect: ratio 1 / 1; /
-  border-radius: 800px IMPORTANT;
-  border: 2PX solid rgba(0, 0, 0, 0.3);
-  background: linear-gradient(145deg, #0aa7d6 0%, #020202 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 16px;
-  cursor: pointer;
-}
-
-.house-card:hover {
-  border-color: #000000;
-  background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
-
-.house-card h2 {
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0 0 15px 0;
-  font-family: 'Oswald', sans-serif;
-}
-
-.house-card p {
-  font-size: 14px;
-  margin: 0;
-  opacity: 0.9;
-}
-</style>
-
-<div id="cartModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000;">
-  <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:white; padding:20px; border-radius:10px; width:90%; max-width:500px; max-height:70vh; overflow-y:auto;">
-    <h2 style="margin-top:0; color:white;">📋 Keranjang Saya</h2>
+<div id="cartModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); z-index:1000;">
+  <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-soft); color:white; padding:24px; border-radius:16px; border:1px solid var(--border); width:90%; max-width:520px; max-height:70vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <h2 style="margin-top:0; color:white; font-family:'Oswald',sans-serif; letter-spacing:0.5px;">📋 Keranjang Saya</h2>
     <div id="cartList"></div>
-    <div style="text-align:center; margin-top:15px;">
-      <button onclick="closeCartModal()" style="background:#4CAF50; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; margin-right:10px;">Lanjut Belanja</button>
-      <button onclick="checkout()" style="background:#2196F3; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer;">Checkout</button>
+    <div style="text-align:center; margin-top:18px; display:flex; gap:10px; justify-content:center;">
+      <button onclick="closeCartModal()" style="background:var(--green); color:white; padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Lanjut Belanja</button>
+      <button onclick="checkout()" style="background:var(--accent); color:white; padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Checkout</button>
     </div>
   </div>
 </div>
 
 <div class="cart-box">
-  🛒 <span id="total">0</span> item<br>
+  <div>🛒 <span id="total">0</span> item</div>
   <button onclick="openCartModal()">Lihat Keranjang</button>
   <button onclick="checkout()">Checkout</button>
-  <button onclick="cancelCheckout()" style="background-color: #d32f2f;">Batalkan</button>
+  <button onclick="cancelCheckout()" style="background-color: var(--red);">Batalkan</button>
 </div>
 
 <script>
@@ -472,7 +711,7 @@ const brainrotCategories = [
       
   
     ]
-  },
+  }, 
   {
     name: "+1 KEKUATAN MENUMBUHKAN LENGAN ANDA",
     img: "+1 MENUMBUHKAN LENGAN DISPLAY.png ",
@@ -760,8 +999,8 @@ function showItems(i){
   const category = categories[i];
   const el = document.getElementById("products");
   el.innerHTML = `
-    <button class="back-btn" onclick="render()">Kembali</button>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:40px;">
+    <button class="back-btn" onclick="render()">← Kembali</button>
+    <div class="items-container">
     ${category.items.map((item,j)=>{
       const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
       const hasCarousel = item.images && item.images.length > 1;
@@ -782,10 +1021,10 @@ function showItems(i){
           </div>
         ` : `<img src="${itemImg}">`}
         <h3>${item.name}</h3>
-        ${item.sold ? `<div style="color: #FF6B6B; font-weight: bold; margin: 5px 0; font-size: 14px;">🔥 Terjual: ${item.sold}</div>` : ''}
-        ${hidePrice ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">Hubungi admin untuk harga</div>' : `<p>${item.originalPrice ? `<span style="text-decoration: line-through; color: #888;">Rp ${item.originalPrice.toLocaleString()}</span> ` : ''}Rp ${item.price.toLocaleString()}</p>`}
-        ${item.stock === 0 ? '<div style="color: #f44336; font-weight: bold; margin: 5px 0;">SOLD OUT</div>' : item.stock ? `<div style="color: #4CAF50; font-weight: bold; margin: 5px 0;">Stock: ${item.stock}</div>` : ''}
-        <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''}>Tambah</button>
+        ${item.sold ? `<div class="sold-tag">🔥 Terjual: ${item.sold}</div>` : ''}
+        ${hidePrice ? '<div class="admin-tag">Hubungi admin untuk harga</div>' : `<div class="price-row">${item.originalPrice ? `<span class="ori">Rp ${item.originalPrice.toLocaleString()}</span>` : ''}Rp ${item.price.toLocaleString()}</div>`}
+        ${item.stock === 0 ? '<div class="stock-tag soldout">SOLD OUT</div>' : item.stock ? `<div class="stock-tag ok">Stock: ${item.stock}</div>` : ''}
+        <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>Tambah</button>
       </div>
     `;} ).join("")}
     </div>
@@ -880,37 +1119,36 @@ function checkout(){
   
   cart.forEach((item, index) => {
     totalPrice += item.price;
-    // Gunakan item.img jika ada, fallback ke categoryImg
     let itemImage = item.img || item.categoryImg || 'Screenshot 2026-04-14 004434.png';
     
     previewHTML += `
-      <div style="background:#333; padding:15px; margin:10px 0; border-radius:8px; display:flex; gap:15px;">
-        <img src="${itemImage}" style="width:80px; height:80px; border-radius:5px; object-fit:cover;" onerror="this.src='Screenshot 2026-04-14 004434.png';">
-        <div style="flex:1; color:white;">
+      <div style="background:var(--card); border:1px solid var(--border); padding:12px; margin:10px 0; border-radius:12px; display:flex; gap:14px; align-items:center;">
+        <img src="${itemImage}" style="width:72px; height:72px; border-radius:8px; object-fit:cover; flex-shrink:0;" onerror="this.src='Screenshot 2026-04-14 004434.png';">
+        <div style="flex:1; color:white; font-size:13.5px;">
           <strong>${index+1}. ${item.name}</strong><br>
-          Rp ${item.price.toLocaleString()}
+          <span style="color:var(--accent-2); font-weight:600;">Rp ${item.price.toLocaleString()}</span>
         </div>
       </div>
     `;
   });
   
   previewHTML += `
-    <div style="border-top:2px solid #555; padding-top:10px; margin-top:10px; color:white;">
+    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; color:white;">
       <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
-      <strong>📦 Total Item: ${cart.length}</strong>
+      <span style="color:var(--muted); font-size:13px;">📦 Total Item: ${cart.length}</span>
     </div>
   `;
   
   // Tampilkan modal preview
   const checkoutModal = document.createElement('div');
   checkoutModal.id = 'checkoutModal';
-  checkoutModal.style.cssText = 'display:block; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000;';
+  checkoutModal.style.cssText = 'display:block; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); z-index:2000;';
   checkoutModal.innerHTML = `
-    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#222; color:white; padding:20px; border-radius:10px; width:90%; max-width:500px; max-height:70vh; overflow-y:auto;">
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-soft); color:white; padding:24px; border:1px solid var(--border); border-radius:16px; width:90%; max-width:520px; max-height:70vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.6);">
       ${previewHTML}
       <div style="text-align:center; margin-top:20px; display:flex; gap:10px; justify-content:center;">
-        <button onclick="closeCheckoutPreview()" style="background:#d32f2f; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:600;">Batal</button>
-        <button onclick="sendToAdmin()" style="background:#25D366; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer; font-weight:600;">✓ Kirim ke Admin</button>
+        <button onclick="closeCheckoutPreview()" style="background:var(--red); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Batal</button>
+        <button onclick="sendToAdmin()" style="background:#25D366; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">✓ Kirim ke Admin</button>
       </div>
     </div>
   `;
@@ -994,20 +1232,20 @@ function openCartModal(){
   cart.forEach((item, index) => {
     totalPrice += item.price;
     cartHTML += `
-      <div style="background:#333; padding:10px; margin:10px 0; border-radius:5px; display:flex; justify-content:space-between; align-items:center;">
-        <div style="color:white;">
+      <div style="background:var(--card); padding:12px; margin:10px 0; border-radius:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div style="color:white; font-size:13.5px; flex:1;">
           <strong>${index+1}. ${item.name}</strong><br>
-          Rp ${item.price.toLocaleString()}
+          <span style="color:var(--accent-2); font-weight:600;">Rp ${item.price.toLocaleString()}</span>
         </div>
-        <button onclick="removeFromCart(${index})" style="background:#d32f2f; color:white; padding:5px 10px; border:none; border-radius:3px; cursor:pointer;">Hapus</button>
+        <button onclick="removeFromCart(${index})" style="background:var(--red); color:white; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600; font-size:12.5px; white-space:nowrap;">Hapus</button>
       </div>
     `;
   });
   
   cartHTML += `
-    <div style="border-top:2px solid #555; padding-top:10px; margin-top:10px; color:white;">
+    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; color:white;">
       <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
-      <strong>📦 Total Item: ${cart.length}</strong>
+      <span style="color:var(--muted); font-size:13px;">📦 Total Item: ${cart.length}</span>
     </div>
   `;
   
@@ -1063,16 +1301,10 @@ document.getElementById("searchInput").addEventListener("input", function(){
 });
 </script>
 
-<footer style="text-align:center; padding:20px; background:#111; color:white; margin-top:40px; overflow:hidden;">
-  <p style="font-size:24px; font-weight:600; font-family: 'Oswald', sans-serif; animation: scrollText 10s linear infinite;">No WA Admin: <a href="https://wa.me/6289664299571" target="_blank" style="color: #00ff00; text-decoration: none; cursor: pointer;">+6289664299571</a> | TikTok: @rockstarstoree</p>
+<footer style="text-align:center; padding:32px 20px; background:var(--bg-soft); color:var(--muted); margin-top:40px; border-top:1px solid var(--border); font-size:14px;">
+  <p style="margin:0 0 6px; font-size:17px; font-weight:600; color:var(--text); font-family:'Oswald',sans-serif; letter-spacing:0.5px;">No WA Admin: <a href="https://wa.me/6289664299571" target="_blank" style="color:#25d366; text-decoration:none; cursor:pointer;">+6289664299571</a></p>
+  <p style="margin:0; color:var(--muted);">TikTok: @rockstarstoree &nbsp;•&nbsp; Rockstar.Store — solusi sepuh roblox kamu</p>
 </footer>
-
-<style>
-@keyframes scrollText {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-</style>
 
 </body>
 </html>
