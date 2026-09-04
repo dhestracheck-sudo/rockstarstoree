@@ -489,7 +489,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. 🚀</p>
     <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">📢 Join Saluran WhatsApp</a>
     <div class="hero-cta">
-      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button>
+      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog Brainrot/Pet/Token/Tanaman 🧠</button>
       <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
     </div>
   </div>
@@ -885,7 +885,7 @@ function render(){
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN</small>
-          <h3>🧠 Katalog Brainrot</h3>
+          <h3>🧠 Katalog Brainrot/Pet/Token/Tanaman</h3>
           <p>Solusi sepuh roblox kamu — puluhan kategori item.</p>
         </div>
         <div class="banner" onclick="goToTopUp()">
@@ -898,7 +898,7 @@ function render(){
   }
   const categories = getCurrentCategories();
   title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
-    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : 'Top Up'}</h2>
+    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot/Pet/Token/Tanaman' : 'Top Up'}</h2>
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
