@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rockstar.Store</title>
+<title>Rockstar.Store — Solusi Sepuh Roblox Kamu</title>
 
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
@@ -14,598 +14,530 @@
   gtag('config', 'G-8CKBS3MNXH');
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --bg: #0b0b0f;
-  --bg-soft: #14141c;
-  --card: #181823;
-  --card-hover: #1f1f2e;
-  --border: rgba(255,255,255,0.08);
-  --text: #f5f5f7;
-  --muted: #9b9ba6;
-  --accent: #6c5ce7;
-  --accent-2: #a29bfe;
+  --bg: #060913;
+  --bg2: #0b1120;
+  --card: #0e1628;
+  --line: rgba(120,150,255,0.14);
+  --txt: #f2f5ff;
+  --mut: #8b96b3;
+  --blue: #2b4eff;
+  --blue2: #6f8bff;
+  --wa: #25d366;
+  --red: #ff5d5d;
   --green: #2ecc71;
-  --red: #ff6b6b;
-  --radius: 16px;
+  --r: 18px;
 }
-
 * { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
-  margin:0;
+  margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background:
+    linear-gradient(rgba(6,9,19,0.9), rgba(6,9,19,0.94)),
+    radial-gradient(900px 320px at 85% -60px, rgba(43,78,255,0.22), transparent 60%),
+    radial-gradient(700px 300px at 5% 0%, rgba(43,78,255,0.12), transparent 60%),
+    url("bg.jpg") center top / cover no-repeat fixed,
+    var(--bg);
+  color: var(--txt);
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- NAVBAR ---------- */
-nav {
+/* ===== announcement bar ===== */
+.announce {
+  background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 9px 14px;
+  letter-spacing: 0.2px;
+}
+.announce a { color: #fff; font-weight: 700; text-decoration: underline; }
+
+/* ===== header ===== */
+header {
   position: sticky;
   top: 0;
   z-index: 100;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  padding:14px 32px;
-  background: rgba(11,11,15,0.85);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-}
-
-.logo-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  color: white;
-  font-weight: 700;
-  font-size: 18px;
-  letter-spacing: 0.3px;
+  gap: 18px;
+  padding: 12px 28px;
+  background: rgba(6,9,19,0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
 }
-
-.logo-img {
-  max-height: 42px;
-  width: auto;
-  border-radius: 8px;
-}
-
-.logo { display: none; }
-
-nav input {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--bg-soft);
-  color: var(--text);
-  width: 220px;
-  font-family: 'Poppins', sans-serif;
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-nav input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(108,92,231,0.2);
-}
-
-nav input::placeholder { color: var(--muted); }
-
-.cart-badge {
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  padding: 8px 14px;
+.brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: 0.4px; white-space: nowrap; }
+.brand img { height: 40px; border-radius: 9px; }
+.searchwrap { flex: 1; display: flex; justify-content: center; }
+#searchInput {
+  width: min(420px, 100%);
+  padding: 10px 18px 10px 40px;
   border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.cart-badge span { color: var(--accent-2); }
-
-/* ---------- HERO ---------- */
-.hero {
-  text-align:center;
-  padding: 90px 24px 70px;
-  margin: 24px 24px 8px;
-  border-radius: 24px;
-  border: 1px solid var(--border);
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,92,231,0.22), transparent),
-    var(--bg-soft);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero h1 {
-  font-size: 56px;
-  font-weight: 700;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 1px;
-  margin: 0 0 8px;
-  background: linear-gradient(90deg, #ffffff, var(--accent-2), #ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-tagline {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 8px 0 24px;
-}
-
-.hero-points {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px 24px;
-  margin: 0 0 24px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.hero-points b { color: var(--accent-2); }
-
-.hero-brand {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--muted);
-  margin: 4px 0 0;
-}
-
-.hero-wa {
-  margin-top: 28px;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--muted);
-}
-
-.hero-wa a {
-  color: #25d366;
-  text-decoration: none;
-  font-weight: 700;
-  border-bottom: 2px solid rgba(37,211,102,0.3);
-  transition: border-color 0.2s ease;
-}
-
-.hero-wa a:hover { border-color: #25d366; }
-
-/* ---------- SECTION: KATA PENGANTAR ---------- */
-.pengantar {
-  background: var(--bg-soft);
-  padding: 44px 24px;
-  margin: 4px 24px 8px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-}
-
-.pengantar h2 {
-  color: var(--accent-2);
-  font-size: 30px;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.5px;
-  margin: 0 0 16px;
-}
-
-.pengantar p.lead {
-  color: var(--text);
-  font-size: 17px;
-  line-height: 1.8;
-  margin: 0 0 24px;
-}
-
-.pengantar p.lead strong { color: var(--accent-2); }
-
-.benefit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 16px;
-  margin: 24px 0;
-}
-
-.benefit {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  padding: 18px;
-  border-radius: 12px;
-  border-left: 3px solid var(--accent);
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.benefit:hover { transform: translateY(-3px); background: rgba(108,92,231,0.08); }
-
-.benefit h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
-.benefit p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
-.benefit.green { border-left-color: #2ecc71; } .benefit.green h4 { color: #2ecc71; }
-.benefit.wa   { border-left-color: #25d366; } .benefit.wa h4 { color: #25d366; }
-.benefit.blue { border-left-color: var(--accent); } .benefit.blue h4 { color: var(--accent-2); }
-.benefit.yellow { border-left-color: #f1c40f; } .benefit.yellow h4 { color: #f1c40f; }
-.benefit.red { border-left-color: var(--red); } .benefit.red h4 { color: var(--red); }
-.benefit.purple { border-left-color: #9b59b6; } .benefit.purple h4 { color: #9b59b6; }
-
-.pengantar .closing {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.7;
-  margin: 20px 0 0;
-  padding: 16px 18px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-}
-
-/* ---------- KATALOG ---------- */
-.products {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:20px;
-  padding:24px 24px 40px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.card {
-  background: linear-gradient(160deg, var(--card) 0%, var(--bg-soft) 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow:hidden;
-  text-align:center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.5);
-  border-color: rgba(108,92,231,0.5);
-}
-
-.card img, .card-item img {
-  width:100%;
-  height:280px;
-  object-fit:cover;
-  background-color: #0a0a0f;
-  display:block;
-}
-
-.card h3 {
-  font-size: 15px;
-  font-weight: 600;
-  padding: 16px 16px 6px;
-  margin: 0;
-  line-height: 1.4;
-  color: var(--text);
-}
-
-.card-item { text-align: left; }
-.card-item h3 { font-size: 14px; padding: 14px 16px 6px; }
-
-.price-row {
-  padding: 8px 16px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.price-row .ori {
-  text-decoration: line-through;
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 13px;
-  margin-right: 6px;
-}
-
-.stock-tag { font-size: 13px; font-weight: 600; padding: 2px 16px; }
-.stock-tag.ok { color: var(--green); }
-.stock-tag.soldout { color: var(--red); }
-.sold-tag { color: var(--red); font-size: 13px; font-weight: 700; padding: 0 16px; }
-.admin-tag { color: var(--red); font-weight: 700; font-size: 13px; padding: 4px 16px; }
-
-/* ---------- TOMBOL ---------- */
-.btn {
-  background: linear-gradient(135deg, var(--accent), #5a4bd1);
-  color: #fff;
-  border:none;
-  padding: 12px 20px;
-  margin: 12px 16px 16px;
-  cursor:pointer;
-  width: calc(100% - 32px);
-  font-weight:700;
+  border: 1px solid var(--line);
+  background: var(--bg2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%238b96b3"><path d="M11.7 10.3l3.5 3.5-1.4 1.4-3.5-3.5A6 6 0 1 1 11.7 10.3zm-5.7.7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>') 14px center no-repeat;
+  color: var(--txt);
   font-family: 'Poppins', sans-serif;
-  border-radius:10px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  box-shadow: 0 6px 18px rgba(108,92,231,0.35);
+  font-size: 14px;
+  outline: none;
 }
-
-.btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.08); box-shadow: 0 10px 24px rgba(108,92,231,0.45); }
-
-.btn:disabled {
-  background:#2a2a35;
-  color: var(--muted);
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.back-btn {
-  background: var(--bg-soft);
-  color: var(--text);
-  border: 1px solid var(--border);
+#searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
+.cartbtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
   padding: 10px 18px;
-  margin: 16px 24px 0;
-  cursor:pointer;
-  border-radius:10px;
-  font-size:14px;
-  font-weight:600;
-  font-family:'Poppins', sans-serif;
-  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(43,78,255,0.4);
+}
+.cartbtn small {
+  background: #fff;
+  color: var(--blue);
+  border-radius: 999px;
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0 5px;
 }
 
-.back-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent-2);
-  transform: translateX(-2px);
+/* ===== hero split ===== */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 28px 30px;
+}
+.hero-text { flex: 1.2; }
+.hero-kicker {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--blue2);
+  border: 1px solid var(--line);
+  background: rgba(43,78,255,0.1);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 58px;
+  line-height: 1.05;
+  margin: 0 0 14px;
+  letter-spacing: 0.5px;
+}
+.hero h1 span { color: var(--blue2); }
+.hero p { color: var(--mut); font-size: 16px; line-height: 1.7; margin: 0 0 26px; max-width: 520px; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary, .btn-ghost {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 12px;
+  padding: 14px 26px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary { background: var(--blue); color: #fff; border: none; box-shadow: 0 10px 28px rgba(43,78,255,0.45); }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
+.btn-ghost:hover { border-color: var(--blue); }
+.hero-visual { flex: 0.8; display: flex; justify-content: center; }
+.hero-visual img {
+  width: min(340px, 80%);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 8px rgba(43,78,255,0.08), 0 30px 80px rgba(43,78,255,0.3);
 }
 
-/* ---------- CAROUSEL ---------- */
-.carousel {
+/* ===== stats strip ===== */
+.stats {
+  display: flex;
+  max-width: 1200px;
+  margin: 26px auto 0;
+  padding: 0 28px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1;
+  min-width: 150px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: center;
+}
+.stat b { display: block; font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.stat span { font-size: 12.5px; color: var(--mut); }
+
+/* ===== section titles ===== */
+.section { max-width: 1200px; margin: 0 auto; padding: 44px 28px 8px; }
+.section h2 { font-family: 'Oswald', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
+.section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
+
+/* ===== home banners ===== */
+.banners { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.banner {
   position: relative;
-  background: #0a0a0f;
   overflow: hidden;
-  margin-bottom: 0;
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, #101b3d, #0a1024);
+  padding: 30px 28px;
+  cursor: pointer;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.banner:hover { transform: translateY(-4px); border-color: var(--blue); }
+.banner::after {
+  content: "→";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: var(--blue2);
+}
+.banner small { color: var(--blue2); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; }
+.banner h3 { font-family: 'Oswald', sans-serif; font-size: 32px; margin: 6px 0 4px; }
+.banner p { color: var(--mut); font-size: 13.5px; margin: 0; }
+
+/* ===== category cards ===== */
+.catgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+.catcard {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.catcard:hover { transform: translateY(-5px); border-color: var(--blue); }
+.catcard img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.catcard .catbody { padding: 14px 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.catcard h3 { font-size: 14.5px; margin: 0; font-weight: 600; }
+.catcard .go {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(43,78,255,0.15);
+  color: var(--blue2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
 }
 
-.carousel-container { width: 100%; height: 280px; }
-
-.carousel-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity 0.3s ease;
+/* ===== item cards (new style) ===== */
+.itemgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
+.item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
+.item .thumb { position: relative; }
+.item .thumb img { width: 100%; height: 300px; object-fit: cover; display: block; background: #05080f; }
+.badge-off {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+.badge-out {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--red);
+}
+.item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
+.item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
+.item .meta .sold { color: #ffb3b3; font-weight: 600; }
+.item .meta .stock { color: var(--green); font-weight: 600; }
+.item .price { margin-top: auto; padding-top: 6px; }
+.item .price .now { font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.item .price .was { font-size: 13px; color: var(--mut); text-decoration: line-through; margin-left: 8px; }
+.item .btn {
+  margin-top: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.item .btn:hover:not(:disabled) { filter: brightness(1.12); }
+.item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
 
-.carousel-button {
+/* carousel inside item (multi-photo) */
+.mthumb { position: relative; }
+.mthumb img { width: 100%; height: 300px; object-fit: cover; display: block; background: #05080f; }
+.mnav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  border: none;
-  padding: 10px 13px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 8px;
-  z-index: 10;
-  backdrop-filter: blur(4px);
-  transition: background 0.2s ease;
-}
-
-.carousel-button:hover { background: rgba(0,0,0,0.85); }
-.carousel-button.prev { left: 10px; }
-.carousel-button.next { right: 10px; }
-
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px;
-  background: #0a0a0f;
-}
-
-.carousel-dot {
-  width: 8px;
-  height: 8px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.carousel-dot.active { background: var(--accent-2); transform: scale(1.2); }
-
-/* ---------- CONTAINER KARTU ITEM ---------- */
-.items-container {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
-  padding:24px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* ---------- HOME CARDS ---------- */
-.house-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 24px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.house-card {
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: linear-gradient(160deg, var(--card) 0%, var(--bg-soft) 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 220px;
-  padding: 24px;
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.house-card:hover {
-  transform: translateY(-6px);
-  border-color: var(--accent);
-  box-shadow: 0 20px 45px rgba(108,92,231,0.25);
-}
-
-.house-card h2 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 10px;
-  font-family: 'Oswald', sans-serif;
-  letter-spacing: 0.5px;
-}
-
-.house-card p { font-size: 14px; margin: 0; color: var(--muted); }
-
-/* ---------- RESPONSIVE NAV ---------- */
-@media (max-width: 640px) {
-  nav { flex-wrap: wrap; padding: 12px 18px; }
-  nav input { width: 100%; order: 3; }
-  .hero { margin: 14px 14px 8px; padding: 60px 18px 48px; }
-  .hero h1 { font-size: 40px; }
-  .products, .items-container { padding: 14px 14px 32px; }
-  .pengantar { margin: 4px 14px 8px; padding: 28px 18px; }
-  .cart-badge { font-size: 13px; }
-}
-
-/* ---------- CART BOX (floating) ---------- */
-.cart-box {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(14px);
-  padding: 14px 18px;
-  border-radius: 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  box-shadow: 0 14px 40px rgba(0,0,0,0.5);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 90;
-}
-
-.cart-box button {
-  background: var(--accent);
-  color: #fff;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 16px;
   cursor: pointer;
+}
+.mnav.l { left: 10px; } .mnav.r { right: 10px; }
+.mdots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.mdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; }
+.mdots i.on { background: #fff; }
+
+/* ===== back button ===== */
+.backbtn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--txt);
+  border-radius: 10px;
+  padding: 9px 16px;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  font-size: 13px;
-  transition: filter 0.2s ease;
+  font-size: 13.5px;
+  cursor: pointer;
+  margin-bottom: 18px;
 }
+.backbtn:hover { border-color: var(--blue); color: var(--blue2); }
 
-.cart-box button:hover { filter: brightness(1.1); }
-.cart-box button:last-child { background: var(--red); }
+/* ===== floating cart ===== */
+.fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+.fab-main {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: var(--blue);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(43,78,255,0.5);
+}
+.fab-main b {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+  min-width: 24px; height: 24px;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px;
+}
+.fab-row { display: flex; gap: 8px; }
+.fab-row button {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: #fff;
+  background: #1a2440;
+  border: 1px solid var(--line);
+}
+.fab-row button.checkout { background: var(--wa); border-color: var(--wa); color: #062b16; }
+.fab-row button.cancel { background: transparent; color: var(--mut); }
+
+/* ===== modal ===== */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(3,5,12,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+}
+.modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  width: min(540px, 92vw);
+  max-height: 74vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.modal h2 { font-family: 'Oswald', sans-serif; margin: 0 0 14px; font-size: 24px; }
+.mrow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.mrow img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.mrow .grow { flex: 1; }
+.mrow .del {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+}
+.mtotal { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; font-weight: 700; }
+.mtotal span { color: var(--mut); font-weight: 400; font-size: 13px; }
+.mactions { display: flex; gap: 10px; margin-top: 16px; }
+.mactions button { flex: 1; border-radius: 10px; padding: 12px; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; border: none; }
+.mactions .ghost { background: transparent; border: 1px solid var(--line); color: var(--txt); }
+.mactions .go { background: var(--blue); color: #fff; }
+.mactions .wa { background: var(--wa); color: #062b16; }
+.mactions .danger { background: var(--red); color: #fff; }
+
+footer {
+  margin-top: 60px;
+  border-top: 1px solid var(--line);
+  padding: 28px;
+  text-align: center;
+  color: var(--mut);
+  font-size: 13px;
+}
+footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
+
+@media (max-width: 760px) {
+  header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
+  .searchwrap { order: 3; flex-basis: 100%; }
+  .hero { flex-direction: column; padding: 40px 18px 10px; text-align: center; }
+  .hero h1 { font-size: 40px; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .hero-cta { justify-content: center; }
+  .banners { grid-template-columns: 1fr; }
+  .section { padding: 32px 16px 6px; }
+  .stats { padding: 0 16px; }
+  .itemgrid { grid-template-columns: 1fr; }
+}
 </style>
-
 </head>
 <body>
 
-<nav>
-  <div class="logo-container">
-    <img src="ROCKSTARLOGO.png" alt="Rockstar.Store" class="logo-img">
-    <span>ROCKSTAR.STORE</span>
-  </div>
-  <input type="text" id="searchInput" placeholder="Cari katalog...">
-  <div class="cart-badge">Keranjang: <span id="cart">0</span></div>
-</nav>
+<div class="announce">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></div>
+
+<header>
+  <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
+  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..."></div>
+  <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
+</header>
 
 <section class="hero">
-  <h1>Rockstar.Store</h1>
-  <div class="hero-tagline">solusi sepuh roblox kamu</div>
-  <div class="hero-points">
-    <span>Item murah <b>💰</b></span>
-    <span>Proses cepat <b>⚡</b></span>
-    <span>Semua payment <b>🌍</b></span>
-    <span>100.000+ testimoni <b>✅</b></span>
-    <span>#1 Store Brainrot Terlengkap di Indonesia</span>
-  </div>
-  <div class="hero-brand">tiktok @rockstarstoree</div>
-  <div class="hero-wa">
-    Jangan lupa join saluran WhatsApp Rockstar.Store:
-    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Klik untuk Join</a>
-  </div>
-</section>
-
-<!-- KATA PENGANTAR SECTION -->
-<section class="pengantar">
-  <div style="max-width: 960px; margin: 0 auto;">
-    <h2>Kenapa Harus Beli di Rockstar.Store?</h2>
-    <p class="lead">
-      Rockstar.Store adalah <strong>solusi sepuh roblox kamu</strong> yang paling terpercaya dan terjangkau! Kami menyediakan berbagai item dan pet roblox dengan harga yang sangat murah, proses yang super cepat, dan layanan pelanggan yang ramah.
-    </p>
-
-    <div class="benefit-grid">
-      <div class="benefit blue">
-        <h4>💰 Harga Termurah</h4>
-        <p>Harga paling kompetitif di pasaran dengan kualitas terjamin!</p>
-      </div>
-      <div class="benefit green">
-        <h4>⚡ Proses Cepat</h4>
-        <p>Admin siap melayani dalam hitungan menit, bukan jam!</p>
-      </div>
-      <div class="benefit wa">
-        <h4>✅ Terpercaya</h4>
-        <p>100.000+ customer puas dengan testimoni asli dan amanah!</p>
-      </div>
-      <div class="benefit yellow">
-        <h4>💳 Banyak Pilihan Pembayaran</h4>
-        <p>Transfer bank, e-wallet, QR Code — semua payment method tersedia!</p>
-      </div>
-      <div class="benefit red">
-        <h4>🎁 Katalog Lengkap</h4>
-        <p>Ribuan item dan pet dari berbagai game roblox favorit!</p>
-      </div>
-      <div class="benefit purple">
-        <h4>🤝 Admin Ramah</h4>
-        <p>Siap membantu dan menjawab semua pertanyaanmu dengan baik!</p>
-      </div>
+  <div class="hero-text">
+    <span class="hero-kicker">#1 STORE BRAINROT TERLENGKAP DI INDONESIA</span>
+    <h1>SOLUSI SEPUH <span>ROBLOX</span> KAMU</h1>
+    <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. 🚀</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button>
+      <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
     </div>
-
-    <p class="closing">
-      Jadi tunggu apa lagi? Mulai berbelanja sekarang dan jadikan robloxmu lebih sepuh, bikin tetanggamu dan temanmu iri! 🚀 Masalah hidup hilang jika roblox-mu sepuh — adios!
-    </p>
   </div>
+  <div class="hero-visual"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
 </section>
 
-<section class="products" id="products"></section>
+<div class="stats">
+  <div class="stat"><b>100K+</b><span>Testimoni amanah</span></div>
+  <div class="stat"><b>⚡</b><span>Proses hitungan menit</span></div>
+  <div class="stat"><b>🌍</b><span>Semua payment</span></div>
+  <div class="stat"><b>🎁</b><span>Ribuan item & pet</span></div>
+</div>
 
-<div id="cartModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); z-index:1000;">
-  <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-soft); color:white; padding:24px; border-radius:16px; border:1px solid var(--border); width:90%; max-width:520px; max-height:70vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.6);">
-    <h2 style="margin-top:0; color:white; font-family:'Oswald',sans-serif; letter-spacing:0.5px;">📋 Keranjang Saya</h2>
+<main class="section">
+  <div id="pageTitle"></div>
+  <div id="products"></div>
+</main>
+
+<div class="fab">
+  <div class="fab-row">
+    <button onclick="openCartModal()">Lihat</button>
+    <button class="checkout" onclick="checkout()">Checkout</button>
+    <button class="cancel" onclick="cancelCheckout()">Batal</button>
+  </div>
+  <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
+</div>
+
+<div class="overlay" id="cartModal">
+  <div class="modal">
+    <h2>📋 Keranjang Saya</h2>
     <div id="cartList"></div>
-    <div style="text-align:center; margin-top:18px; display:flex; gap:10px; justify-content:center;">
-      <button onclick="closeCartModal()" style="background:var(--green); color:white; padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Lanjut Belanja</button>
-      <button onclick="checkout()" style="background:var(--accent); color:white; padding:10px 18px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Checkout</button>
+    <div class="mactions">
+      <button class="ghost" onclick="closeCartModal()">Lanjut Belanja</button>
+      <button class="go" onclick="checkout()">Checkout</button>
     </div>
   </div>
 </div>
 
-<div class="cart-box">
-  <div>🛒 <span id="total">0</span> item</div>
-  <button onclick="openCartModal()">Lihat Keranjang</button>
-  <button onclick="checkout()">Checkout</button>
-  <button onclick="cancelCheckout()" style="background-color: var(--red);">Batalkan</button>
-</div>
+<footer>
+  No WA Admin: <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
+  TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu
+</footer>
 
 <script>
 let cart = [];
-let currentPage = 'home'; // home, brainrot, topup
-let carouselState = {}; // Track carousel positions
+let currentPage = 'home';
+let carouselState = {};
+
+const IMG = "";
+const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
+function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
 
 const brainrotCategories = [
   {    name: "KOTAK GULUNG UNTUK BRAINROT",
@@ -890,9 +822,7 @@ const brainrotCategories = [
       {name: "Katalog Kosong 7 - v10", price: 95000}
     ]
   }
-];
-
-
+];;
 const topupCategories = [
   {
     name: "Top Up robux(via login)",
@@ -930,7 +860,7 @@ const topupCategories = [
 
     ]
   }
-];
+];;
 
 function getCurrentCategories(){
   if(currentPage === 'brainrot') return brainrotCategories;
@@ -938,97 +868,115 @@ function getCurrentCategories(){
   return [];
 }
 
+function discountOf(item){
+  if(!item.originalPrice || !item.price || item.originalPrice <= item.price) return 0;
+  return Math.round((1 - item.price / item.originalPrice) * 100);
+}
+
 function render(){
   const el = document.getElementById("products");
-  
+  const title = document.getElementById("pageTitle");
   if(currentPage === 'home'){
+    title.innerHTML = `<h2>Mulai Belanja</h2><p>Pilih kategori di bawah ini</p>`;
     el.innerHTML = `
-      <div class="house-container">
-        <div class="house-card" onclick="goToBrainrot()">
-          <h2>🧠 Brainrot/Pet/Token</h2>
-          <p>Solusi sepuh roblox kamu</p>
+      <div class="banners">
+        <div class="banner" onclick="goToBrainrot()">
+          <small>BRAINROT • PET • TOKEN</small>
+          <h3>🧠 Katalog Brainrot</h3>
+          <p>Solusi sepuh roblox kamu — puluhan kategori item.</p>
         </div>
-        <div class="house-card" onclick="goToTopUp()">
-          <h2>💰 Top Up</h2>
-          <p>Top up Robux dengan harga terbaik</p>
+        <div class="banner" onclick="goToTopUp()">
+          <small>ROBUX • GAMEPASS</small>
+          <h3>💰 Top Up</h3>
+          <p>Top up Robux & gamepass harga terbaik.</p>
         </div>
-      </div>
-    `;
+      </div>`;
     return;
   }
-  
   const categories = getCurrentCategories();
-  let html = '<button class="back-btn" onclick="goHome()">← Kembali ke Beranda</button>';
-  html += categories.map((c,i)=>`
-    <div class="card" onclick="showItems(${i})" style="cursor:pointer;">
-      <img src="${c.img}">
-      <h3>${c.name}</h3>
-    </div>
-  `).join("");
-  
-  el.innerHTML = html;
+  title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
+    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : 'Top Up'}</h2>
+    <p>${categories.length} kategori — klik untuk lihat item</p>`;
+  el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
+    <div class="catcard" onclick="showItems(${i})">
+      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
+    </div>`).join("") + `</div>`;
 }
 
 function searchCatalog(){
-  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
   const el = document.getElementById("products");
-  
-  if(searchInput === ""){
-    render();
+  const title = document.getElementById("pageTitle");
+  if(q === ""){ render(); return; }
+  const out = [];
+  ['brainrot', 'topup'].forEach(page => {
+    const cats = page === 'brainrot' ? brainrotCategories : topupCategories;
+    cats.forEach((c, i) => {
+      c.items.forEach((item, j) => {
+        if((c.name + " " + item.name).toLowerCase().includes(q)) out.push({page, i, j, cname: c.name, item});
+      });
+    });
+  });
+  if(out.length === 0){
+    title.innerHTML = `<h2>Hasil pencarian</h2><p>Tidak ada item cocok dengan "${q}"</p>`;
+    el.innerHTML = "";
     return;
   }
-  
-  const filtered = categories.filter(c => c.name.toLowerCase().includes(searchInput));
-  
-  if(filtered.length === 0){
-    el.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Katalog tidak ditemukan</p>';
-    return;
-  }
-  
-  const categoryIndex = categories.indexOf(filtered[0]);
-  el.innerHTML = filtered.map((c,idx)=>`
-    <div class="card" onclick="showItems(${categories.indexOf(c)})" style="cursor:pointer;">
-      <img src="${c.img}">
-      <h3>${c.name}</h3>
+  currentPage = out[0].page;
+  title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
+    <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
+  el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(r.page === 'brainrot' ? brainrotCategories : topupCategories, r.i, r.j)).join("") + `</div>`;
+}
+
+function itemCard(categories, i, j){
+  const item = categories[i].items[j];
+  const category = categories[i];
+  const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
+  const hasCarousel = item.images && item.images.length > 1;
+  const itemImg = item.img || (item.images && item.images[0]) || category.img;
+  const off = discountOf(item);
+  const thumb = hasCarousel ? `
+    <div class="thumb mthumb">
+      ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
+      <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
+      <div class="mdots" id="dots-${i}-${j}">
+        ${item.images.map((_, idx) => `<i class="${idx === 0 ? 'on' : ''}" onclick="event.stopPropagation();carouselGoto(${i},${j},${idx})"></i>`).join('')}
+      </div>
+    </div>` : `
+    <div class="thumb">
+      ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+    </div>`;
+  return `
+  <div class="item">
+    ${thumb}
+    <div class="ibody">
+      <h3>${item.name}</h3>
+      <div class="meta">
+        ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
+        ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
+      </div>
+      <div class="price">
+        ${hidePrice
+          ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
+          : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
+      </div>
+      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
-  `).join("");
+  </div>`;
 }
 
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
-  const el = document.getElementById("products");
-  el.innerHTML = `
-    <button class="back-btn" onclick="render()">← Kembali</button>
-    <div class="items-container">
-    ${category.items.map((item,j)=>{
-      const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
-      const hasCarousel = item.images && item.images.length > 1;
-      const itemImg = item.img || item.images?.[0] || category.img;
-      
-      return `
-      <div class="card card-item">
-        ${hasCarousel ? `
-          <div class="carousel">
-            <div class="carousel-container">
-              <img src="${item.images[0]}" class="carousel-image" id="carousel-${i}-${j}" alt="${item.name}">
-            </div>
-            <button class="carousel-button prev" onclick="carouselPrev(${i}, ${j})">❮</button>
-            <button class="carousel-button next" onclick="carouselNext(${i}, ${j})">❯</button>
-            <div class="carousel-dots" id="dots-${i}-${j}">
-              ${item.images.map((_, idx) => `<span class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="carouselGoto(${i}, ${j}, ${idx})"></span>`).join('')}
-            </div>
-          </div>
-        ` : `<img src="${itemImg}">`}
-        <h3>${item.name}</h3>
-        ${item.sold ? `<div class="sold-tag">🔥 Terjual: ${item.sold}</div>` : ''}
-        ${hidePrice ? '<div class="admin-tag">Hubungi admin untuk harga</div>' : `<div class="price-row">${item.originalPrice ? `<span class="ori">Rp ${item.originalPrice.toLocaleString()}</span>` : ''}Rp ${item.price.toLocaleString()}</div>`}
-        ${item.stock === 0 ? '<div class="stock-tag soldout">SOLD OUT</div>' : item.stock ? `<div class="stock-tag ok">Stock: ${item.stock}</div>` : ''}
-        <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>Tambah</button>
-      </div>
-    `;} ).join("")}
-    </div>
-  `;
+  document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
+    <h2>${category.name}</h2><p>${category.items.length} item</p>`;
+  document.getElementById("products").innerHTML =
+    `<div class="itemgrid">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
 }
 
 function chatAdmin(){
@@ -1039,162 +987,88 @@ function carouselNext(i, j){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
   const key = `${i}-${j}`;
-  const currentIndex = carouselState[key] || 0;
-  const nextIndex = (currentIndex + 1) % item.images.length;
-  carouselState[key] = nextIndex;
-  updateCarousel(i, j, nextIndex);
+  carouselState[key] = ((carouselState[key] || 0) + 1) % item.images.length;
+  updateCarousel(i, j, carouselState[key]);
 }
-
 function carouselPrev(i, j){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
   const key = `${i}-${j}`;
-  const currentIndex = carouselState[key] || 0;
-  const prevIndex = (currentIndex - 1 + item.images.length) % item.images.length;
-  carouselState[key] = prevIndex;
-  updateCarousel(i, j, prevIndex);
+  carouselState[key] = ((carouselState[key] || 0) - 1 + item.images.length) % item.images.length;
+  updateCarousel(i, j, carouselState[key]);
 }
-
 function carouselGoto(i, j, index){
   carouselState[`${i}-${j}`] = index;
   updateCarousel(i, j, index);
 }
-
 function updateCarousel(i, j, index){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
   const imgEl = document.getElementById(`carousel-${i}-${j}`);
   const dotsContainer = document.getElementById(`dots-${i}-${j}`);
-  
-  if(imgEl){
-    imgEl.src = item.images[index];
-  }
-  
+  if(imgEl) imgEl.src = fixImg(item.images[index]);
   if(dotsContainer){
-    const dots = dotsContainer.querySelectorAll('.carousel-dot');
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === index);
-    });
+    dotsContainer.querySelectorAll('i').forEach((d, idx) => d.classList.toggle('on', idx === index));
   }
 }
 
-function goHome(){
-  currentPage = 'home';
-  render();
-}
+function goHome(){ currentPage = 'home'; render(); }
+function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 
-function goToBrainrot(){
-  currentPage = 'brainrot';
-  render();
-}
-
-function goToTopUp(){
-  currentPage = 'topup';
-  render();
+function syncCart(){
+  document.getElementById("cartCount").innerText = cart.length;
+  document.getElementById("total").innerText = cart.length;
 }
 
 function addItem(i,j){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
-  if(item.stock === 0){
-    alert("Maaf, item ini sudah habis!");
-    return;
-  }
-  // Tambahkan kategori gambar sebagai fallback
-  const itemToAdd = {...item, categoryImg: categories[i].img};
-  cart.push(itemToAdd);
-  // Event analytics: lapor ke GA4 setiap tombol Tambah diklik
+  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
   if(typeof gtag === "function"){
     gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
   }
-  document.getElementById("cart").innerText = cart.length;
-  document.getElementById("total").innerText = cart.length;
+  syncCart();
 }
 
 function checkout(){
-  if(cart.length==0){
-    alert("Keranjang kosong!");
-    return;
-  }
-
-  // Tampilkan preview checkout dengan gambar
-  let previewHTML = '<h3 style="margin-top:0; color:white;">📸 Preview Pesanan Anda</h3>';
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  let previewHTML = '<h2>📸 Preview Pesanan</h2>';
   let totalPrice = 0;
-  
   cart.forEach((item, index) => {
     totalPrice += item.price;
-    let itemImage = item.img || item.categoryImg || 'Screenshot 2026-04-14 004434.png';
-    
+    let itemImage = fixImg(item.img || item.categoryImg);
     previewHTML += `
-      <div style="background:var(--card); border:1px solid var(--border); padding:12px; margin:10px 0; border-radius:12px; display:flex; gap:14px; align-items:center;">
-        <img src="${itemImage}" style="width:72px; height:72px; border-radius:8px; object-fit:cover; flex-shrink:0;" onerror="this.src='Screenshot 2026-04-14 004434.png';">
-        <div style="flex:1; color:white; font-size:13.5px;">
-          <strong>${index+1}. ${item.name}</strong><br>
-          <span style="color:var(--accent-2); font-weight:600;">Rp ${item.price.toLocaleString()}</span>
-        </div>
-      </div>
-    `;
+      <div class="mrow">
+        <img src="${itemImage}" onerror="this.src='${FALLBACK_IMG}'">
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
+      </div>`;
   });
-  
-  previewHTML += `
-    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; color:white;">
-      <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
-      <span style="color:var(--muted); font-size:13px;">📦 Total Item: ${cart.length}</span>
-    </div>
-  `;
-  
-  // Tampilkan modal preview
-  const checkoutModal = document.createElement('div');
-  checkoutModal.id = 'checkoutModal';
-  checkoutModal.style.cssText = 'display:block; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); z-index:2000;';
-  checkoutModal.innerHTML = `
-    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-soft); color:white; padding:24px; border:1px solid var(--border); border-radius:16px; width:90%; max-width:520px; max-height:70vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.6);">
-      ${previewHTML}
-      <div style="text-align:center; margin-top:20px; display:flex; gap:10px; justify-content:center;">
-        <button onclick="closeCheckoutPreview()" style="background:var(--red); color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">Batal</button>
-        <button onclick="sendToAdmin()" style="background:#25D366; color:white; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600;">✓ Kirim ke Admin</button>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(checkoutModal);
-  checkoutModal.addEventListener('click', function(e){
-    if(e.target === checkoutModal){
-      closeCheckoutPreview();
-    }
-  });
+  previewHTML += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  const m = document.createElement('div');
+  m.id = 'checkoutModal';
+  m.className = 'overlay';
+  m.style.display = 'block';
+  m.innerHTML = `<div class="modal">${previewHTML}
+    <div class="mactions">
+      <button class="danger" onclick="closeCheckoutPreview()">Batal</button>
+      <button class="wa" onclick="sendToAdmin()">✓ Kirim ke Admin</button>
+    </div></div>`;
+  document.body.appendChild(m);
+  m.addEventListener('click', e => { if(e.target === m) closeCheckoutPreview(); });
 }
-
-function closeCheckoutPreview(){
-  const modal = document.getElementById('checkoutModal');
-  if(modal) modal.remove();
-}
+function closeCheckoutPreview(){ const m = document.getElementById('checkoutModal'); if(m) m.remove(); }
 
 function sendToAdmin(){
-  if(cart.length==0){
-    alert("Keranjang kosong!");
-    return;
-  }
-
-  // Event analytics: lapor ke GA4 setiap checkout diteruskan ke WA admin
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
   if(typeof gtag === "function"){
-    const totalValue = cart.reduce((sum, p) => sum + (p.price || 0), 0);
+    const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
     gtag("event", "checkout_whatsapp", { item_count: cart.length, value: totalValue, currency: "IDR" });
   }
-
   let text = "Halo saya mau beli:%0A";
-  cart.forEach(p=>{
-    text += "- "+p.name+" (Rp "+p.price+")%0A";
-  });
-
-  // Jika jumlah item lebih dari 3, arahkan ke Admin 1
-  if(cart.length > 3){
-    closeCheckoutPreview();
-    window.open("https://wa.me/6289664299571?text="+text);
-    return;
-  }
-
-  // Cek tipe item di keranjang - KHUSUS ADMIN 2
+  cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
+  if(cart.length > 3){ closeCheckoutPreview(); window.open("https://wa.me/6289664299571?text="+text); return; }
   const hasFishIt = cart.some(item => item.name.toLowerCase().includes("fish it"));
   const hasSab = cart.some(item => item.name.toLowerCase().includes("sab"));
   const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
@@ -1203,118 +1077,52 @@ function sendToAdmin(){
   const hasGrowAGarden = cart.some(item => item.name.toLowerCase().includes("grow a garden"));
   const hasIceGolem = cart.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
   const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
-  
-  let adminNumber = "6289664299571"; // Default: Admin 1
-  
-  // Jika ada FISH IT, SAB, Top Up Robux, Gamepass, atau Steal a brainrot, arahkan ke Admin 2
-  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal){
-    adminNumber = "6283114900053";
-  }
-  
-  // Jika ada Grow A Garden di keranjang, selalu arahkan ke nomor 6289664299571
-  if(hasGrowAGarden){
-    adminNumber = "6289664299571";
-  }
-  
-  // Jika ada Ice Golem Titan (Prismatic) di keranjang, arahkan ke nomor 6289664299571
-  if(hasIceGolem){
-    adminNumber = "6289664299571";
-  }
-  
-  // Jika ada Token di keranjang, arahkan ke nomor 6283114900053
-  if(hasToken){
-    adminNumber = "6283114900053";
-  }
-
+  let adminNumber = "6289664299571";
+  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal) adminNumber = "6283114900053";
+  if(hasGrowAGarden) adminNumber = "6289664299571";
+  if(hasIceGolem) adminNumber = "6289664299571";
+  if(hasToken) adminNumber = "6283114900053";
   closeCheckoutPreview();
   window.open("https://wa.me/"+adminNumber+"?text="+text);
 }
 
 function openCartModal(){
-  if(cart.length==0){
-    alert("Keranjang kosong!");
-    return;
-  }
-
-  let cartHTML = '';
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  let html = '';
   let totalPrice = 0;
-  
   cart.forEach((item, index) => {
     totalPrice += item.price;
-    cartHTML += `
-      <div style="background:var(--card); padding:12px; margin:10px 0; border-radius:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; gap:10px;">
-        <div style="color:white; font-size:13.5px; flex:1;">
-          <strong>${index+1}. ${item.name}</strong><br>
-          <span style="color:var(--accent-2); font-weight:600;">Rp ${item.price.toLocaleString()}</span>
-        </div>
-        <button onclick="removeFromCart(${index})" style="background:var(--red); color:white; padding:6px 12px; border:none; border-radius:6px; cursor:pointer; font-family:'Poppins',sans-serif; font-weight:600; font-size:12.5px; white-space:nowrap;">Hapus</button>
-      </div>
-    `;
+    html += `
+      <div class="mrow">
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">Rp ${item.price.toLocaleString()}</span></div>
+        <button class="del" onclick="removeFromCart(${index})">Hapus</button>
+      </div>`;
   });
-  
-  cartHTML += `
-    <div style="border-top:1px solid var(--border); padding-top:14px; margin-top:14px; color:white;">
-      <strong>💰 TOTAL: Rp ${totalPrice.toLocaleString()}</strong><br>
-      <span style="color:var(--muted); font-size:13px;">📦 Total Item: ${cart.length}</span>
-    </div>
-  `;
-  
-  document.getElementById("cartList").innerHTML = cartHTML;
+  html += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  document.getElementById("cartList").innerHTML = html;
   document.getElementById("cartModal").style.display = "block";
 }
-
 function removeFromCart(index){
   cart.splice(index, 1);
-  document.getElementById("cart").innerText = cart.length;
-  document.getElementById("total").innerText = cart.length;
-  
-  if(cart.length === 0){
-    document.getElementById("cartModal").style.display = "none";
-    alert("Keranjang sekarang kosong");
-    return;
-  }
-  
+  syncCart();
+  if(cart.length === 0){ closeCartModal(); return; }
   openCartModal();
 }
-
-function closeCartModal(){
-  document.getElementById("cartModal").style.display = "none";
-}
-
-// Close modal kalau klik di luar modal
-document.addEventListener('click', function(e){
-  const modal = document.getElementById("cartModal");
-  if(e.target === modal){
-    closeCartModal();
-  }
+function closeCartModal(){ document.getElementById("cartModal").style.display = "none"; }
+document.getElementById("cartModal").addEventListener('click', e => {
+  if(e.target.id === "cartModal") closeCartModal();
 });
-
 function cancelCheckout(){
-  if(cart.length==0){
-    alert("Keranjang sudah kosong!");
-    return;
-  }
-  
-  if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus dari keranjang.")){
+  if(cart.length==0){ alert("Keranjang sudah kosong!"); return; }
+  if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus.")){
     cart = [];
-    document.getElementById("cart").innerText = "0";
-    document.getElementById("total").innerText = "0";
-    alert("Checkout dibatalkan. Keranjang sudah dikosongkan.");
+    syncCart();
   }
 }
 
 render();
-
-// Search functionality
-document.getElementById("searchInput").addEventListener("input", function(){
-  searchCatalog();
-});
+document.getElementById("searchInput").addEventListener("input", searchCatalog);
 </script>
-
-<footer style="text-align:center; padding:32px 20px; background:var(--bg-soft); color:var(--muted); margin-top:40px; border-top:1px solid var(--border); font-size:14px;">
-  <p style="margin:0 0 6px; font-size:17px; font-weight:600; color:var(--text); font-family:'Oswald',sans-serif; letter-spacing:0.5px;">No WA Admin: <a href="https://wa.me/6289664299571" target="_blank" style="color:#25d366; text-decoration:none; cursor:pointer;">+6289664299571</a></p>
-  <p style="margin:0; color:var(--muted);">TikTok: @rockstarstoree &nbsp;•&nbsp; Rockstar.Store — solusi sepuh roblox kamu</p>
-</footer>
 
 </body>
 </html>
