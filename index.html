@@ -1103,6 +1103,10 @@ function addItem(i,j){
   // Tambahkan kategori gambar sebagai fallback
   const itemToAdd = {...item, categoryImg: categories[i].img};
   cart.push(itemToAdd);
+  // Event analytics: lapor ke GA4 setiap tombol Tambah diklik
+  if(typeof gtag === "function"){
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
+  }
   document.getElementById("cart").innerText = cart.length;
   document.getElementById("total").innerText = cart.length;
 }
@@ -1170,6 +1174,12 @@ function sendToAdmin(){
   if(cart.length==0){
     alert("Keranjang kosong!");
     return;
+  }
+
+  // Event analytics: lapor ke GA4 setiap checkout diteruskan ke WA admin
+  if(typeof gtag === "function"){
+    const totalValue = cart.reduce((sum, p) => sum + (p.price || 0), 0);
+    gtag("event", "checkout_whatsapp", { item_count: cart.length, value: totalValue, currency: "IDR" });
   }
 
   let text = "Halo saya mau beli:%0A";
