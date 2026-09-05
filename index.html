@@ -743,8 +743,8 @@ const brainrotCategories = [
     name: "JATUH FOR BRAINROT",
     img: "JATUH FOR BRAINROT DISPLAY.png ",
     items: [
-      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  3N+/S ", price: 10000, originalPrice: 100000, img: "FALL FOR BRAINROT ETERNAL RANDOM 3 N.png", stock: 5, sold: 184},
-      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  10N+O/S ", price: 15000, originalPrice: 150000, img: "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", stock: 5, sold: 184},
+      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  50N+/S ", price: 10000, originalPrice: 100000, img: "FALL FOR BRAINROT ETERNAL RANDOM 3 N.png", stock: 5, sold: 184},
+      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  100N+/S ", price: 15000, originalPrice: 150000, img: "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", stock: 5, sold: 184},
       
    
     ]
@@ -957,6 +957,7 @@ function itemCard(categories, i, j){
   const thumb = hasCarousel ? `
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
       <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
@@ -1051,7 +1052,7 @@ function addItem(i,j){
   syncCart();
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwXHQgdhFFKatEFgZAQdeDStiBDMM9Yq7B4KrsbmODwPEsUaIugAHEdv8Smx64fpYY/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwhkqH7QQ25QKcrmlp1Ys_5Qu3aLqmIgEe5y8yhfWdhst0FLz5T0yu_N3nQ6qmFKBRwVA/exec";
 
 function decreaseStock(page, i, j){
   const categories = page === 'brainrot' ? brainrotCategories : topupCategories;
@@ -1178,11 +1179,17 @@ function loadLiveStock(){
       try {
         const arr = Array.isArray(data) ? data : [];
         const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = Number(o.stock); });
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim() }; });
         [brainrotCategories, topupCategories].forEach(cats =>
           cats.forEach(c => c.items.forEach(it => {
             const k = String(it.name).trim();
-            if (k in map) it.stock = map[k];
+            if (k in map) {
+              const v = map[k];
+              const flagged = v.soldout !== "" && v.soldout !== "0" && v.soldout !== "TIDAK" && v.soldout !== "NO";
+              it.stock = flagged ? 0 : v.stock;
+              if (v.price > 0) it.price = v.price;
+              if (v.image) { it.img = v.image; it.images = null; }
+            }
           })));
       } catch(e) {}
       resolve();
