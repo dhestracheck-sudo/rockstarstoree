@@ -307,6 +307,17 @@ header {
   transition: filter 0.15s ease;
 }
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
+.item .btn.stockbtn {
+  background: #1a2440;
+  border: 1px solid var(--line);
+  box-shadow: none;
+  margin-top: 0;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mut);
+}
+.item .btn.stockbtn:hover:not(:disabled) { color: #fff; border-color: var(--blue); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
 
 /* carousel inside item (multi-photo) */
@@ -773,7 +784,8 @@ const brainrotCategories = [
       {name: "token tsunami brainrot(300)", price: 10000, img: "token.png",sold: 1000},
       {name: "token tsunami brainrot(1000)", price: 30000, img: "token.png",sold: 500},
       {name: "token grow a garden(250)", price: 10000, img: "token.png",sold: 200},
-      {name: "fish it(chat admin)", price: 0000, img: "token.png",sold: 100},
+              
+     
     ]
   },
   {
@@ -936,6 +948,8 @@ function searchCatalog(){
 function itemCard(categories, i, j){
   const item = categories[i].items[j];
   const category = categories[i];
+  const page = (categories === brainrotCategories) ? 'brainrot' : 'topup';
+  const uid = `${page}-${i}-${j}`;
   const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
   const hasCarousel = item.images && item.images.length > 1;
   const itemImg = item.img || (item.images && item.images[0]) || category.img;
@@ -962,14 +976,15 @@ function itemCard(categories, i, j){
       <h3>${item.name}</h3>
       <div class="meta">
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
-        ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
+        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
       </div>
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <button class="btn" id="addbtn-${uid}" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <button class="btn stockbtn" onclick="decreaseStock('${page}',${i},${j})">− Kurangi Stok</button>
     </div>
   </div>`;
 }
@@ -1034,6 +1049,37 @@ function addItem(i,j){
     gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
   }
   syncCart();
+}
+
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwXHQgdhFFKatEFgZAQdeDStiBDMM9Yq7B4KrsbmODwPEsUaIugAHEdv8Smx64fpYY/exec";
+
+function decreaseStock(page, i, j){
+  const categories = page === 'brainrot' ? brainrotCategories : topupCategories;
+  const item = categories[i].items[j];
+  const cur = Number(item.stock || 0);
+  if(cur <= 0){ alert("Stok sudah habis!"); return; }
+  const next = cur - 1;
+  item.stock = next;
+  const uid = `${page}-${i}-${j}`;
+  const stockEl = document.getElementById(`stock-${uid}`);
+  if(stockEl){
+    stockEl.innerText = next > 0 ? `Stok: ${next}` : "Stok habis";
+    if(next === 0) stockEl.style.color = "var(--red)";
+  }
+  const addBtn = document.getElementById(`addbtn-${uid}`);
+  if(addBtn && next === 0){ addBtn.disabled = true; addBtn.innerText = "Stok Habis"; }
+  if(typeof gtag === "function"){
+    gtag("event", "decrease_stock", { item_name: item.name, new_stock: next, currency: "IDR" });
+  }
+  const sheet = page === 'brainrot' ? "Brainrot" : "Top Up";
+  fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ item_name: item.name, new_stock: next, sheet })
+  }).then(r => r.json()).then(d => {
+    if(d.result === "success") alert("✅ Stok jadi " + next + ", tersimpan di Sheets.");
+    else alert("Web terupdate (stok " + next + "), tapi Sheets: " + d.result);
+  }).catch(() => alert("Stok web jadi " + next + ", tapi gagal kirim ke Sheets (cek koneksi)."));
 }
 
 function checkout(){
@@ -1124,8 +1170,34 @@ function cancelCheckout(){
   }
 }
 
-render();
-document.getElementById("searchInput").addEventListener("input", searchCatalog);
+function loadLiveStock(){
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, 5000);
+    window.__stockCb = data => {
+      clearTimeout(timer);
+      try {
+        const arr = Array.isArray(data) ? data : [];
+        const map = {};
+        arr.forEach(o => { map[String(o.name).trim()] = Number(o.stock); });
+        [brainrotCategories, topupCategories].forEach(cats =>
+          cats.forEach(c => c.items.forEach(it => {
+            const k = String(it.name).trim();
+            if (k in map) it.stock = map[k];
+          })));
+      } catch(e) {}
+      resolve();
+    };
+    const s = document.createElement('script');
+    s.src = SHEET_URL + "?callback=__stockCb&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+loadLiveStock().then(() => {
+  render();
+  document.getElementById("searchInput").addEventListener("input", searchCatalog);
+});
 </script>
 
 </body>
