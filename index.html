@@ -223,7 +223,7 @@ header {
   color: var(--blue2);
 }
 .banner small { color: var(--blue2); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; }
-.banner h3 { font-family: 'Oswald', sans-serif; font-size: 32px; margin: 6px 0 4px; }
+.banner h3 { font-family: 'Oswald', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
 .banner p { color: var(--mut); font-size: 13.5px; margin: 0; }
 
 /* ===== category cards ===== */
@@ -484,6 +484,7 @@ footer {
 footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 @media (max-width: 760px) {
+  body { background-attachment: scroll; }
   header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
   .searchwrap { order: 3; flex-basis: 100%; }
   .hero { flex-direction: column; padding: 40px 18px 10px; text-align: center; }
@@ -514,7 +515,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. 🚀</p>
     <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">📢 Join Saluran WhatsApp</a>
     <div class="hero-cta">
-      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog Brainrot/Pet/Token/Tanaman 🧠</button>
+      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button>
       <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
     </div>
   </div>
@@ -947,8 +948,8 @@ function render(){
     el.innerHTML = `
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
-          <small>BRAINROT • PET • TOKEN</small>
-          <h3>🧠 Katalog Brainrot/Pet/Token/Tanaman</h3>
+          <small>BRAINROT • PET • TOKEN • TANAMAN</small>
+          <h3>🧠 Katalog Brainrot</h3>
           <p>Solusi sepuh roblox kamu — puluhan kategori item.</p>
         </div>
         <div class="banner" onclick="goToTopUp()">
@@ -966,7 +967,7 @@ function render(){
   }
   const categories = getCurrentCategories();
   title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
-    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot/Pet/Token/Tanaman' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
+    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
