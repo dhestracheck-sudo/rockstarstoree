@@ -641,7 +641,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <section class="section server-cta" id="serverCta">
   <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.png" alt="Rockstar Avatar - Link Server"></a>
-  <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER</b></div>
+  <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
 </section>
 
 <footer>
@@ -1309,7 +1309,7 @@ function loadLiveStock(){
               if (v.price > 0) it.price = v.price;
               if (v.sold > 0) it.sold = v.sold;
               if (v.image) {
-                const files = v.image.split(",").map(s => s.trim()).filter(Boolean);
+                const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
                 if (files.length > 1) { it.img = files[0]; it.images = files; }
                 else if (files.length === 1) { it.img = files[0]; it.images = null; }
               }
