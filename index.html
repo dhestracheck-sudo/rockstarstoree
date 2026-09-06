@@ -162,13 +162,54 @@ header {
 .btn-primary:hover { transform: translateY(-2px); }
 .btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
 .btn-ghost:hover { border-color: var(--blue); }
-.hero-visual { flex: 0.8; display: flex; justify-content: center; }
-.hero-visual img {
+.hero-visual { flex: 0.8; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.hero-visual a { cursor: pointer; }
+.ava-caption {
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1.4px;
+  line-height: 1.7;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(43,78,255,0.28), rgba(43,78,255,0.07));
+  border: 1px solid rgba(111,139,255,0.55);
+  border-radius: 16px;
+  padding: 12px 24px;
+  box-shadow: 0 0 28px rgba(43,78,255,0.35), inset 0 0 18px rgba(43,78,255,0.12);
+}
+.ava-caption .finger { display: inline-block; font-size: 20px; animation: point 1.4s ease-in-out infinite; }
+.ava-caption b { color: var(--blue2); }
+@keyframes point { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.hero-visual img.hero-logo {
+  width: min(200px, 60%);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.hero-visual img:not(.hero-logo) {
   width: min(340px, 80%);
   border-radius: 24px;
   border: 1px solid var(--line);
   box-shadow: 0 0 0 8px rgba(43,78,255,0.08), 0 30px 80px rgba(43,78,255,0.3);
 }
+
+/* ===== server links ===== */
+.serverbtns { display: flex; gap: 12px; flex-wrap: wrap; }
+.serverbtn {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+  background: rgba(43,78,255,0.12);
+  border: 1px solid var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.serverbtn:hover { background: var(--blue); transform: translateY(-2px); }
 
 /* ===== stats strip ===== */
 .stats {
@@ -369,6 +410,18 @@ header {
 .step b { font-size: 14.5px; }
 .step p { margin: 4px 0 0; font-size: 13px; color: var(--mut); line-height: 1.6; }
 
+/* ===== bottom server CTA ===== */
+.server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.server-cta .ava-big { cursor: pointer; }
+.server-cta .ava-big img {
+  width: min(300px, 70vw);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 8px rgba(43,78,255,0.08), 0 30px 80px rgba(43,78,255,0.3);
+  transition: transform 0.2s ease;
+}
+.server-cta .ava-big img:hover { transform: scale(1.03); }
+
 /* ===== floating cart ===== */
 .fab {
   position: fixed;
@@ -495,6 +548,10 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   .section { padding: 32px 16px 6px; }
   .stats { padding: 0 16px; }
   .itemgrid { grid-template-columns: 1fr; }
+  .modal { width: 94vw; padding: 18px 16px; border-radius: 16px; }
+  .modal h2 { font-size: 20px; }
+  .serverbtn { min-width: 0; font-size: 13px; padding: 12px 14px; overflow-wrap: break-word; }
+  .mactions { flex-wrap: wrap; }
 }
 </style>
 </head>
@@ -519,7 +576,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
     </div>
   </div>
-  <div class="hero-visual"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
 </section>
 
 <div class="stats">
@@ -555,6 +612,22 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
 </div>
 
+<div class="overlay" id="serverModal">
+  <div class="modal">
+    <h2>🔗 Link Server Rock Star</h2>
+    <p style="color:var(--mut);font-size:13.5px;margin:0 0 14px;">Klik server untuk join langsung dari Roblox</p>
+    <div class="serverbtns" style="flex-direction:column;">
+      <a class="serverbtn" href="https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" target="_blank" rel="noopener">🎲 Server Kotak Gulung untuk Brainrot</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" target="_blank" rel="noopener">🍂 Server Fall for Brainrot</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=f0a1cedc6be4f041a22d1079ca713f2d&type=Server" target="_blank" rel="noopener">🪙 Server Lempar Koin</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" target="_blank" rel="noopener">🌱 Server Grow A Garden 2</a>
+    </div>
+    <div class="mactions">
+      <button class="ghost" onclick="closeServerModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="cartModal">
   <div class="modal">
     <h2>📋 Keranjang Saya</h2>
@@ -565,6 +638,11 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     </div>
   </div>
 </div>
+
+<section class="section server-cta" id="serverCta">
+  <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.png" alt="Rockstar Avatar - Link Server"></a>
+  <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER</b></div>
+</section>
 
 <footer>
   No WA Admin: <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
@@ -940,9 +1018,15 @@ function discountOf(item){
   return Math.round((1 - item.price / item.originalPrice) * 100);
 }
 
+function syncCta(){
+  const cta = document.getElementById("serverCta");
+  if(cta) cta.style.display = (currentPage === 'home') ? "" : "none";
+}
+
 function render(){
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
+  syncCta();
   if(currentPage === 'home'){
     title.innerHTML = `<h2>Mulai Belanja</h2><p>Pilih kategori di bawah ini</p>`;
     el.innerHTML = `
@@ -996,6 +1080,7 @@ function searchCatalog(){
     return;
   }
   currentPage = out[0].page;
+  syncCta();
   title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
   el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
@@ -1048,6 +1133,7 @@ function itemCard(categories, i, j){
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
+  syncCta();
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
@@ -1109,6 +1195,12 @@ function addItem(i,j){
 }
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyYzWTKdq-8ZTmpcuHo9hx-w4IlirbLsYza7ArUItrAHGoTQzInYOO7VEJ7k0L1SdXcWA/exec";
+
+function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
+function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
+document.getElementById("serverModal").addEventListener('click', e => {
+  if(e.target.id === "serverModal") closeServerModal();
+});
 
 function checkout(){
   if(cart.length==0){ alert("Keranjang kosong!"); return; }
