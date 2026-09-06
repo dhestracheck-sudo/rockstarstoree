@@ -197,7 +197,7 @@ header {
 .section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
 
 /* ===== home banners ===== */
-.banners { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
 .banner {
   position: relative;
   overflow: hidden;
@@ -251,7 +251,7 @@ header {
 }
 
 /* ===== item cards (new style) ===== */
-.itemgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.itemgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 22px; }
 .item {
   background: var(--card);
   border: 1px solid var(--line);
@@ -263,7 +263,7 @@ header {
 }
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
 .item .thumb { position: relative; }
-.item .thumb img { width: 100%; height: 540px; object-fit: cover; display: block; background: #05080f; }
+.item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; }
 .badge-off {
   position: absolute;
   top: 12px; left: 12px;
@@ -307,22 +307,11 @@ header {
   transition: filter 0.15s ease;
 }
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
-.item .btn.stockbtn {
-  background: #1a2440;
-  border: 1px solid var(--line);
-  box-shadow: none;
-  margin-top: 0;
-  padding: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--mut);
-}
-.item .btn.stockbtn:hover:not(:disabled) { color: #fff; border-color: var(--blue); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
 
 /* carousel inside item (multi-photo) */
 .mthumb { position: relative; }
-.mthumb img { width: 100%; height: 340px; object-fit: cover; display: block; background: #05080f; }
+.mthumb img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; background: #05080f; }
 .mnav {
   position: absolute;
   top: 50%;
@@ -354,6 +343,31 @@ header {
   margin-bottom: 18px;
 }
 .backbtn:hover { border-color: var(--blue); color: var(--blue2); }
+
+/* ===== cara beli ===== */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.step .snum {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(43,78,255,0.4);
+}
+.step b { font-size: 14.5px; }
+.step p { margin: 4px 0 0; font-size: 13px; color: var(--mut); line-height: 1.6; }
 
 /* ===== floating cart ===== */
 .fab {
@@ -514,6 +528,18 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <div class="stat"><b>🎁</b><span>Ribuan item & pet</span></div>
 </div>
 
+<section class="section" id="carabeli">
+  <h2>Cara Beli</h2>
+  <p>5 langkah, beres dalam hitungan menit</p>
+  <div class="steps">
+    <div class="step"><span class="snum">1</span><div><b>Pilih item</b><p>Klik <b>Tambah ke Keranjang</b> pada item yang kamu mau.</p></div></div>
+    <div class="step"><span class="snum">2</span><div><b>Checkout</b><p>Buka keranjang 🛒, cek pesanan, klik <b>Checkout</b>.</p></div></div>
+    <div class="step"><span class="snum">3</span><div><b>Kirim ke Admin</b><p>Klik <b>✓ Kirim ke Admin</b> — chat WA terbuka otomatis berisi pesananmu.</p></div></div>
+    <div class="step"><span class="snum">4</span><div><b>Bayar</b><p>Transfer via QRIS / e-wallet / bank sesuai instruksi admin, kirim bukti.</p></div></div>
+    <div class="step"><span class="snum">5</span><div><b>Terima item</b><p>Admin trade/kirim item di dalam game. Cek dan konfirmasi terima. 🚀</p></div></div>
+  </div>
+</section>
+
 <main class="section">
   <div id="pageTitle"></div>
   <div id="products"></div>
@@ -663,8 +689,8 @@ const brainrotCategories = [
     name: "+1 KEKUATAN MENUMBUHKAN LENGAN ANDA",
     img: "+1 MENUMBUHKAN LENGAN DISPLAY.png ",
     items: [
-      {name: "+1 KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 500O+/S", price: 10000, originalPrice: 20000, img: "GROW ARM SOVEREIGN RANDOM 3O S.png", stock: 10, sold: 300},
-      {name: "+1 KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 1N+/S", price: 15000, originalPrice: 30000, img: "GROW ARM SVOREGIN RANDOM 1 N.png", stock: 10, sold: 520},
+      {name: "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 500O+/S", price: 10000, originalPrice: 20000, img: "GROW ARM SOVEREIGN RANDOM 3O S.png", stock: 10, sold: 300},
+      {name: "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 1N+/S", price: 15000, originalPrice: 30000, img: "GROW ARM SVOREGIN RANDOM 1 N.png", stock: 10, sold: 520},
     
     ]
   },
@@ -765,7 +791,7 @@ const brainrotCategories = [
     name: "+ 1 MINE PER KLICK",
     img: "MINE PER KLICK DISPLAY.png ",
     items: [
-      {name: "+ 1 MINE PER KLICK - DAPAT 15 BATU 1 B ", price: 10000, originalPrice: 20000, img:"MINE PER KLICK BATU 1 B.png", stock: 10, sold: 50},
+      {name: "MINE PER KLICK - DAPAT 15 BATU 1 B ", price: 10000, originalPrice: 20000, img:"MINE PER KLICK BATU 1 B.png", stock: 10, sold: 50},
       
        
     ]
@@ -805,6 +831,8 @@ const brainrotCategories = [
     img: "Screenshot 2026-04-16 192032.png",
     items: [
       {name: "tendang block keberuntungan -DAPAT 1 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka ", price: 10000, originalPrice: 30000, img: "KALB COIATOR ASTRAL 4.8Q.png", stock: 3, sold: 54},
+      {name: "tendang block keberuntungan -DAPAT 2 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka ", price: 15000, originalPrice: 60000, img: "KALB COIATOR ASTRAL 4.8Q.png", stock: 3, sold: 54},
+      
       
     ]
   }, 
@@ -880,10 +908,30 @@ const topupCategories = [
   }
 ];;
 
+const akunCategories = [
+  {
+    name: "Akun Sepuh Data Polos",
+    img: "ROBUX.webp",
+    items: [
+      {name: "CONTOH - Akun sepuh data polos (ganti dengan akun asli)", price: 150000, originalPrice: 250000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 1, sold: 0},
+      {name: "CONTOH - Akun sepuh data polos full gamepass (ganti dengan akun asli)", price: 200000, originalPrice: 300000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 1, sold: 0}
+    ]
+  },
+  {
+    name: "Akun Roblox Berbagai Map",
+    img: "ROBUX.webp",
+    items: [
+      {name: "CONTOH - Akun Roblox berbagai map (ganti dengan akun asli)", price: 80000, originalPrice: 120000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 2, sold: 0}
+    ]
+  }
+];
+
+const PAGES = { brainrot: () => brainrotCategories, topup: () => topupCategories, akun: () => akunCategories };
+
+function catsOf(page){ return (PAGES[page] || (() => []))(); }
+
 function getCurrentCategories(){
-  if(currentPage === 'brainrot') return brainrotCategories;
-  if(currentPage === 'topup') return topupCategories;
-  return [];
+  return catsOf(currentPage);
 }
 
 function discountOf(item){
@@ -908,12 +956,17 @@ function render(){
           <h3>💰 Top Up</h3>
           <p>Top up Robux & gamepass harga terbaik.</p>
         </div>
+        <div class="banner" onclick="goToAkun()">
+          <small>AKUN ROBLOX</small>
+          <h3>👤 Akun Roblox</h3>
+          <p>Akun sepuh, data polos, berbagai map — siap pakai.</p>
+        </div>
       </div>`;
     return;
   }
   const categories = getCurrentCategories();
   title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
-    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot/Pet/Token/Tanaman' : 'Top Up'}</h2>
+    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot/Pet/Token/Tanaman' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
@@ -928,8 +981,8 @@ function searchCatalog(){
   const title = document.getElementById("pageTitle");
   if(q === ""){ render(); return; }
   const out = [];
-  ['brainrot', 'topup'].forEach(page => {
-    const cats = page === 'brainrot' ? brainrotCategories : topupCategories;
+  ['brainrot', 'topup', 'akun'].forEach(page => {
+    const cats = catsOf(page);
     cats.forEach((c, i) => {
       c.items.forEach((item, j) => {
         if((c.name + " " + item.name).toLowerCase().includes(q)) out.push({page, i, j, cname: c.name, item});
@@ -944,13 +997,13 @@ function searchCatalog(){
   currentPage = out[0].page;
   title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
-  el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(r.page === 'brainrot' ? brainrotCategories : topupCategories, r.i, r.j)).join("") + `</div>`;
+  el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
 }
 
 function itemCard(categories, i, j){
   const item = categories[i].items[j];
   const category = categories[i];
-  const page = (categories === brainrotCategories) ? 'brainrot' : 'topup';
+  const page = (categories === brainrotCategories) ? 'brainrot' : ((categories === akunCategories) ? 'akun' : 'topup');
   const uid = `${page}-${i}-${j}`;
   const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
   const hasCarousel = item.images && item.images.length > 1;
@@ -986,8 +1039,7 @@ function itemCard(categories, i, j){
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <button class="btn" id="addbtn-${uid}" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
-      <button class="btn stockbtn" onclick="decreaseStock('${page}',${i},${j})">− Kurangi Stok</button>
+      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
   </div>`;
 }
@@ -1037,6 +1089,7 @@ function updateCarousel(i, j, index){
 function goHome(){ currentPage = 'home'; render(); }
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 
 function syncCart(){
   document.getElementById("cartCount").innerText = cart.length;
@@ -1054,36 +1107,7 @@ function addItem(i,j){
   syncCart();
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwhkqH7QQ25QKcrmlp1Ys_5Qu3aLqmIgEe5y8yhfWdhst0FLz5T0yu_N3nQ6qmFKBRwVA/exec";
-
-function decreaseStock(page, i, j){
-  const categories = page === 'brainrot' ? brainrotCategories : topupCategories;
-  const item = categories[i].items[j];
-  const cur = Number(item.stock || 0);
-  if(cur <= 0){ alert("Stok sudah habis!"); return; }
-  const next = cur - 1;
-  item.stock = next;
-  const uid = `${page}-${i}-${j}`;
-  const stockEl = document.getElementById(`stock-${uid}`);
-  if(stockEl){
-    stockEl.innerText = next > 0 ? `Stok: ${next}` : "Stok habis";
-    if(next === 0) stockEl.style.color = "var(--red)";
-  }
-  const addBtn = document.getElementById(`addbtn-${uid}`);
-  if(addBtn && next === 0){ addBtn.disabled = true; addBtn.innerText = "Stok Habis"; }
-  if(typeof gtag === "function"){
-    gtag("event", "decrease_stock", { item_name: item.name, new_stock: next, currency: "IDR" });
-  }
-  const sheet = page === 'brainrot' ? "Brainrot" : "Top Up";
-  fetch(SHEET_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({ item_name: item.name, new_stock: next, sheet })
-  }).then(r => r.json()).then(d => {
-    if(d.result === "success") alert("✅ Stok jadi " + next + ", tersimpan di Sheets.");
-    else alert("Web terupdate (stok " + next + "), tapi Sheets: " + d.result);
-  }).catch(() => alert("Stok web jadi " + next + ", tapi gagal kirim ke Sheets (cek koneksi)."));
-}
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyYzWTKdq-8ZTmpcuHo9hx-w4IlirbLsYza7ArUItrAHGoTQzInYOO7VEJ7k0L1SdXcWA/exec";
 
 function checkout(){
   if(cart.length==0){ alert("Keranjang kosong!"); return; }
@@ -1181,16 +1205,21 @@ function loadLiveStock(){
       try {
         const arr = Array.isArray(data) ? data : [];
         const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim() }; });
-        [brainrotCategories, topupCategories].forEach(cats =>
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
           cats.forEach(c => c.items.forEach(it => {
             const k = String(it.name).trim();
             if (k in map) {
               const v = map[k];
-              const flagged = v.soldout !== "" && v.soldout !== "0" && v.soldout !== "TIDAK" && v.soldout !== "NO";
+              const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
               it.stock = flagged ? 0 : v.stock;
               if (v.price > 0) it.price = v.price;
-              if (v.image) { it.img = v.image; it.images = null; }
+              if (v.sold > 0) it.sold = v.sold;
+              if (v.image) {
+                const files = v.image.split(",").map(s => s.trim()).filter(Boolean);
+                if (files.length > 1) { it.img = files[0]; it.images = files; }
+                else if (files.length === 1) { it.img = files[0]; it.images = null; }
+              }
             }
           })));
       } catch(e) {}
