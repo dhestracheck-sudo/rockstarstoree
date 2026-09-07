@@ -49,23 +49,103 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 
     <button id="upBtn" onclick="upload()">📤 Upload & Pasang Foto</button>
     <div id="status"></div>
+  </div>
 
-    <p class="hint" style="margin-top:18px;">Foto tersimpan di Google Drive, link-nya otomatis masuk kolom Gambar di Sheets. Buka kembali web utama + refresh untuk lihat hasilnya. Stok/harga tetap diubah langsung di aplikasi Sheets.</p>
+  <div class="card" id="editCard" style="display:none;">
+    <label>Harga baru (Rp)</label>
+    <input type="number" id="priceInput" placeholder="misal 15000" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Stok baru</label>
+    <input type="number" id="stockInput" placeholder="misal 10" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="saveBtn" onclick="savePriceStock()">💾 Simpan Harga & Stok</button>
+    <div id="status2"></div>
+  </div>
+
+  <div class="card" id="renameCard" style="display:none;">
+    <label>Nama baru barang</label>
+    <input type="text" id="nameInput" placeholder="nama lengkap baru" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="renameBtn" onclick="renameItem()">✏️ Ganti Nama</button>
+    <div id="status3"></div>
+    <p class="hint" style="margin-top:14px;">Ganti nama aman karena web dibangun dari Sheets — nama baru langsung tampil setelah refresh.</p>
+  </div>
+
+  <div class="card">
+    <p class="hint">Foto tersimpan di Google Drive, link-nya otomatis masuk kolom Gambar di Sheets. Harga, stok, dan nama langsung tertulis ke Sheets. Buka kembali web utama + refresh untuk lihat hasilnya. Tidak perlu upload ke GitHub kecuali update kode.</p>
   </div>
 </div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyqGKu01AdvRWX8BoTkhahIrxx67mn9GBnsZeG1x_a6kmCyIwPlDz-bPaR1aJszXorg7w/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyv1KvraW5UIdMQ3DdqzE1_lzNde4m5j5rTuh2_-VEca3XguzUQ_UxdUZu7elS22CCg1Q/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
 
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
     document.getElementById("mainCard").style.display = "block";
+    document.getElementById("editCard").style.display = "block";
+    document.getElementById("renameCard").style.display = "block";
     loadItems();
   } else {
     alert("PIN salah.");
   }
+}
+
+let ALL_ITEMS = [];
+
+function prefill(){
+  const name = document.getElementById("itemSel").value;
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(o){
+    document.getElementById("priceInput").value = o.price || "";
+    document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
+  }
+}
+
+function postSet(col, value, stEl, btn, okMsg){
+  const name = document.getElementById("itemSel").value;
+  const st = document.getElementById(stEl);
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return Promise.resolve(false); }
+  btn.disabled = true;
+  st.textContent = "Menyimpan...";
+  return fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ action: "set", item_name: name, col: col, value: value, sheet: "Brainrot" })
+  }).then(r => r.text()).then(t => {
+    let d = {};
+    try { d = JSON.parse(t); } catch(e) {}
+    btn.disabled = false;
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">' + okMsg + '</span>';
+      return true;
+    }
+    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+    return false;
+  }).catch(() => {
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>';
+    return false;
+  });
+}
+
+function savePriceStock(){
+  const price = Number(document.getElementById("priceInput").value);
+  const stock = document.getElementById("stockInput").value;
+  const btn = document.getElementById("saveBtn");
+  if(!(price > 0)){ document.getElementById("status2").innerHTML = '<span class="err">Isi harga dulu.</span>'; return; }
+  if(stock === "" || isNaN(Number(stock))){ document.getElementById("status2").innerHTML = '<span class="err">Isi stok dulu.</span>'; return; }
+  postSet(2, price, "status2", btn, "Harga tersimpan, menyimpan stok...").then(ok => {
+    if(ok) postSet(3, Number(stock), "status2", btn, "✅ Harga & stok tersimpan!");
+  });
+}
+
+function renameItem(){
+  const nv = document.getElementById("nameInput").value.trim();
+  const btn = document.getElementById("renameBtn");
+  if(!nv){ document.getElementById("status3").innerHTML = '<span class="err">Isi nama baru dulu.</span>'; return; }
+  if(!confirm("Ganti nama barang ini menjadi:\n" + nv + " ?")) return;
+  postSet(1, nv, "status3", btn, "✅ Nama diganti! Daftar dimuat ulang...").then(ok => {
+    if(ok){ document.getElementById("nameInput").value = ""; loadItems(); }
+  });
 }
 
 function loadItems(){
@@ -74,14 +154,18 @@ function loadItems(){
     window.__names = data => {
       clearTimeout(timer);
       try {
+        const arr = Array.isArray(data) ? data : [];
+        ALL_ITEMS = arr;
         const sel = document.getElementById("itemSel");
         sel.innerHTML = "";
-        (Array.isArray(data) ? data : []).forEach(o => {
+        arr.forEach(o => {
           const op = document.createElement("option");
           op.value = String(o.name).trim();
           op.textContent = String(o.name).trim().slice(0, 70);
           sel.appendChild(op);
         });
+        sel.onchange = prefill;
+        prefill();
       } catch(e) {}
       resolve();
     };
