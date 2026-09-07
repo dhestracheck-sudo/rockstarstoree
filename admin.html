@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
+.wrap { max-width: 560px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
+label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
+select, input[type=password] {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px;
+}
+input[type=file] { width:100%; font-size:13px; color:var(--mut); }
+button {
+  width:100%; margin-top:16px; padding:13px; border:none; border-radius:12px;
+  background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+}
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+#preview { width:100%; border-radius:12px; margin-top:14px; display:none; border:1px solid var(--line); }
+#status { margin-top:14px; font-size:13.5px; line-height:1.6; }
+.ok { color:var(--green); } .err { color:var(--red); }
+.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔧 Admin Rockstar.Store</h1>
+
+  <div class="card" id="pinCard">
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
+    <button onclick="unlock()">Buka Panel</button>
+  </div>
+
+  <div class="card" id="mainCard" style="display:none;">
+    <label>Barang</label>
+    <select id="itemSel"><option>Memuat daftar barang...</option></select>
+
+    <label>Foto baru (kamera / galeri)</label>
+    <input type="file" id="fileInput" accept="image/*">
+    <img id="preview" alt="preview">
+
+    <button id="upBtn" onclick="upload()">📤 Upload & Pasang Foto</button>
+    <div id="status"></div>
+
+    <p class="hint" style="margin-top:18px;">Foto tersimpan di Google Drive, link-nya otomatis masuk kolom Gambar di Sheets. Buka kembali web utama + refresh untuk lihat hasilnya. Stok/harga tetap diubah langsung di aplikasi Sheets.</p>
+  </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyqGKu01AdvRWX8BoTkhahIrxx67mn9GBnsZeG1x_a6kmCyIwPlDz-bPaR1aJszXorg7w/exec";
+const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
+
+function unlock(){
+  if(document.getElementById("pinInput").value === ADMIN_PIN){
+    document.getElementById("pinCard").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+    loadItems();
+  } else {
+    alert("PIN salah.");
+  }
+}
+
+function loadItems(){
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, 8000);
+    window.__names = data => {
+      clearTimeout(timer);
+      try {
+        const sel = document.getElementById("itemSel");
+        sel.innerHTML = "";
+        (Array.isArray(data) ? data : []).forEach(o => {
+          const op = document.createElement("option");
+          op.value = String(o.name).trim();
+          op.textContent = String(o.name).trim().slice(0, 70);
+          sel.appendChild(op);
+        });
+      } catch(e) {}
+      resolve();
+    };
+    const s = document.createElement("script");
+    s.src = SHEET_URL + "?callback=__names&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+document.getElementById("fileInput").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const img = document.getElementById("preview");
+  img.src = URL.createObjectURL(f);
+  img.style.display = "block";
+});
+
+function upload(){
+  const name = document.getElementById("itemSel").value;
+  const f = document.getElementById("fileInput").files[0];
+  const st = document.getElementById("status");
+  const btn = document.getElementById("upBtn");
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  if(!f){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Mengupload, tunggu...";
+  const rd = new FileReader();
+  rd.onload = () => {
+    const base64 = String(rd.result).split(",")[1];
+    fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" })
+    }).then(r => r.text()).then(t => {
+      let d = {};
+      try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
+      if(d.result === "success"){
+        st.innerHTML = '<span class="ok">✅ Foto terpasang!</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
+      } else {
+        st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '</span>';
+      }
+      btn.disabled = false;
+    }).catch(err => {
+      st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
+      btn.disabled = false;
+    });
+  };
+  rd.readAsDataURL(f);
+}
+</script>
+</body>
+</html>
