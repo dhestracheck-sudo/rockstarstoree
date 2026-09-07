@@ -1194,7 +1194,7 @@ function addItem(i,j){
   syncCart();
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyYzWTKdq-8ZTmpcuHo9hx-w4IlirbLsYza7ArUItrAHGoTQzInYOO7VEJ7k0L1SdXcWA/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzDV6robRcWLNv5FtKPyiPst45ceklwaCf38GKlADRPchGEnwX-E0ZPFVFp4YfvQc7GHA/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1297,6 +1297,42 @@ function loadLiveStock(){
       clearTimeout(timer);
       try {
         const arr = Array.isArray(data) ? data : [];
+        const hasKat = arr.some(o => String(o.kategori || "").trim() !== "");
+        if (hasKat) {
+          const codeImg = {};
+          [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+            cats.forEach(c => {
+              const ck = "CAT:" + String(c.name).trim();
+              if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
+              c.items.forEach(it => {
+                const k = String(it.name).trim();
+                if (!(k in codeImg)) {
+                  codeImg[k] = (it.images && it.images[0]) || it.img || "";
+                  if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
+                }
+              });
+            }));
+          const groups = {};
+          const order = [];
+          arr.forEach(o => {
+            const name = String(o.name || "").trim();
+            if (!name) return;
+            const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
+            if (!groups[kat]) { groups[kat] = { name: kat, img: codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
+            let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
+            if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
+            if (!files.length && codeImg[name]) files = [codeImg[name]];
+            const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
+            if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            if (files.length > 1) it.images = files;
+            const g = groups[kat];
+            g.items.push(it);
+            if (!g.img && files[0]) g.img = files[0];
+          });
+          brainrotCategories.length = 0;
+          order.forEach(k => brainrotCategories.push(groups[k]));
+        } else {
         const map = {};
         arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
         [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
@@ -1315,6 +1351,7 @@ function loadLiveStock(){
               }
             }
           })));
+        }
       } catch(e) {}
       resolve();
     };
