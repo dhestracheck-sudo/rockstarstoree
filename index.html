@@ -1195,7 +1195,7 @@ function addItem(i,j){
   syncCart();
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyv1KvraW5UIdMQ3DdqzE1_lzNde4m5j5rTuh2_-VEca3XguzUQ_UxdUZu7elS22CCg1Q/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBzZeScxeCdCCSZiDRGJcVEYzG7_5ftK-qZnV8knIA8u8qWsLfkoRZ2hCEBiwIbXBz/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1315,11 +1315,24 @@ function loadLiveStock(){
             }));
           const groups = {};
           const order = [];
+          const catImgSheet = {};
+          // OVERRIDE FOTO KATEGORI VIA SHEET (tanpa edit kode):
+          // Tambah baris di Sheet Brainrot: name = "CAT:<nama kategori persis>", kategori = "<nama kategori persis>", image = "namafile.png" atau URL drive.
+          // Contoh: name="CAT:be flash for brainrot", kategori="be flash for brainrot", image="BE FLASH BARU.png"
+          // Baris CAT:* tidak tampil sebagai produk, hanya jadi foto display kategori. Sheet menang atas img di kode.
+          arr.forEach(o => {
+            const nm = String(o.name || "").trim();
+            if (!nm || nm.indexOf("CAT:") !== 0) return;
+            const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
+            const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+            if (targetKat && f) catImgSheet[targetKat] = f;
+          });
           arr.forEach(o => {
             const name = String(o.name || "").trim();
             if (!name) return;
+            if (name.indexOf("CAT:") === 0) return;
             const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
-            if (!groups[kat]) { groups[kat] = { name: kat, img: codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
+            if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
             let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
             if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
             if (!files.length && codeImg[name]) files = [codeImg[name]];
@@ -1331,13 +1344,20 @@ function loadLiveStock(){
             g.items.push(it);
             if (!g.img && files[0]) g.img = files[0];
           });
+          Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
           brainrotCategories.length = 0;
           order.forEach(k => brainrotCategories.push(groups[k]));
         } else {
         const map = {};
         arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
         [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
-          cats.forEach(c => c.items.forEach(it => {
+          cats.forEach(c => {
+            const catKey = "CAT:" + String(c.name).trim();
+            if (catKey in map && map[catKey].image) {
+              const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
+              if (cf.length) c.img = cf[0];
+            }
+            c.items.forEach(it => {
             const k = String(it.name).trim();
             if (k in map) {
               const v = map[k];
@@ -1351,7 +1371,9 @@ function loadLiveStock(){
                 else if (files.length === 1) { it.img = files[0]; it.images = null; }
               }
             }
-          })));
+            });
+          })
+        );
         }
       } catch(e) {}
       resolve();
