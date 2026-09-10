@@ -41,9 +41,10 @@ function canonKey_(header) {
   return null;
 }
 
-function getSheet_(name) {
+function getSheet_(name, create) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = name ? ss.getSheetByName(name) : null;
+  if (!sh && create && name) sh = ss.insertSheet(String(name).slice(0, 100));
   if (!sh) sh = ss.getSheetByName(SHEET_DEFAULT);
   if (!sh) sh = ss.getSheets()[0];
   return sh;
@@ -51,7 +52,7 @@ function getSheet_(name) {
 
 function readTable_() {
   var p = (typeof arguments[0] === "string") ? { sheet: arguments[0] } : (arguments[0] || {});
-  var sh = getSheet_(p.sheet);
+  var sh = getSheet_(p.sheet, true);
   var vals = sh.getDataRange().getValues();
   if (!vals.length) return { sheet: sh, headers: [], idx: {}, rows: [] };
   var headers = vals[0];

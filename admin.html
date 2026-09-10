@@ -39,6 +39,15 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <button onclick="unlock()">Buka Panel</button>
   </div>
 
+  <div class="card" id="sheetCard" style="display:none;">
+    <label>Tab Sheet yang dikelola</label>
+    <select id="sheetSel" onchange="loadItems()">
+      <option value="Brainrot">Brainrot</option>
+      <option value="Akun">Akun</option>
+    </select>
+    <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
+  </div>
+
   <div class="card" id="mainCard" style="display:none;">
     <label>Barang</label>
     <select id="itemSel"><option>Memuat daftar barang...</option></select>
@@ -119,9 +128,15 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBzZeScxeCdCCSZiDRGJcVEYzG7_5ftK-qZnV8knIA8u8qWsLfkoRZ2hCEBiwIbXBz/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
 
+function CURSHEET(){
+  const s = document.getElementById("sheetSel");
+  return (s && s.value) ? s.value : "Brainrot";
+}
+
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
+    document.getElementById("sheetCard").style.display = "block";
     document.getElementById("mainCard").style.display = "block";
     document.getElementById("slideCard").style.display = "block";
     document.getElementById("catCard").style.display = "block";
@@ -161,7 +176,7 @@ function postSet(col, value, stEl, btn, okMsg){
   return fetch(SHEET_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({ action: "set", item_name: name, col: col, value: value, sheet: "Brainrot" })
+    body: JSON.stringify({ action: "set", item_name: name, col: col, value: value, sheet: CURSHEET() })
   }).then(r => r.text()).then(t => {
     let d = {};
     try { d = JSON.parse(t); } catch(e) {}
@@ -246,7 +261,7 @@ function loadItems(){
       resolve();
     };
     const s = document.createElement("script");
-    s.src = SHEET_URL + "?callback=__names&t=" + Date.now();
+    s.src = SHEET_URL + "?callback=__names&sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now();
     s.onerror = () => { clearTimeout(timer); resolve(); };
     document.head.appendChild(s);
   });
@@ -300,7 +315,7 @@ function saveSlides(arr, stMsg){
   const st = document.getElementById("statusSlide");
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
   st.textContent = "Menyimpan...";
-  postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 10).join("|"), sheet: "Brainrot" }).then(d => {
+  postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 10).join("|"), sheet: CURSHEET() }).then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">' + (stMsg || '✅ Tersimpan!') + '</span>';
       loadItems();
@@ -318,7 +333,7 @@ function slideUploadToSlot(i, f){
   rd.onload = () => {
     const base64 = String(rd.result).split(",")[1];
     const name = document.getElementById("itemSel").value;
-    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" }).then(d => {
+    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() }).then(d => {
       if(d.result === "success" && d.url){
         const arr = curSlides();
         arr[i] = d.url;
@@ -363,7 +378,7 @@ function slideAddFile(){
   rd.onload = () => {
     const base64 = String(rd.result).split(",")[1];
     const name = document.getElementById("itemSel").value;
-    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" }).then(d => {
+    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() }).then(d => {
       if(d.result === "success" && d.url){
         arr.push(d.url);
         saveSlides(arr, '✅ Slide ditambah!');
@@ -402,7 +417,7 @@ function uploadCat(){
     fetch(SHEET_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot", kategori: kat })
+      body: JSON.stringify({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET(), kategori: kat })
     }).then(r => r.text()).then(t => {
       let d = {};
       try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
@@ -436,7 +451,7 @@ function upload(){
     fetch(SHEET_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" })
+      body: JSON.stringify({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() })
     }).then(r => r.text()).then(t => {
       let d = {};
       try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
@@ -479,10 +494,10 @@ function renameCat(){
   let chain = Promise.resolve(true);
   targets.forEach(o => {
     const nm = String(o.name).trim();
-    chain = chain.then(() => postOne({ action: "set", item_name: nm, col: "kategori", value: newKat, sheet: "Brainrot" }));
+    chain = chain.then(() => postOne({ action: "set", item_name: nm, col: "kategori", value: newKat, sheet: CURSHEET() }));
   });
-  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: "kategori", value: newKat, sheet: "Brainrot" }));
-  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: 1, value: "CAT:" + newKat, sheet: "Brainrot" }));
+  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: "kategori", value: newKat, sheet: CURSHEET() }));
+  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: 1, value: "CAT:" + newKat, sheet: CURSHEET() }));
   chain.then(() => {
     if (!f) {
       st.innerHTML = '<span class="ok">✅ Nama kategori diganti! Refresh web utama.</span>';
@@ -495,7 +510,7 @@ function renameCat(){
     const rd = new FileReader();
     rd.onload = () => {
       const base64 = String(rd.result).split(",")[1];
-      postOne({ action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot", kategori: newKat })
+      postOne({ action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET(), kategori: newKat })
       .then(d => {
         if (d.result === "success") st.innerHTML = '<span class="ok">✅ Nama + foto kategori diganti! Refresh web utama.</span>';
         else st.innerHTML = '<span class="err">Nama diganti, foto gagal: ' + (d.result || "?") + '</span>';

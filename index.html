@@ -1292,97 +1292,112 @@ function cancelCheckout(){
   }
 }
 
-function loadLiveStock(){
+function fetchSheet(sheet, cbName){
   return new Promise(resolve => {
-    const timer = setTimeout(resolve, 5000);
-    window.__stockCb = data => {
+    const timer = setTimeout(() => resolve([]), 5000);
+    window[cbName] = data => {
       clearTimeout(timer);
-      try {
-        const arr = Array.isArray(data) ? data : [];
-        const hasKat = arr.some(o => String(o.kategori || "").trim() !== "");
-        if (hasKat) {
-          const codeImg = {};
-          [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
-            cats.forEach(c => {
-              const ck = "CAT:" + String(c.name).trim();
-              if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
-              c.items.forEach(it => {
-                const k = String(it.name).trim();
-                if (!(k in codeImg)) {
-                  codeImg[k] = (it.images && it.images[0]) || it.img || "";
-                  if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
-                }
-              });
-            }));
-          const groups = {};
-          const order = [];
-          const catImgSheet = {};
-          // OVERRIDE FOTO KATEGORI VIA SHEET (tanpa edit kode):
-          // Tambah baris di Sheet Brainrot: name = "CAT:<nama kategori persis>", kategori = "<nama kategori persis>", image = "namafile.png" atau URL drive.
-          // Contoh: name="CAT:be flash for brainrot", kategori="be flash for brainrot", image="BE FLASH BARU.png"
-          // Baris CAT:* tidak tampil sebagai produk, hanya jadi foto display kategori. Sheet menang atas img di kode.
-          arr.forEach(o => {
-            const nm = String(o.name || "").trim();
-            if (!nm || nm.indexOf("CAT:") !== 0) return;
-            const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
-            const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
-            if (targetKat && f) catImgSheet[targetKat] = f;
-          });
-          arr.forEach(o => {
-            const name = String(o.name || "").trim();
-            if (!name) return;
-            if (name.indexOf("CAT:") === 0) return;
-            const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
-            if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
-            let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
-            if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
-            if (!files.length && codeImg[name]) files = [codeImg[name]];
-            const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
-            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
-            if (Number(o.sold) > 0) it.sold = Number(o.sold);
-            if (files.length > 1) it.images = files;
-            const g = groups[kat];
-            g.items.push(it);
-            if (!g.img && files[0]) g.img = files[0];
-          });
-          Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
-          brainrotCategories.length = 0;
-          order.forEach(k => brainrotCategories.push(groups[k]));
-        } else {
-        const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
-        [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
-          cats.forEach(c => {
-            const catKey = "CAT:" + String(c.name).trim();
-            if (catKey in map && map[catKey].image) {
-              const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
-              if (cf.length) c.img = cf[0];
-            }
-            c.items.forEach(it => {
-            const k = String(it.name).trim();
-            if (k in map) {
-              const v = map[k];
-              const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
-              it.stock = flagged ? 0 : v.stock;
-              if (v.price > 0) it.price = v.price;
-              if (v.sold > 0) it.sold = v.sold;
-              if (v.image) {
-                const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
-                if (files.length > 1) { it.img = files[0]; it.images = files; }
-                else if (files.length === 1) { it.img = files[0]; it.images = null; }
-              }
-            }
-            });
-          })
-        );
-        }
-      } catch(e) {}
-      resolve();
+      resolve(Array.isArray(data) ? data : []);
     };
     const s = document.createElement('script');
-    s.src = SHEET_URL + "?callback=__stockCb&t=" + Date.now();
-    s.onerror = () => { clearTimeout(timer); resolve(); };
+    s.src = SHEET_URL + "?callback=" + cbName + "&sheet=" + encodeURIComponent(sheet) + "&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve([]); };
     document.head.appendChild(s);
+  });
+}
+
+function buildCodeImg(){
+  const codeImg = {};
+  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+    cats.forEach(c => {
+      const ck = "CAT:" + String(c.name).trim();
+      if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
+      c.items.forEach(it => {
+        const k = String(it.name).trim();
+        if (!(k in codeImg)) {
+          codeImg[k] = (it.images && it.images[0]) || it.img || "";
+          if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
+        }
+      });
+    }));
+  return codeImg;
+}
+
+// Bangun ulang 1 halaman katalog dari 1 tab Sheet (sistem sama untuk Brainrot & Akun).
+// Tab Sheet: name | kategori | price | stock | soldout | image | sold
+// Baris name = "CAT:<nama kategori>" = foto display kategori (tidak tampil sebagai produk).
+function rebuildFromSheet(arr, targetCats){
+  const codeImg = buildCodeImg();
+  const groups = {};
+  const order = [];
+  const catImgSheet = {};
+  arr.forEach(o => {
+    const nm = String(o.name || "").trim();
+    if (!nm || nm.indexOf("CAT:") !== 0) return;
+    const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
+    const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+    if (targetKat && f) catImgSheet[targetKat] = f;
+  });
+  arr.forEach(o => {
+    const name = String(o.name || "").trim();
+    if (!name) return;
+    if (name.indexOf("CAT:") === 0) return;
+    const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
+    if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
+    let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
+    if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
+    if (!files.length && codeImg[name]) files = [codeImg[name]];
+    const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+    const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
+    if (Number(o.sold) > 0) it.sold = Number(o.sold);
+    if (files.length > 1) it.images = files;
+    const g = groups[kat];
+    g.items.push(it);
+    if (!g.img && files[0]) g.img = files[0];
+  });
+  Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
+  targetCats.length = 0;
+  order.forEach(k => targetCats.push(groups[k]));
+}
+
+function mergeFromSheet(arr){
+  const map = {};
+  arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+    cats.forEach(c => {
+      const catKey = "CAT:" + String(c.name).trim();
+      if (catKey in map && map[catKey].image) {
+        const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
+        if (cf.length) c.img = cf[0];
+      }
+      c.items.forEach(it => {
+      const k = String(it.name).trim();
+      if (k in map) {
+        const v = map[k];
+        const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
+        it.stock = flagged ? 0 : v.stock;
+        if (v.price > 0) it.price = v.price;
+        if (v.sold > 0) it.sold = v.sold;
+        if (v.image) {
+          const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
+          if (files.length > 1) { it.img = files[0]; it.images = files; }
+          else if (files.length === 1) { it.img = files[0]; it.images = null; }
+        }
+      }
+      });
+    })
+  );
+}
+
+function loadLiveStock(){
+  return Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]).then(res => {
+    try {
+      const b = res[0], a = res[1];
+      if (b.length && b.some(o => String(o.kategori || "").trim() !== "")) rebuildFromSheet(b, brainrotCategories);
+      else if (b.length) mergeFromSheet(b);
+      if (a.length && a.some(o => String(o.kategori || "").trim() !== "")) rebuildFromSheet(a, akunCategories);
+      else if (a.length) mergeFromSheet(a);
+    } catch(e) {}
   });
 }
 
