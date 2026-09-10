@@ -51,6 +51,19 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <div id="status"></div>
   </div>
 
+  <div class="card" id="slideCard" style="display:none;">
+    <label>Foto slide barang (maks 5) — ganti / tambah / hapus</label>
+    <div id="slideList"></div>
+    <label>Tambah dari file (kamera / galeri)</label>
+    <input type="file" id="slideFileInput" accept="image/*">
+    <button id="slideAddBtn" onclick="slideAddFile()">➕ Tambah Foto Ini</button>
+    <label>Tambah dari link (URL Drive / gambar)</label>
+    <input type="text" id="slideUrlInput" placeholder="https://..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="slideUrlBtn" onclick="slideAddUrl()">🔗 Tambah Link Ini</button>
+    <div id="statusSlide"></div>
+    <p class="hint" style="margin-top:14px;">Slide 1 = foto utama. Tersimpan di Sheet kolom <b>image</b> dipisah <b>|</b>, web otomatis jadi carousel.</p>
+  </div>
+
   <div class="card" id="catCard" style="display:none;">
     <label>Foto DISPLAY kategori (ganti img kategori tanpa kode)</label>
     <select id="catSel"><option>Memuat kategori...</option></select>
@@ -110,6 +123,7 @@ function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
     document.getElementById("mainCard").style.display = "block";
+    document.getElementById("slideCard").style.display = "block";
     document.getElementById("catCard").style.display = "block";
     document.getElementById("editCard").style.display = "block";
     document.getElementById("renameCard").style.display = "block";
@@ -130,9 +144,11 @@ function prefill(){
     document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
     document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
+    renderSlides();
   } else {
     document.getElementById("catInfo").textContent = "-";
     document.getElementById("catInfo2").textContent = "-";
+    renderSlides();
   }
 }
 
@@ -251,6 +267,124 @@ document.getElementById("catFileInput").addEventListener("change", e => {
   img.src = URL.createObjectURL(f);
   img.style.display = "block";
 });
+
+function curSlides(){
+  const name = document.getElementById("itemSel").value;
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(!o) return [];
+  return String(o.image || "").split("|").map(s => s.trim()).filter(Boolean).slice(0, 5);
+}
+
+function renderSlides(){
+  const box = document.getElementById("slideList");
+  const arr = curSlides();
+  if(!arr.length){ box.innerHTML = '<p class="hint">Belum ada foto. Tambahkan di bawah (maks 5).</p>'; return; }
+  box.innerHTML = arr.map((u, i) =>
+    '<div style="display:flex;gap:10px;align-items:center;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;">' +
+    '<img src="' + u.replace(/"/g, "&quot;") + '" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\'">' +
+    '<div style="flex:1;font-size:12px;word-break:break-all;">Slide ' + (i+1) + (i===0 ? ' (utama)' : '') + '<br><span style="color:var(--mut);">' + u.slice(0, 60) + (u.length > 60 ? '...' : '') + '</span></div>' +
+    '<div style="display:flex;flex-direction:column;gap:6px;">' +
+    (i===0 ? '' : '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMain(' + i + ')">⭐ Utama</button>') +
+    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideReplace(' + i + ')">🔄 Ganti</button>' +
+    '<button style="margin:0;padding:7px 10px;font-size:12px;background:#5a2330;" onclick="slideDelete(' + i + ')">🗑️</button>' +
+    '</div></div>'
+  ).join("") + '<input type="file" id="slideReplaceInput" accept="image/*" style="display:none;">';
+  document.getElementById("slideReplaceInput").addEventListener("change", e => {
+    const f = e.target.files[0];
+    if(f) slideUploadToSlot(parseInt(e.target.dataset.slot, 10), f);
+  });
+}
+
+function saveSlides(arr, stMsg){
+  const name = document.getElementById("itemSel").value;
+  const st = document.getElementById("statusSlide");
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  st.textContent = "Menyimpan...";
+  postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 5).join("|"), sheet: "Brainrot" }).then(d => {
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">' + (stMsg || '✅ Tersimpan!') + '</span>';
+      loadItems();
+    } else {
+      st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+    }
+  });
+}
+
+function slideUploadToSlot(i, f){
+  const st = document.getElementById("statusSlide");
+  if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  st.textContent = "Mengupload...";
+  const rd = new FileReader();
+  rd.onload = () => {
+    const base64 = String(rd.result).split(",")[1];
+    const name = document.getElementById("itemSel").value;
+    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" }).then(d => {
+      if(d.result === "success" && d.url){
+        const arr = curSlides();
+        arr[i] = d.url;
+        saveSlides(arr, '✅ Slide ' + (i+1) + ' diganti!');
+        document.getElementById("slideFileInput").value = "";
+      } else {
+        st.innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
+      }
+    });
+  };
+  rd.readAsDataURL(f);
+}
+
+function slideReplace(i){
+  const inp = document.getElementById("slideReplaceInput");
+  inp.dataset.slot = i;
+  inp.click();
+}
+
+function slideDelete(i){
+  const arr = curSlides();
+  if(!confirm("Hapus slide " + (i+1) + " ?")) return;
+  arr.splice(i, 1);
+  saveSlides(arr, '✅ Slide dihapus!');
+}
+
+function slideMain(i){
+  const arr = curSlides();
+  const u = arr.splice(i, 1)[0];
+  arr.unshift(u);
+  saveSlides(arr, '✅ Slide ' + (i+1) + ' jadi foto utama!');
+}
+
+function slideAddFile(){
+  const arr = curSlides();
+  if(arr.length >= 5){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 5 slide.</span>'; return; }
+  const f = document.getElementById("slideFileInput").files[0];
+  if(!f){ document.getElementById("statusSlide").innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  document.getElementById("statusSlide").textContent = "Mengupload...";
+  const rd = new FileReader();
+  rd.onload = () => {
+    const base64 = String(rd.result).split(",")[1];
+    const name = document.getElementById("itemSel").value;
+    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" }).then(d => {
+      if(d.result === "success" && d.url){
+        arr.push(d.url);
+        saveSlides(arr, '✅ Slide ditambah!');
+        document.getElementById("slideFileInput").value = "";
+      } else {
+        document.getElementById("statusSlide").innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
+      }
+    });
+  };
+  rd.readAsDataURL(f);
+}
+
+function slideAddUrl(){
+  const arr = curSlides();
+  if(arr.length >= 5){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 5 slide.</span>'; return; }
+  const u = document.getElementById("slideUrlInput").value.trim();
+  if(!u){ document.getElementById("statusSlide").innerHTML = '<span class="err">Tempel link dulu.</span>'; return; }
+  arr.push(u);
+  saveSlides(arr, '✅ Link ditambah!');
+  document.getElementById("slideUrlInput").value = "";
+}
 
 function uploadCat(){
   const kat = document.getElementById("catSel").value;
