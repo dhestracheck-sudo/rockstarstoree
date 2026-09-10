@@ -1156,6 +1156,10 @@ function showItems(i){
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
     `<div class="itemgrid">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
+  // preload semua foto kategori yang dibuka supaya carousel langsung tampil
+  category.items.forEach(it => {
+    (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
+  });
 }
 
 function chatAdmin(){
@@ -1185,7 +1189,17 @@ function updateCarousel(i, j, index){
   const item = categories[i].items[j];
   const imgEl = document.getElementById(`carousel-${i}-${j}`);
   const dotsContainer = document.getElementById(`dots-${i}-${j}`);
-  if(imgEl) imgEl.src = fixImg(item.images[index]);
+  if(imgEl){
+    delete imgEl.dataset.retry;
+    imgEl.onerror = function(){ imgErr(imgEl); };
+    imgEl.src = fixImg(item.images[index]);
+    // preload slide tetangga biar pindah slide instan
+    [index + 1, index - 1].forEach(k => {
+      const n = (k + item.images.length) % item.images.length;
+      const pre = new Image();
+      pre.src = fixImg(item.images[n]);
+    });
+  }
   if(dotsContainer){
     dotsContainer.querySelectorAll('i').forEach((d, idx) => d.classList.toggle('on', idx === index));
   }
