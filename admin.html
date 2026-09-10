@@ -190,6 +190,10 @@ function unlock(){
 
 let ALL_ITEMS = [];
 
+// Foto bawaan dari kode web (dipakai kalau kolom image Sheet masih kosong).
+// Dibuat otomatis dari index.html — jangan edit manual.
+const FALLBACK_IMG_MAP = {"KOTAK GULUNG UNTUK BRAINROT - 1 BRAINROT RANDOM LV MAX  500SX+/S(TERGANTUNG)": "ROLL CASE BRAINROT MECHA CERBERUS 40SX.png", "KOTAK GULUNG UNTUK BRAINROT - 1 BRAINROT RANDOM LV MAX  1SP+/S(TERGANTUNG)": "ROLL CASE BRAINROT 1SP RANDOM BRAINROT.png", "block keberuntungan ledakan daya - 1 BRAINROT RANDOM ILAHI TDC/s+": "BLOCK KEBERUNTUNGAN LEDAKAN DAYA TDC.png", "block keberuntungan ledakan daya - 1 BRAINROT RANDOM OMEGA QADC/s+": "BLOCK KEBERUNTUNGAN LEDAKAN DAYA QADC.png", "Grow A Garden 2 - DAPAT 1 STAR FRUIT SEED": "GAG2 SEED STRAFRUIT.png", "Grow A Garden 2 - DAPAT 1 SUN BLOOM SEED": "GAG2 SUN BLOOM SEED.png", "Grow A Garden 2 - DAPAT 4 MOON BLOOM SEED (PROMO TERBATAS)": "GAG2 SEED MOON BLOOM.png", "Grow A Garden 2 - DAPAT 4 HYPNO BLOOM SEED (PROMO TERBATAS)": "GAG 2 HYPO BLOOM.png", "Grow A Garden 2 - DAPAT 2 DRAGON BRETH SEED": "GAG 2 DRAGON BRETH SEED.png", "Grow A Garden 2 - DAPAT 4 VENOM SEED": "GAG2 VENOM SEED.png", "Grow A Garden 2 - DAPAT 3 GHOST PAPER SEED": "gag 2 ghost paper seed .png", "Grow A Garden 2 - DAPAT 2 VENUS FLY TRAP SEED": "GAG 2 VENUS FLY TRAP.png", "Grow A Garden 2 - DAPAT 1 PET BALD EAGLE (MYTIC)": "GAG2 BALD EAGLE.png", "Grow A Garden 2 - DAPAT 1 PET UNICORN (MYTIC)": "GAG2 UNICORN.png|GAG2 UNICORN SKILL.png", "Grow A Garden 2 - DAPAT 1 PET BEAR (MYTIC)": "GAG 2 BEAR PET.png", "Grow A Garden 2 - DAPAT 1 DRAGONFLY (MYTIC)": "GAG2 DRAGONFLY.png|GAG2 DRAGONFLY SKILL.png", "Grow A Garden 2 - DAPAT 10 MEGA SEED": "GAG2 MEGA SEED.png", "Grow A Garden 2 - DAPAT 300m sheckless(duit gag2)via buah": "GAG2 9M SHECKLESS.png", "Grow A Garden 2 - DAPAT 1B sheckless(duit gag2)via buah": "GAG2 9M SHECKLESS.png", "Grow A Garden 2 - DAPAT 15 SUPER SPRINKLE (GEAR)": "GAG2 SUPER SPRINKLE.png", "Grow A Garden 2 - DAPAT 15 SUPER WATERING (GEAR)": "GAG 2 SUPER WATERING.png", "be flash for brainrot - 1 BRAINROT RANDOM 10QI/S": "flash brainrot brainrot random10qi.png", "be flash for brainrot - 1 GOD ESOK SEKOLA 50%": "flash brainrot esok god 55PERSEN.png", "build a base and steal - 1 YETI OG(INFERNO) 1B/S": "BUILD AND STEAL BASE YETI INFERNO 1B.png", "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN - 1 BRAINROT MASTODONTIK OMNIVERSE (HACKER) 700SP+/s": "NAIK DAN JATUHKAN BLOCK OMNIVERSE MASTORDENTIK LV MAX 700SP.png", "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN - 1 BRAINROT CAPTAIN MOBY OMNIVERSE (HACKER) 300SP/s": "NAIK DAN JATUHKAN BLOCK OMINVERSE KAPTAIN MOBY LV MAX 300SP.png", "drill for brainrot - 1 ketupat kepat inf/s(tamat)": "Screenshot 2026-04-18 102335.png", "drill for brainrot - 2 ketupat kepat inf/s(tamat)": "Screenshot 2026-04-18 102335.png", "drill for brainrot - 1 MY EXAME 16M/s duit bulan": "DRILL BRAINROT MY EXAME 16M S.png", "drill for brainrot - 2 NUCLEARO 16M/s duit bulan": "DRILL BRAINROT MY EXAME 16M S.png", "Swing obby for brainrot - naga sepuh lv 500.000(langsung tamat)": "Screenshot 2026-04-14 055828.png", "CAPYBARA VS TANAMAN - 1 ANGEL CAPYBARA TITAN 600K DPS": "CAPYBARA VS TANAMAN ANGEL CAPYBARA TITAN 600K DPS.png", "CAPYBARA VS TANAMAN - 1 SHINIGAMI CAPYBARA TITAN 1.3M DPS": "CAPYBARA VS TANAMAN SHINIGAMI CAPYBARA TITAN 1.3M DPS.png", "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 500O+/S": "GROW ARM SOVEREIGN RANDOM 3O S.png", "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 1N+/S": "GROW ARM SVOREGIN RANDOM 1 N.png", "STEAL A EGG - 1 PET RANDOM 100M/S+": "STEAL A EGG PET RANDOM 100M.png", "BECOME A BRAINROT - 1 BRAINROT STELLAR RANDOM LV MAX(500)": "BECOME BRAINROT STELLAR RANDOM LV MAX.png", "BECOME A BRAINROT - UP LV MAX 2 BRAINROT BEBAS": "BECOME A BRAINROT DISPLAY.png", "di dalam kepala brainrot - 1 ABADI RANDOM 1sp/s+": "INSIDE BRAINROT HEAD ETERHNAL 1SP.png", "di dalam kepala brainrot - 2 ABADI RANDOM 1sp/s+": "INSIDE BRAINROT HEAD ETERHNAL 1SP.png", "di dalam kepala brainrot - 1 ABADI RANDOM 1sx/s+": "inside brainrot head abadi 1sx.png", "di dalam kepala brainrot - 2 ABADI RANDOM 1sx/s+": "inside brainrot head abadi 1sx.png", "BE MONKEY FOR BRAINROT - DAPAT 1 BRAINROT ALMIGHTY 69 1SXI/S LV MAX": "BE MONKEY 69 1 SX ALGMYTI.png", "BE MONKEY FOR BRAINROT - DAPAT 2 BRAINROT ALMIGHTY 69 1SXI/S LV MAX": "BE MONKEY 69 1 SX ALGMYTI.png", "pecahkan tape for brainrot - 1 brainrot RANDOM 1SX+/S": "TAPE BRAINROT 1SX .png", "pecahkan tape for brainrot - 2 brainrot RANDOM 1SX+/S": "TAPE BRAINROT 1SX .png", "LEPAR KOIN - DAPAT 10 SUN PALACE (SOVEREIGN) 239 DD TERGANTUNG LUCK UANG": "LEMPAR KOIN TURBIN 500 DC.png", "LEPAR KOIN - DAPAT 20 SUN PALACE (SOVEREIGN) 239 DD TERGANTUNG LUCK UANG": "LEMPAR KOIN TURBIN 500 DC.png", "SWING WEB FOR LUCKY BLOCK - 1 BRAINROT ADMIN RANDOM 1QI/S+ TERGANTUNG REBIRTH (LANGSUNG SEPUH)": "SWING WEB BRAINROT ADMIN RANDOM 1QI.png", "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  500N+/S": "FALL FOR BRAINROT ETERNAL RANDOM 3 N.png", "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  1DE+/S": "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", "JATUH FOR BRAINROT - 1 BRAINROT TRANSENDENT LV MAX 1UD+/S": "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", "BRAIN BLAST FOR LUCKY BLOCK - 1 BRAINROT RANDOM EMPEREYAN 40 QA+/S(TERGANTUNG REBIRTH) LV MAX": "BRAINBLAST EMPERAYAEN 40QA+.png", "BRAIN BLAST FOR LUCKY BLOCK - 2 BRAINROT RANDOM EMPEREYAN 40 QA+/S(TERGANTUNG REBIRTH) LV MAX": "BRAINBLAST EMPERAYAEN 40QA+.png", "MINE PER KLICK - DAPAT 15 BATU 1 B": "MINE PER KLICK BATU 1 B.png", "steal a brainrot-chat admin": "WhatsApp Image 2026-04-14 at 08.02.58.png", "steal a brainrot-1 garam dan madung": "WhatsApp Image 2026-04-17 at 13.13.31.png", "token tsunami brainrot(300)": "token.png", "token tsunami brainrot(1000)": "token.png", "token grow a garden(250)": "token.png", "RUSH LUCKY BLOCK - 2 MALAM XEON 1.6T+/S LV MAX TERGANTUNG REBIRTH + BONUS": "RUSH LUCKY BLOCK XEON 1.6T.png", "RUSH LUCKY BLOCK - 4 MALAM XEON 1.6T+/S LV MAX TERGANTUNG REBIRTH + BONUS": "RUSH LUCKY BLOCK XEON 1.6T.png", "tendang block keberuntungan -DAPAT 1 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka": "KALB COIATOR ASTRAL 4.8Q.png", "tendang block keberuntungan -DAPAT 2 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka": "KALB COIATOR ASTRAL 4.8Q.png", "Top Up robux(via login) - 80 ROBUX": "ROBUX.webp", "Top Up robux(via login) - 160 ROBUX": "ROBUX.webp", "Top Up robux(via login) - 240 ROBUX": "ROBUX.webp", "Top Up robux(via login) - 320 ROBUX": "ROBUX.webp", "Top Up robux(via login) - 500 ROBUX": "ROBUX.webp", "Top Up robux(via login) - 1000 ROBUX": "ROBUX.webp", "Game pass ALL GAME- 1 ROBUX (CONTOH BELI GAMEPAS 86 ROBUX BERARTI 86 X 150RP)": "ROBUX.webp", "CONTOH - Akun sepuh data polos (ganti dengan akun asli)": "ROBUX.webp|token.png", "CONTOH - Akun sepuh data polos full gamepass (ganti dengan akun asli)": "ROBUX.webp|token.png", "CONTOH - Akun Roblox berbagai map (ganti dengan akun asli)": "ROBUX.webp|token.png"};
+
 function prefill(){
   const name = document.getElementById("itemSel").value;
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
@@ -345,7 +349,7 @@ function renderPreview(name, o){
     document.getElementById("prevPrice").textContent = "-";
     return;
   }
-  const first = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+  const first = imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean)[0] || "";
   if(first) img.src = first; else img.removeAttribute("src");
   const n = v => (v === 0 || v) ? Number(v).toLocaleString("id-ID") : "-";
   document.getElementById("prevMeta").textContent =
@@ -353,18 +357,26 @@ function renderPreview(name, o){
   document.getElementById("prevPrice").textContent = "Rp " + n(o.price);
 }
 
+function imgRawOf(name){
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(!o) return { v: "", fb: false };
+  const s = String(o.image || "").trim();
+  if(s) return { v: s, fb: false };
+  return { v: FALLBACK_IMG_MAP[name] || "", fb: true };
+}
+
 function curSlides(){
   const name = document.getElementById("itemSel").value;
-  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
-  if(!o) return [];
-  return String(o.image || "").split("|").map(s => s.trim()).filter(Boolean).slice(0, 10);
+  return imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean).slice(0, 10);
 }
 
 function renderSlides(){
   const box = document.getElementById("slideList");
-  const arr = curSlides();
+  const name = document.getElementById("itemSel").value;
+  const src = imgRawOf(name);
+  const arr = src.v.split("|").map(s => s.trim()).filter(Boolean).slice(0, 10);
   if(!arr.length){ box.innerHTML = '<p class="hint">Belum ada foto. Tambahkan di bawah (maks 10).</p>'; return; }
-  box.innerHTML = arr.map((u, i) =>
+  box.innerHTML = (src.fb ? '<p class="hint">Foto bawaan kode (Sheet masih kosong) — ubah/tambah untuk menulis ke Sheet.</p>' : '') + arr.map((u, i) =>
     '<div style="display:flex;gap:10px;align-items:center;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;">' +
     '<img src="' + u.replace(/"/g, "&quot;") + '" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\'">' +
     '<div style="flex:1;font-size:12px;word-break:break-all;">Slide ' + (i+1) + (i===0 ? ' (utama)' : '') + '<br><span style="color:var(--mut);">' + u.slice(0, 60) + (u.length > 60 ? '...' : '') + '</span></div>' +
