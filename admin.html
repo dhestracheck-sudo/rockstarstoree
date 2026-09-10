@@ -54,19 +54,12 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
-    <label>Barang (produk) yang diedit</label>
+    <label>Barang (produk) yang diedit — berlaku untuk semua panel 📦 di bawah</label>
     <select id="itemSel"><option>Memuat daftar barang...</option></select>
-
-    <label>Foto baru (kamera / galeri)</label>
-    <input type="file" id="fileInput" accept="image/*">
-    <img id="preview" alt="preview">
-
-    <button id="upBtn" onclick="upload()">📤 Upload & Pasang Foto</button>
-    <div id="status"></div>
   </div>
 
   <div class="card" id="slideCard" style="display:none;">
-    <label>Foto slide barang (maks 10) — ganti / tambah / hapus</label>
+    <label>Foto barang (maks 10 slide) — ganti / tambah / hapus di sini</label>
     <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
     <div id="slideList"></div>
     <label>Tambah dari file (kamera / galeri)</label>
@@ -321,14 +314,6 @@ function loadItems(){
   });
 }
 
-document.getElementById("fileInput").addEventListener("change", e => {
-  const f = e.target.files[0];
-  if(!f) return;
-  const img = document.getElementById("preview");
-  img.src = URL.createObjectURL(f);
-  img.style.display = "block";
-});
-
 document.getElementById("catFileInput").addEventListener("change", e => {
   const f = e.target.files[0];
   if(!f) return;
@@ -479,40 +464,6 @@ function uploadCat(){
         st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
       } else {
         st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '. Kalau baris CAT belum ada, tambah manual 1 baris di Sheet: name=CAT:' + kat + ', kategori=' + kat + ', lalu upload ulang.</span>';
-      }
-      btn.disabled = false;
-    }).catch(err => {
-      st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
-      btn.disabled = false;
-    });
-  };
-  rd.readAsDataURL(f);
-}
-
-function upload(){
-  const name = document.getElementById("itemSel").value;
-  const f = document.getElementById("fileInput").files[0];
-  const st = document.getElementById("status");
-  const btn = document.getElementById("upBtn");
-  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
-  if(!f){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
-  if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
-  btn.disabled = true;
-  st.textContent = "Mengupload, tunggu...";
-  const rd = new FileReader();
-  rd.onload = () => {
-    const base64 = String(rd.result).split(",")[1];
-    fetch(SHEET_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() })
-    }).then(r => r.text()).then(t => {
-      let d = {};
-      try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
-      if(d.result === "success"){
-        st.innerHTML = '<span class="ok">✅ Foto terpasang!</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
-      } else {
-        st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '</span>';
       }
       btn.disabled = false;
     }).catch(err => {
