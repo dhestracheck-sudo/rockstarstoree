@@ -415,23 +415,20 @@ function saveSlides(arr, stMsg){
 function slideUploadToSlot(i, f){
   const st = document.getElementById("statusSlide");
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
-  st.textContent = "Mengupload...";
-  const rd = new FileReader();
-  rd.onload = () => {
-    const base64 = String(rd.result).split(",")[1];
-    const name = document.getElementById("itemSel").value;
-    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() }).then(d => {
-      if(d.result === "success" && d.url){
-        const arr = curSlides();
-        arr[i] = d.url;
-        saveSlides(arr, '✅ Slide ' + (i+1) + ' diganti!');
-        document.getElementById("slideFileInput").value = "";
-      } else {
-        st.innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
-      }
-    });
-  };
-  rd.readAsDataURL(f);
+  st.textContent = "Memeriksa & mengupload...";
+  const name = document.getElementById("itemSel").value;
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+    if(d.result === "success" && d.url){
+      const arr = curSlides();
+      arr[i] = d.url;
+      saveSlides(arr, '✅ Slide ' + (i+1) + ' diganti!');
+      document.getElementById("slideFileInput").value = "";
+    } else if(String(d.result || "").indexOf("file rusak") !== -1){
+      st.innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
+    } else {
+      st.innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
+    }
+  });
 }
 
 function slideReplace(i){
@@ -460,22 +457,19 @@ function slideAddFile(){
   const f = document.getElementById("slideFileInput").files[0];
   if(!f){ document.getElementById("statusSlide").innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
   if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
-  document.getElementById("statusSlide").textContent = "Mengupload...";
-  const rd = new FileReader();
-  rd.onload = () => {
-    const base64 = String(rd.result).split(",")[1];
-    const name = document.getElementById("itemSel").value;
-    postOne({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET() }).then(d => {
-      if(d.result === "success" && d.url){
-        arr.push(d.url);
-        saveSlides(arr, '✅ Slide ditambah!');
-        document.getElementById("slideFileInput").value = "";
-      } else {
-        document.getElementById("statusSlide").innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
-      }
-    });
-  };
-  rd.readAsDataURL(f);
+  document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
+  const name = document.getElementById("itemSel").value;
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+    if(d.result === "success" && d.url){
+      arr.push(d.url);
+      saveSlides(arr, '✅ Slide ditambah!');
+      document.getElementById("slideFileInput").value = "";
+    } else if(String(d.result || "").indexOf("file rusak") !== -1){
+      document.getElementById("statusSlide").innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
+    } else {
+      document.getElementById("statusSlide").innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
+    }
+  });
 }
 
 function slideAddUrl(){
@@ -497,29 +491,20 @@ function uploadCat(){
   if(!f){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   btn.disabled = true;
-  st.textContent = "Mengupload foto kategori, tunggu...";
-  const rd = new FileReader();
-  rd.onload = () => {
-    const base64 = String(rd.result).split(",")[1];
-    fetch(SHEET_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET(), kategori: kat })
-    }).then(r => r.text()).then(t => {
-      let d = {};
-      try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
-      if(d.result === "success"){
-        st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
-      } else {
-        st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '. Kalau baris CAT belum ada, tambah manual 1 baris di Sheet: name=CAT:' + kat + ', kategori=' + kat + ', lalu upload ulang.</span>';
-      }
-      btn.disabled = false;
-    }).catch(err => {
-      st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
-      btn.disabled = false;
-    });
-  };
-  rd.readAsDataURL(f);
+  st.textContent = "Memeriksa & mengupload foto kategori, tunggu...";
+  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(d => {
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
+    } else if(String(d.result || "").indexOf("file rusak") !== -1){
+      st.innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
+    } else {
+      st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '. Kalau baris CAT belum ada, tambah manual 1 baris di Sheet: name=CAT:' + kat + ', kategori=' + kat + ', lalu upload ulang.</span>';
+    }
+    btn.disabled = false;
+  }).catch(err => {
+    st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
+    btn.disabled = false;
+  });
 }
 
 function needAdd_(d, st, btn){
@@ -552,18 +537,16 @@ function addCategory(){
       return;
     }
     if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (kategori sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
-    st.textContent = "Kategori ok, mengupload foto...";
-    const rd = new FileReader();
-    rd.onload = () => {
-      postOne({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: String(rd.result).split(",")[1], sheet: CURSHEET(), kategori: kat }).then(u => {
-        st.innerHTML = u.result === "success" ? '<span class="ok">✅ Kategori + foto ditambah!</span>' : '<span class="err">Kategori ditambah, foto gagal: ' + (u.result || "?") + '</span>';
-        document.getElementById("addCatName").value = "";
-        document.getElementById("addCatFile").value = "";
-        btn.disabled = false;
-        loadItems();
-      });
-    };
-    rd.readAsDataURL(f);
+    st.textContent = "Kategori ok, memeriksa & mengupload foto...";
+    sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(u => {
+      if(u.result === "success") st.innerHTML = '<span class="ok">✅ Kategori + foto ditambah!</span>';
+      else if(String(u.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Kategori ditambah, tapi file rusak / bukan gambar — upload ulang pakai JPG/PNG.</span>';
+      else st.innerHTML = '<span class="err">Kategori ditambah, foto gagal: ' + (u.result || "?") + '</span>';
+      document.getElementById("addCatName").value = "";
+      document.getElementById("addCatFile").value = "";
+      btn.disabled = false;
+      loadItems();
+    });
   });
 }
 
@@ -592,18 +575,16 @@ function addProduct(){
       return;
     }
     if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
-    st.textContent = "Produk ok, mengupload foto...";
-    const rd = new FileReader();
-    rd.onload = () => {
-      postOne({ action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", file: String(rd.result).split(",")[1], sheet: CURSHEET() }).then(u => {
-        st.innerHTML = u.result === "success" ? '<span class="ok">✅ Produk + foto ditambah!</span>' : '<span class="err">Produk ditambah, foto gagal: ' + (u.result || "?") + '</span>';
-        document.getElementById("addName").value = "";
-        document.getElementById("addFile").value = "";
-        btn.disabled = false;
-        loadItems();
-      });
-    };
-    rd.readAsDataURL(f);
+    st.textContent = "Produk ok, memeriksa & mengupload foto...";
+    sendUpload(f, { action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(u => {
+      if(u.result === "success") st.innerHTML = '<span class="ok">✅ Produk + foto ditambah!</span>';
+      else if(String(u.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Produk ditambah, tapi file rusak / bukan gambar — tambah ulang via panel slide pakai JPG/PNG.</span>';
+      else st.innerHTML = '<span class="err">Produk ditambah, foto gagal: ' + (u.result || "?") + '</span>';
+      document.getElementById("addName").value = "";
+      document.getElementById("addFile").value = "";
+      btn.disabled = false;
+      loadItems();
+    });
   });
 }
 
@@ -630,6 +611,35 @@ function postOne(body) {
     body: JSON.stringify(body)
   }).then(r => r.text()).then(t => {
     try { return JSON.parse(t); } catch(e) { return { result: "error: respon aneh" }; }
+  });
+}
+
+// Cek file benar-benar gambar yang bisa dibuka browser (tolak file rusak/HEIC/tipe aneh).
+function validImageFile(f){
+  return new Promise(resolve => {
+    if(!f){ resolve(false); return; }
+    if(f.type && String(f.type).indexOf("image/") !== 0){ resolve(false); return; }
+    const url = URL.createObjectURL(f);
+    const im = new Image();
+    im.onload = () => { URL.revokeObjectURL(url); resolve(true); };
+    im.onerror = () => { URL.revokeObjectURL(url); resolve(false); };
+    im.src = url;
+  });
+}
+
+// Upload file yang sudah lolos validasi. body = {action:"upload", item_name, ...} tanpa file.
+function sendUpload(f, body){
+  return validImageFile(f).then(ok => {
+    if(!ok) return { result: "error: file rusak / bukan gambar (pakai JPG/PNG)" };
+    return new Promise(resolve => {
+      const rd = new FileReader();
+      rd.onload = () => {
+        body.file = String(rd.result).split(",")[1];
+        postOne(body).then(resolve);
+      };
+      rd.onerror = () => resolve({ result: "error: gagal baca file" });
+      rd.readAsDataURL(f);
+    });
   });
 }
 
@@ -660,19 +670,15 @@ function renameCat(){
       return;
     }
     if (f.size > 8 * 1024 * 1024) { st.innerHTML = '<span class="err">Foto maksimal 8 MB (nama sudah diganti).</span>'; btn.disabled = false; loadItems(); return; }
-    st.textContent = "Nama ok, mengupload foto...";
-    const rd = new FileReader();
-    rd.onload = () => {
-      const base64 = String(rd.result).split(",")[1];
-      postOne({ action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: CURSHEET(), kategori: newKat })
-      .then(d => {
-        if (d.result === "success") st.innerHTML = '<span class="ok">✅ Nama + foto kategori diganti! Refresh web utama.</span>';
-        else st.innerHTML = '<span class="err">Nama diganti, foto gagal: ' + (d.result || "?") + '</span>';
-        btn.disabled = false;
-        loadItems();
-      });
-    };
-    rd.readAsDataURL(f);
+    st.textContent = "Nama ok, memeriksa & mengupload foto...";
+    sendUpload(f, { action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: newKat })
+    .then(d => {
+      if (d.result === "success") st.innerHTML = '<span class="ok">✅ Nama + foto kategori diganti! Refresh web utama.</span>';
+      else if (String(d.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Nama diganti, tapi file rusak / bukan gambar — upload ulang pakai JPG/PNG.</span>';
+      else st.innerHTML = '<span class="err">Nama diganti, foto gagal: ' + (d.result || "?") + '</span>';
+      btn.disabled = false;
+      loadItems();
+    });
   }).catch(() => { st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; btn.disabled = false; });
 }
 </script>
