@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
+.wrap { max-width: 560px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
+label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
+select, input[type=password] {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px;
+}
+input[type=file] { width:100%; font-size:13px; color:var(--mut); }
+button {
+  width:100%; margin-top:16px; padding:13px; border:none; border-radius:12px;
+  background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+}
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+#preview { width:100%; border-radius:12px; margin-top:14px; display:none; border:1px solid var(--line); }
+#status { margin-top:14px; font-size:13.5px; line-height:1.6; }
+.ok { color:var(--green); } .err { color:var(--red); }
+.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🔧 Admin Rockstar.Store</h1>
+
+  <div class="card" id="pinCard">
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
+    <button onclick="unlock()">Buka Panel</button>
+  </div>
+
+  <div class="card" id="mainCard" style="display:none;">
+    <label>Barang</label>
+    <select id="itemSel"><option>Memuat daftar barang...</option></select>
+
+    <label>Foto baru (kamera / galeri)</label>
+    <input type="file" id="fileInput" accept="image/*">
+    <img id="preview" alt="preview">
+
+    <button id="upBtn" onclick="upload()">📤 Upload & Pasang Foto</button>
+    <div id="status"></div>
+  </div>
+
+  <div class="card" id="catCard" style="display:none;">
+    <label>Foto DISPLAY kategori (ganti img kategori tanpa kode)</label>
+    <select id="catSel"><option>Memuat kategori...</option></select>
+
+    <label>Foto kategori baru (kamera / galeri)</label>
+    <input type="file" id="catFileInput" accept="image/*">
+    <img id="catPreview" alt="preview" style="width:100%;border-radius:12px;margin-top:14px;display:none;border:1px solid var(--line);">
+
+    <button id="catUpBtn" onclick="uploadCat()">🖼️ Upload & Pasang Foto Kategori</button>
+    <div id="statusCat"></div>
+    <p class="hint" style="margin-top:14px;">Contoh: pilih kategori <b>be flash for brainrot</b> lalu upload — otomatis mengganti <b>img: "BE FALSH DISPLAY.png"</b> di web. Tersimpan sebagai baris <b>CAT:be flash for brainrot</b> di Sheet, tidak tampil sebagai produk. Kalau backend belum buat baris otomatis, tambah manual 1 baris di Sheet: name=<b>CAT:be flash for brainrot</b>, kategori=<b>be flash for brainrot</b>, image=kosongkan, lalu upload ulang dari sini.</p>
+  </div>
+
+  <div class="card" id="editCard" style="display:none;">
+    <label>Kategori barang terpilih</label>
+    <div id="catInfo" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
+    <label>Harga baru (Rp)</label>
+    <input type="number" id="priceInput" placeholder="misal 15000" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Stok baru</label>
+    <input type="number" id="stockInput" placeholder="misal 10" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="saveBtn" onclick="savePriceStock()">💾 Simpan Harga & Stok</button>
+    <div id="status2"></div>
+  </div>
+
+  <div class="card" id="renameCard" style="display:none;">
+    <label>Kategori barang terpilih</label>
+    <div id="catInfo2" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
+    <label>Nama baru barang</label>
+    <input type="text" id="nameInput" placeholder="nama lengkap baru" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="renameBtn" onclick="renameItem()">✏️ Ganti Nama</button>
+    <div id="status3"></div>
+    <p class="hint" style="margin-top:14px;">Ganti nama aman karena web dibangun dari Sheets — nama baru langsung tampil setelah refresh.</p>
+  </div>
+
+  <div class="card" id="renameCatCard" style="display:none;">
+    <label>Ganti nama kategori + foto display sekaligus</label>
+    <select id="catRenameSel"><option>Memuat kategori...</option></select>
+    <label>Nama kategori baru</label>
+    <input type="text" id="catNameInput" placeholder="misal KOTAK GULUNG BRAINROT NEW" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Foto kategori baru (opsional, kamera / galeri)</label>
+    <input type="file" id="catRenameFileInput" accept="image/*">
+    <button id="renameCatBtn" onclick="renameCat()">✏️🖼️ Ganti Nama + Foto Kategori</button>
+    <div id="statusCatRename"></div>
+    <p class="hint" style="margin-top:14px;">Ini mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus, jadi nama dan foto ganti bareng tanpa edit kode.</p>
+  </div>
+
+  <div class="card">
+    <p class="hint">Foto tersimpan di Google Drive, link-nya otomatis masuk kolom Gambar di Sheets. Harga, stok, dan nama langsung tertulis ke Sheets. Buka kembali web utama + refresh untuk lihat hasilnya. Tidak perlu upload ke GitHub kecuali update kode.</p>
+  </div>
+</div>
+
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBzZeScxeCdCCSZiDRGJcVEYzG7_5ftK-qZnV8knIA8u8qWsLfkoRZ2hCEBiwIbXBz/exec";
+const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
+
+function unlock(){
+  if(document.getElementById("pinInput").value === ADMIN_PIN){
+    document.getElementById("pinCard").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+    document.getElementById("catCard").style.display = "block";
+    document.getElementById("editCard").style.display = "block";
+    document.getElementById("renameCard").style.display = "block";
+    document.getElementById("renameCatCard").style.display = "block";
+    loadItems();
+  } else {
+    alert("PIN salah.");
+  }
+}
+
+let ALL_ITEMS = [];
+
+function prefill(){
+  const name = document.getElementById("itemSel").value;
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(o){
+    document.getElementById("priceInput").value = o.price || "";
+    document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
+    document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
+    document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
+  } else {
+    document.getElementById("catInfo").textContent = "-";
+    document.getElementById("catInfo2").textContent = "-";
+  }
+}
+
+function postSet(col, value, stEl, btn, okMsg){
+  const name = document.getElementById("itemSel").value;
+  const st = document.getElementById(stEl);
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return Promise.resolve(false); }
+  btn.disabled = true;
+  st.textContent = "Menyimpan...";
+  return fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({ action: "set", item_name: name, col: col, value: value, sheet: "Brainrot" })
+  }).then(r => r.text()).then(t => {
+    let d = {};
+    try { d = JSON.parse(t); } catch(e) {}
+    btn.disabled = false;
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">' + okMsg + '</span>';
+      return true;
+    }
+    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+    return false;
+  }).catch(() => {
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>';
+    return false;
+  });
+}
+
+function savePriceStock(){
+  const price = Number(document.getElementById("priceInput").value);
+  const stock = document.getElementById("stockInput").value;
+  const btn = document.getElementById("saveBtn");
+  if(!(price > 0)){ document.getElementById("status2").innerHTML = '<span class="err">Isi harga dulu.</span>'; return; }
+  if(stock === "" || isNaN(Number(stock))){ document.getElementById("status2").innerHTML = '<span class="err">Isi stok dulu.</span>'; return; }
+  postSet(2, price, "status2", btn, "Harga tersimpan, menyimpan stok...").then(ok => {
+    if(ok) postSet(3, Number(stock), "status2", btn, "✅ Harga & stok tersimpan!");
+  });
+}
+
+function renameItem(){
+  const nv = document.getElementById("nameInput").value.trim();
+  const btn = document.getElementById("renameBtn");
+  if(!nv){ document.getElementById("status3").innerHTML = '<span class="err">Isi nama baru dulu.</span>'; return; }
+  if(!confirm("Ganti nama barang ini menjadi:\n" + nv + " ?")) return;
+  postSet(1, nv, "status3", btn, "✅ Nama diganti! Daftar dimuat ulang...").then(ok => {
+    if(ok){ document.getElementById("nameInput").value = ""; loadItems(); }
+  });
+}
+
+function loadItems(){
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, 8000);
+    window.__names = data => {
+      clearTimeout(timer);
+      try {
+        const arr = Array.isArray(data) ? data : [];
+        ALL_ITEMS = arr;
+        const sel = document.getElementById("itemSel");
+        sel.innerHTML = "";
+        arr.forEach(o => {
+          const nm = String(o.name || "").trim();
+          if (!nm || nm.indexOf("CAT:") === 0) return;
+          const op = document.createElement("option");
+          op.value = nm;
+          op.textContent = nm.slice(0, 70);
+          sel.appendChild(op);
+        });
+        sel.onchange = prefill;
+        prefill();
+        const cats = [];
+        arr.forEach(o => {
+          const k = String(o.kategori || "").trim();
+          if (k && cats.indexOf(k) === -1) cats.push(k);
+        });
+        cats.sort();
+        const csel = document.getElementById("catSel");
+        csel.innerHTML = "";
+        cats.forEach(k => {
+          const op = document.createElement("option");
+          op.value = k;
+          op.textContent = k.slice(0, 70);
+          csel.appendChild(op);
+        });
+        const rsel = document.getElementById("catRenameSel");
+        rsel.innerHTML = "";
+        cats.forEach(k => {
+          const op = document.createElement("option");
+          op.value = k;
+          op.textContent = k.slice(0, 70);
+          rsel.appendChild(op);
+        });
+      } catch(e) {}
+      resolve();
+    };
+    const s = document.createElement("script");
+    s.src = SHEET_URL + "?callback=__names&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+document.getElementById("fileInput").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const img = document.getElementById("preview");
+  img.src = URL.createObjectURL(f);
+  img.style.display = "block";
+});
+
+document.getElementById("catFileInput").addEventListener("change", e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const img = document.getElementById("catPreview");
+  img.src = URL.createObjectURL(f);
+  img.style.display = "block";
+});
+
+function uploadCat(){
+  const kat = document.getElementById("catSel").value;
+  const f = document.getElementById("catFileInput").files[0];
+  const st = document.getElementById("statusCat");
+  const btn = document.getElementById("catUpBtn");
+  if(!kat){ st.innerHTML = '<span class="err">Pilih kategori dulu.</span>'; return; }
+  if(!f){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Mengupload foto kategori, tunggu...";
+  const rd = new FileReader();
+  rd.onload = () => {
+    const base64 = String(rd.result).split(",")[1];
+    fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot", kategori: kat })
+    }).then(r => r.text()).then(t => {
+      let d = {};
+      try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
+      if(d.result === "success"){
+        st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
+      } else {
+        st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '. Kalau baris CAT belum ada, tambah manual 1 baris di Sheet: name=CAT:' + kat + ', kategori=' + kat + ', lalu upload ulang.</span>';
+      }
+      btn.disabled = false;
+    }).catch(err => {
+      st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
+      btn.disabled = false;
+    });
+  };
+  rd.readAsDataURL(f);
+}
+
+function upload(){
+  const name = document.getElementById("itemSel").value;
+  const f = document.getElementById("fileInput").files[0];
+  const st = document.getElementById("status");
+  const btn = document.getElementById("upBtn");
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  if(!f){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Mengupload, tunggu...";
+  const rd = new FileReader();
+  rd.onload = () => {
+    const base64 = String(rd.result).split(",")[1];
+    fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot" })
+    }).then(r => r.text()).then(t => {
+      let d = {};
+      try { d = JSON.parse(t); } catch(e) { throw new Error("Respon server aneh"); }
+      if(d.result === "success"){
+        st.innerHTML = '<span class="ok">✅ Foto terpasang!</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
+      } else {
+        st.innerHTML = '<span class="err">Gagal: ' + (d.result || d.error || "?") + '</span>';
+      }
+      btn.disabled = false;
+    }).catch(err => {
+      st.innerHTML = '<span class="err">Gagal kirim: periksa koneksi / deploy terbaru.</span>';
+      btn.disabled = false;
+    });
+  };
+  rd.readAsDataURL(f);
+}
+
+function postOne(body) {
+  return fetch(SHEET_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(body)
+  }).then(r => r.text()).then(t => {
+    try { return JSON.parse(t); } catch(e) { return { result: "error: respon aneh" }; }
+  });
+}
+
+function renameCat(){
+  const oldKat = document.getElementById("catRenameSel").value;
+  const newKat = document.getElementById("catNameInput").value.trim();
+  const f = document.getElementById("catRenameFileInput").files[0];
+  const st = document.getElementById("statusCatRename");
+  const btn = document.getElementById("renameCatBtn");
+  if(!oldKat){ st.innerHTML = '<span class="err">Pilih kategori dulu.</span>'; return; }
+  if(!newKat){ st.innerHTML = '<span class="err">Isi nama kategori baru dulu.</span>'; return; }
+  if(!confirm("Ganti kategori:\n" + oldKat + "\nmenjadi:\n" + newKat + "\n?")) return;
+  btn.disabled = true;
+  st.textContent = "Menyimpan nama kategori...";
+  const targets = ALL_ITEMS.filter(o => String(o.kategori || "").trim() === oldKat && String(o.name || "").trim().indexOf("CAT:") !== 0);
+  let chain = Promise.resolve(true);
+  targets.forEach(o => {
+    const nm = String(o.name).trim();
+    chain = chain.then(() => postOne({ action: "set", item_name: nm, col: "kategori", value: newKat, sheet: "Brainrot" }));
+  });
+  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: "kategori", value: newKat, sheet: "Brainrot" }));
+  chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: 1, value: "CAT:" + newKat, sheet: "Brainrot" }));
+  chain.then(() => {
+    if (!f) {
+      st.innerHTML = '<span class="ok">✅ Nama kategori diganti! Refresh web utama.</span>';
+      btn.disabled = false;
+      loadItems();
+      return;
+    }
+    if (f.size > 8 * 1024 * 1024) { st.innerHTML = '<span class="err">Foto maksimal 8 MB (nama sudah diganti).</span>'; btn.disabled = false; loadItems(); return; }
+    st.textContent = "Nama ok, mengupload foto...";
+    const rd = new FileReader();
+    rd.onload = () => {
+      const base64 = String(rd.result).split(",")[1];
+      postOne({ action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", file: base64, sheet: "Brainrot", kategori: newKat })
+      .then(d => {
+        if (d.result === "success") st.innerHTML = '<span class="ok">✅ Nama + foto kategori diganti! Refresh web utama.</span>';
+        else st.innerHTML = '<span class="err">Nama diganti, foto gagal: ' + (d.result || "?") + '</span>';
+        btn.disabled = false;
+        loadItems();
+      });
+    };
+    rd.readAsDataURL(f);
+  }).catch(() => { st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; btn.disabled = false; });
+}
+</script>
+</body>
+</html>

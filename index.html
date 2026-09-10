@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rockstar.Store — Solusi Sepuh Roblox Kamu</title>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8CKBS3MNXH');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #060913;
+  --bg2: #0b1120;
+  --card: #0e1628;
+  --line: rgba(120,150,255,0.14);
+  --txt: #f2f5ff;
+  --mut: #8b96b3;
+  --blue: #2b4eff;
+  --blue2: #6f8bff;
+  --wa: #25d366;
+  --red: #ff5d5d;
+  --green: #2ecc71;
+  --r: 18px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background:
+    linear-gradient(rgba(6,9,19,0.78), rgba(6,9,19,0.86)),
+    radial-gradient(900px 320px at 85% -60px, rgba(43,78,255,0.22), transparent 60%),
+    radial-gradient(700px 300px at 5% 0%, rgba(43,78,255,0.12), transparent 60%),
+    url("bg.jpg") center top / cover no-repeat fixed,
+    var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+}
+
+/* ===== announcement bar ===== */
+.announce {
+  background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  padding: 9px 14px;
+  letter-spacing: 0.2px;
+}
+.announce a { color: #fff; font-weight: 700; text-decoration: underline; }
+
+/* ===== header ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 28px;
+  background: rgba(6,9,19,0.88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: 0.4px; white-space: nowrap; }
+.brand img { height: 40px; border-radius: 9px; }
+.searchwrap { flex: 1; display: flex; justify-content: center; }
+#searchInput {
+  width: min(420px, 100%);
+  padding: 10px 18px 10px 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--bg2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%238b96b3"><path d="M11.7 10.3l3.5 3.5-1.4 1.4-3.5-3.5A6 6 0 1 1 11.7 10.3zm-5.7.7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>') 14px center no-repeat;
+  color: var(--txt);
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+#searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
+.cartbtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(43,78,255,0.4);
+}
+.cartbtn small {
+  background: #fff;
+  color: var(--blue);
+  border-radius: 999px;
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0 5px;
+}
+
+/* ===== hero split ===== */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 28px 30px;
+}
+.hero-text { flex: 1.2; }
+.hero-kicker {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--blue2);
+  border: 1px solid var(--line);
+  background: rgba(43,78,255,0.1);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 58px;
+  line-height: 1.05;
+  margin: 0 0 14px;
+  letter-spacing: 0.5px;
+}
+.hero h1 span { color: var(--blue2); }
+.hero p { color: var(--mut); font-size: 16px; line-height: 1.7; margin: 0 0 26px; max-width: 520px; }
+.channel-link { display: inline-block; color: var(--wa); font-size: 14px; font-weight: 700; margin: -10px 0 24px; text-decoration: none; }
+.channel-link:hover { text-decoration: underline; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary, .btn-ghost {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  border-radius: 12px;
+  padding: 14px 26px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-primary { background: var(--blue); color: #fff; border: none; box-shadow: 0 10px 28px rgba(43,78,255,0.45); }
+.btn-primary:hover { transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
+.btn-ghost:hover { border-color: var(--blue); }
+.hero-visual { flex: 0.8; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.hero-visual a { cursor: pointer; }
+.ava-caption {
+  text-align: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1.4px;
+  line-height: 1.7;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(43,78,255,0.28), rgba(43,78,255,0.07));
+  border: 1px solid rgba(111,139,255,0.55);
+  border-radius: 16px;
+  padding: 12px 24px;
+  box-shadow: 0 0 28px rgba(43,78,255,0.35), inset 0 0 18px rgba(43,78,255,0.12);
+}
+.ava-caption .finger { display: inline-block; font-size: 20px; animation: point 1.4s ease-in-out infinite; }
+.ava-caption b { color: var(--blue2); }
+@keyframes point { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.hero-visual img.hero-logo {
+  width: min(200px, 60%);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.hero-visual img:not(.hero-logo) {
+  width: min(340px, 80%);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 8px rgba(43,78,255,0.08), 0 30px 80px rgba(43,78,255,0.3);
+}
+
+/* ===== server links ===== */
+.serverbtns { display: flex; gap: 12px; flex-wrap: wrap; }
+.serverbtn {
+  flex: 1;
+  min-width: 220px;
+  text-align: center;
+  background: rgba(43,78,255,0.12);
+  border: 1px solid var(--blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.serverbtn:hover { background: var(--blue); transform: translateY(-2px); }
+
+/* ===== stats strip ===== */
+.stats {
+  display: flex;
+  max-width: 1200px;
+  margin: 26px auto 0;
+  padding: 0 28px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.stat {
+  flex: 1;
+  min-width: 150px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-align: center;
+}
+.stat b { display: block; font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.stat span { font-size: 12.5px; color: var(--mut); }
+
+/* ===== section titles ===== */
+.section { max-width: 1200px; margin: 0 auto; padding: 44px 28px 8px; }
+.section h2 { font-family: 'Oswald', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
+.section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
+
+/* ===== home banners ===== */
+.banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r);
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, #101b3d, #0a1024);
+  padding: 30px 28px;
+  cursor: pointer;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.banner:hover { transform: translateY(-4px); border-color: var(--blue); }
+.banner::after {
+  content: "→";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: var(--blue2);
+}
+.banner small { color: var(--blue2); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; }
+.banner h3 { font-family: 'Oswald', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
+.banner p { color: var(--mut); font-size: 13.5px; margin: 0; }
+
+/* ===== category cards ===== */
+.catgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+.catcard {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.catcard:hover { transform: translateY(-5px); border-color: var(--blue); }
+.catcard img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.catcard .catbody { padding: 14px 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.catcard h3 { font-size: 14.5px; margin: 0; font-weight: 600; }
+.catcard .go {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: rgba(43,78,255,0.15);
+  color: var(--blue2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+
+/* ===== item cards (new style) ===== */
+.itemgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 22px; }
+.item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
+.item .thumb { position: relative; }
+.item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; }
+.badge-off {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+.badge-out {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--red);
+}
+.item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
+.item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
+.item .meta .sold { color: #ffb3b3; font-weight: 600; }
+.item .meta .stock { color: var(--green); font-weight: 600; }
+.item .price { margin-top: auto; padding-top: 6px; }
+.item .price .now { font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.item .price .was { font-size: 13px; color: var(--mut); text-decoration: line-through; margin-left: 8px; }
+.item .btn {
+  margin-top: 10px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+.item .btn:hover:not(:disabled) { filter: brightness(1.12); }
+.item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
+
+/* carousel inside item (multi-photo) */
+.mthumb { position: relative; }
+.mthumb img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; background: #05080f; }
+.mnav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.mnav.l { left: 10px; } .mnav.r { right: 10px; }
+.mdots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.mdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; }
+.mdots i.on { background: #fff; }
+
+/* ===== back button ===== */
+.backbtn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--txt);
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  margin-bottom: 18px;
+}
+.backbtn:hover { border-color: var(--blue); color: var(--blue2); }
+
+/* ===== cara beli ===== */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.step {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.step .snum {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 16px rgba(43,78,255,0.4);
+}
+.step b { font-size: 14.5px; }
+.step p { margin: 4px 0 0; font-size: 13px; color: var(--mut); line-height: 1.6; }
+
+/* ===== bottom server CTA ===== */
+.server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.server-cta .ava-big { cursor: pointer; }
+.server-cta .ava-big img {
+  width: min(300px, 70vw);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 8px rgba(43,78,255,0.08), 0 30px 80px rgba(43,78,255,0.3);
+  transition: transform 0.2s ease;
+}
+.server-cta .ava-big img:hover { transform: scale(1.03); }
+
+/* ===== floating cart ===== */
+.fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+.fab-main {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: var(--blue);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(43,78,255,0.5);
+}
+.fab-main b {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--red);
+  color: #fff;
+  font-size: 12px;
+  min-width: 24px; height: 24px;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px;
+}
+.fab-row { display: flex; gap: 8px; }
+.fab-row button {
+  border: none;
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: #fff;
+  background: #1a2440;
+  border: 1px solid var(--line);
+}
+.fab-row button.checkout { background: var(--wa); border-color: var(--wa); color: #062b16; }
+.fab-row button.cancel { background: transparent; color: var(--mut); }
+
+/* ===== modal ===== */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(3,5,12,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+}
+.modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  width: min(540px, 92vw);
+  max-height: 74vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.modal h2 { font-family: 'Oswald', sans-serif; margin: 0 0 14px; font-size: 24px; }
+.mrow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.mrow img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.mrow .grow { flex: 1; }
+.mrow .del {
+  background: var(--red);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+}
+.mtotal { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; font-weight: 700; }
+.mtotal span { color: var(--mut); font-weight: 400; font-size: 13px; }
+.mactions { display: flex; gap: 10px; margin-top: 16px; }
+.mactions button { flex: 1; border-radius: 10px; padding: 12px; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; border: none; }
+.mactions .ghost { background: transparent; border: 1px solid var(--line); color: var(--txt); }
+.mactions .go { background: var(--blue); color: #fff; }
+.mactions .wa { background: var(--wa); color: #062b16; }
+.mactions .danger { background: var(--red); color: #fff; }
+
+footer {
+  margin-top: 60px;
+  border-top: 1px solid var(--line);
+  padding: 28px;
+  text-align: center;
+  color: var(--mut);
+  font-size: 13px;
+}
+footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
+
+@media (max-width: 760px) {
+  body { background-attachment: scroll; }
+  header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
+  .searchwrap { order: 3; flex-basis: 100%; }
+  .hero { flex-direction: column; padding: 40px 18px 10px; text-align: center; }
+  .hero h1 { font-size: 40px; }
+  .hero p { margin-left: auto; margin-right: auto; }
+  .hero-cta { justify-content: center; }
+  .banners { grid-template-columns: 1fr; }
+  .section { padding: 32px 16px 6px; }
+  .stats { padding: 0 16px; }
+  .itemgrid { grid-template-columns: 1fr; }
+  .modal { width: 94vw; padding: 18px 16px; border-radius: 16px; }
+  .modal h2 { font-size: 20px; }
+  .serverbtn { min-width: 0; font-size: 13px; padding: 12px 14px; overflow-wrap: break-word; }
+  .mactions { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="announce">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></div>
+
+<header>
+  <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
+  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..."></div>
+  <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-kicker">#1 STORE BRAINROT TERLENGKAP DI INDONESIA</span>
+    <h1>SOLUSI SEPUH <span>ROBLOX</span> KAMU</h1>
+    <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. 🚀</p>
+    <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">📢 Join Saluran WhatsApp</a>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button>
+      <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
+    </div>
+  </div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
+</section>
+
+<div class="stats">
+  <div class="stat"><b>100K+</b><span>Testimoni amanah</span></div>
+  <div class="stat"><b>⚡</b><span>Proses hitungan menit</span></div>
+  <div class="stat"><b>🌍</b><span>Semua payment</span></div>
+  <div class="stat"><b>🎁</b><span>Ribuan item & pet</span></div>
+</div>
+
+<section class="section" id="carabeli">
+  <h2>Cara Beli</h2>
+  <p>5 langkah, beres dalam hitungan menit</p>
+  <div class="steps">
+    <div class="step"><span class="snum">1</span><div><b>Pilih item</b><p>Klik <b>Tambah ke Keranjang</b> pada item yang kamu mau.</p></div></div>
+    <div class="step"><span class="snum">2</span><div><b>Checkout</b><p>Buka keranjang 🛒, cek pesanan, klik <b>Checkout</b>.</p></div></div>
+    <div class="step"><span class="snum">3</span><div><b>Kirim ke Admin</b><p>Klik <b>✓ Kirim ke Admin</b> — chat WA terbuka otomatis berisi pesananmu.</p></div></div>
+    <div class="step"><span class="snum">4</span><div><b>Bayar</b><p>Transfer via QRIS / e-wallet / bank sesuai instruksi admin, kirim bukti.</p></div></div>
+    <div class="step"><span class="snum">5</span><div><b>Terima item</b><p>Admin trade/kirim item di dalam game. Cek dan konfirmasi terima. 🚀</p></div></div>
+  </div>
+</section>
+
+<main class="section">
+  <div id="pageTitle"></div>
+  <div id="products"></div>
+</main>
+
+<div class="fab">
+  <div class="fab-row">
+    <button onclick="openCartModal()">Lihat</button>
+    <button class="checkout" onclick="checkout()">Checkout</button>
+    <button class="cancel" onclick="cancelCheckout()">Batal</button>
+  </div>
+  <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
+</div>
+
+<div class="overlay" id="serverModal">
+  <div class="modal">
+    <h2>🔗 Link Server Rock Star</h2>
+    <p style="color:var(--mut);font-size:13.5px;margin:0 0 14px;">Klik server untuk join langsung dari Roblox</p>
+    <div class="serverbtns" style="flex-direction:column;">
+      <a class="serverbtn" href="https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" target="_blank" rel="noopener">🎲 Server Kotak Gulung untuk Brainrot</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" target="_blank" rel="noopener">🍂 Server Fall for Brainrot</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=f0a1cedc6be4f041a22d1079ca713f2d&type=Server" target="_blank" rel="noopener">🪙 Server Lempar Koin</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" target="_blank" rel="noopener">🌱 Server Grow A Garden 2</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=592596d70f7d1044ae692f625524368e&type=Server" target="_blank" rel="noopener">🐔 Server Tarik Telur</a>
+      <a class="serverbtn" href="https://www.roblox.com/share?code=555c4557fd120c4ab3a050b2116a2e6c&type=Server" target="_blank" rel="noopener">🎲 Server Dadu Anime</a>
+    </div>
+    <div class="mactions">
+      <button class="ghost" onclick="closeServerModal()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="cartModal">
+  <div class="modal">
+    <h2>📋 Keranjang Saya</h2>
+    <div id="cartList"></div>
+    <div class="mactions">
+      <button class="ghost" onclick="closeCartModal()">Lanjut Belanja</button>
+      <button class="go" onclick="checkout()">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<section class="section server-cta" id="serverCta">
+  <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.png" alt="Rockstar Avatar - Link Server"></a>
+  <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
+</section>
+
+<footer>
+  No WA Admin: <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
+  TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu
+</footer>
+
+<script>
+let cart = [];
+let currentPage = 'home';
+let carouselState = {};
+
+const IMG = "";
+const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
+function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
+
+const brainrotCategories = [
+  {    name: "KOTAK GULUNG UNTUK BRAINROT",
+    img: "KOTAK GULUNG BRAINROT DISPLAY.png",
+    items: [
+      {name: "KOTAK GULUNG UNTUK BRAINROT - 1 BRAINROT RANDOM LV MAX  500SX+/S(TERGANTUNG) ", price: 10000, originalPrice: 20000, img: "ROLL CASE BRAINROT MECHA CERBERUS 40SX.png", stock: 15, sold: 184},
+      {name: "KOTAK GULUNG UNTUK BRAINROT - 1 BRAINROT RANDOM LV MAX  1SP+/S(TERGANTUNG) ", price: 15000, originalPrice: 30000, img: "ROLL CASE BRAINROT 1SP RANDOM BRAINROT.png", stock: 5, sold: 284},
+    ]
+  },
+  {
+    name: "BLOCK KEBERUNTUNGAN LEDAKAN DAYA",
+    img: "BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.png",
+    items: [
+      {name: "block keberuntungan ledakan daya - 1 BRAINROT RANDOM ILAHI TDC/s+", price: 10000, originalPrice: 15000, img: "BLOCK KEBERUNTUNGAN LEDAKAN DAYA TDC.png", stock: 10, sold: 400},
+      {name: "block keberuntungan ledakan daya - 1 BRAINROT RANDOM OMEGA QADC/s+", price: 15000, originalPrice: 15000, img: "BLOCK KEBERUNTUNGAN LEDAKAN DAYA QADC.png", stock: 10, sold: 400},
+      
+      
+      
+   
+  
+    ]
+  },
+  {
+    name: "Grow A Garden 2",
+    img: "GAG 2 DISPLAY.png ",
+    items: [
+      {name: "Grow A Garden 2 - DAPAT 1 STAR FRUIT SEED", price: 30000, originalPrice: 100000, images:["GAG2 SEED STRAFRUIT.png"], stock: 0, sold: 8},
+      {name: "Grow A Garden 2 - DAPAT 1 SUN BLOOM SEED", price: 20000, originalPrice: 50000, images:["GAG2 SUN BLOOM SEED.png"], stock: 2, sold: 8},
+      {name: "Grow A Garden 2 - DAPAT 4 MOON BLOOM SEED (PROMO TERBATAS) ", price: 10000, originalPrice: 70000, images:["GAG2 SEED MOON BLOOM.png"], stock: 4, sold: 1198},
+      {name: "Grow A Garden 2 - DAPAT 4 HYPNO BLOOM SEED (PROMO TERBATAS) ", price: 10000, originalPrice: 150000, images:["GAG 2 HYPO BLOOM.png"], stock: 10, sold: 152},
+      {name: "Grow A Garden 2 - DAPAT 2 DRAGON BRETH SEED ", price: 10000, originalPrice: 80000, images:["GAG 2 DRAGON BRETH SEED.png"], stock: 7, sold: 3043},
+      {name: "Grow A Garden 2 - DAPAT 4 VENOM SEED ", price: 10000, originalPrice: 20000, images:["GAG2 VENOM SEED.png"], stock: 10, sold: 500},
+      {name: "Grow A Garden 2 - DAPAT 3 GHOST PAPER SEED ", price: 10000, originalPrice: 100000, images:["gag 2 ghost paper seed .png",], stock: 10, sold: 100},
+      {name: "Grow A Garden 2 - DAPAT 2 VENUS FLY TRAP SEED ", price: 10000, originalPrice: 30000, images:["GAG 2 VENUS FLY TRAP.png"], stock: 0, sold: 100},
+      {name: "Grow A Garden 2 - DAPAT 1 PET BALD EAGLE (MYTIC) ", price: 10000, originalPrice: 100000, images:["GAG2 BALD EAGLE.png"], stock: 3, sold: 10},
+      {name: "Grow A Garden 2 - DAPAT 1 PET UNICORN (MYTIC) ", price: 10000, originalPrice: 700000, images:["GAG2 UNICORN.png","GAG2 UNICORN SKILL.png"], stock: 10, sold: 10},
+      {name: "Grow A Garden 2 - DAPAT 1 PET BEAR (MYTIC) ", price: 10000, originalPrice: 200000, images:["GAG 2 BEAR PET.png"], stock: 5, sold: 10},
+      {name: "Grow A Garden 2 - DAPAT 1 DRAGONFLY (MYTIC) ", price: 10000, originalPrice: 50000, images:["GAG2 DRAGONFLY.png","GAG2 DRAGONFLY SKILL.png"], stock: 0, sold: 10},
+      {name: "Grow A Garden 2 - DAPAT 10 MEGA SEED ", price: 10000, originalPrice: 15000, images:["GAG2 MEGA SEED.png"], stock: 10, sold: 1000},
+      {name: "Grow A Garden 2 - DAPAT 300m sheckless(duit gag2)via buah", price: 15000, originalPrice: 30000, images:["GAG2 9M SHECKLESS.png"], stock: 10, sold: 943},
+      {name: "Grow A Garden 2 - DAPAT 1B sheckless(duit gag2)via buah", price: 30000, originalPrice: 60000, images:["GAG2 9M SHECKLESS.png"], stock: 3, sold: 546},
+      {name: "Grow A Garden 2 - DAPAT 15 SUPER SPRINKLE (GEAR) ", price: 10000, originalPrice: 30000, images:["GAG2 SUPER SPRINKLE.png"], stock: 20, sold: 200},
+      {name: "Grow A Garden 2 - DAPAT 15 SUPER WATERING (GEAR) ", price: 10000, originalPrice: 30000, images:["GAG 2 SUPER WATERING.png"], stock: 20, sold: 200},
+      
+      
+    ]
+  },
+  {
+    name: "be flash for brainrot",
+    img: "BE FALSH DISPLAY.png",
+    items: [
+      {name: "be flash for brainrot - 1 BRAINROT RANDOM 10QI/S", price: 10000, originalPrice: 30000, img: "flash brainrot brainrot random10qi.png", stock: 10, sold: 2858},
+      {name: "be flash for brainrot - 1 GOD ESOK SEKOLA 50%", price: 10000, originalPrice: 30000, img: "flash brainrot esok god 55PERSEN.png", stock: 10, sold: 2858},
+      
+      
+    ]
+  },
+  {
+    name: "BUILD A BASE AND STEAL",
+    img: "BABAS DISPLAY.png",
+    items: [
+      {name: "build a base and steal - 1 YETI OG(INFERNO) 1B/S", price: 15000, originalPrice: 30000, img: "BUILD AND STEAL BASE YETI INFERNO 1B.png", stock: 0, sold: 50},
+      
+      
+    
+      
+    ]
+  },
+  {
+    name: "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN",
+    img: "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN DISPLAY.png ",
+    items: [
+      {name: "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN - 1 BRAINROT MASTODONTIK OMNIVERSE (HACKER) 700SP+/s", price: 15000, originalPrice: 20000, img: "NAIK DAN JATUHKAN BLOCK OMNIVERSE MASTORDENTIK LV MAX 700SP.png", stock: 10, sold: 20},
+      {name: "NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN - 1 BRAINROT CAPTAIN MOBY OMNIVERSE (HACKER) 300SP/s", price: 10000, originalPrice: 15000, img: "NAIK DAN JATUHKAN BLOCK OMINVERSE KAPTAIN MOBY LV MAX 300SP.png", stock: 5, sold: 130},
+      
+    ]
+  },
+  {
+    name: "drill for brainrot",
+    img: "Screenshot 2026-04-18 103423.png",
+    items: [
+      {name: "drill for brainrot - 1 ketupat kepat inf/s(tamat)", price: 15000, originalPrice: 50000, img: "Screenshot 2026-04-18 102335.png",stock: 50, sold: 595},
+      {name: "drill for brainrot - 2 ketupat kepat inf/s(tamat)", price: 25000, originalPrice: 100000, img: "Screenshot 2026-04-18 102335.png",stock: 50, sold: 595},
+      {name: "drill for brainrot - 1 MY EXAME 16M/s duit bulan", price: 15000, originalPrice: 50000, img: "DRILL BRAINROT MY EXAME 16M S.png",stock: 50, sold: 225},
+      {name: "drill for brainrot - 2 NUCLEARO 16M/s duit bulan", price: 25000, originalPrice: 100000, img: "DRILL BRAINROT MY EXAME 16M S.png",stock: 50, sold: 225},
+  
+    ]
+  },
+  {
+    name: "Swing obby for brainrot",
+    img: "Screenshot 2026-04-14 011113.png",
+    items: [
+      {name: "Swing obby for brainrot - naga sepuh lv 500.000(langsung tamat)", price: 15000, originalPrice: 30000, img: "Screenshot 2026-04-14 055828.png",sold: 127},
+      
+
+    ]
+  },
+  {
+    name: "CAPYBARA VS TANAMAN",
+    img: "CAPYBARA VS TANAMAN DISPLAY.png",
+    items: [
+      {name: "CAPYBARA VS TANAMAN - 1 ANGEL CAPYBARA TITAN 600K DPS",price: 15000,originalPrice: 25000, img: "CAPYBARA VS TANAMAN ANGEL CAPYBARA TITAN 600K DPS.png",stock: 0,sold: 286},
+      {name: "CAPYBARA VS TANAMAN - 1 SHINIGAMI CAPYBARA TITAN 1.3M DPS",price: 30000,originalPrice: 50000, img: "CAPYBARA VS TANAMAN SHINIGAMI CAPYBARA TITAN 1.3M DPS.png",stock: 0,sold: 152},
+      
+  
+    ]
+  }, 
+  {
+    name: "+1 KEKUATAN MENUMBUHKAN LENGAN ANDA",
+    img: "+1 MENUMBUHKAN LENGAN DISPLAY.png ",
+    items: [
+      {name: "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 500O+/S", price: 10000, originalPrice: 20000, img: "GROW ARM SOVEREIGN RANDOM 3O S.png", stock: 10, sold: 300},
+      {name: "KEKUATAN MENUMBUHKAN LENGAN ANDA - 1 BRAINROT SOVEREIGN RANDOM 1N+/S", price: 15000, originalPrice: 30000, img: "GROW ARM SVOREGIN RANDOM 1 N.png", stock: 10, sold: 520},
+    
+    ]
+  },
+  {
+    name: "STEAL A EGG",
+    img: "STEAL A EGG DISPLAY.png",
+    items: [
+      {name: "STEAL A EGG - 1 PET RANDOM 100M/S+", price: 15000, originalPrice: 30000, img: "STEAL A EGG PET RANDOM 100M.png", stock: 10, sold: 127},
+      
+      
+ 
+    ]
+  },
+  {
+    name: "BECOME A BRAINROT(MENJADI BRAINROT)",
+    img: "BECOME A BRAINROT DISPLAY.png",
+    items: [
+      {name: "BECOME A BRAINROT - 1 BRAINROT STELLAR RANDOM LV MAX(500)", price: 10000, originalPrice: 15000, img: "BECOME BRAINROT STELLAR RANDOM LV MAX.png", stock: 10, sold: 100},
+      {name: "BECOME A BRAINROT - UP LV MAX 2 BRAINROT BEBAS", price: 10000, originalPrice: 25000, img: "BECOME A BRAINROT DISPLAY.png", stock: 99999, sold: 50},
+      
+      
+    ]
+  },
+  {
+    name: "di dalam kepala brainrot",
+    img: "di dalam kepala brainrot.png",
+    items: [
+      {name: "di dalam kepala brainrot - 1 ABADI RANDOM 1sp/s+", price: 15000, originalPrice: 20000, img: "INSIDE BRAINROT HEAD ETERHNAL 1SP.png", stock: 10, sold: 1000},
+      {name: "di dalam kepala brainrot - 2 ABADI RANDOM 1sp/s+", price: 20000, originalPrice: 40000, img: "INSIDE BRAINROT HEAD ETERHNAL 1SP.png", stock: 10, sold: 500},
+      {name: "di dalam kepala brainrot - 1 ABADI RANDOM 1sx/s+", price: 10000, originalPrice: 15000, img: "inside brainrot head abadi 1sx.png", stock: 0, sold: 340},
+      {name: "di dalam kepala brainrot - 2 ABADI RANDOM 1sx/s+", price: 15000, originalPrice: 30000, img: "inside brainrot head abadi 1sx.png", stock: 0, sold: 340},
+   
+   
+    ]
+  },
+  {
+    name: "BE MONKEY FOR BRAINROT",
+    img: "BE MONKEY DISPLAY.png",
+    items: [
+      {name: "BE MONKEY FOR BRAINROT - DAPAT 1 BRAINROT ALMIGHTY 69 1SXI/S LV MAX", price: 10000, originalPrice: 20000, img: "BE MONKEY 69 1 SX ALGMYTI.png", stock: 10, sold: 100},
+      {name: "BE MONKEY FOR BRAINROT - DAPAT 2 BRAINROT ALMIGHTY 69 1SXI/S LV MAX", price: 15000, originalPrice: 20000, img: "BE MONKEY 69 1 SX ALGMYTI.png", stock: 10, sold: 100},
+      
+      
+   
+    ]
+  },
+  {
+    name: "PECAHKAN TAPE FOR BRAINROT",
+    img: "TAPE BRAINROT DISPLAY.png",
+    items: [
+      {name: "pecahkan tape for brainrot - 1 brainrot RANDOM 1SX+/S", price: 10000, originalPrice: 25000, img: "TAPE BRAINROT 1SX .png", stock: 10, sold: 20},
+      {name: "pecahkan tape for brainrot - 2 brainrot RANDOM 1SX+/S", price: 15000, originalPrice: 50000, img: "TAPE BRAINROT 1SX .png", stock: 10, sold: 20},
+  
+    ]
+  },
+  {
+    name: "LEPAR KOIN",
+    img: "LEMPAR KOIN FOR BRAINROT DISPLAY.png",
+    items: [
+      {name: "LEPAR KOIN - DAPAT 10 SUN PALACE (SOVEREIGN) 239 DD TERGANTUNG LUCK UANG", price: 10000, originalPrice: 20000, img: "LEMPAR KOIN TURBIN 500 DC.png", stock: 10, sold: 100},
+      {name: "LEPAR KOIN - DAPAT 20 SUN PALACE (SOVEREIGN) 239 DD TERGANTUNG LUCK UANG", price: 15000, originalPrice: 50000, img: "LEMPAR KOIN TURBIN 500 DC.png", stock: 10, sold: 1450},
+      
+    ]
+  },
+  {
+    name: "SWING WEB FOR LUCKY BLOCK",
+    img: "SWING WEB DISPLAY.png ",
+    items: [
+      {name: "SWING WEB FOR LUCKY BLOCK - 1 BRAINROT ADMIN RANDOM 1QI/S+ TERGANTUNG REBIRTH (LANGSUNG SEPUH)", price: 10000, originalPrice: 20000, img: "SWING WEB BRAINROT ADMIN RANDOM 1QI.png", stock: 10, sold: 7},
+      
+      
+    
+    ]
+  },
+  {
+    name: "JATUH FOR BRAINROT",
+    img: "JATUH FOR BRAINROT DISPLAY.png ",
+    items: [
+      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  500N+/S ", price: 10000, originalPrice: 20000, img: "FALL FOR BRAINROT ETERNAL RANDOM 3 N.png", stock: 5, sold: 184},
+      {name: "JATUH FOR BRAINROT - 1 BRAINROT RANDOM LV MAX  1DE+/S ", price: 15000, originalPrice: 30000, img: "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", stock: 5, sold: 184},
+      {name: "JATUH FOR BRAINROT - 1 BRAINROT TRANSENDENT LV MAX 1UD+/S ", price: 30000, originalPrice: 150000, img: "FALL FOR BRAINROT BRAINROT RANDOM 10N+.png", stock: 5, sold: 184},
+      
+      
+   
+    ]
+  },
+  {
+    name: "BRAIN BLAST FOR LUCKY BLOCK",
+    img: "BRAIN BLAST DISPLAY.png ",
+    items: [
+      {name: "BRAIN BLAST FOR LUCKY BLOCK - 1 BRAINROT RANDOM EMPEREYAN 40 QA+/S(TERGANTUNG REBIRTH) LV MAX", price: 10000, originalPrice: 30000, img: "BRAINBLAST EMPERAYAEN 40QA+.png", stock: 10, sold: 1027},
+      {name: "BRAIN BLAST FOR LUCKY BLOCK - 2 BRAINROT RANDOM EMPEREYAN 40 QA+/S(TERGANTUNG REBIRTH) LV MAX", price: 15000, originalPrice: 60000, img: "BRAINBLAST EMPERAYAEN 40QA+.png", stock: 10, sold: 127},
+     
+     
+    ]
+  },
+  {
+    name: "+ 1 MINE PER KLICK",
+    img: "MINE PER KLICK DISPLAY.png ",
+    items: [
+      {name: "MINE PER KLICK - DAPAT 15 BATU 1 B ", price: 10000, originalPrice: 20000, img:"MINE PER KLICK BATU 1 B.png", stock: 10, sold: 50},
+      
+       
+    ]
+  },
+  {
+    name: "steal a brainrot",
+    img: "Screenshot 2026-04-14 161623.png",
+    items: [
+      {name: "steal a brainrot-chat admin", price: 0, img: "WhatsApp Image 2026-04-14 at 08.02.58.png"},
+      {name: "steal a brainrot-1 garam dan madung", price: 50000, img: "WhatsApp Image 2026-04-17 at 13.13.31.png"},
+   
+    ]
+  },
+  {
+    name: "token",
+    img: "token.png",
+    items: [
+      {name: "token tsunami brainrot(300)", price: 10000, img: "token.png",sold: 1000},
+      {name: "token tsunami brainrot(1000)", price: 30000, img: "token.png",sold: 500},
+      {name: "token grow a garden(250)", price: 10000, img: "token.png",sold: 200},
+              
+     
+    ]
+  },
+  {
+    name: "RUSH LUCKY BLOCK",
+    img: "RUSH LUCKY BLOCK DISPLAY.png ",
+    items: [
+      {name: "RUSH LUCKY BLOCK - 2 MALAM XEON 1.6T+/S LV MAX TERGANTUNG REBIRTH + BONUS", price: 10000, originalPrice: 30000, img: "RUSH LUCKY BLOCK XEON 1.6T.png", stock: 6, sold: 1000},
+      {name: "RUSH LUCKY BLOCK - 4 MALAM XEON 1.6T+/S LV MAX TERGANTUNG REBIRTH + BONUS", price: 15000, originalPrice: 30000, img: "RUSH LUCKY BLOCK XEON 1.6T.png", stock: 6, sold: 1000},
+      
+      
+    ]
+  },
+  {
+    name: "tendang block keberuntungan",
+    img: "Screenshot 2026-04-16 192032.png",
+    items: [
+      {name: "tendang block keberuntungan -DAPAT 1 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka ", price: 10000, originalPrice: 30000, img: "KALB COIATOR ASTRAL 4.8Q.png", stock: 3, sold: 54},
+      {name: "tendang block keberuntungan -DAPAT 2 brainrot ABYSALL COINATOR lv max 4.8Q/s(ASTRAL) sepuh langka ", price: 15000, originalPrice: 60000, img: "KALB COIATOR ASTRAL 4.8Q.png", stock: 3, sold: 54},
+      
+      
+    ]
+  }, 
+  {
+    name: "Katalog Kosong 6",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 6 - v1", price: 50000},
+      {name: "Katalog Kosong 6 - v2", price: 55000},
+      {name: "Katalog Kosong 6 - v3", price: 60000},
+      {name: "Katalog Kosong 6 - v4", price: 65000},
+      {name: "Katalog Kosong 6 - v5", price: 70000},
+      {name: "Katalog Kosong 6 - v6", price: 75000},
+      {name: "Katalog Kosong 6 - v7", price: 80000},
+      {name: "Katalog Kosong 6 - v8", price: 85000},
+      {name: "Katalog Kosong 6 - v9", price: 90000},
+      {name: "Katalog Kosong 6 - v10", price: 95000}
+    ]
+  },
+  {
+    name: "Katalog Kosong 7",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Katalog Kosong 7 - v1", price: 50000},
+      {name: "Katalog Kosong 7 - v2", price: 55000},
+      {name: "Katalog Kosong 7 - v3", price: 60000},
+      {name: "Katalog Kosong 7 - v4", price: 65000},
+      {name: "Katalog Kosong 7 - v5", price: 70000},
+      {name: "Katalog Kosong 7 - v6", price: 75000},
+      {name: "Katalog Kosong 7 - v7", price: 80000},
+      {name: "Katalog Kosong 7 - v8", price: 85000},
+      {name: "Katalog Kosong 7 - v9", price: 90000},
+      {name: "Katalog Kosong 7 - v10", price: 95000}
+    ]
+  }
+];;
+const topupCategories = [
+  {
+    name: "Top Up robux(via login)",
+    img: "ROBUX.webp",
+    items: [
+      {name: "Top Up robux(via login) - 80 ROBUX", price: 18000, img: "ROBUX.webp"},
+      {name: "Top Up robux(via login) - 160 ROBUX", price: 40000, img: "ROBUX.webp"},
+      {name: "Top Up robux(via login) - 240 ROBUX", price: 60000, img: "ROBUX.webp"},
+      {name: "Top Up robux(via login) - 320 ROBUX", price: 70000, img: "ROBUX.webp"},
+      {name: "Top Up robux(via login) - 500 ROBUX", price: 100000, img: "ROBUX.webp"},
+      {name: "Top Up robux(via login) - 1000 ROBUX", price: 200000, img: "ROBUX.webp"},
+      
+      
+    
+    ]
+  },
+  {
+    name: "gamepass(all game)",
+    img: "ROBUX.webp",
+    items: [
+      {name: "Game pass ALL GAME- 1 ROBUX (CONTOH BELI GAMEPAS 86 ROBUX BERARTI 86 X 150RP) ", price: 150, img: "ROBUX.webp"},
+      
+   
+
+    ]
+  },
+  {
+    name: "Bundle Premium",
+    img: "Screenshot 2026-04-14 004434.png",
+    items: [
+      {name: "Bundle Hemat 500K", price: 450000},
+      {name: "Bundle Hemat 1M", price: 900000},
+      {name: "Bundle Hemat 2M", price: 1800000},
+      {name: "Bundle Hemat 5M", price: 4500000},
+
+    ]
+  }
+];;
+
+const akunCategories = [
+  {
+    name: "Akun Sepuh Data Polos",
+    img: "ROBUX.webp",
+    items: [
+      {name: "CONTOH - Akun sepuh data polos (ganti dengan akun asli)", price: 150000, originalPrice: 250000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 1, sold: 0},
+      {name: "CONTOH - Akun sepuh data polos full gamepass (ganti dengan akun asli)", price: 200000, originalPrice: 300000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 1, sold: 0}
+    ]
+  },
+  {
+    name: "Akun Roblox Berbagai Map",
+    img: "ROBUX.webp",
+    items: [
+      {name: "CONTOH - Akun Roblox berbagai map (ganti dengan akun asli)", price: 80000, originalPrice: 120000, img: "ROBUX.webp", images: ["ROBUX.webp", "token.png"], stock: 2, sold: 0}
+    ]
+  }
+];
+
+const PAGES = { brainrot: () => brainrotCategories, topup: () => topupCategories, akun: () => akunCategories };
+
+function catsOf(page){ return (PAGES[page] || (() => []))(); }
+
+function getCurrentCategories(){
+  return catsOf(currentPage);
+}
+
+function discountOf(item){
+  if(!item.originalPrice || !item.price || item.originalPrice <= item.price) return 0;
+  return Math.round((1 - item.price / item.originalPrice) * 100);
+}
+
+function syncCta(){
+  const cta = document.getElementById("serverCta");
+  if(cta) cta.style.display = (currentPage === 'home') ? "" : "none";
+}
+
+function render(){
+  const el = document.getElementById("products");
+  const title = document.getElementById("pageTitle");
+  syncCta();
+  if(currentPage === 'home'){
+    title.innerHTML = `<h2>Mulai Belanja</h2><p>Pilih kategori di bawah ini</p>`;
+    el.innerHTML = `
+      <div class="banners">
+        <div class="banner" onclick="goToBrainrot()">
+          <small>BRAINROT • PET • TOKEN • TANAMAN</small>
+          <h3>🧠 Katalog Brainrot</h3>
+          <p>Solusi sepuh roblox kamu — puluhan kategori item.</p>
+        </div>
+        <div class="banner" onclick="goToTopUp()">
+          <small>ROBUX • GAMEPASS</small>
+          <h3>💰 Top Up</h3>
+          <p>Top up Robux & gamepass harga terbaik.</p>
+        </div>
+        <div class="banner" onclick="goToAkun()">
+          <small>AKUN ROBLOX</small>
+          <h3>👤 Akun Roblox</h3>
+          <p>Akun sepuh, data polos, berbagai map — siap pakai.</p>
+        </div>
+      </div>`;
+    return;
+  }
+  const categories = getCurrentCategories();
+  title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
+    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
+    <p>${categories.length} kategori — klik untuk lihat item</p>`;
+  el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
+    <div class="catcard" onclick="showItems(${i})">
+      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
+    </div>`).join("") + `</div>`;
+}
+
+function searchCatalog(){
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+  const el = document.getElementById("products");
+  const title = document.getElementById("pageTitle");
+  if(q === ""){ render(); return; }
+  const out = [];
+  ['brainrot', 'topup', 'akun'].forEach(page => {
+    const cats = catsOf(page);
+    cats.forEach((c, i) => {
+      c.items.forEach((item, j) => {
+        if((c.name + " " + item.name).toLowerCase().includes(q)) out.push({page, i, j, cname: c.name, item});
+      });
+    });
+  });
+  if(out.length === 0){
+    title.innerHTML = `<h2>Hasil pencarian</h2><p>Tidak ada item cocok dengan "${q}"</p>`;
+    el.innerHTML = "";
+    return;
+  }
+  currentPage = out[0].page;
+  syncCta();
+  title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
+    <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
+  el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
+}
+
+function itemCard(categories, i, j){
+  const item = categories[i].items[j];
+  const category = categories[i];
+  const page = (categories === brainrotCategories) ? 'brainrot' : ((categories === akunCategories) ? 'akun' : 'topup');
+  const uid = `${page}-${i}-${j}`;
+  const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
+  const hasCarousel = item.images && item.images.length > 1;
+  const itemImg = item.img || (item.images && item.images[0]) || category.img;
+  const off = discountOf(item);
+  const thumb = hasCarousel ? `
+    <div class="thumb mthumb">
+      ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
+      <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
+      <div class="mdots" id="dots-${i}-${j}">
+        ${item.images.map((_, idx) => `<i class="${idx === 0 ? 'on' : ''}" onclick="event.stopPropagation();carouselGoto(${i},${j},${idx})"></i>`).join('')}
+      </div>
+    </div>` : `
+    <div class="thumb">
+      ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+    </div>`;
+  return `
+  <div class="item">
+    ${thumb}
+    <div class="ibody">
+      <h3>${item.name}</h3>
+      <div class="meta">
+        ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
+        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
+      </div>
+      <div class="price">
+        ${hidePrice
+          ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
+          : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
+      </div>
+      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+    </div>
+  </div>`;
+}
+
+function showItems(i){
+  const categories = getCurrentCategories();
+  const category = categories[i];
+  syncCta();
+  document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
+    <h2>${category.name}</h2><p>${category.items.length} item</p>`;
+  document.getElementById("products").innerHTML =
+    `<div class="itemgrid">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
+}
+
+function chatAdmin(){
+  window.open("https://wa.me/6289664299571?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
+}
+
+function carouselNext(i, j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const key = `${i}-${j}`;
+  carouselState[key] = ((carouselState[key] || 0) + 1) % item.images.length;
+  updateCarousel(i, j, carouselState[key]);
+}
+function carouselPrev(i, j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const key = `${i}-${j}`;
+  carouselState[key] = ((carouselState[key] || 0) - 1 + item.images.length) % item.images.length;
+  updateCarousel(i, j, carouselState[key]);
+}
+function carouselGoto(i, j, index){
+  carouselState[`${i}-${j}`] = index;
+  updateCarousel(i, j, index);
+}
+function updateCarousel(i, j, index){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  const imgEl = document.getElementById(`carousel-${i}-${j}`);
+  const dotsContainer = document.getElementById(`dots-${i}-${j}`);
+  if(imgEl) imgEl.src = fixImg(item.images[index]);
+  if(dotsContainer){
+    dotsContainer.querySelectorAll('i').forEach((d, idx) => d.classList.toggle('on', idx === index));
+  }
+}
+
+function goHome(){ currentPage = 'home'; render(); }
+function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+
+function syncCart(){
+  document.getElementById("cartCount").innerText = cart.length;
+  document.getElementById("total").innerText = cart.length;
+}
+
+function addItem(i,j){
+  const categories = getCurrentCategories();
+  const item = categories[i].items[j];
+  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
+  if(typeof gtag === "function"){
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
+  }
+  syncCart();
+}
+
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBzZeScxeCdCCSZiDRGJcVEYzG7_5ftK-qZnV8knIA8u8qWsLfkoRZ2hCEBiwIbXBz/exec";
+
+function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
+function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
+document.getElementById("serverModal").addEventListener('click', e => {
+  if(e.target.id === "serverModal") closeServerModal();
+});
+
+function checkout(){
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  let previewHTML = '<h2>📸 Preview Pesanan</h2>';
+  let totalPrice = 0;
+  cart.forEach((item, index) => {
+    totalPrice += item.price;
+    let itemImage = fixImg(item.img || item.categoryImg);
+    previewHTML += `
+      <div class="mrow">
+        <img src="${itemImage}" onerror="this.src='${FALLBACK_IMG}'">
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
+      </div>`;
+  });
+  previewHTML += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  const m = document.createElement('div');
+  m.id = 'checkoutModal';
+  m.className = 'overlay';
+  m.style.display = 'block';
+  m.innerHTML = `<div class="modal">${previewHTML}
+    <div class="mactions">
+      <button class="danger" onclick="closeCheckoutPreview()">Batal</button>
+      <button class="wa" onclick="sendToAdmin()">✓ Kirim ke Admin</button>
+    </div></div>`;
+  document.body.appendChild(m);
+  m.addEventListener('click', e => { if(e.target === m) closeCheckoutPreview(); });
+}
+function closeCheckoutPreview(){ const m = document.getElementById('checkoutModal'); if(m) m.remove(); }
+
+function sendToAdmin(){
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  if(typeof gtag === "function"){
+    const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
+    gtag("event", "checkout_whatsapp", { item_count: cart.length, value: totalValue, currency: "IDR" });
+  }
+  let text = "Halo saya mau beli:%0A";
+  cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
+  if(cart.length > 3){ closeCheckoutPreview(); window.open("https://wa.me/6289664299571?text="+text); return; }
+  const hasFishIt = cart.some(item => item.name.toLowerCase().includes("fish it"));
+  const hasSab = cart.some(item => item.name.toLowerCase().includes("sab"));
+  const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
+  const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
+  const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
+  const hasGrowAGarden = cart.some(item => item.name.toLowerCase().includes("grow a garden"));
+  const hasIceGolem = cart.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
+  const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
+  let adminNumber = "6289664299571";
+  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal) adminNumber = "6283114900053";
+  if(hasGrowAGarden) adminNumber = "6289664299571";
+  if(hasIceGolem) adminNumber = "6289664299571";
+  if(hasToken) adminNumber = "6283114900053";
+  closeCheckoutPreview();
+  window.open("https://wa.me/"+adminNumber+"?text="+text);
+}
+
+function openCartModal(){
+  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  let html = '';
+  let totalPrice = 0;
+  cart.forEach((item, index) => {
+    totalPrice += item.price;
+    html += `
+      <div class="mrow">
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">Rp ${item.price.toLocaleString()}</span></div>
+        <button class="del" onclick="removeFromCart(${index})">Hapus</button>
+      </div>`;
+  });
+  html += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  document.getElementById("cartList").innerHTML = html;
+  document.getElementById("cartModal").style.display = "block";
+}
+function removeFromCart(index){
+  cart.splice(index, 1);
+  syncCart();
+  if(cart.length === 0){ closeCartModal(); return; }
+  openCartModal();
+}
+function closeCartModal(){ document.getElementById("cartModal").style.display = "none"; }
+document.getElementById("cartModal").addEventListener('click', e => {
+  if(e.target.id === "cartModal") closeCartModal();
+});
+function cancelCheckout(){
+  if(cart.length==0){ alert("Keranjang sudah kosong!"); return; }
+  if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus.")){
+    cart = [];
+    syncCart();
+  }
+}
+
+function loadLiveStock(){
+  return new Promise(resolve => {
+    const timer = setTimeout(resolve, 5000);
+    window.__stockCb = data => {
+      clearTimeout(timer);
+      try {
+        const arr = Array.isArray(data) ? data : [];
+        const hasKat = arr.some(o => String(o.kategori || "").trim() !== "");
+        if (hasKat) {
+          const codeImg = {};
+          [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+            cats.forEach(c => {
+              const ck = "CAT:" + String(c.name).trim();
+              if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
+              c.items.forEach(it => {
+                const k = String(it.name).trim();
+                if (!(k in codeImg)) {
+                  codeImg[k] = (it.images && it.images[0]) || it.img || "";
+                  if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
+                }
+              });
+            }));
+          const groups = {};
+          const order = [];
+          const catImgSheet = {};
+          // OVERRIDE FOTO KATEGORI VIA SHEET (tanpa edit kode):
+          // Tambah baris di Sheet Brainrot: name = "CAT:<nama kategori persis>", kategori = "<nama kategori persis>", image = "namafile.png" atau URL drive.
+          // Contoh: name="CAT:be flash for brainrot", kategori="be flash for brainrot", image="BE FLASH BARU.png"
+          // Baris CAT:* tidak tampil sebagai produk, hanya jadi foto display kategori. Sheet menang atas img di kode.
+          arr.forEach(o => {
+            const nm = String(o.name || "").trim();
+            if (!nm || nm.indexOf("CAT:") !== 0) return;
+            const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
+            const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+            if (targetKat && f) catImgSheet[targetKat] = f;
+          });
+          arr.forEach(o => {
+            const name = String(o.name || "").trim();
+            if (!name) return;
+            if (name.indexOf("CAT:") === 0) return;
+            const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
+            if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
+            let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
+            if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
+            if (!files.length && codeImg[name]) files = [codeImg[name]];
+            const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
+            if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            if (files.length > 1) it.images = files;
+            const g = groups[kat];
+            g.items.push(it);
+            if (!g.img && files[0]) g.img = files[0];
+          });
+          Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
+          brainrotCategories.length = 0;
+          order.forEach(k => brainrotCategories.push(groups[k]));
+        } else {
+        const map = {};
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+          cats.forEach(c => {
+            const catKey = "CAT:" + String(c.name).trim();
+            if (catKey in map && map[catKey].image) {
+              const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
+              if (cf.length) c.img = cf[0];
+            }
+            c.items.forEach(it => {
+            const k = String(it.name).trim();
+            if (k in map) {
+              const v = map[k];
+              const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
+              it.stock = flagged ? 0 : v.stock;
+              if (v.price > 0) it.price = v.price;
+              if (v.sold > 0) it.sold = v.sold;
+              if (v.image) {
+                const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
+                if (files.length > 1) { it.img = files[0]; it.images = files; }
+                else if (files.length === 1) { it.img = files[0]; it.images = null; }
+              }
+            }
+            });
+          })
+        );
+        }
+      } catch(e) {}
+      resolve();
+    };
+    const s = document.createElement('script');
+    s.src = SHEET_URL + "?callback=__stockCb&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+loadLiveStock().then(() => {
+  render();
+  document.getElementById("searchInput").addEventListener("input", searchCatalog);
+});
+</script>
+
+</body>
+</html>

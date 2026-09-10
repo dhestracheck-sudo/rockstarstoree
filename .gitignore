@@ -1,0 +1,7 @@
+# Backup / sementara - jangan upload
+*.bak
+*.syncbak
+*~
+*.tmp
+Thumbs.db
+Desktop.ini
