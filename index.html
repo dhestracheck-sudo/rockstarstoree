@@ -659,6 +659,22 @@ let carouselState = {};
 const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
 function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
+// Gambar gagal load (umumnya thumbnail Drive kena throttle sesaat): coba sekali lagi
+// dengan cache-bust, baru fallback. Mencegah gambar hilang-timbul tiap refresh.
+function imgErr(el){
+  if(!el.dataset.retry){
+    el.dataset.retry = "1";
+    const s = el.src;
+    el.src = s + (s.indexOf("?") === -1 ? "?" : "&") + "r=" + Date.now();
+  } else {
+    el.onerror = null;
+    el.src = FALLBACK_IMG;
+  }
+}
+// Pecah daftar file dipisah "|", buang spasi & koma nyasar (misal "foto.png,").
+function splitFiles(v){
+  return String(v || "").split("|").map(s => s.trim().replace(/,+$/, "").trim()).filter(Boolean);
+}
 
 const brainrotCategories = [
   {    name: "KOTAK GULUNG UNTUK BRAINROT",
@@ -1057,7 +1073,7 @@ function render(){
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
-      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)">
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
 }
@@ -1101,7 +1117,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
-      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
       <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
       <div class="mdots" id="dots-${i}-${j}">
@@ -1111,7 +1127,7 @@ function itemCard(categories, i, j){
     <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
-      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
+      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
   return `
   <div class="item">
@@ -1213,7 +1229,7 @@ function checkout(){
     let itemImage = fixImg(item.img || item.categoryImg);
     previewHTML += `
       <div class="mrow">
-        <img src="${itemImage}" onerror="this.src='${FALLBACK_IMG}'">
+        <img src="${itemImage}" onerror="imgErr(this)">
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
       </div>`;
   });
@@ -1362,7 +1378,7 @@ function rebuildFromSheet(arr, targetCats){
     const nm = String(o.name || "").trim();
     if (!nm || nm.indexOf("CAT:") !== 0) return;
     const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
-    const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+    const f = splitFiles(o.image)[0] || "";
     if (targetKat && f) catImgSheet[targetKat] = f;
   });
   arr.forEach(o => {
@@ -1371,7 +1387,7 @@ function rebuildFromSheet(arr, targetCats){
     if (name.indexOf("CAT:") === 0) return;
     const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
     if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
-    let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
+    let files = splitFiles(o.image);
     if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
     if (!files.length && codeImg[name]) files = [codeImg[name]];
     const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
@@ -1394,7 +1410,7 @@ function mergeFromSheet(arr){
     cats.forEach(c => {
       const catKey = "CAT:" + String(c.name).trim();
       if (catKey in map && map[catKey].image) {
-        const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
+        const cf = splitFiles(map[catKey].image);
         if (cf.length) c.img = cf[0];
       }
       c.items.forEach(it => {
@@ -1406,7 +1422,7 @@ function mergeFromSheet(arr){
         if (v.price > 0) it.price = v.price;
         if (v.sold > 0) it.sold = v.sold;
         if (v.image) {
-          const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
+          const files = splitFiles(v.image);
           if (files.length > 1) { it.img = files[0]; it.images = files; }
           else if (files.length === 1) { it.img = files[0]; it.images = null; }
         }
