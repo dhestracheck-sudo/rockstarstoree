@@ -1294,16 +1294,43 @@ function cancelCheckout(){
 
 function fetchSheet(sheet, cbName){
   return new Promise(resolve => {
-    const timer = setTimeout(() => resolve([]), 5000);
+    const timer = setTimeout(() => resolve(null), 15000);
     window[cbName] = data => {
       clearTimeout(timer);
       resolve(Array.isArray(data) ? data : []);
     };
     const s = document.createElement('script');
     s.src = SHEET_URL + "?callback=" + cbName + "&sheet=" + encodeURIComponent(sheet) + "&t=" + Date.now();
-    s.onerror = () => { clearTimeout(timer); resolve([]); };
+    s.onerror = () => { clearTimeout(timer); resolve(null); };
     document.head.appendChild(s);
   });
+}
+
+// Cache data Sheet terakhir di browser: kalau fetch lambat/gagal, tampilkan cache
+// (bukan data kode lama) supaya kategori baru tidak hilang-timbul.
+function loadCached(sheet){
+  try {
+    const raw = localStorage.getItem("rockstar_" + sheet);
+    if(!raw) return [];
+    const o = JSON.parse(raw);
+    if(!o || !o.t || (Date.now() - o.t) > 7*24*3600*1000) return [];
+    return Array.isArray(o.data) ? o.data : [];
+  } catch(e){ return []; }
+}
+
+function saveCached(sheet, data){
+  try { localStorage.setItem("rockstar_" + sheet, JSON.stringify({ t: Date.now(), data: data })); } catch(e){}
+}
+
+function hasKatArr(arr){
+  return arr.length > 0 && arr.some(o => String(o.kategori || "").trim() !== "");
+}
+
+function applySnap(b, a){
+  if (hasKatArr(b)) rebuildFromSheet(b, brainrotCategories);
+  else if (b.length) mergeFromSheet(b);
+  if (hasKatArr(a)) rebuildFromSheet(a, akunCategories);
+  else if (a.length) mergeFromSheet(a);
 }
 
 function buildCodeImg(){
@@ -1390,13 +1417,20 @@ function mergeFromSheet(arr){
 }
 
 function loadLiveStock(){
-  return Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]).then(res => {
+  try {
+    applySnap(loadCached("Brainrot"), loadCached("Akun"));
+    render();
+  } catch(e) {}
+  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
+  return once().then(res => {
+    if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
+    return res;
+  }).then(res => {
+    const b = res[0] || [], a = res[1] || [];
     try {
-      const b = res[0], a = res[1];
-      if (b.length && b.some(o => String(o.kategori || "").trim() !== "")) rebuildFromSheet(b, brainrotCategories);
-      else if (b.length) mergeFromSheet(b);
-      if (a.length && a.some(o => String(o.kategori || "").trim() !== "")) rebuildFromSheet(a, akunCategories);
-      else if (a.length) mergeFromSheet(a);
+      applySnap(b, a);
+      if (b.length) saveCached("Brainrot", b);
+      if (a.length) saveCached("Akun", a);
     } catch(e) {}
   });
 }
