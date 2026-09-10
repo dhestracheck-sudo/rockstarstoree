@@ -89,6 +89,9 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   <div class="card" id="catCard" style="display:none;">
     <label>Kategori yang diedit (foto display)</label>
     <select id="catSel"><option>Memuat kategori...</option></select>
+    <label>Foto display lama</label>
+    <img id="catOld" alt="foto display lama" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);">
+    <div id="catOldCap" style="font-size:12px;color:var(--mut);margin-top:6px;word-break:break-all;">-</div>
 
     <label>Foto kategori baru (kamera / galeri)</label>
     <input type="file" id="catFileInput" accept="image/*">
@@ -125,18 +128,15 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   </div>
 
   <div class="card" id="renameCatCard" style="display:none;">
-    <label>Ganti nama kategori + foto display sekaligus</label>
+    <label>Ganti nama kategori</label>
+    <label>Kategori lama</label>
+    <div id="catRenameOldName" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
     <select id="catRenameSel"><option>Memuat kategori...</option></select>
-    <label>Foto display lama</label>
-    <img id="catRenameOld" alt="foto display lama" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);">
-    <div id="catRenameOldCap" style="font-size:12px;color:var(--mut);margin-top:6px;word-break:break-all;">-</div>
     <label>Nama kategori baru</label>
     <input type="text" id="catNameInput" placeholder="misal KOTAK GULUNG BRAINROT NEW" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-    <label>Foto kategori baru (opsional, kamera / galeri)</label>
-    <input type="file" id="catRenameFileInput" accept="image/*">
-    <button id="renameCatBtn" onclick="renameCat()">✏️🖼️ Ganti Nama + Foto Kategori</button>
+    <button id="renameCatBtn" onclick="renameCat()">✏️ Ganti Nama Kategori</button>
     <div id="statusCatRename"></div>
-    <p class="hint" style="margin-top:14px;">Ini mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus, jadi nama dan foto ganti bareng tanpa edit kode.</p>
+    <p class="hint" style="margin-top:14px;">Mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus. Foto display diganti lewat card <b>Foto display kategori</b> di atas.</p>
   </div>
 
   <h2 class="sect" id="sectAdd" style="display:none;">➕ TAMBAH BARU</h2>
@@ -309,6 +309,8 @@ function loadItems(){
           op.textContent = k.slice(0, 70);
           csel.appendChild(op);
         });
+        csel.onchange = prefillCat;
+        prefillCat();
         const rsel = document.getElementById("catRenameSel");
         rsel.innerHTML = "";
         cats.forEach(k => {
@@ -317,8 +319,10 @@ function loadItems(){
           op.textContent = k.slice(0, 70);
           rsel.appendChild(op);
         });
-        rsel.onchange = prefillCatRename;
-        prefillCatRename();
+        rsel.onchange = () => {
+          document.getElementById("catRenameOldName").textContent = rsel.value || "-";
+        };
+        document.getElementById("catRenameOldName").textContent = rsel.value || "-";
         const psel = document.getElementById("addCatSel");
         psel.innerHTML = "";
         cats.forEach(k => {
