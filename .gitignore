@@ -5,3 +5,6 @@
 *.tmp
 Thumbs.db
 Desktop.ini
+# File kerja watcher auto-push
+.autopush-pending
+auto-push.log
