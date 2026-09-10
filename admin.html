@@ -119,6 +119,27 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:14px;">Ini mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus, jadi nama dan foto ganti bareng tanpa edit kode.</p>
   </div>
 
+  <div class="card" id="addCard" style="display:none;">
+    <label>Tambah kategori baru</label>
+    <input type="text" id="addCatName" placeholder="misal KOTAK GULUNG UNTUK BRAINROT" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Foto display kategori (opsional)</label>
+    <input type="file" id="addCatFile" accept="image/*">
+    <button id="addCatBtn" onclick="addCategory()">➕ Tambah Kategori</button>
+    <div id="statusAddCat"></div>
+    <label style="margin-top:18px;">Tambah produk baru</label>
+    <input type="text" id="addName" placeholder="nama lengkap produk" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;margin-bottom:8px;">
+    <select id="addCatSel"><option>Memuat kategori...</option></select>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input type="number" id="addPrice" placeholder="harga" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <input type="number" id="addStock" placeholder="stok" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    </div>
+    <label>Foto produk (opsional, bisa tambah lagi maks 10 via panel slide)</label>
+    <input type="file" id="addFile" accept="image/*">
+    <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
+    <div id="statusAdd"></div>
+    <p class="hint" style="margin-top:14px;">Masuk ke tab Sheet yang sedang dipilih di atas. Kategori baru otomatis punya baris <b>CAT:</b> (disembunyikan dari produk).</p>
+  </div>
+
   <div class="card">
     <p class="hint">Foto tersimpan di Google Drive, link-nya otomatis masuk kolom Gambar di Sheets. Harga, stok, dan nama langsung tertulis ke Sheets. Buka kembali web utama + refresh untuk lihat hasilnya. Tidak perlu upload ke GitHub kecuali update kode.</p>
   </div>
@@ -143,6 +164,7 @@ function unlock(){
     document.getElementById("editCard").style.display = "block";
     document.getElementById("renameCard").style.display = "block";
     document.getElementById("renameCatCard").style.display = "block";
+    document.getElementById("addCard").style.display = "block";
     loadItems();
   } else {
     alert("PIN salah.");
@@ -256,6 +278,14 @@ function loadItems(){
           op.value = k;
           op.textContent = k.slice(0, 70);
           rsel.appendChild(op);
+        });
+        const psel = document.getElementById("addCatSel");
+        psel.innerHTML = "";
+        cats.forEach(k => {
+          const op = document.createElement("option");
+          op.value = k;
+          op.textContent = k.slice(0, 70);
+          psel.appendChild(op);
         });
       } catch(e) {}
       resolve();
@@ -467,6 +497,91 @@ function upload(){
     });
   };
   rd.readAsDataURL(f);
+}
+
+function needAdd_(d, st, btn){
+  // backend lama belum kenal action=add -> minta deploy ulang
+  if(d.result === "success") return false;
+  if(String(d.result || "").indexOf("unknown action") !== -1){
+    st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version), lalu coba lagi.</span>';
+    btn.disabled = false;
+    return true;
+  }
+  return false;
+}
+
+function addCategory(){
+  const kat = document.getElementById("addCatName").value.trim();
+  const f = document.getElementById("addCatFile").files[0];
+  const st = document.getElementById("statusAddCat");
+  const btn = document.getElementById("addCatBtn");
+  if(!kat){ st.innerHTML = '<span class="err">Isi nama kategori dulu.</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Menambah kategori...";
+  postOne({ action: "add", item_name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
+    if(needAdd_(d, st, btn)) return;
+    if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
+    if(!f){
+      st.innerHTML = '<span class="ok">✅ Kategori ditambah! Refresh web untuk lihat.</span>';
+      document.getElementById("addCatName").value = "";
+      btn.disabled = false;
+      loadItems();
+      return;
+    }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (kategori sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
+    st.textContent = "Kategori ok, mengupload foto...";
+    const rd = new FileReader();
+    rd.onload = () => {
+      postOne({ action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", file: String(rd.result).split(",")[1], sheet: CURSHEET(), kategori: kat }).then(u => {
+        st.innerHTML = u.result === "success" ? '<span class="ok">✅ Kategori + foto ditambah!</span>' : '<span class="err">Kategori ditambah, foto gagal: ' + (u.result || "?") + '</span>';
+        document.getElementById("addCatName").value = "";
+        document.getElementById("addCatFile").value = "";
+        btn.disabled = false;
+        loadItems();
+      });
+    };
+    rd.readAsDataURL(f);
+  });
+}
+
+function addProduct(){
+  const nm = document.getElementById("addName").value.trim();
+  const kat = document.getElementById("addCatSel").value;
+  const price = Number(document.getElementById("addPrice").value);
+  const stockRaw = document.getElementById("addStock").value;
+  const f = document.getElementById("addFile").files[0];
+  const st = document.getElementById("statusAdd");
+  const btn = document.getElementById("addBtn");
+  if(!nm){ st.innerHTML = '<span class="err">Isi nama produk dulu.</span>'; return; }
+  if(!kat){ st.innerHTML = '<span class="err">Pilih kategorinya dulu.</span>'; return; }
+  if(!(price > 0)){ st.innerHTML = '<span class="err">Isi harga dulu.</span>'; return; }
+  if(stockRaw === "" || isNaN(Number(stockRaw))){ st.innerHTML = '<span class="err">Isi stok dulu.</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Menambah produk...";
+  postOne({ action: "add", item_name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
+    if(needAdd_(d, st, btn)) return;
+    if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
+    if(!f){
+      st.innerHTML = '<span class="ok">✅ Produk ditambah! Tambah fotonya via panel slide.</span>';
+      document.getElementById("addName").value = "";
+      btn.disabled = false;
+      loadItems();
+      return;
+    }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
+    st.textContent = "Produk ok, mengupload foto...";
+    const rd = new FileReader();
+    rd.onload = () => {
+      postOne({ action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", file: String(rd.result).split(",")[1], sheet: CURSHEET() }).then(u => {
+        st.innerHTML = u.result === "success" ? '<span class="ok">✅ Produk + foto ditambah!</span>' : '<span class="err">Produk ditambah, foto gagal: ' + (u.result || "?") + '</span>';
+        document.getElementById("addName").value = "";
+        document.getElementById("addFile").value = "";
+        btn.disabled = false;
+        loadItems();
+      });
+    };
+    rd.readAsDataURL(f);
+  });
 }
 
 function postOne(body) {

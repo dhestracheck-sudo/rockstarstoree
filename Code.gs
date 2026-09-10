@@ -11,6 +11,9 @@
 //   GET  (tanpa callback)     -> JSON murni (buat cek manual)
 //   POST {action:"set", item_name, col, value, sheet}      -> admin ganti nama/harga/stok
 //        col: 1=name, 2=price, 3=stock (kompatibel admin lama) ATAU nama kolom ("price","stock","soldout","image","kategori","sold","name")
+//   POST {action:"add", item_name, kategori, price, stock, soldout, image, sold, sheet}
+//        -> tambah baris baru. Ditolak kalau name sudah ada.
+//        Untuk kategori baru: item_name = "CAT:<nama>", kategori = "<nama>".
 //   POST {action:"upload", item_name, filename, mime, file(base64), sheet, kategori?}
 //        -> simpan ke Drive folder ROCKSTAR-UPLOADS, update kolom image.
 //        Kalau item_name "CAT:<kategori>" belum ada, otomatis tambah baris baru (tidak tampil sebagai produk di web).
@@ -116,8 +119,9 @@ function doPost(e) {
     else if (e && e.parameter) body = e.parameter;
     var action = norm_(body.action);
     if (action === "set") return jsonOut_(actionSet_(body));
+    if (action === "add") return jsonOut_(actionAdd_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
-    return jsonOut_({ result: "error: unknown action (pakai set / upload)" });
+    return jsonOut_({ result: "error: unknown action (pakai set / add / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
     return jsonOut_({ result: "error: " + String(err && err.message || err) });
   }
@@ -159,6 +163,27 @@ function actionSet_(body) {
   var r = findRow_(t, name);
   if (r < 0) return { result: "error: barang tidak ketemu: " + name };
   t.sheet.getRange(r + 1, ci + 1).setValue(body.value);
+  return { result: "success" };
+}
+
+function actionAdd_(body) {
+  var name = String(body.item_name || body.name || "").trim();
+  if (!name) return { result: "error: item_name kosong" };
+  var t = readTable_(body.sheet || SHEET_DEFAULT);
+  if (findRow_(t, name) >= 0) return { result: "error: sudah ada: " + name };
+  var kat = String(body.kategori || "").trim();
+  if (!kat && name.indexOf("CAT:") === 0) kat = name.slice(4).trim();
+  if (!kat) kat = "Lainnya";
+  var row = [];
+  for (var c = 0; c < t.headers.length; c++) row.push("");
+  row[t.idx["name"]] = name;
+  row[t.idx["kategori"]] = kat;
+  row[t.idx["price"]] = Number(body.price) || 0;
+  row[t.idx["stock"]] = Number(body.stock) || 0;
+  row[t.idx["soldout"]] = String(body.soldout || (name.indexOf("CAT:") === 0 ? "YA" : ""));
+  row[t.idx["image"]] = String(body.image || "");
+  row[t.idx["sold"]] = Number(body.sold) || 0;
+  t.sheet.appendRow(row);
   return { result: "success" };
 }
 
