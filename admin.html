@@ -52,7 +52,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   </div>
 
   <div class="card" id="slideCard" style="display:none;">
-    <label>Foto slide barang (maks 5) — ganti / tambah / hapus</label>
+    <label>Foto slide barang (maks 10) — ganti / tambah / hapus</label>
     <div id="slideList"></div>
     <label>Tambah dari file (kamera / galeri)</label>
     <input type="file" id="slideFileInput" accept="image/*">
@@ -272,13 +272,13 @@ function curSlides(){
   const name = document.getElementById("itemSel").value;
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
   if(!o) return [];
-  return String(o.image || "").split("|").map(s => s.trim()).filter(Boolean).slice(0, 5);
+  return String(o.image || "").split("|").map(s => s.trim()).filter(Boolean).slice(0, 10);
 }
 
 function renderSlides(){
   const box = document.getElementById("slideList");
   const arr = curSlides();
-  if(!arr.length){ box.innerHTML = '<p class="hint">Belum ada foto. Tambahkan di bawah (maks 5).</p>'; return; }
+  if(!arr.length){ box.innerHTML = '<p class="hint">Belum ada foto. Tambahkan di bawah (maks 10).</p>'; return; }
   box.innerHTML = arr.map((u, i) =>
     '<div style="display:flex;gap:10px;align-items:center;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;">' +
     '<img src="' + u.replace(/"/g, "&quot;") + '" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\'">' +
@@ -300,7 +300,7 @@ function saveSlides(arr, stMsg){
   const st = document.getElementById("statusSlide");
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
   st.textContent = "Menyimpan...";
-  postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 5).join("|"), sheet: "Brainrot" }).then(d => {
+  postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 10).join("|"), sheet: "Brainrot" }).then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">' + (stMsg || '✅ Tersimpan!') + '</span>';
       loadItems();
@@ -354,7 +354,7 @@ function slideMain(i){
 
 function slideAddFile(){
   const arr = curSlides();
-  if(arr.length >= 5){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 5 slide.</span>'; return; }
+  if(arr.length >= 10){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 10 slide.</span>'; return; }
   const f = document.getElementById("slideFileInput").files[0];
   if(!f){ document.getElementById("statusSlide").innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
   if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
@@ -378,7 +378,7 @@ function slideAddFile(){
 
 function slideAddUrl(){
   const arr = curSlides();
-  if(arr.length >= 5){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 5 slide.</span>'; return; }
+  if(arr.length >= 10){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 10 slide.</span>'; return; }
   const u = document.getElementById("slideUrlInput").value.trim();
   if(!u){ document.getElementById("statusSlide").innerHTML = '<span class="err">Tempel link dulu.</span>'; return; }
   arr.push(u);
