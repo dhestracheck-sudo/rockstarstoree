@@ -279,6 +279,7 @@ header {
 }
 .catcard:hover { transform: translateY(-5px); border-color: var(--blue); }
 .catcard img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.catcard img.portrait { object-fit: contain; background: #05080f; height: 220px; }
 .catcard .catbody { padding: 14px 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .catcard h3 { font-size: 14.5px; margin: 0; font-weight: 600; }
 .catcard .go {
@@ -1031,6 +1032,13 @@ function getCurrentCategories(){
   return catsOf(currentPage);
 }
 
+// Foto portrait di card kategori: tampil utuh (contain), bukan kepotong.
+function catFit(el){
+  try {
+    if(el.naturalHeight > el.naturalWidth * 1.1) el.classList.add("portrait");
+  } catch(e) {}
+}
+
 function discountOf(item){
   if(!item.originalPrice || !item.price || item.originalPrice <= item.price) return 0;
   return Math.round((1 - item.price / item.originalPrice) * 100);
@@ -1073,7 +1081,7 @@ function render(){
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
-      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)">
+      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onload="catFit(this)" onerror="imgErr(this)">
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
 }
