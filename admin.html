@@ -11,6 +11,9 @@
 body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
 .wrap { max-width: 560px; margin: 0 auto; }
 h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+h2.sect { font-family:'Oswald',sans-serif; letter-spacing:1px; font-size:18px; margin:26px 0 0; color:var(--blue2); }
+.curprod { font-size:13px; color:var(--mut); margin:10px 0 0; }
+.curprod b { color:var(--txt); }
 .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
 label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
 select, input[type=password] {
@@ -48,8 +51,10 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
   </div>
 
+  <h2 class="sect">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
+
   <div class="card" id="mainCard" style="display:none;">
-    <label>Barang</label>
+    <label>Barang (produk) yang diedit</label>
     <select id="itemSel"><option>Memuat daftar barang...</option></select>
 
     <label>Foto baru (kamera / galeri)</label>
@@ -62,6 +67,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 
   <div class="card" id="slideCard" style="display:none;">
     <label>Foto slide barang (maks 10) — ganti / tambah / hapus</label>
+    <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
     <div id="slideList"></div>
     <label>Tambah dari file (kamera / galeri)</label>
     <input type="file" id="slideFileInput" accept="image/*">
@@ -73,8 +79,10 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:14px;">Slide 1 = foto utama. Tersimpan di Sheet kolom <b>image</b> dipisah <b>|</b>, web otomatis jadi carousel.</p>
   </div>
 
+  <h2 class="sect">🗂️ KATEGORI — yang di bawah ini mengubah DISPLAY kategori</h2>
+
   <div class="card" id="catCard" style="display:none;">
-    <label>Foto DISPLAY kategori (ganti img kategori tanpa kode)</label>
+    <label>Kategori yang diedit (foto display)</label>
     <select id="catSel"><option>Memuat kategori...</option></select>
 
     <label>Foto kategori baru (kamera / galeri)</label>
@@ -87,6 +95,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   </div>
 
   <div class="card" id="editCard" style="display:none;">
+    <div class="curprod">Barang: <b id="curProdEdit">-</b></div>
     <label>Kategori barang terpilih</label>
     <div id="catInfo" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
     <label>Harga baru (Rp)</label>
@@ -100,6 +109,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
   </div>
 
   <div class="card" id="renameCard" style="display:none;">
+    <div class="curprod">Barang: <b id="curProdRename">-</b></div>
     <label>Kategori barang terpilih</label>
     <div id="catInfo2" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
     <label>Nama baru barang</label>
@@ -120,6 +130,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <div id="statusCatRename"></div>
     <p class="hint" style="margin-top:14px;">Ini mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus, jadi nama dan foto ganti bareng tanpa edit kode.</p>
   </div>
+
+  <h2 class="sect">➕ TAMBAH BARU</h2>
 
   <div class="card" id="addCard" style="display:none;">
     <label>Tambah kategori baru</label>
@@ -160,6 +172,9 @@ function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
     document.getElementById("sheetCard").style.display = "block";
+    document.getElementById("sectProd").style.display = "block";
+    document.getElementById("sectCat").style.display = "block";
+    document.getElementById("sectAdd").style.display = "block";
     document.getElementById("mainCard").style.display = "block";
     document.getElementById("slideCard").style.display = "block";
     document.getElementById("catCard").style.display = "block";
@@ -184,10 +199,16 @@ function prefill(){
     document.getElementById("soldInput").value = (o.sold === 0 || o.sold) ? o.sold : "";
     document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
+    document.getElementById("curProdSlide").textContent = name;
+    document.getElementById("curProdEdit").textContent = name;
+    document.getElementById("curProdRename").textContent = name;
     renderSlides();
   } else {
     document.getElementById("catInfo").textContent = "-";
     document.getElementById("catInfo2").textContent = "-";
+    document.getElementById("curProdSlide").textContent = "-";
+    document.getElementById("curProdEdit").textContent = "-";
+    document.getElementById("curProdRename").textContent = "-";
     renderSlides();
   }
 }
