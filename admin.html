@@ -51,7 +51,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
   </div>
 
-  <h2 class="sect">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
+  <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
     <label>Barang (produk) yang diedit</label>
@@ -79,7 +79,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:14px;">Slide 1 = foto utama. Tersimpan di Sheet kolom <b>image</b> dipisah <b>|</b>, web otomatis jadi carousel.</p>
   </div>
 
-  <h2 class="sect">🗂️ KATEGORI — yang di bawah ini mengubah DISPLAY kategori</h2>
+  <h2 class="sect" id="sectCat" style="display:none;">🗂️ KATEGORI — yang di bawah ini mengubah DISPLAY kategori</h2>
 
   <div class="card" id="catCard" style="display:none;">
     <label>Kategori yang diedit (foto display)</label>
@@ -131,7 +131,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:14px;">Ini mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus, jadi nama dan foto ganti bareng tanpa edit kode.</p>
   </div>
 
-  <h2 class="sect">➕ TAMBAH BARU</h2>
+  <h2 class="sect" id="sectAdd" style="display:none;">➕ TAMBAH BARU</h2>
 
   <div class="card" id="addCard" style="display:none;">
     <label>Tambah kategori baru</label>
@@ -168,20 +168,15 @@ function CURSHEET(){
   return (s && s.value) ? s.value : "Brainrot";
 }
 
+function show_(id){
+  const el = document.getElementById(id);
+  if(el) el.style.display = "block";
+}
+
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    document.getElementById("sheetCard").style.display = "block";
-    document.getElementById("sectProd").style.display = "block";
-    document.getElementById("sectCat").style.display = "block";
-    document.getElementById("sectAdd").style.display = "block";
-    document.getElementById("mainCard").style.display = "block";
-    document.getElementById("slideCard").style.display = "block";
-    document.getElementById("catCard").style.display = "block";
-    document.getElementById("editCard").style.display = "block";
-    document.getElementById("renameCard").style.display = "block";
-    document.getElementById("renameCatCard").style.display = "block";
-    document.getElementById("addCard").style.display = "block";
+    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadItems();
   } else {
     alert("PIN salah.");
