@@ -58,6 +58,18 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <select id="itemSel"><option>Memuat daftar barang...</option></select>
   </div>
 
+  <div class="card" id="prevCard" style="display:none;">
+    <div style="display:flex;gap:14px;align-items:center;">
+      <img id="prevImg" alt="foto produk" style="width:96px;height:96px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);flex-shrink:0;">
+      <div style="flex:1;min-width:0;">
+        <div id="prevName" style="font-weight:700;">-</div>
+        <div id="prevMeta" style="font-size:12.5px;color:var(--mut);margin-top:4px;">-</div>
+        <div id="prevPrice" style="font-family:'Oswald',sans-serif;font-size:22px;margin-top:4px;">-</div>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">Ubah lewat panel di bawah — preview ini ikut keganti otomatis.</p>
+  </div>
+
   <div class="card" id="slideCard" style="display:none;">
     <label>Foto barang (maks 10 slide) — ganti / tambah / hapus di sini</label>
     <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
@@ -169,7 +181,7 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadItems();
   } else {
     alert("PIN salah.");
@@ -190,6 +202,7 @@ function prefill(){
     document.getElementById("curProdSlide").textContent = name;
     document.getElementById("curProdEdit").textContent = name;
     document.getElementById("curProdRename").textContent = name;
+    renderPreview(name, o);
     renderSlides();
   } else {
     document.getElementById("catInfo").textContent = "-";
@@ -197,6 +210,7 @@ function prefill(){
     document.getElementById("curProdSlide").textContent = "-";
     document.getElementById("curProdEdit").textContent = "-";
     document.getElementById("curProdRename").textContent = "-";
+    renderPreview("", null);
     renderSlides();
   }
 }
@@ -321,6 +335,23 @@ document.getElementById("catFileInput").addEventListener("change", e => {
   img.src = URL.createObjectURL(f);
   img.style.display = "block";
 });
+
+function renderPreview(name, o){
+  const img = document.getElementById("prevImg");
+  document.getElementById("prevName").textContent = name || "-";
+  if(!o){
+    img.removeAttribute("src");
+    document.getElementById("prevMeta").textContent = "-";
+    document.getElementById("prevPrice").textContent = "-";
+    return;
+  }
+  const first = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+  if(first) img.src = first; else img.removeAttribute("src");
+  const n = v => (v === 0 || v) ? Number(v).toLocaleString("id-ID") : "-";
+  document.getElementById("prevMeta").textContent =
+    (String(o.kategori || "-").trim() || "-") + " • Stok: " + n(o.stock) + " • Terjual: " + n(o.sold);
+  document.getElementById("prevPrice").textContent = "Rp " + n(o.price);
+}
 
 function curSlides(){
   const name = document.getElementById("itemSel").value;
