@@ -14,7 +14,7 @@
 //   POST {action:"add", item_name, kategori, price, stock, soldout, image, sold, sheet}
 //        -> tambah baris baru. Ditolak kalau name sudah ada.
 //        Untuk kategori baru: item_name = "CAT:<nama>", kategori = "<nama>".
-//   POST {action:"upload", item_name, filename, mime, file(base64), sheet, kategori?}
+//   POST {action:"delete", item_name, sheet} -> hapus baris (produk / baris CAT:).
 //        -> simpan ke Drive folder ROCKSTAR-UPLOADS, update kolom image.
 //        Kalau item_name "CAT:<kategori>" belum ada, otomatis tambah baris baru (tidak tampil sebagai produk di web).
 //
@@ -120,6 +120,7 @@ function doPost(e) {
     var action = norm_(body.action);
     if (action === "set") return jsonOut_(actionSet_(body));
     if (action === "add") return jsonOut_(actionAdd_(body));
+    if (action === "delete") return jsonOut_(actionDelete_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
@@ -184,6 +185,16 @@ function actionAdd_(body) {
   row[t.idx["image"]] = String(body.image || "");
   row[t.idx["sold"]] = Number(body.sold) || 0;
   t.sheet.appendRow(row);
+  return { result: "success" };
+}
+
+function actionDelete_(body) {
+  var name = String(body.item_name || body.name || "").trim();
+  if (!name) return { result: "error: item_name kosong" };
+  var t = readTable_(body.sheet || SHEET_DEFAULT);
+  var r = findRow_(t, name);
+  if (r < 0) return { result: "error: tidak ketemu: " + name };
+  t.sheet.deleteRow(r + 1);
   return { result: "success" };
 }
 

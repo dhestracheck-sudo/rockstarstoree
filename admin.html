@@ -70,6 +70,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     </div>
     <p class="hint" style="margin-top:10px;">Ubah lewat panel di bawah — preview ini ikut keganti otomatis.</p>
     <button id="saveAllBtn" onclick="saveAll()" style="background:var(--green);">💾 SIMPAN SEMUA PERUBAHAN</button>
+    <button id="delBtn" onclick="deleteProduct()" style="background:var(--red);">🗑️ HAPUS BARANG INI</button>
     <div id="statusAll"></div>
     <p class="hint" style="margin-top:10px;">Satu tombol menyimpan Harga + Stok + Terjual + Nama baru sekaligus. Foto/slide tetap tersimpan instan masing-masing.</p>
   </div>
@@ -136,6 +137,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <label>Nama kategori baru</label>
     <input type="text" id="catNameInput" placeholder="misal KOTAK GULUNG BRAINROT NEW" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <button id="renameCatBtn" onclick="renameCat()">✏️ Ganti Nama Kategori</button>
+    <button id="delCatBtn" onclick="deleteCategory()" style="background:var(--red);">🗑️ HAPUS KATEGORI + ISINYA</button>
     <div id="statusCatRename"></div>
     <p class="hint" style="margin-top:14px;">Mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus. Foto display diganti lewat card <b>Foto display kategori</b> di atas.</p>
   </div>
@@ -283,6 +285,63 @@ function syncAfterProduct(name){
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
   if(o) renderPreview(name, o);
   renderSlides();
+}
+
+function deleteProduct(){
+  const name = document.getElementById("itemSel").value;
+  const st = document.getElementById("statusAll");
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  if(!confirm("HAPUS barang ini dari Sheet?\n" + name)) return;
+  if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
+  st.textContent = "Menghapus...";
+  postOne({ action: "delete", item_name: name, sheet: CURSHEET() }).then(d => {
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">✅ Barang dihapus!</span>';
+      ALL_ITEMS = ALL_ITEMS.filter(x => String(x.name).trim() !== name);
+      const sel = document.getElementById("itemSel");
+      const opt = Array.from(sel.options).find(p => p.value === name);
+      if(opt) opt.remove();
+      syncAfterProduct(sel.value);
+    } else if(String(d.result || "").indexOf("unknown action") !== -1){
+      st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    } else {
+      st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+    }
+  });
+}
+
+function deleteCategory(){
+  const kat = document.getElementById("catRenameSel").value;
+  const st = document.getElementById("statusCatRename");
+  const btn = document.getElementById("delCatBtn");
+  if(!kat){ st.innerHTML = '<span class="err">Pilih kategori dulu.</span>'; return; }
+  const n = ALL_ITEMS.filter(o => String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat).length;
+  if(!confirm("HAPUS kategori \"" + kat + "\" + " + n + " baris (termasuk foto display)?")) return;
+  if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
+  btn.disabled = true;
+  st.textContent = "Menghapus...";
+  const names = ALL_ITEMS.filter(o => String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat).map(o => String(o.name).trim());
+  let chain = Promise.resolve(true);
+  names.forEach(nm => {
+    chain = chain.then(() => postOne({ action: "delete", item_name: nm, sheet: CURSHEET() }).then(d => d.result === "success"));
+  });
+  chain.then(ok => {
+    btn.disabled = false;
+    if(ok){
+      st.innerHTML = '<span class="ok">✅ Kategori dihapus!</span>';
+      ALL_ITEMS = ALL_ITEMS.filter(o => !(String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat));
+      ["catSel","catRenameSel","addCatSel"].forEach(id => {
+        const s = document.getElementById(id);
+        const opt = Array.from(s.options).find(p => p.value === kat);
+        if(opt) opt.remove();
+      });
+      document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
+      prefillCat();
+      prefill();
+    } else {
+      st.innerHTML = '<span class="err">Sebagian gagal / backend belum update (Deploy ulang Code.gs).</span>';
+    }
+  }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 
 function saveAll(){
