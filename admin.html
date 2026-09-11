@@ -600,12 +600,12 @@ function catDisplayOf(kat){
   return "";
 }
 
-function prefillCatRename(){
-  const kat = document.getElementById("catRenameSel").value;
+function prefillCat(){
+  const kat = document.getElementById("catSel").value;
   const u = kat ? catDisplayOf(kat) : "";
-  const img = document.getElementById("catRenameOld");
+  const img = document.getElementById("catOld");
   if(u) img.src = u; else img.removeAttribute("src");
-  document.getElementById("catRenameOldCap").textContent = u || "Belum ada foto display.";
+  document.getElementById("catOldCap").textContent = u || "Belum ada foto display.";
 }
 
 function postOne(body) {
