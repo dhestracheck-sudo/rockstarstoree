@@ -68,6 +68,9 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       </div>
     </div>
     <p class="hint" style="margin-top:10px;">Ubah lewat panel di bawah — preview ini ikut keganti otomatis.</p>
+    <button id="saveAllBtn" onclick="saveAll()" style="background:var(--green);">💾 SIMPAN SEMUA PERUBAHAN</button>
+    <div id="statusAll"></div>
+    <p class="hint" style="margin-top:10px;">Satu tombol menyimpan Harga + Stok + Terjual + Nama baru sekaligus. Foto/slide tetap tersimpan instan masing-masing.</p>
   </div>
 
   <div class="card" id="slideCard" style="display:none;">
@@ -247,6 +250,56 @@ function postSet(col, value, stEl, btn, okMsg){
     st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>';
     return false;
   });
+}
+
+function saveAll(){
+  const name = document.getElementById("itemSel").value;
+  const st = document.getElementById("statusAll");
+  const btn = document.getElementById("saveAllBtn");
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  const priceRaw = document.getElementById("priceInput").value;
+  const stockRaw = document.getElementById("stockInput").value;
+  const soldRaw = document.getElementById("soldInput").value;
+  const newName = document.getElementById("nameInput").value.trim();
+  const jobs = [];
+  if(priceRaw !== ""){
+    if(!(Number(priceRaw) > 0)){ st.innerHTML = '<span class="err">Harga tidak valid.</span>'; return; }
+    jobs.push({ col: 2, value: Number(priceRaw), label: "harga" });
+  }
+  if(stockRaw !== ""){
+    if(isNaN(Number(stockRaw))){ st.innerHTML = '<span class="err">Stok tidak valid.</span>'; return; }
+    jobs.push({ col: 3, value: Number(stockRaw), label: "stok" });
+  }
+  if(soldRaw !== ""){
+    if(isNaN(Number(soldRaw))){ st.innerHTML = '<span class="err">Terjual tidak valid.</span>'; return; }
+    jobs.push({ col: "sold", value: Number(soldRaw), label: "terjual" });
+  }
+  if(newName) jobs.push({ col: 1, value: newName, label: "nama" });
+  if(!jobs.length){ st.innerHTML = '<span class="err">Tidak ada perubahan (isi dulu yang mau diganti).</span>'; return; }
+  if(!confirm("Simpan berbarengan (" + jobs.map(j => j.label).join(", ") + ") untuk:\n" + name + " ?")) return;
+  btn.disabled = true;
+  st.textContent = "Menyimpan 1/" + jobs.length + "...";
+  let chain = Promise.resolve(true);
+  jobs.forEach((jb, idx) => {
+    chain = chain.then(ok => {
+      if(!ok) return false;
+      st.textContent = "Menyimpan " + (idx+1) + "/" + jobs.length + " (" + jb.label + ")...";
+      // nama barang bisa berubah di tengah jalan: selalu pakai nama terbaru
+      const cur = (idx > 0 && jobs[idx-1].col === 1) ? jobs[idx-1].value : document.getElementById("itemSel").value;
+      return postOne({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => d.result === "success");
+    });
+  });
+  chain.then(ok => {
+    btn.disabled = false;
+    if(ok){
+      st.innerHTML = '<span class="ok">✅ Semua tersimpan berbarengan!</span>';
+      document.getElementById("nameInput").value = "";
+      loadItems();
+    } else {
+      st.innerHTML = '<span class="err">Sebagian gagal, cek panel masing-masing.</span>';
+      loadItems();
+    }
+  }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 
 function savePriceStock(){
