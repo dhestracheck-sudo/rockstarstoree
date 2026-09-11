@@ -49,6 +49,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       <option value="Akun">Akun</option>
     </select>
     <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
+    <button onclick="loadItems()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
   </div>
 
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
@@ -249,6 +250,41 @@ function postSet(col, value, stEl, btn, okMsg){
   });
 }
 
+// Tambah baris ke data lokal + dropdown TANPA reset pilihan (tidak seperti loadItems).
+function addLocalRow(o){
+  ALL_ITEMS.push(o);
+  const nm = String(o.name).trim();
+  if(nm.indexOf("CAT:") !== 0){
+    const sel = document.getElementById("itemSel");
+    const op = document.createElement("option");
+    op.value = nm; op.textContent = nm.slice(0, 70);
+    sel.appendChild(op);
+  }
+  const k = String(o.kategori || "").trim();
+  ["catSel","catRenameSel","addCatSel"].forEach(id => {
+    const s = document.getElementById(id);
+    if(s && k && !Array.from(s.options).some(p => p.value === k)){
+      const op = document.createElement("option");
+      op.value = k; op.textContent = k.slice(0, 70);
+      s.appendChild(op);
+    }
+  });
+}
+
+function updItem(name, patch){
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(o) Object.assign(o, patch);
+  return o;
+}
+
+// Refresh tampilan TANPA reset dropdown (tidak seperti loadItems).
+function syncAfterProduct(name){
+  prefill();
+  const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  if(o) renderPreview(name, o);
+  renderSlides();
+}
+
 function saveAll(){
   const name = document.getElementById("itemSel").value;
   const st = document.getElementById("statusAll");
@@ -290,11 +326,24 @@ function saveAll(){
     btn.disabled = false;
     if(ok){
       st.innerHTML = '<span class="ok">✅ Semua tersimpan berbarengan!</span>';
+      let finalName = name;
+      jobs.forEach(jb => {
+        if(jb.col === 1){
+          updItem(finalName, { name: jb.value });
+          const sel = document.getElementById("itemSel");
+          const opt = Array.from(sel.options).find(p => p.value === finalName);
+          if(opt){ opt.value = jb.value; opt.textContent = String(jb.value).slice(0, 70); }
+          finalName = jb.value;
+          sel.value = finalName;
+        }
+        else if(jb.col === 2) updItem(finalName, { price: jb.value });
+        else if(jb.col === 3) updItem(finalName, { stock: jb.value });
+        else if(jb.col === "sold") updItem(finalName, { sold: jb.value });
+      });
       document.getElementById("nameInput").value = "";
-      loadItems();
+      syncAfterProduct(finalName);
     } else {
-      st.innerHTML = '<span class="err">Sebagian gagal, cek panel masing-masing.</span>';
-      loadItems();
+      st.innerHTML = '<span class="err">Sebagian gagal, tekan 🔄 Muat ulang lalu coba lagi.</span>';
     }
   }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
@@ -443,7 +492,8 @@ function saveSlides(arr, stMsg){
   postOne({ action: "set", item_name: name, col: "image", value: arr.slice(0, 10).join("|"), sheet: CURSHEET() }).then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">' + (stMsg || '✅ Tersimpan!') + '</span>';
-      loadItems();
+      updItem(name, { image: arr.slice(0, 10).join("|") });
+      syncAfterProduct(name);
     } else {
       st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
     }
@@ -533,6 +583,12 @@ function uploadCat(){
   sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
+      updItem("CAT:" + kat, { image: d.url });
+      if(!ALL_ITEMS.some(x => String(x.name).trim() === "CAT:" + kat)){
+        addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: d.url, sold: 0 });
+      }
+      prefillCat();
+      document.getElementById("catFileInput").value = "";
     } else if(String(d.result || "").indexOf("file rusak") !== -1){
       st.innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
     } else {
@@ -571,19 +627,22 @@ function addCategory(){
       st.innerHTML = '<span class="ok">✅ Kategori ditambah! Refresh web untuk lihat.</span>';
       document.getElementById("addCatName").value = "";
       btn.disabled = false;
-      loadItems();
+      addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0 });
+      document.getElementById("catSel").value = kat;
+      prefillCat();
       return;
     }
-    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (kategori sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (kategori sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0 }); return; }
     st.textContent = "Kategori ok, memeriksa & mengupload foto...";
     sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(u => {
-      if(u.result === "success") st.innerHTML = '<span class="ok">✅ Kategori + foto ditambah!</span>';
-      else if(String(u.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Kategori ditambah, tapi file rusak / bukan gambar — upload ulang pakai JPG/PNG.</span>';
-      else st.innerHTML = '<span class="err">Kategori ditambah, foto gagal: ' + (u.result || "?") + '</span>';
+      if(u.result === "success"){ st.innerHTML = '<span class="ok">✅ Kategori + foto ditambah!</span>'; addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: u.url, sold: 0 }); }
+      else if(String(u.result || "").indexOf("file rusak") !== -1){ st.innerHTML = '<span class="err">Kategori ditambah, tapi file rusak / bukan gambar — upload ulang pakai JPG/PNG.</span>'; addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0 }); }
+      else { st.innerHTML = '<span class="err">Kategori ditambah, foto gagal: ' + (u.result || "?") + '</span>'; addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0 }); }
       document.getElementById("addCatName").value = "";
       document.getElementById("addCatFile").value = "";
       btn.disabled = false;
-      loadItems();
+      document.getElementById("catSel").value = kat;
+      prefillCat();
     });
   });
 }
@@ -609,19 +668,24 @@ function addProduct(){
       st.innerHTML = '<span class="ok">✅ Produk ditambah! Tambah fotonya via panel slide.</span>';
       document.getElementById("addName").value = "";
       btn.disabled = false;
-      loadItems();
+      addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0 });
+      document.getElementById("itemSel").value = nm;
+      syncAfterProduct(nm);
       return;
     }
-    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; loadItems(); return; }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); return; }
     st.textContent = "Produk ok, memeriksa & mengupload foto...";
     sendUpload(f, { action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(u => {
+      const img = (u.result === "success") ? u.url : "";
       if(u.result === "success") st.innerHTML = '<span class="ok">✅ Produk + foto ditambah!</span>';
       else if(String(u.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Produk ditambah, tapi file rusak / bukan gambar — tambah ulang via panel slide pakai JPG/PNG.</span>';
       else st.innerHTML = '<span class="err">Produk ditambah, foto gagal: ' + (u.result || "?") + '</span>';
       document.getElementById("addName").value = "";
       document.getElementById("addFile").value = "";
       btn.disabled = false;
-      loadItems();
+      addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: img, sold: 0 });
+      document.getElementById("itemSel").value = nm;
+      syncAfterProduct(nm);
     });
   });
 }
@@ -703,7 +767,18 @@ function renameCat(){
     st.innerHTML = '<span class="ok">✅ Nama kategori diganti! Refresh web utama.</span>';
     document.getElementById("catNameInput").value = "";
     btn.disabled = false;
-    loadItems();
+    ALL_ITEMS.forEach(o => {
+      if(String(o.kategori || "").trim() === oldKat) o.kategori = newKat;
+      if(String(o.name).trim() === "CAT:" + oldKat) o.name = "CAT:" + newKat;
+    });
+    ["catSel","catRenameSel","addCatSel"].forEach(id => {
+      const s = document.getElementById(id);
+      Array.from(s.options).forEach(p => { if(p.value === oldKat){ p.value = newKat; p.textContent = newKat.slice(0, 70); } });
+      s.value = newKat;
+    });
+    document.getElementById("catRenameOldName").textContent = newKat;
+    prefill();
+    prefillCat();
   }).catch(() => { st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; btn.disabled = false; });
 }
 </script>
