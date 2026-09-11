@@ -56,6 +56,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 
   <div class="card" id="mainCard" style="display:none;">
     <label>Barang (produk) yang diedit — berlaku untuk semua panel 📦 di bawah</label>
+    <input type="text" id="itemSearch" placeholder="🔍 Cari barang..." oninput="fillProductOptions(this.value.toLowerCase())" style="width:100%;padding:10px 14px;margin-bottom:8px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <select id="itemSel"><option>Memuat daftar barang...</option></select>
   </div>
 
@@ -93,6 +94,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 
   <div class="card" id="catCard" style="display:none;">
     <label>Kategori yang diedit (foto display)</label>
+    <input type="text" id="catSearch" placeholder="🔍 Cari kategori..." oninput="fillCatOptions(this.value.toLowerCase())" style="width:100%;padding:10px 14px;margin-bottom:8px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <select id="catSel"><option>Memuat kategori...</option></select>
     <label>Foto display lama</label>
     <img id="catOld" alt="foto display lama" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);">
@@ -443,6 +445,56 @@ function savePriceStock(){
   return;
 }
 
+function fillProductOptions(filter){
+  const sel = document.getElementById("itemSel");
+  const cur = sel.value;
+  sel.innerHTML = "";
+  ALL_ITEMS.forEach(o => {
+    const nm = String(o.name || "").trim();
+    if (!nm || nm.indexOf("CAT:") === 0) return;
+    if (filter && nm.toLowerCase().indexOf(filter) === -1) return;
+    const op = document.createElement("option");
+    op.value = nm;
+    op.textContent = nm.slice(0, 70);
+    sel.appendChild(op);
+  });
+  if(cur && Array.from(sel.options).some(p => p.value === cur)) sel.value = cur;
+  sel.onchange = prefill;
+  prefill();
+}
+
+function catList(){
+  const cats = [];
+  ALL_ITEMS.forEach(o => {
+    const k = String(o.kategori || "").trim();
+    if (k && cats.indexOf(k) === -1) cats.push(k);
+  });
+  cats.sort();
+  return cats;
+}
+
+function fillCatOptions(filter){
+  const cats = catList().filter(k => !filter || k.toLowerCase().indexOf(filter) !== -1);
+  ["catSel","catRenameSel","addCatSel"].forEach(id => {
+    const s = document.getElementById(id);
+    const cur = s.value;
+    s.innerHTML = "";
+    cats.forEach(k => {
+      const op = document.createElement("option");
+      op.value = k;
+      op.textContent = k.slice(0, 70);
+      s.appendChild(op);
+    });
+    if(cur && cats.indexOf(cur) !== -1) s.value = cur;
+  });
+  document.getElementById("catRenameSel").onchange = () => {
+    document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
+  };
+  document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
+  document.getElementById("catSel").onchange = prefillCat;
+  prefillCat();
+}
+
 function loadItems(){
   return new Promise(resolve => {
     const timer = setTimeout(resolve, 8000);
@@ -451,54 +503,10 @@ function loadItems(){
       try {
         const arr = Array.isArray(data) ? data : [];
         ALL_ITEMS = arr;
-        const sel = document.getElementById("itemSel");
-        sel.innerHTML = "";
-        arr.forEach(o => {
-          const nm = String(o.name || "").trim();
-          if (!nm || nm.indexOf("CAT:") === 0) return;
-          const op = document.createElement("option");
-          op.value = nm;
-          op.textContent = nm.slice(0, 70);
-          sel.appendChild(op);
-        });
-        sel.onchange = prefill;
-        prefill();
-        const cats = [];
-        arr.forEach(o => {
-          const k = String(o.kategori || "").trim();
-          if (k && cats.indexOf(k) === -1) cats.push(k);
-        });
-        cats.sort();
-        const csel = document.getElementById("catSel");
-        csel.innerHTML = "";
-        cats.forEach(k => {
-          const op = document.createElement("option");
-          op.value = k;
-          op.textContent = k.slice(0, 70);
-          csel.appendChild(op);
-        });
-        csel.onchange = prefillCat;
-        prefillCat();
-        const rsel = document.getElementById("catRenameSel");
-        rsel.innerHTML = "";
-        cats.forEach(k => {
-          const op = document.createElement("option");
-          op.value = k;
-          op.textContent = k.slice(0, 70);
-          rsel.appendChild(op);
-        });
-        rsel.onchange = () => {
-          document.getElementById("catRenameOldName").textContent = rsel.value || "-";
-        };
-        document.getElementById("catRenameOldName").textContent = rsel.value || "-";
-        const psel = document.getElementById("addCatSel");
-        psel.innerHTML = "";
-        cats.forEach(k => {
-          const op = document.createElement("option");
-          op.value = k;
-          op.textContent = k.slice(0, 70);
-          psel.appendChild(op);
-        });
+        document.getElementById("itemSearch").value = "";
+        document.getElementById("catSearch").value = "";
+        fillProductOptions("");
+        fillCatOptions("");
       } catch(e) {}
       resolve();
     };
