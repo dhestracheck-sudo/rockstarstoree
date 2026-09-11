@@ -194,15 +194,21 @@ function actionDelMany_(body) {
   if (!names || !names.length || typeof names.length !== "number") return { result: "error: names kosong" };
   var t = readTable_(body.sheet || SHEET_DEFAULT);
   var ni = t.idx["name"];
+  var W = t.headers.length;
   var targets = {};
   for (var i = 0; i < names.length; i++) targets[String(names[i]).trim()] = true;
-  var rows = [];
-  for (var r = 1; r < t.rows.length; r++) {
-    if (targets[String(t.rows[r][ni]).trim()]) rows.push(r + 1);
+  var kept = [];
+  var dropped = 0;
+  for (var r = 0; r < t.rows.length; r++) {
+    var row = t.rows[r].slice();
+    while (row.length < W) row.push("");
+    if (r > 0 && targets[String(row[ni]).trim()]) { dropped++; continue; }
+    kept.push(row.slice(0, W));
   }
-  rows.sort(function (a, b) { return b - a; }); // hapus dari bawah (termasuk duplikat)
-  for (var k = 0; k < rows.length; k++) t.sheet.deleteRow(rows[k]);
-  return { result: "success", deleted: rows.length, total: names.length };
+  // tulis ulang sekaligus (jauh lebih cepat daripada deleteRow satu-satu)
+  t.sheet.clearContents();
+  t.sheet.getRange(1, 1, kept.length, W).setValues(kept);
+  return { result: "success", deleted: dropped, total: names.length };
 }
 
 function actionDelete_(body) {
