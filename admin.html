@@ -173,7 +173,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 <script>
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzLRxtp58q-UFAht4hEEAKzDrCTnuoWD2wbxiDDMX381CffOl6Eorwi2EweztMxXfxY/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
-const ADMIN_V = "12c-hapus-toleran";
+const ADMIN_V = "12d-hapus-cepat";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -321,20 +321,10 @@ function deleteCategory(){
   if(!confirm("HAPUS kategori \"" + kat + "\" + " + n + " baris (termasuk foto display)?")) return;
   if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
   btn.disabled = true;
-  st.textContent = "Menghapus 0/" + names.length + "...";
-  let done = 0, di = 0;
-  let chain = Promise.resolve(true);
-  names.forEach(nm => {
-    chain = chain.then(() => postOne({ action: "delete", item_name: nm, sheet: CURSHEET() }).then(d => {
-      di++;
-      st.textContent = "Menghapus " + di + "/" + names.length + "...";
-      if(d.result === "success" || String(d.result || "").indexOf("tidak ketemu") !== -1) done++;
-      return true;
-    }).catch(() => true));
-  });
-  chain.then(() => {
+  st.textContent = "Menghapus " + names.length + " baris sekaligus...";
+  const afterDel = okCount => {
     btn.disabled = false;
-    if(done > 0){
+    if(okCount > 0){
       ALL_ITEMS = ALL_ITEMS.filter(o => !(String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat));
       ["catSel","catRenameSel","addCatSel"].forEach(id => {
         const s = document.getElementById(id);
@@ -345,9 +335,29 @@ function deleteCategory(){
       prefillCat();
       prefill();
     }
-    st.innerHTML = done >= names.length
-      ? '<span class="ok">✅ Kategori dihapus (' + done + '/' + names.length + ')!</span>'
-      : '<span class="err">Terhapus ' + done + '/' + names.length + ' — tekan lagi tombol hapus untuk sisanya.</span>';
+    st.innerHTML = okCount >= names.length
+      ? '<span class="ok">✅ Kategori dihapus (' + okCount + '/' + names.length + ')!</span>'
+      : '<span class="err">Terhapus ' + okCount + '/' + names.length + ' — tekan lagi tombol hapus untuk sisanya.</span>';
+  };
+  const seqDel = () => {
+    // cadangan kalau backend belum update (tanpa delmany): hapus satu-satu
+    let done = 0, di = 0;
+    let chain = Promise.resolve(true);
+    names.forEach(nm => {
+      chain = chain.then(() => postOne({ action: "delete", item_name: nm, sheet: CURSHEET() }).then(d => {
+        di++;
+        st.textContent = "Menghapus " + di + "/" + names.length + "...";
+        if(d.result === "success" || String(d.result || "").indexOf("tidak ketemu") !== -1) done++;
+        return true;
+      }).catch(() => true));
+    });
+    chain.then(() => afterDel(done)).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
+  };
+  postOne({ action: "delmany", names: names, sheet: CURSHEET() }, 90000).then(d => {
+    if(d.result === "success"){ afterDel(d.deleted); return; }
+    if(String(d.result || "").indexOf("unknown action") !== -1){ seqDel(); return; }
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
   }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 

@@ -121,8 +121,9 @@ function doPost(e) {
     if (action === "set") return jsonOut_(actionSet_(body));
     if (action === "add") return jsonOut_(actionAdd_(body));
     if (action === "delete") return jsonOut_(actionDelete_(body));
+    if (action === "delmany") return jsonOut_(actionDelMany_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
-    return jsonOut_({ result: "error: unknown action (pakai set / add / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
+    return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
     return jsonOut_({ result: "error: " + String(err && err.message || err) });
   }
@@ -186,6 +187,22 @@ function actionAdd_(body) {
   row[t.idx["sold"]] = Number(body.sold) || 0;
   t.sheet.appendRow(row);
   return { result: "success" };
+}
+
+function actionDelMany_(body) {
+  var names = body.names || body.items;
+  if (!names || !names.length || typeof names.length !== "number") return { result: "error: names kosong" };
+  var t = readTable_(body.sheet || SHEET_DEFAULT);
+  var ni = t.idx["name"];
+  var targets = {};
+  for (var i = 0; i < names.length; i++) targets[String(names[i]).trim()] = true;
+  var rows = [];
+  for (var r = 1; r < t.rows.length; r++) {
+    if (targets[String(t.rows[r][ni]).trim()]) rows.push(r + 1);
+  }
+  rows.sort(function (a, b) { return b - a; }); // hapus dari bawah (termasuk duplikat)
+  for (var k = 0; k < rows.length; k++) t.sheet.deleteRow(rows[k]);
+  return { result: "success", deleted: rows.length, total: names.length };
 }
 
 function actionDelete_(body) {
