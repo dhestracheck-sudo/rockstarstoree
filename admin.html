@@ -115,8 +115,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <input type="number" id="stockInput" placeholder="misal 10" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Terjual baru (sold, angka display)</label>
     <input type="number" id="soldInput" placeholder="misal 100" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-    <button id="saveBtn" onclick="savePriceStock()">💾 Simpan Harga, Stok & Terjual</button>
-    <div id="status2"></div>
+    <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas.</p>
   </div>
 
   <div class="card" id="renameCard" style="display:none;">
@@ -125,9 +124,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <div id="catInfo2" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;">-</div>
     <label>Nama baru barang</label>
     <input type="text" id="nameInput" placeholder="nama lengkap baru" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-    <button id="renameBtn" onclick="renameItem()">✏️ Ganti Nama</button>
-    <div id="status3"></div>
-    <p class="hint" style="margin-top:14px;">Ganti nama aman karena web dibangun dari Sheets — nama baru langsung tampil setelah refresh.</p>
+    <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas. Ganti nama aman karena web dibangun dari Sheets.</p>
   </div>
 
   <div class="card" id="renameCatCard" style="display:none;">
@@ -302,30 +299,14 @@ function saveAll(){
   }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 
-function savePriceStock(){
-  const price = Number(document.getElementById("priceInput").value);
-  const stock = document.getElementById("stockInput").value;
-  const soldRaw = document.getElementById("soldInput").value;
-  const btn = document.getElementById("saveBtn");
-  if(!(price > 0)){ document.getElementById("status2").innerHTML = '<span class="err">Isi harga dulu.</span>'; return; }
-  if(stock === "" || isNaN(Number(stock))){ document.getElementById("status2").innerHTML = '<span class="err">Isi stok dulu.</span>'; return; }
-  if(soldRaw === "" || isNaN(Number(soldRaw))){ document.getElementById("status2").innerHTML = '<span class="err">Isi terjual dulu.</span>'; return; }
-  postSet(2, price, "status2", btn, "Harga tersimpan, menyimpan stok...").then(ok => {
-    if(!ok) return;
-    postSet(3, Number(stock), "status2", btn, "Stok tersimpan, menyimpan terjual...").then(ok2 => {
-      if(ok2) postSet("sold", Number(soldRaw), "status2", btn, "✅ Harga, stok & terjual tersimpan!");
-    });
-  });
+function renameItem(){
+  // digabung ke saveAll (tombol hijau) — fungsi lama tidak dipakai
+  return;
 }
 
-function renameItem(){
-  const nv = document.getElementById("nameInput").value.trim();
-  const btn = document.getElementById("renameBtn");
-  if(!nv){ document.getElementById("status3").innerHTML = '<span class="err">Isi nama baru dulu.</span>'; return; }
-  if(!confirm("Ganti nama barang ini menjadi:\n" + nv + " ?")) return;
-  postSet(1, nv, "status3", btn, "✅ Nama diganti! Daftar dimuat ulang...").then(ok => {
-    if(ok){ document.getElementById("nameInput").value = ""; loadItems(); }
-  });
+function savePriceStock(){
+  // digabung ke saveAll (tombol hijau) — fungsi lama tidak dipakai
+  return;
 }
 
 function loadItems(){
