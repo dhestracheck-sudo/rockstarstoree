@@ -34,7 +34,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 </head>
 <body>
 <div class="wrap">
-  <h1>🔧 Admin Rockstar.Store</h1>
+  <h1>🔧 Admin Rockstar.Store <span id="adminV" style="font-size:12px;color:var(--mut);font-family:'Poppins',sans-serif;"></span></h1>
 
   <div class="card" id="pinCard">
     <label>PIN Admin</label>
@@ -173,6 +173,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 <script>
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzLRxtp58q-UFAht4hEEAKzDrCTnuoWD2wbxiDDMX381CffOl6Eorwi2EweztMxXfxY/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
+const ADMIN_V = "12c-hapus-toleran";
+document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
   const s = document.getElementById("sheetSel");
