@@ -770,13 +770,21 @@ function prefillCat(){
   document.getElementById("catOldCap").textContent = u || "Belum ada foto display.";
 }
 
-function postOne(body) {
+function postOne(body, ms){
+  ms = ms || 45000;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
   return fetch(SHEET_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    signal: ctl.signal
   }).then(r => r.text()).then(t => {
+    clearTimeout(timer);
     try { return JSON.parse(t); } catch(e) { return { result: "error: respon aneh" }; }
+  }).catch(err => {
+    clearTimeout(timer);
+    return { result: "error: timeout/koneksi (> " + Math.round(ms/1000) + "s)" };
   });
 }
 
