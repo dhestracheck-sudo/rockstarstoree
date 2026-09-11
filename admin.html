@@ -650,7 +650,6 @@ function sendUpload(f, body){
 function renameCat(){
   const oldKat = document.getElementById("catRenameSel").value;
   const newKat = document.getElementById("catNameInput").value.trim();
-  const f = document.getElementById("catRenameFileInput").files[0];
   const st = document.getElementById("statusCatRename");
   const btn = document.getElementById("renameCatBtn");
   if(!oldKat){ st.innerHTML = '<span class="err">Pilih kategori dulu.</span>'; return; }
@@ -667,22 +666,10 @@ function renameCat(){
   chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: "kategori", value: newKat, sheet: CURSHEET() }));
   chain = chain.then(() => postOne({ action: "set", item_name: "CAT:" + oldKat, col: 1, value: "CAT:" + newKat, sheet: CURSHEET() }));
   chain.then(() => {
-    if (!f) {
-      st.innerHTML = '<span class="ok">✅ Nama kategori diganti! Refresh web utama.</span>';
-      btn.disabled = false;
-      loadItems();
-      return;
-    }
-    if (f.size > 8 * 1024 * 1024) { st.innerHTML = '<span class="err">Foto maksimal 8 MB (nama sudah diganti).</span>'; btn.disabled = false; loadItems(); return; }
-    st.textContent = "Nama ok, memeriksa & mengupload foto...";
-    sendUpload(f, { action: "upload", item_name: "CAT:" + newKat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: newKat })
-    .then(d => {
-      if (d.result === "success") st.innerHTML = '<span class="ok">✅ Nama + foto kategori diganti! Refresh web utama.</span>';
-      else if (String(d.result || "").indexOf("file rusak") !== -1) st.innerHTML = '<span class="err">Nama diganti, tapi file rusak / bukan gambar — upload ulang pakai JPG/PNG.</span>';
-      else st.innerHTML = '<span class="err">Nama diganti, foto gagal: ' + (d.result || "?") + '</span>';
-      btn.disabled = false;
-      loadItems();
-    });
+    st.innerHTML = '<span class="ok">✅ Nama kategori diganti! Refresh web utama.</span>';
+    document.getElementById("catNameInput").value = "";
+    btn.disabled = false;
+    loadItems();
   }).catch(() => { st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; btn.disabled = false; });
 }
 </script>
