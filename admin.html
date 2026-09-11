@@ -173,7 +173,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 <script>
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbz7_GW4QXniyt8SfeeIgTmIELA9lNmEf_5_nyu4UidGPBfuco51-beKiGi3fxcoDGdm/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
-const ADMIN_V = "12f-hapus-cepat";
+const ADMIN_V = "12g-hapus-cepat";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -321,7 +321,12 @@ function deleteCategory(){
   if(!confirm("HAPUS kategori \"" + kat + "\" + " + n + " baris (termasuk foto display)?")) return;
   if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
   btn.disabled = true;
-  st.textContent = "Menghapus " + names.length + " baris sekaligus...";
+  const names = ALL_ITEMS.filter(o => String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat).map(o => String(o.name).trim());
+  const t0 = Date.now();
+  const tick = setInterval(() => {
+    st.textContent = "Menghapus " + names.length + " baris sekaligus... (" + Math.round((Date.now() - t0) / 1000) + " dtk)";
+  }, 500);
+  st.textContent = "Menghapus " + names.length + " baris sekaligus... (0 dtk)";
   const afterDel = okCount => {
     btn.disabled = false;
     if(okCount > 0){
@@ -341,6 +346,7 @@ function deleteCategory(){
   };
   const seqDel = () => {
     // cadangan kalau backend belum update (tanpa delmany): hapus satu-satu
+    clearInterval(tick);
     let done = 0, di = 0;
     let chain = Promise.resolve(true);
     names.forEach(nm => {
@@ -354,11 +360,14 @@ function deleteCategory(){
     chain.then(() => afterDel(done)).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
   };
   postOne({ action: "delmany", names: names, sheet: CURSHEET() }, 90000).then(d => {
-    if(d.result === "success"){ afterDel(d.deleted); return; }
+    clearInterval(tick);
+    const secs = Math.round((Date.now() - t0) / 1000);
+    if(d.result === "success"){ afterDel(d.deleted); st.innerHTML += ' <span style="color:var(--mut);">(' + secs + ' dtk)</span>'; return; }
     if(String(d.result || "").indexOf("unknown action") !== -1){ seqDel(); return; }
+    clearInterval(tick);
     btn.disabled = false;
     st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
+  }).catch(() => { clearInterval(tick); btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 
 function saveAll(){
