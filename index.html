@@ -481,7 +481,12 @@ header {
   box-shadow: 0 12px 30px rgba(37,211,102,0.5); overflow: hidden; padding: 0;
 }
 .wabtn img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.wabtn.testibtn { width: auto; height: 46px; padding: 5px 16px 5px 5px; gap: 8px; font-size: 15px; font-weight: 700; color: #111; font-family: 'Poppins', sans-serif; background: #fff; box-shadow: 0 12px 30px rgba(0,0,0,0.45); }
+.wabtn.testibtn { width: 110px; height: 110px; padding: 0; background: rgba(6,9,19,0.88); border: 1px solid var(--line); border-radius: 50%; position: relative; }
+.wabtn.testibtn img { width: 52px; height: 52px; border-radius: 50%; position: absolute; }
+.wabtn.testibtn .tring { position: absolute; inset: 0; animation: spin 14s linear infinite; }
+.wabtn.testibtn .tring svg { width: 100%; height: 100%; }
+.wabtn.testibtn .tring text { fill: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: 1.5px; font-family: 'Poppins', sans-serif; }
+@keyframes spin { to { transform: rotate(360deg); } }
 .wabtn.testibtn img { width: 36px; height: 36px; border-radius: 50%; }
 .wapop {
   background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
@@ -643,7 +648,15 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="watext"><b>⭐ Testimoni Customer</b><span>100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
     <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
   </div>
-  <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni"><img src="ROCKSTARLOGO.png" alt="Rockstar"><span>KLIK INI LIHAT TESTI</span></button>
+  <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni">
+    <span class="tring">
+      <svg viewBox="0 0 100 100">
+        <defs><path id="tcirc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
+        <text><textPath href="#tcirc">KLIK INI LIHAT TESTI • KLIK INI LIHAT TESTI •</textPath></text>
+      </svg>
+    </span>
+    <img src="ROCKSTARLOGO.png" alt="Rockstar">
+  </button>
   <div class="wapop" id="waPop" style="display:none;">
     <img src="logo wa.jpg" alt="WhatsApp Admin" onerror="this.style.display='none'">
     <div class="watext"><b>Butuh bantuan?</b><span>Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
