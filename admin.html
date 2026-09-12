@@ -119,6 +119,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <input type="number" id="stockInput" placeholder="misal 10" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Terjual baru (sold, angka display)</label>
     <input type="number" id="soldInput" placeholder="misal 100" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Harga coret / diskon (opsional — tampil coret bila LEBIH BESAR dari harga)</label>
+    <input type="number" id="coretInput" placeholder="misal 30000, kosongkan = tanpa diskon" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas.</p>
   </div>
 
@@ -160,6 +162,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       <input type="number" id="addPrice" placeholder="harga" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
       <input type="number" id="addStock" placeholder="stok" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     </div>
+    <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Foto produk (opsional, bisa tambah lagi maks 10 via panel slide)</label>
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
@@ -211,6 +214,7 @@ function prefill(){
     document.getElementById("priceInput").value = o.price || "";
     document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
     document.getElementById("soldInput").value = (o.sold === 0 || o.sold) ? o.sold : "";
+    document.getElementById("coretInput").value = (o.coret > 0) ? o.coret : "";
     document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("curProdSlide").textContent = name;
@@ -380,6 +384,7 @@ function saveAll(){
   const priceRaw = document.getElementById("priceInput").value;
   const stockRaw = document.getElementById("stockInput").value;
   const soldRaw = document.getElementById("soldInput").value;
+  const coretRaw = document.getElementById("coretInput").value;
   const newName = document.getElementById("nameInput").value.trim();
   const jobs = [];
   if(priceRaw !== ""){
@@ -393,6 +398,10 @@ function saveAll(){
   if(soldRaw !== ""){
     if(isNaN(Number(soldRaw))){ st.innerHTML = '<span class="err">Terjual tidak valid.</span>'; return; }
     jobs.push({ col: "sold", value: Number(soldRaw), label: "terjual" });
+  }
+  if(coretRaw !== ""){
+    if(isNaN(Number(coretRaw)) || Number(coretRaw) < 0){ st.innerHTML = '<span class="err">Harga coret tidak valid.</span>'; return; }
+    jobs.push({ col: "coret", value: Number(coretRaw), label: "coret" });
   }
   if(newName) jobs.push({ col: 1, value: newName, label: "nama" });
   if(!jobs.length){ st.innerHTML = '<span class="err">Tidak ada perubahan (isi dulu yang mau diganti).</span>'; return; }
@@ -426,6 +435,7 @@ function saveAll(){
         else if(jb.col === 2) updItem(finalName, { price: jb.value });
         else if(jb.col === 3) updItem(finalName, { stock: jb.value });
         else if(jb.col === "sold") updItem(finalName, { sold: jb.value });
+        else if(jb.col === "coret") updItem(finalName, { coret: jb.value });
       });
       document.getElementById("nameInput").value = "";
       syncAfterProduct(finalName);
@@ -539,7 +549,8 @@ function renderPreview(name, o){
   const n = v => (v === 0 || v) ? Number(v).toLocaleString("id-ID") : "-";
   document.getElementById("prevMeta").textContent =
     (String(o.kategori || "-").trim() || "-") + " • Stok: " + n(o.stock) + " • Terjual: " + n(o.sold);
-  document.getElementById("prevPrice").textContent = "Rp " + n(o.price);
+  document.getElementById("prevPrice").innerHTML = "Rp " + n(o.price) +
+    ((Number(o.coret) > Number(o.price)) ? ' <span style="font-size:13px;color:var(--mut);text-decoration:line-through;">Rp ' + Number(o.coret).toLocaleString("id-ID") + '</span>' : '');
 }
 
 function imgRawOf(name){
@@ -745,6 +756,7 @@ function addProduct(){
   const kat = document.getElementById("addCatSel").value;
   const price = Number(document.getElementById("addPrice").value);
   const stockRaw = document.getElementById("addStock").value;
+  const coretRaw = document.getElementById("addCoret").value;
   const f = document.getElementById("addFile").files[0];
   const st = document.getElementById("statusAdd");
   const btn = document.getElementById("addBtn");
@@ -754,19 +766,20 @@ function addProduct(){
   if(stockRaw === "" || isNaN(Number(stockRaw))){ st.innerHTML = '<span class="err">Isi stok dulu.</span>'; return; }
   btn.disabled = true;
   st.textContent = "Menambah produk...";
-  postOne({ action: "add", item_name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
+  const coretVal = (coretRaw !== "" && !isNaN(Number(coretRaw))) ? Number(coretRaw) : 0;
+  postOne({ action: "add", item_name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
     if(needAdd_(d, st, btn)) return;
     if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
     if(!f){
       st.innerHTML = '<span class="ok">✅ Produk ditambah! Tambah fotonya via panel slide.</span>';
       document.getElementById("addName").value = "";
       btn.disabled = false;
-      addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0 });
+      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 });
       document.getElementById("itemSel").value = nm;
       syncAfterProduct(nm);
       return;
     }
-    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); return; }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); return; }
     st.textContent = "Produk ok, memeriksa & mengupload foto...";
     sendUpload(f, { action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(u => {
       const img = (u.result === "success") ? u.url : "";
@@ -776,7 +789,7 @@ function addProduct(){
       document.getElementById("addName").value = "";
       document.getElementById("addFile").value = "";
       btn.disabled = false;
-      addLocalRow({ name: nm, kategori: kat, price: price, stock: Number(stockRaw), soldout: "", image: img, sold: 0 });
+      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: img, sold: 0 });
       document.getElementById("itemSel").value = nm;
       syncAfterProduct(nm);
     });

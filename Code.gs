@@ -3,7 +3,8 @@
 //
 // Sheet yang dibutuhkan:
 //   Tab "Brainrot", baris 1 header (urutan bebas, nama fleksibel):
-//     name | kategori | price | stock | soldout | image | sold
+//     name | kategori | price | coret | stock | soldout | image | sold
+//   coret = harga coret (opsional, tampil discount bila > price)
 //   File CSV siap-import: Desktop/rockstar3/data-google-sheet.csv
 //
 // Mendukung:
@@ -28,6 +29,7 @@ var HEADER_ALIASES = {
   name: ["name", "nama", "nama barang", "barang", "item_name", "item", "produk"],
   kategori: ["kategori", "category", "kat", "kelompok"],
   price: ["price", "harga", "rp"],
+  coret: ["coret", "harga coret", "harga awal", "harga normal", "original", "originalprice", "was"],
   stock: ["stock", "stok", "sisa"],
   soldout: ["soldout", "sold out", "habis", "sold_out"],
   image: ["image", "gambar", "foto", "img", "link", "url", "file"],
@@ -65,7 +67,7 @@ function readTable_() {
     if (k && !(k in idx)) idx[k] = c;
   }
   // pastikan kolom kanonis ada; kalau belum, tambah di kanan
-  var need = ["name", "kategori", "price", "stock", "soldout", "image", "sold"];
+  var need = ["name", "kategori", "price", "coret", "stock", "soldout", "image", "sold"];
   var changed = false;
   need.forEach(function (k) {
     if (!(k in idx)) {
@@ -84,6 +86,7 @@ function toObj_(row, idx) {
     name: String(g("name", "")),
     kategori: String(g("kategori", "")),
     price: Number(g("price", 0)) || 0,
+    coret: Number(g("coret", 0)) || 0,
     stock: Number(g("stock", 0)) || 0,
     soldout: String(g("soldout", "")),
     image: String(g("image", "")),

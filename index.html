@@ -1407,8 +1407,9 @@ function rebuildFromSheet(arr, targetCats){
     if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
     if (!files.length && codeImg[name]) files = [codeImg[name]];
     const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
-    const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
-    if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
+            if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            if (Number(o.coret) > it.price) it.originalPrice = Number(o.coret);
     if (files.length > 1) it.images = files;
     const g = groups[kat];
     g.items.push(it);
@@ -1421,7 +1422,7 @@ function rebuildFromSheet(arr, targetCats){
 
 function mergeFromSheet(arr){
   const map = {};
-  arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
   [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
     cats.forEach(c => {
       const catKey = "CAT:" + String(c.name).trim();
@@ -1434,9 +1435,11 @@ function mergeFromSheet(arr){
       if (k in map) {
         const v = map[k];
         const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
-        it.stock = flagged ? 0 : v.stock;
-        if (v.price > 0) it.price = v.price;
-        if (v.sold > 0) it.sold = v.sold;
+              it.stock = flagged ? 0 : v.stock;
+              if (v.price > 0) it.price = v.price;
+              if (v.sold > 0) it.sold = v.sold;
+              if (v.coret > it.price) it.originalPrice = v.coret;
+              else if (!(v.coret > 0)) it.originalPrice = null;
         if (v.image) {
           const files = splitFiles(v.image);
           if (files.length > 1) { it.img = files[0]; it.images = files; }
