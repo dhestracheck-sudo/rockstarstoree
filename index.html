@@ -647,7 +647,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <div class="wafab">
   <div class="wapop" id="testiPop" style="display:none;">
-    <img src="logo wa.jpg" alt="Testimoni" onerror="this.style.display='none'">
     <div class="watext"><b>⭐ Testimoni Customer</b><span>100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
     <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
   </div>
@@ -1276,9 +1275,7 @@ function toggleWaPop(){
 
 function toggleTestiPop(){
   const p = document.getElementById("testiPop");
-  const open = (p.style.display === "none" || !p.style.display);
-  p.style.display = open ? "flex" : "none";
-  document.getElementById("waBtn").style.display = open ? "none" : "";
+  p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
 }
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
