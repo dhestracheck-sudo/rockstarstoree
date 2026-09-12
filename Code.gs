@@ -240,7 +240,7 @@ function actionUpload_(body) {
   var file = folder.createFile(blob);
   try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) {}
   var id = file.getId();
-  var url = "https://drive.google.com/thumbnail?id=" + id + "&sz=w1000";
+  var url = "https://drive.google.com/thumbnail?id=" + id + "&sz=w1600";
 
   var t = readTable_(body.sheet || SHEET_DEFAULT);
   var r = findRow_(t, name);
