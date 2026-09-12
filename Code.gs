@@ -184,6 +184,7 @@ function actionAdd_(body) {
   row[t.idx["name"]] = name;
   row[t.idx["kategori"]] = kat;
   row[t.idx["price"]] = Number(body.price) || 0;
+  row[t.idx["coret"]] = Number(body.coret) || 0;
   row[t.idx["stock"]] = Number(body.stock) || 0;
   row[t.idx["soldout"]] = String(body.soldout || (name.indexOf("CAT:") === 0 ? "YA" : ""));
   row[t.idx["image"]] = String(body.image || "");
