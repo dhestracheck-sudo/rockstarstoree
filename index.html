@@ -243,13 +243,15 @@ header {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   background: linear-gradient(90deg, #3d0a0a, #7a1010);
   border: 1px solid var(--red); border-radius: var(--r);
-  padding: 16px 20px; margin-bottom: 18px;
+  padding: 16px 20px; margin-bottom: 0; cursor: pointer; user-select: none;
 }
 .flashhead h3 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; }
+.flashhead .arrow { margin-left: 4px; font-size: 18px; color: var(--blue2); }
 .flashhead .timer {
   margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 22px;
   background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
 }
+.flashbody { margin-top: 18px; }
 .banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
 .banner {
   position: relative;
@@ -1164,9 +1166,17 @@ function flashHTML(){
   }).join("");
   return `
   <div class="flashsec">
-    <div class="flashhead"><h3>⚡ FLASH SALE</h3><span>Diskon spesial, berakhir dalam:</span><span class="timer" id="flashtime">--:--:--</span></div>
-    <div class="itemgrid">${cards}</div>
+    <div class="flashhead" onclick="toggleFlash()"><h3>⚡ FLASH SALE</h3><span class="arrow" id="flasharrow">▼</span><span>Diskon spesial, berakhir dalam:</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid">${cards}</div></div>
   </div>`;
+}
+
+function toggleFlash(){
+  const b = document.getElementById("flashbody");
+  const a = document.getElementById("flasharrow");
+  const open = b.style.display === "none";
+  b.style.display = open ? "" : "none";
+  if(a) a.textContent = open ? "▲" : "▼";
 }
 
 function startFlashTick(){
