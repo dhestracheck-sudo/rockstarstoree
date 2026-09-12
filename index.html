@@ -652,7 +652,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
   </div>
   <div class="wabtnrow">
-  <button class="wabtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
+  <button class="wabtn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
     <img src="logo wa.jpg" alt="WA">
   </button>
   <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni">
@@ -1276,7 +1276,9 @@ function toggleWaPop(){
 
 function toggleTestiPop(){
   const p = document.getElementById("testiPop");
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
+  const open = (p.style.display === "none" || !p.style.display);
+  p.style.display = open ? "flex" : "none";
+  document.getElementById("waBtn").style.display = open ? "none" : "";
 }
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
