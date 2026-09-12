@@ -475,6 +475,7 @@ header {
 
 /* ===== tombol WA mengambang + popup ===== */
 .wafab { position: fixed; left: 22px; bottom: 22px; z-index: 90; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.wafab .wabtnrow { display: flex; gap: 10px; align-items: center; }
 #testiPop { position: absolute; left: calc(100% + 12px); bottom: 0; width: 230px; min-height: 280px; justify-content: center; }
 .wabtn {
   width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
@@ -650,6 +651,10 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="watext"><b>⭐ Testimoni Customer</b><span>100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
     <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
   </div>
+  <div class="wabtnrow">
+  <button class="wabtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
+    <img src="logo wa.jpg" alt="WA">
+  </button>
   <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni">
     <span class="tring">
       <svg viewBox="0 0 100 100">
@@ -659,14 +664,12 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     </span>
     <img src="ROCKSTARLOGO.png" alt="Rockstar">
   </button>
+  </div>
   <div class="wapop" id="waPop" style="display:none;">
     <img src="logo wa.jpg" alt="WhatsApp Admin" onerror="this.style.display='none'">
     <div class="watext"><b>Butuh bantuan?</b><span>Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
     <a href="https://wa.me/6289664299571?text=Halo%20admin%20Rockstar.Store!" target="_blank" rel="noopener">Chat WhatsApp</a>
   </div>
-  <button class="wabtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
-    <img src="logo wa.jpg" alt="WA">
-  </button>
 </div>
 
 <div class="overlay" id="serverModal">
