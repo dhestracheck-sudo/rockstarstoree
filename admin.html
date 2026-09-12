@@ -864,7 +864,7 @@ function prepImage(f){
       im.onload = () => {
         URL.revokeObjectURL(url);
         try {
-          const MAX = 1920;
+          const MAX = 1600;
           const sc = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
           const cv = document.createElement("canvas");
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
@@ -872,7 +872,7 @@ function prepImage(f){
           cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
           const keepPng = String(f.type || "") === "image/png";
           const mime = keepPng ? "image/png" : "image/jpeg";
-          const dataUrl = keepPng ? cv.toDataURL(mime) : cv.toDataURL(mime, 0.9);
+          const dataUrl = keepPng ? cv.toDataURL(mime) : cv.toDataURL(mime, 0.85);
           let nm = String(f.name || "foto");
           nm = keepPng ? nm.replace(/\.[^.]+$/, "") + ".png" : nm.replace(/\.[^.]+$/, "") + ".jpg";
           resolve({ ok: true, base64: dataUrl.split(",")[1], mime: mime, name: nm });

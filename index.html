@@ -662,12 +662,7 @@ let carouselState = {};
 
 const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
-function fixImg(f){
-  if(!f) return FALLBACK_IMG;
-  // naikkan resolusi thumbnail Drive lama (w1000 -> w1600) agar HD
-  if(f.indexOf("drive.google.com/thumbnail") !== -1) f = f.replace(/([?&])sz=w\d+/, "$1sz=w1600");
-  return IMG + f;
-}
+function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
 // Gambar gagal load (umumnya thumbnail Drive kena throttle sesaat): coba sekali lagi
 // dengan cache-bust, baru fallback. Mencegah gambar hilang-timbul tiap refresh.
 function imgErr(el){
