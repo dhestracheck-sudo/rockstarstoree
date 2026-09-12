@@ -80,8 +80,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <label>Foto barang (maks 10 slide) — ganti / tambah / hapus di sini</label>
     <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
     <div id="slideList"></div>
-    <label>Tambah dari file (kamera / galeri — bisa pilih banyak sekaligus)</label>
-    <input type="file" id="slideFileInput" accept="image/*" multiple>
+    <label>Tambah dari file (kamera / galeri)</label>
+    <input type="file" id="slideFileInput" accept="image/*">
     <button id="slideAddBtn" onclick="slideAddFile()">➕ Tambah Foto Ini</button>
     <label>Tambah dari link (URL Drive / gambar)</label>
     <input type="text" id="slideUrlInput" placeholder="https://..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
@@ -645,33 +645,23 @@ function slideMain(i){
 
 function slideAddFile(){
   const arr = curSlides();
-  const files = Array.from(document.getElementById("slideFileInput").files || []);
-  const st = document.getElementById("statusSlide");
-  if(!files.length){ st.innerHTML = '<span class="err">Pilih foto dulu (bisa banyak).</span>'; return; }
-  const room = 10 - arr.length;
-  if(room <= 0){ st.innerHTML = '<span class="err">Sudah 10 slide.</span>'; return; }
-  const batch = files.slice(0, room);
+  if(arr.length >= 10){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 10 slide.</span>'; return; }
+  const f = document.getElementById("slideFileInput").files[0];
+  if(!f){ document.getElementById("statusSlide").innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
+  document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  const fresh = [];
-  let i = 0, bad = 0;
-  st.textContent = "Mengupload 0/" + batch.length + "...";
-  const next = () => {
-    if(i >= batch.length){
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+    if(d.result === "success" && d.url){
+      arr.push(d.url);
+      saveSlides(arr, '✅ Slide ditambah!');
       document.getElementById("slideFileInput").value = "";
-      if(fresh.length) saveSlides(curSlides().concat(fresh).slice(0, 10), '✅ ' + fresh.length + ' slide ditambah!' + (bad ? ' (' + bad + ' file rusak dilewati)' : ''));
-      else st.innerHTML = '<span class="err">Semua file rusak / bukan gambar (pakai JPG/PNG).</span>';
-      return;
+    } else if(String(d.result || "").indexOf("file rusak") !== -1){
+      document.getElementById("statusSlide").innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
+    } else {
+      document.getElementById("statusSlide").innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
     }
-    const f = batch[i++];
-    if(f.size > 8 * 1024 * 1024){ bad++; next(); return; }
-    st.textContent = "Mengupload " + i + "/" + batch.length + "...";
-    sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
-      if(d.result === "success" && d.url) fresh.push(d.url);
-      else bad++;
-      next();
-    });
-  };
-  next();
+  });
 }
 
 function slideAddUrl(){
