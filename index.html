@@ -237,7 +237,19 @@ header {
 .section h2 { font-family: 'Oswald', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
 .section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
 
-/* ===== home banners ===== */
+/* ===== flash sale ===== */
+.flashsec { margin-top: 26px; }
+.flashhead {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: linear-gradient(90deg, #3d0a0a, #7a1010);
+  border: 1px solid var(--red); border-radius: var(--r);
+  padding: 16px 20px; margin-bottom: 18px;
+}
+.flashhead h3 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; }
+.flashhead .timer {
+  margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 22px;
+  background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
+}
 .banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
 .banner {
   position: relative;
@@ -1092,6 +1104,76 @@ function getCurrentCategories(){
   return catsOf(currentPage);
 }
 
+/* ===== flash sale (diskon dari kolom coret) ===== */
+function flashItems(){
+  const out = [];
+  ['brainrot', 'topup', 'akun'].forEach(page => {
+    catsOf(page).forEach((c, i) => {
+      c.items.forEach((item, j) => {
+        if(item.originalPrice && item.originalPrice > item.price && item.stock !== 0){
+          out.push({ page, i, j, item, off: Math.round((1 - item.price / item.originalPrice) * 100) });
+        }
+      });
+    });
+  });
+  out.sort((a, b) => b.off - a.off);
+  return out.slice(0, 12);
+}
+
+function flashAdd(page, i, j){
+  const item = catsOf(page)[i].items[j];
+  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  cart.push({...item});
+  if(typeof gtag === "function"){
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
+  }
+  syncCart();
+}
+
+function flashTick(){
+  const el = document.getElementById("flashtime");
+  if(!el) return;
+  const now = new Date();
+  const end = new Date(now);
+  end.setHours(23, 59, 59, 999);
+  let s = Math.max(0, Math.floor((end - now) / 1000));
+  const h = String(Math.floor(s / 3600)).padStart(2, "0");
+  const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
+  const ss = String(s % 60).padStart(2, "0");
+  el.textContent = h + ":" + m + ":" + ss;
+}
+
+function flashHTML(){
+  const items = flashItems();
+  if(!items.length) return "";
+  const cards = items.map(r => {
+    const it = r.item;
+    return `
+    <div class="item">
+      <div class="thumb">
+        <span class="badge-off">-${r.off}%</span>
+        <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
+      </div>
+      <div class="ibody">
+        <h3>${it.name}</h3>
+        <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
+        <button class="btn" onclick="flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
+      </div>
+    </div>`;
+  }).join("");
+  return `
+  <div class="flashsec">
+    <div class="flashhead"><h3>⚡ FLASH SALE</h3><span>Diskon spesial, berakhir dalam:</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="itemgrid">${cards}</div>
+  </div>`;
+}
+
+function startFlashTick(){
+  if(window.__flashT) clearInterval(window.__flashT);
+  flashTick();
+  window.__flashT = setInterval(flashTick, 1000);
+}
+
 function discountOf(item){
   if(!item.originalPrice || !item.price || item.originalPrice <= item.price) return 0;
   return Math.round((1 - item.price / item.originalPrice) * 100);
@@ -1125,7 +1207,10 @@ function render(){
           <h3>👤 Akun Roblox</h3>
           <p>Akun sepuh, data polos, berbagai map — siap pakai.</p>
         </div>
-      </div>`;
+      </div>
+      <div id="flashwrap"></div>`;
+    document.getElementById("flashwrap").outerHTML = flashHTML();
+    if(document.getElementById("flashtime")) startFlashTick();
     return;
   }
   const categories = getCurrentCategories();
