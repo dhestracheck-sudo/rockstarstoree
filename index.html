@@ -247,6 +247,7 @@ header {
 }
 .flashhead h3 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; }
 .flashhead .arrow { margin-left: 4px; font-size: 18px; color: var(--blue2); }
+.flashhead .fomo { font-weight: 700; font-size: 13.5px; color: #ffb3b3; }
 .flashhead .timer {
   margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 22px;
   background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
@@ -1166,7 +1167,7 @@ function flashHTML(){
   }).join("");
   return `
   <div class="flashsec">
-    <div class="flashhead" onclick="toggleFlash()"><h3>⚡ FLASH SALE</h3><span class="arrow" id="flasharrow">▼</span><span>👆 KLIK DI SINI UNTUK LIHAT BARANGNYA</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="flashhead" onclick="toggleFlash()"><h3>⚡ FLASH SALE</h3><span class="arrow" id="flasharrow">▼</span><span>👆 Klik Flash Sale untuk melihat barang diskon</span><span class="fomo">🔥 Buruan! Keburu habis:</span><span class="timer" id="flashtime">--:--:--</span></div>
     <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid">${cards}</div></div>
   </div>`;
 }
