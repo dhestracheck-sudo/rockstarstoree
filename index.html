@@ -1136,7 +1136,8 @@ function flashTick(){
   const now = new Date();
   const end = new Date(now);
   end.setHours(23, 59, 59, 999);
-  let s = Math.max(0, Math.floor((end - now) / 1000));
+  let s = Math.floor((end - now) / 1000);
+  if (s <= 0) s = 24 * 3600 - 1; // tidak pernah mati: langsung mulai lagi 23:59:59
   const h = String(Math.floor(s / 3600)).padStart(2, "0");
   const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
   const ss = String(s % 60).padStart(2, "0");
