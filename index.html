@@ -305,6 +305,8 @@ header {
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
 .item .thumb { position: relative; }
 .item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; }
+/* Halaman akun: screenshot sering portrait — tampilkan utuh, jangan dipotong */
+.itemgrid.akun .thumb img, .itemgrid.akun .mthumb img { aspect-ratio: auto; max-height: 440px; object-fit: contain; }
 .badge-off {
   position: absolute;
   top: 12px; left: 12px;
@@ -1153,11 +1155,12 @@ function itemCard(categories, i, j){
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
+  const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
-    `<div class="itemgrid">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
+    `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
   // preload semua foto kategori yang dibuka supaya carousel langsung tampil
   category.items.forEach(it => {
     (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
