@@ -66,6 +66,15 @@ function count(rows, ev){
 
 const EV_ID = { buka_kategori: "📂 Buka kategori", tambah_keranjang: "🛒 Keranjang", cari_barang: "🔍 Cari" };
 
+// Waktu Indonesia (WIB). Backend kirim UTC, jadi harus dikonversi.
+function wib(v){
+  const t = new Date(v);
+  if(isNaN(t)) return { day: String(v).slice(0, 10), time: String(v).slice(11, 19) };
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" }).format(t);
+  const time = new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(t);
+  return { day: day, time: time };
+}
+
 function live(rows){
   const box = document.getElementById("live");
   const now = Date.now();
@@ -81,7 +90,7 @@ function live(rows){
     const kat = String(r[3] || "");
     return '<div class="row"><div class="lbl"><span>' + ev + ': <b style="color:var(--txt);">' + nama + '</b>' +
       (kat ? ' <span style="color:var(--mut);">(' + kat + ')</span>' : '') + '</span><span>' +
-      String(r[0]).slice(11, 19) + '</span></div></div>';
+      wib(r[0]).time + ' WIB</span></div></div>';
   }).join("");
 }
 
@@ -89,8 +98,8 @@ window.__statCb = rows => {
   rows = Array.isArray(rows) ? rows : [];
   document.getElementById("status").textContent = rows.length + " baris.";
   document.getElementById("tTotal").textContent = rows.length;
-  const today = new Date().toISOString().slice(0, 10);
-  document.getElementById("tToday").textContent = rows.filter(r => String(r[0]).slice(0, 10) === today).length;
+  const today = wib(new Date()).day;
+  document.getElementById("tToday").textContent = rows.filter(r => wib(r[0]).day === today).length;
   document.getElementById("tCart").textContent = rows.filter(r => String(r[1]) === "tambah_keranjang").length;
   bar("topProd", count(rows, "tambah_keranjang"));
   bar("topKat", count(rows, "buka_kategori"));
@@ -98,8 +107,8 @@ window.__statCb = rows => {
   live(rows);
   const days = {};
   rows.forEach(r => {
-    const d = String(r[0]).slice(0, 10);
-    if(d) days[d] = (days[d] || 0) + 1;
+    const d = wib(r[0]).day;
+    if(d && d !== "Invalid Date") days[d] = (days[d] || 0) + 1;
   });
   bar("perHari", Object.entries(days).sort().slice(-7));
 };
