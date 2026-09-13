@@ -99,6 +99,18 @@ function doGet(e) {
   e = e || {};
   var p = e.parameter || {};
   var t = readTable_(p.sheet || SHEET_DEFAULT);
+  // Sheet khusus (misal Statistik) dikembalikan mentah apa adanya
+  if (String(p.sheet || "") === "Statistik") {
+    var raw = [];
+    for (var r = 1; r < t.rows.length; r++) raw.push(t.rows[r]);
+    var json2 = JSON.stringify(raw);
+    if (p.callback) {
+      return ContentService.createTextOutput(p.callback + "(" + json2 + ");")
+        .setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(json2)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   var out = [];
   for (var r = 1; r < t.rows.length; r++) {
     var o = toObj_(t.rows[r], t.idx);
@@ -126,6 +138,7 @@ function doPost(e) {
     if (action === "delete") return jsonOut_(actionDelete_(body));
     if (action === "delmany") return jsonOut_(actionDelMany_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
+    if (action === "track") return jsonOut_(actionTrack_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
     return jsonOut_({ result: "error: " + String(err && err.message || err) });
@@ -264,6 +277,18 @@ function actionUpload_(body) {
     t.sheet.appendRow(row);
   }
   return { result: "success", url: url, id: id };
+}
+
+// Statistik klik web (ringan, tanpa auth). Sheet "Statistik": time | ev | nama | kat
+function actionTrack_(body) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName("Statistik");
+  if (!sh) {
+    sh = ss.insertSheet("Statistik");
+    sh.appendRow(["time", "ev", "nama", "kat"]);
+  }
+  sh.appendRow([new Date(), String(body.ev || ""), String(body.nama || ""), String(body.kat || "")]);
+  return { result: "success" };
 }
 
 // Test manual dari editor: Run testRead lalu lihat View > Logs

@@ -1127,6 +1127,7 @@ function flashAdd(page, i, j){
   const item = catsOf(page)[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item});
+  trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
   }
@@ -1310,6 +1311,7 @@ function itemCard(categories, i, j){
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
+  trackClick("buka_kategori", category.name, "");
   if(typeof gtag === "function"){
     gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
   }
@@ -1393,6 +1395,7 @@ function addItem(i,j){
   const item = categories[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
+  trackClick("tambah_keranjang", item.name, categories[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
   }
@@ -1403,6 +1406,19 @@ function trackSearch(q){
   if(typeof gtag === "function"){
     gtag("event", "cari_barang", { kata_cari: q });
   }
+  trackClick("cari_barang", q, "");
+}
+
+// Statistik sendiri ke Sheet tab "Statistik" (ringan, tidak menunggu respon).
+function trackClick(ev, nama, kat){
+  try {
+    fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "track", ev: ev, nama: nama || "", kat: kat || "" }),
+      keepalive: true
+    }).catch(() => {});
+  } catch(e) {}
 }
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxj9JslJziyqz-EugnT2ndtpMg_WU5mZ5I39LyEGYoAeN5Da4wTxaLaq_3wK5ceRR8l/exec";

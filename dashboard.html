@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --green:#2ecc71; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); padding:24px 16px 60px; }
+.wrap { max-width: 720px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; }
+.cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:12px; margin:16px 0; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center; }
+.stat b { display:block; font-family:'Oswald',sans-serif; font-size:28px; }
+.stat span { font-size:12px; color:var(--mut); }
+.panel { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:14px; }
+.panel h2 { font-family:'Oswald',sans-serif; font-size:18px; margin:0 0 12px; }
+.row { margin-bottom:10px; }
+.row .lbl { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+.row .lbl b { color:var(--green); }
+.bar { height:10px; background:#1a2440; border-radius:99px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--blue); border-radius:99px; }
+.hint { font-size:12.5px; color:var(--mut); }
+#status { color:var(--mut); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 Statistik Rockstar.Store</h1>
+  <p class="hint">Data klik pengunjung dari web, bahasa Indonesia. <span id="status">Memuat...</span></p>
+  <div class="cards">
+    <div class="stat"><b id="tTotal">-</b><span>Total klik</span></div>
+    <div class="stat"><b id="tToday">-</b><span>Klik hari ini</span></div>
+    <div class="stat"><b id="tCart">-</b><span>Masuk keranjang</span></div>
+  </div>
+  <div class="panel"><h2>🔥 Produk paling laris (masuk keranjang)</h2><div id="topProd"></div></div>
+  <div class="panel"><h2>📂 Kategori paling dibuka</h2><div id="topKat"></div></div>
+  <div class="panel"><h2>🔍 Kata paling dicari</h2><div id="topCari"></div></div>
+  <div class="panel"><h2>📅 Klik 7 hari terakhir</h2><div id="perHari"></div></div>
+</div>
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxj9JslJziyqz-EugnT2ndtpMg_WU5mZ5I39LyEGYoAeN5Da4wTxaLaq_3wK5ceRR8l/exec";
+
+function bar(el, list){
+  const box = document.getElementById(el);
+  if(!list.length){ box.innerHTML = '<p class="hint">Belum ada data.</p>'; return; }
+  const max = list[0][1];
+  box.innerHTML = list.map(([nama, n]) =>
+    '<div class="row"><div class="lbl"><span>' + nama + '</span><b>' + n + 'x</b></div>' +
+    '<div class="bar"><i style="width:' + Math.round(n / max * 100) + '%"></i></div></div>'
+  ).join("");
+}
+
+function count(rows, ev){
+  const m = {};
+  rows.forEach(r => {
+    if(String(r[1] || "") !== ev) return;
+    const k = String(r[2] || "(kosong)").trim() || "(kosong)";
+    m[k] = (m[k] || 0) + 1;
+  });
+  return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 10);
+}
+
+window.__statCb = rows => {
+  rows = Array.isArray(rows) ? rows : [];
+  document.getElementById("status").textContent = rows.length + " baris.";
+  document.getElementById("tTotal").textContent = rows.length;
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById("tToday").textContent = rows.filter(r => String(r[0]).slice(0, 10) === today).length;
+  document.getElementById("tCart").textContent = rows.filter(r => String(r[1]) === "tambah_keranjang").length;
+  bar("topProd", count(rows, "tambah_keranjang"));
+  bar("topKat", count(rows, "buka_kategori"));
+  bar("topCari", count(rows, "cari_barang"));
+  const days = {};
+  rows.forEach(r => {
+    const d = String(r[0]).slice(0, 10);
+    if(d) days[d] = (days[d] || 0) + 1;
+  });
+  bar("perHari", Object.entries(days).sort().slice(-7));
+};
+
+const s = document.createElement("script");
+s.src = SHEET_URL + "?callback=__statCb&sheet=Statistik&t=" + Date.now();
+s.onerror = () => { document.getElementById("status").textContent = "Gagal memuat. Cek koneksi / Deploy."; };
+document.head.appendChild(s);
+</script>
+</body>
+</html>
