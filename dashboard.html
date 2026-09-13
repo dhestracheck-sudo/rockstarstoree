@@ -35,6 +35,7 @@ h1 { font-family:'Oswald',sans-serif; }
     <div class="stat"><b id="tToday">-</b><span>Klik hari ini</span></div>
     <div class="stat"><b id="tCart">-</b><span>Masuk keranjang</span></div>
   </div>
+  <div class="panel"><h2>🟢 Live — lagi diklik 5 menit terakhir <span id="liveCount" style="color:var(--green);"></span></h2><div id="live"></div><p class="hint">Otomatis refresh tiap 15 detik.</p></div>
   <div class="panel"><h2>🔥 Produk paling laris (masuk keranjang)</h2><div id="topProd"></div></div>
   <div class="panel"><h2>📂 Kategori paling dibuka</h2><div id="topKat"></div></div>
   <div class="panel"><h2>🔍 Kata paling dicari</h2><div id="topCari"></div></div>
@@ -63,6 +64,27 @@ function count(rows, ev){
   return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 10);
 }
 
+const EV_ID = { buka_kategori: "📂 Buka kategori", tambah_keranjang: "🛒 Keranjang", cari_barang: "🔍 Cari" };
+
+function live(rows){
+  const box = document.getElementById("live");
+  const now = Date.now();
+  const rec = rows.filter(r => {
+    const t = new Date(r[0]).getTime();
+    return isFinite(t) && (now - t) < 5 * 60 * 1000;
+  }).slice(-15).reverse();
+  document.getElementById("liveCount").textContent = rec.length ? "(" + rec.length + ")" : "";
+  if(!rec.length){ box.innerHTML = '<p class="hint">Sepi — tidak ada klik 5 menit terakhir.</p>'; return; }
+  box.innerHTML = rec.map(r => {
+    const ev = EV_ID[String(r[1])] || String(r[1]);
+    const nama = String(r[2] || "-");
+    const kat = String(r[3] || "");
+    return '<div class="row"><div class="lbl"><span>' + ev + ': <b style="color:var(--txt);">' + nama + '</b>' +
+      (kat ? ' <span style="color:var(--mut);">(' + kat + ')</span>' : '') + '</span><span>' +
+      String(r[0]).slice(11, 19) + '</span></div></div>';
+  }).join("");
+}
+
 window.__statCb = rows => {
   rows = Array.isArray(rows) ? rows : [];
   document.getElementById("status").textContent = rows.length + " baris.";
@@ -73,6 +95,7 @@ window.__statCb = rows => {
   bar("topProd", count(rows, "tambah_keranjang"));
   bar("topKat", count(rows, "buka_kategori"));
   bar("topCari", count(rows, "cari_barang"));
+  live(rows);
   const days = {};
   rows.forEach(r => {
     const d = String(r[0]).slice(0, 10);
@@ -81,10 +104,17 @@ window.__statCb = rows => {
   bar("perHari", Object.entries(days).sort().slice(-7));
 };
 
-const s = document.createElement("script");
-s.src = SHEET_URL + "?callback=__statCb&sheet=Statistik&t=" + Date.now();
-s.onerror = () => { document.getElementById("status").textContent = "Gagal memuat. Cek koneksi / Deploy."; };
-document.head.appendChild(s);
+function muat(){
+  const old = document.getElementById("statJsonp");
+  if(old) old.remove();
+  const sc = document.createElement("script");
+  sc.id = "statJsonp";
+  sc.src = SHEET_URL + "?callback=__statCb&sheet=Statistik&t=" + Date.now();
+  sc.onerror = () => { document.getElementById("status").textContent = "Gagal memuat. Cek koneksi / Deploy."; };
+  document.head.appendChild(sc);
+}
+muat();
+setInterval(muat, 15000);
 </script>
 </body>
 </html>
