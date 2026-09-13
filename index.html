@@ -1128,7 +1128,7 @@ function flashAdd(page, i, j){
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item});
   if(typeof gtag === "function"){
-    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR", item_category: catsOf(page)[i].name });
+    gtag("event", "tambah_keranjang", { item_name: item.name, price: item.price, currency: "IDR", item_category: catsOf(page)[i].name });
   }
   syncCart();
 }
@@ -1311,7 +1311,7 @@ function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
   if(typeof gtag === "function"){
-    gtag("event", "view_item_list", { item_list_name: category.name, items: category.items.slice(0, 10).map(it => ({ item_name: it.name })) });
+    gtag("event", "buka_kategori", { item_list_name: category.name, items: category.items.slice(0, 10).map(it => ({ item_name: it.name })) });
   }
   const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
@@ -1394,14 +1394,14 @@ function addItem(i,j){
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
   if(typeof gtag === "function"){
-    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR", item_category: categories[i].name });
+    gtag("event", "tambah_keranjang", { item_name: item.name, price: item.price, currency: "IDR", item_category: categories[i].name });
   }
   syncCart();
 }
 
 function trackSearch(q){
   if(typeof gtag === "function"){
-    gtag("event", "search", { search_term: q });
+    gtag("event", "cari_barang", { search_term: q });
   }
 }
 
@@ -1445,7 +1445,7 @@ function sendToAdmin(){
   if(cart.length==0){ alert("Keranjang kosong!"); return; }
   if(typeof gtag === "function"){
     const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
-    gtag("event", "checkout_whatsapp", { item_count: cart.length, value: totalValue, currency: "IDR" });
+    gtag("event", "kirim_ke_admin", { item_count: cart.length, value: totalValue, currency: "IDR" });
   }
   let text = "Halo saya mau beli:%0A";
   cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
