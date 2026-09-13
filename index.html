@@ -1128,7 +1128,7 @@ function flashAdd(page, i, j){
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item});
   if(typeof gtag === "function"){
-    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR", item_category: catsOf(page)[i].name });
   }
   syncCart();
 }
@@ -1241,6 +1241,7 @@ function searchCatalog(){
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
   if(q === ""){ render(); return; }
+  trackSearch(q);
   const out = [];
   ['brainrot', 'topup', 'akun'].forEach(page => {
     const cats = catsOf(page);
@@ -1309,6 +1310,9 @@ function itemCard(categories, i, j){
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
+  if(typeof gtag === "function"){
+    gtag("event", "view_item_list", { item_list_name: category.name, items: category.items.slice(0, 10).map(it => ({ item_name: it.name })) });
+  }
   const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
@@ -1390,9 +1394,15 @@ function addItem(i,j){
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
   if(typeof gtag === "function"){
-    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR", item_category: categories[i].name });
   }
   syncCart();
+}
+
+function trackSearch(q){
+  if(typeof gtag === "function"){
+    gtag("event", "search", { search_term: q });
+  }
 }
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxj9JslJziyqz-EugnT2ndtpMg_WU5mZ5I39LyEGYoAeN5Da4wTxaLaq_3wK5ceRR8l/exec";
