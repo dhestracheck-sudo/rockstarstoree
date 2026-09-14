@@ -307,7 +307,7 @@ function actionInc_(body) {
   }
 }
 
-// Teks pengumuman berjalan (tab "Pengumuman", sel A2). Boleh pakai <a> dan <b>.
+// Teks pengumuman berjalan (tab "Pengumuman"): A2 = teks, A4 = mode (auto/online/offline).
 function actionSetInfo_(body) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName("Pengumuman");
@@ -316,7 +316,13 @@ function actionSetInfo_(body) {
     sh.appendRow(["teks"]);
     sh.appendRow([""]);
   }
-  sh.getRange(2, 1).setValue(String(body.value || body.teks || ""));
+  var key = norm_(body.key || body.k || "teks");
+  if (key === "mode" || key === "status" || key === "online") {
+    sh.getRange(3, 1).setValue("mode");
+    sh.getRange(4, 1).setValue(String(body.value || ""));
+  } else {
+    sh.getRange(2, 1).setValue(String(body.value || body.teks || ""));
+  }
   return { result: "success" };
 }
 

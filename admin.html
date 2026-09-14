@@ -60,6 +60,18 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:10px;">Boleh pakai <b>tebal</b>. Kosongkan + simpan untuk kembali ke teks utama.</p>
   </div>
 
+  <div class="card" id="modeCard" style="display:none;">
+    <label>🟢 Status toko (Online/Offline)</label>
+    <div id="modeNow" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;margin-bottom:10px;">-</div>
+    <div style="display:flex;gap:8px;">
+      <button id="modeAutoBtn" onclick="setMode('auto')" style="flex:1;">🤖 Auto</button>
+      <button id="modeOnBtn" onclick="setMode('online')" style="flex:1;">🟢 Online</button>
+      <button id="modeOffBtn" onclick="setMode('offline')" style="flex:1;">🔴 Offline</button>
+    </div>
+    <div id="statusMode"></div>
+    <p class="hint" style="margin-top:10px;">Auto = online jam 08–22 WIB. Online/Offline = paksa tampil itu terus.</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -205,8 +217,9 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","infoCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","infoCard","modeCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadInfo();
+    loadMode();
     loadItems();
   } else {
     alert("PIN salah.");
@@ -922,6 +935,32 @@ function loadInfo(){
         });
       } catch(e) {}
     }).catch(() => {});
+}
+
+function loadMode(){
+  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const rows = JSON.parse(t);
+        const v = String((rows[3] && rows[3][0] !== undefined) ? rows[3][0] : "auto").trim().toLowerCase() || "auto";
+        showMode(v);
+      } catch(e) { showMode("auto"); }
+    }).catch(() => { showMode("?"); });
+}
+
+function showMode(v){
+  const el = document.getElementById("modeNow");
+  el.textContent = v === "online" ? "🟢 Paksa Online" : v === "offline" ? "🔴 Paksa Offline" : v === "?" ? "Tidak terbaca" : "🤖 Auto (08–22 WIB)";
+}
+
+function setMode(v){
+  const st = document.getElementById("statusMode");
+  st.textContent = "Menyimpan...";
+  postOne({ action: "setinfo", key: "mode", value: v }).then(d => {
+    if(d.result === "success"){ showMode(v); st.innerHTML = '<span class="ok">✅ Tersimpan!</span>'; }
+    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
 }
 
 function saveInfo(){

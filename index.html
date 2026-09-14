@@ -104,6 +104,9 @@ header {
   outline: none;
 }
 #searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
+#shopstatus { font-size: 12px; font-weight: 700; white-space: nowrap; }
+#shopstatus .on { color: var(--green); }
+#shopstatus .off { color: #ff8080; }
 .cartbtn {
   display: flex;
   align-items: center;
@@ -666,6 +669,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
+  <span id="shopstatus"></span>
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..."></div>
   <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
 </header>
@@ -1865,27 +1869,48 @@ function loadLiveStock(){
   });
 }
 
-/* ===== teks berjalan dari Sheet tab Pengumuman (bisa diganti via admin) ===== */
+/* ===== teks berjalan + status online dari Sheet tab Pengumuman ===== */
+let shopMode = "auto";
 function loadAnnounce(){
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
         const rows = JSON.parse(t);
-        let teks = "";
-        rows.forEach(r => {
-          const v = String((r && r[0] !== undefined) ? r[0] : "").trim();
-          if(v && v.toLowerCase() !== "teks") teks = v;
-        });
+        const cell = i => (rows[i] && rows[i][0] !== undefined) ? String(rows[i][0]).trim() : "";
+        let teks = cell(1);
+        if(teks.toLowerCase() === "teks") teks = "";
+        let mode = cell(3).toLowerCase();
+        if(mode === "online" || mode === "offline" || mode === "auto") shopMode = mode;
         if(!teks) return;
         teks = teks.replace(/<script[\s\S]*?<\/script>/gi, "");
         const el = document.querySelector(".announce .run");
         if(el) el.innerHTML = teks + " • " + teks;
       } catch(e) {}
-    }).catch(() => {});
+      renderShopStatus();
+    }).catch(() => { renderShopStatus(); });
+}
+
+// Badge Online/Offline: manual dari admin (online/offline) atau otomatis jam 08–22 WIB.
+function renderShopStatus(){
+  const el = document.getElementById("shopstatus");
+  if(!el) return;
+  let online;
+  if(shopMode === "online") online = true;
+  else if(shopMode === "offline") online = false;
+  else {
+    try {
+      const h = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", hour12: false }).format(new Date()));
+      online = h >= 8 && h < 22;
+    } catch(e) { online = true; }
+  }
+  el.innerHTML = online
+    ? `<span class="on">🟢 Online — fast respon</span>`
+    : `<span class="off">🔴 Offline — dibalas jam 08:00</span>`;
 }
 
 loadLiveStock().then(() => {
   loadAnnounce();
+  renderShopStatus();
   render();
   document.getElementById("searchInput").addEventListener("input", searchCatalog);
   setTimeout(() => {
