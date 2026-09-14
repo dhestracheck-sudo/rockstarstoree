@@ -1377,7 +1377,12 @@ function renderDetail(){
   detailCur.k = k;
   const off = discountOf(item);
   document.getElementById("detailBox").innerHTML = `
-    <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
+    <div style="position:relative;">
+      <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
+      ${files.length > 1 ? `
+      <button class="mnav l" onclick="detailGoto(${(k - 1 + files.length) % files.length})">❮</button>
+      <button class="mnav r" onclick="detailGoto(${(k + 1) % files.length})">❯</button>` : ``}
+    </div>
     ${files.length > 1 ? `<div class="dthumbs">` + files.map((f, idx) =>
       `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
     ).join("") + `</div>` : ``}
