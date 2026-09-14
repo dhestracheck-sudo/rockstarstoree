@@ -1333,7 +1333,7 @@ function itemCard(categories, i, j){
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
       <div class="kilat">⚡ Proses kilat</div>
-      <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>BCA</span></div>
+      <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
       <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
   </div>`;
@@ -1404,7 +1404,7 @@ function renderDetail(){
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
     <div class="kilat">⚡ Proses kilat</div>
-    <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>BCA</span></div>
+    <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
     <div class="mactions">
       <button class="ghost" onclick="closeDetail()">Tutup</button>
