@@ -68,8 +68,13 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       <button id="modeOnBtn" onclick="setMode('online')" style="flex:1;">🟢 Online</button>
       <button id="modeOffBtn" onclick="setMode('offline')" style="flex:1;">🔴 Offline</button>
     </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input type="number" id="openInput" min="0" max="23" placeholder="buka (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <input type="number" id="closeInput" min="0" max="23" placeholder="tutup (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <button id="hoursBtn" onclick="saveHours()" style="flex:1;">⏰ Simpan Jam</button>
+    </div>
     <div id="statusMode"></div>
-    <p class="hint" style="margin-top:10px;">Auto = online jam 08–22 WIB. Online/Offline = paksa tampil itu terus.</p>
+    <p class="hint" style="margin-top:10px;">Auto = ikut jam buka-tutup di atas (WIB). Online/Offline = paksa tampil itu terus.</p>
   </div>
 
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
@@ -942,8 +947,11 @@ function loadMode(){
     .then(r => r.text()).then(t => {
       try {
         const rows = JSON.parse(t);
-        const v = String((rows[3] && rows[3][0] !== undefined) ? rows[3][0] : "auto").trim().toLowerCase() || "auto";
-        showMode(v);
+        const cell = i => (rows[i] && rows[i][0] !== undefined) ? String(rows[i][0]).trim() : "";
+        const v = cell(3).toLowerCase() || "auto";
+        showMode(v === "online" || v === "offline" ? v : "auto");
+        if(cell(5) !== "") document.getElementById("openInput").value = cell(5);
+        if(cell(7) !== "") document.getElementById("closeInput").value = cell(7);
       } catch(e) { showMode("auto"); }
     }).catch(() => { showMode("?"); });
 }
@@ -951,6 +959,26 @@ function loadMode(){
 function showMode(v){
   const el = document.getElementById("modeNow");
   el.textContent = v === "online" ? "🟢 Paksa Online" : v === "offline" ? "🔴 Paksa Offline" : v === "?" ? "Tidak terbaca" : "🤖 Auto (08–22 WIB)";
+}
+
+function saveHours(){
+  const o = document.getElementById("openInput").value;
+  const c = document.getElementById("closeInput").value;
+  const st = document.getElementById("statusMode");
+  const btn = document.getElementById("hoursBtn");
+  if(o === "" || c === "" || isNaN(Number(o)) || isNaN(Number(c)) || Number(o) < 0 || Number(o) > 23 || Number(c) < 0 || Number(c) > 23){
+    st.innerHTML = '<span class="err">Isi jam 0–23 dulu.</span>'; return;
+  }
+  btn.disabled = true;
+  st.textContent = "Menyimpan jam...";
+  postOne({ action: "setinfo", key: "open", value: Number(o) }).then(() =>
+    postOne({ action: "setinfo", key: "close", value: Number(c) })
+  ).then(d => {
+    btn.disabled = false;
+    if(d.result === "success") st.innerHTML = '<span class="ok">✅ Jam operasional tersimpan!</span>';
+    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
 }
 
 function setMode(v){

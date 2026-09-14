@@ -307,7 +307,8 @@ function actionInc_(body) {
   }
 }
 
-// Teks pengumuman berjalan (tab "Pengumuman"): A2 = teks, A4 = mode (auto/online/offline).
+// Teks pengumuman + jam operasional (tab "Pengumuman"):
+// A2 = teks | A4 = mode (auto/online/offline) | A6 = jam buka | A8 = jam tutup
 function actionSetInfo_(body) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName("Pengumuman");
@@ -320,6 +321,12 @@ function actionSetInfo_(body) {
   if (key === "mode" || key === "status" || key === "online") {
     sh.getRange(3, 1).setValue("mode");
     sh.getRange(4, 1).setValue(String(body.value || ""));
+  } else if (key === "open" || key === "buka") {
+    sh.getRange(5, 1).setValue("open");
+    sh.getRange(6, 1).setValue(String(body.value || ""));
+  } else if (key === "close" || key === "tutup") {
+    sh.getRange(7, 1).setValue("close");
+    sh.getRange(8, 1).setValue(String(body.value || ""));
   } else {
     sh.getRange(2, 1).setValue(String(body.value || body.teks || ""));
   }

@@ -1871,6 +1871,7 @@ function loadLiveStock(){
 
 /* ===== teks berjalan + status online dari Sheet tab Pengumuman ===== */
 let shopMode = "auto";
+let shopOpen = 8, shopClose = 22;
 function loadAnnounce(){
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
@@ -1881,6 +1882,9 @@ function loadAnnounce(){
         if(teks.toLowerCase() === "teks") teks = "";
         let mode = cell(3).toLowerCase();
         if(mode === "online" || mode === "offline" || mode === "auto") shopMode = mode;
+        const o = parseInt(cell(5), 10), c = parseInt(cell(7), 10);
+        if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
+        if(isFinite(c) && c >= 0 && c <= 23) shopClose = c;
         if(!teks) return;
         teks = teks.replace(/<script[\s\S]*?<\/script>/gi, "");
         const el = document.querySelector(".announce .run");
@@ -1900,12 +1904,12 @@ function renderShopStatus(){
   else {
     try {
       const h = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", hour12: false }).format(new Date()));
-      online = h >= 8 && h < 22;
+      online = shopOpen <= shopClose ? (h >= shopOpen && h < shopClose) : (h >= shopOpen || h < shopClose);
     } catch(e) { online = true; }
   }
   el.innerHTML = online
     ? `<span class="on">🟢 Online — fast respon</span>`
-    : `<span class="off">🔴 Offline — dibalas jam 08:00</span>`;
+    : `<span class="off">🔴 Offline — buka jam ` + String(shopOpen).padStart(2, "0") + `:00</span>`;
 }
 
 loadLiveStock().then(() => {
