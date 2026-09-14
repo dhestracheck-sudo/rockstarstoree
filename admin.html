@@ -121,6 +121,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <input type="number" id="soldInput" placeholder="misal 100" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Harga coret / diskon (opsional — tampil coret bila LEBIH BESAR dari harga)</label>
     <input type="number" id="coretInput" placeholder="misal 30000, kosongkan = tanpa diskon" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Deskripsi produk (opsional)</label>
+    <textarea id="descInput" rows="3" placeholder="misal: Proses kilat, full garansi..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
     <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas.</p>
   </div>
 
@@ -163,6 +165,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       <input type="number" id="addStock" placeholder="stok" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     </div>
     <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <textarea id="addDesc" rows="2" placeholder="deskripsi produk (opsional)" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
     <label>Foto produk (opsional, bisa tambah lagi maks 10 via panel slide)</label>
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
@@ -176,9 +179,9 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 </div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwB--q5mAeXQK6VFxU5EyX8j_q3XxW7qifWxdvsDXiCWaBqDl6UgZ3TUDVIoYVKL7kV/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwglRXeW_g08CbTVGuy31YbvWOcOkgG8q3kicY8kGW2A0yKQazWy5Nnyw9pJLQqYA8_/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
-const ADMIN_V = "12h-diskon";
+const ADMIN_V = "12i-deskripsi";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -215,6 +218,7 @@ function prefill(){
     document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
     document.getElementById("soldInput").value = (o.sold === 0 || o.sold) ? o.sold : "";
     document.getElementById("coretInput").value = (o.coret > 0) ? o.coret : "";
+    document.getElementById("descInput").value = String(o.deskripsi || "");
     document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
     document.getElementById("curProdSlide").textContent = name;
@@ -385,6 +389,7 @@ function saveAll(){
   const stockRaw = document.getElementById("stockInput").value;
   const soldRaw = document.getElementById("soldInput").value;
   const coretRaw = document.getElementById("coretInput").value;
+  const descRaw = document.getElementById("descInput").value.trim();
   const newName = document.getElementById("nameInput").value.trim();
   const jobs = [];
   if(priceRaw !== ""){
@@ -403,24 +408,29 @@ function saveAll(){
     if(isNaN(Number(coretRaw)) || Number(coretRaw) < 0){ st.innerHTML = '<span class="err">Harga coret tidak valid.</span>'; return; }
     jobs.push({ col: "coret", value: Number(coretRaw), label: "coret" });
   }
+  jobs.push({ col: "deskripsi", value: descRaw, label: "deskripsi" });
   if(newName) jobs.push({ col: 1, value: newName, label: "nama" });
   if(!jobs.length){ st.innerHTML = '<span class="err">Tidak ada perubahan (isi dulu yang mau diganti).</span>'; return; }
   if(!confirm("Simpan berbarengan (" + jobs.map(j => j.label).join(", ") + ") untuk:\n" + name + " ?")) return;
   btn.disabled = true;
   st.textContent = "Menyimpan 1/" + jobs.length + "...";
   let chain = Promise.resolve(true);
+  const gagal = [];
   jobs.forEach((jb, idx) => {
     chain = chain.then(ok => {
-      if(!ok) return false;
       st.textContent = "Menyimpan " + (idx+1) + "/" + jobs.length + " (" + jb.label + ")...";
       // nama barang bisa berubah di tengah jalan: selalu pakai nama terbaru
       const cur = (idx > 0 && jobs[idx-1].col === 1) ? jobs[idx-1].value : document.getElementById("itemSel").value;
-      return postOne({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => d.result === "success");
+      return postOne({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => {
+        if(d.result === "success") return true;
+        gagal.push(jb.label + " (" + (d.result || "?") + ")");
+        return false;
+      });
     });
   });
-  chain.then(ok => {
+  chain.then(() => {
     btn.disabled = false;
-    if(ok){
+    if(!gagal.length){
       st.innerHTML = '<span class="ok">✅ Semua tersimpan berbarengan!</span>';
       let finalName = name;
       jobs.forEach(jb => {
@@ -436,11 +446,12 @@ function saveAll(){
         else if(jb.col === 3) updItem(finalName, { stock: jb.value });
         else if(jb.col === "sold") updItem(finalName, { sold: jb.value });
         else if(jb.col === "coret") updItem(finalName, { coret: jb.value });
+        else if(jb.col === "deskripsi") updItem(finalName, { deskripsi: jb.value });
       });
       document.getElementById("nameInput").value = "";
       syncAfterProduct(finalName);
     } else {
-      st.innerHTML = '<span class="err">Sebagian gagal, tekan 🔄 Muat ulang lalu coba lagi.</span>';
+      st.innerHTML = '<span class="err">Gagal: ' + gagal.join(" | ") + ' — tekan 🔄 Muat ulang lalu coba lagi.</span>';
     }
   }).catch(() => { btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
@@ -548,7 +559,8 @@ function renderPreview(name, o){
   if(first) img.src = first; else img.removeAttribute("src");
   const n = v => (v === 0 || v) ? Number(v).toLocaleString("id-ID") : "-";
   document.getElementById("prevMeta").textContent =
-    (String(o.kategori || "-").trim() || "-") + " • Stok: " + n(o.stock) + " • Terjual: " + n(o.sold);
+    (String(o.kategori || "-").trim() || "-") + " • Stok: " + n(o.stock) + " • Terjual: " + n(o.sold) +
+    (String(o.deskripsi || "").trim() ? " • " + String(o.deskripsi).trim().slice(0, 80) : "");
   document.getElementById("prevPrice").innerHTML = "Rp " + n(o.price) +
     ((Number(o.coret) > Number(o.price)) ? ' <span style="font-size:13px;color:var(--mut);text-decoration:line-through;">Rp ' + Number(o.coret).toLocaleString("id-ID") + '</span>' : '');
 }
@@ -757,6 +769,7 @@ function addProduct(){
   const price = Number(document.getElementById("addPrice").value);
   const stockRaw = document.getElementById("addStock").value;
   const coretRaw = document.getElementById("addCoret").value;
+  const descVal = document.getElementById("addDesc").value.trim();
   const f = document.getElementById("addFile").files[0];
   const st = document.getElementById("statusAdd");
   const btn = document.getElementById("addBtn");
@@ -767,19 +780,19 @@ function addProduct(){
   btn.disabled = true;
   st.textContent = "Menambah produk...";
   const coretVal = (coretRaw !== "" && !isNaN(Number(coretRaw))) ? Number(coretRaw) : 0;
-  postOne({ action: "add", item_name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
+  postOne({ action: "add", item_name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
     if(needAdd_(d, st, btn)) return;
     if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
     if(!f){
       st.innerHTML = '<span class="ok">✅ Produk ditambah! Tambah fotonya via panel slide.</span>';
       document.getElementById("addName").value = "";
       btn.disabled = false;
-      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 });
+      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 });
       document.getElementById("itemSel").value = nm;
       syncAfterProduct(nm);
       return;
     }
-    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); return; }
+    if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Maksimal 8 MB (produk sudah ditambah).</span>'; btn.disabled = false; addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); return; }
     st.textContent = "Produk ok, memeriksa & mengupload foto...";
     sendUpload(f, { action: "upload", item_name: nm, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(u => {
       const img = (u.result === "success") ? u.url : "";
@@ -789,7 +802,7 @@ function addProduct(){
       document.getElementById("addName").value = "";
       document.getElementById("addFile").value = "";
       btn.disabled = false;
-      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, stock: Number(stockRaw), soldout: "", image: img, sold: 0 });
+      addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: img, sold: 0 });
       document.getElementById("itemSel").value = nm;
       syncAfterProduct(nm);
     });

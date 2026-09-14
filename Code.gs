@@ -3,7 +3,7 @@
 //
 // Sheet yang dibutuhkan:
 //   Tab "Brainrot", baris 1 header (urutan bebas, nama fleksibel):
-//     name | kategori | price | coret | stock | soldout | image | sold
+//     name | kategori | price | coret | deskripsi | stock | soldout | image | sold
 //   coret = harga coret (opsional, tampil discount bila > price)
 //   File CSV siap-import: Desktop/rockstar3/data-google-sheet.csv
 //
@@ -30,6 +30,7 @@ var HEADER_ALIASES = {
   kategori: ["kategori", "category", "kat", "kelompok"],
   price: ["price", "harga", "rp"],
   coret: ["coret", "harga coret", "harga awal", "harga normal", "original", "originalprice", "was"],
+  deskripsi: ["deskripsi", "desc", "description", "keterangan", "detail"],
   stock: ["stock", "stok", "sisa"],
   soldout: ["soldout", "sold out", "habis", "sold_out"],
   image: ["image", "gambar", "foto", "img", "link", "url", "file"],
@@ -67,7 +68,7 @@ function readTable_() {
     if (k && !(k in idx)) idx[k] = c;
   }
   // pastikan kolom kanonis ada; kalau belum, tambah di kanan
-  var need = ["name", "kategori", "price", "coret", "stock", "soldout", "image", "sold"];
+  var need = ["name", "kategori", "price", "coret", "deskripsi", "stock", "soldout", "image", "sold"];
   var changed = false;
   need.forEach(function (k) {
     if (!(k in idx)) {
@@ -87,6 +88,7 @@ function toObj_(row, idx) {
     kategori: String(g("kategori", "")),
     price: Number(g("price", 0)) || 0,
     coret: Number(g("coret", 0)) || 0,
+    deskripsi: String(g("deskripsi", "")),
     stock: Number(g("stock", 0)) || 0,
     soldout: String(g("soldout", "")),
     image: String(g("image", "")),
@@ -198,6 +200,7 @@ function actionAdd_(body) {
   row[t.idx["kategori"]] = kat;
   row[t.idx["price"]] = Number(body.price) || 0;
   row[t.idx["coret"]] = Number(body.coret) || 0;
+  row[t.idx["deskripsi"]] = String(body.deskripsi || "");
   row[t.idx["stock"]] = Number(body.stock) || 0;
   row[t.idx["soldout"]] = String(body.soldout || (name.indexOf("CAT:") === 0 ? "YA" : ""));
   row[t.idx["image"]] = String(body.image || "");

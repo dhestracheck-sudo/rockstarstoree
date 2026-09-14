@@ -345,6 +345,7 @@ header {
 }
 .item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
+.item .desc { font-size: 12.5px; color: var(--mut); margin: 0; line-height: 1.6; }
 .item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
 .item .meta .sold { color: #ffb3b3; font-weight: 600; }
 .item .meta .stock { color: var(--green); font-weight: 600; }
@@ -1161,6 +1162,7 @@ function flashHTML(){
       </div>
       <div class="ibody">
         <h3>${it.name}</h3>
+        ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <button class="btn" onclick="flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
       </div>
@@ -1294,6 +1296,7 @@ function itemCard(categories, i, j){
     ${thumb}
     <div class="ibody">
       <h3>${item.name}</h3>
+      ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
       <div class="meta">
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
@@ -1421,7 +1424,7 @@ function trackClick(ev, nama, kat){
   } catch(e) {}
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwB--q5mAeXQK6VFxU5EyX8j_q3XxW7qifWxdvsDXiCWaBqDl6UgZ3TUDVIoYVKL7kV/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwglRXeW_g08CbTVGuy31YbvWOcOkgG8q3kicY8kGW2A0yKQazWy5Nnyw9pJLQqYA8_/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1602,6 +1605,7 @@ function rebuildFromSheet(arr, targetCats){
     const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
             const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
             if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            if (String(o.deskripsi || "").trim()) it.deskripsi = String(o.deskripsi).trim();
             if (Number(o.coret) > it.price) it.originalPrice = Number(o.coret);
     if (files.length > 1) it.images = files;
     const g = groups[kat];
@@ -1615,7 +1619,7 @@ function rebuildFromSheet(arr, targetCats){
 
 function mergeFromSheet(arr){
   const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, deskripsi: String(o.deskripsi || ""), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
   [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
     cats.forEach(c => {
       const catKey = "CAT:" + String(c.name).trim();
@@ -1631,6 +1635,7 @@ function mergeFromSheet(arr){
               it.stock = flagged ? 0 : v.stock;
               if (v.price > 0) it.price = v.price;
               if (v.sold > 0) it.sold = v.sold;
+              it.deskripsi = String(v.deskripsi || "").trim() || null;
               if (v.coret > it.price) it.originalPrice = v.coret;
               else if (!(v.coret > 0)) it.originalPrice = null;
         if (v.image) {
