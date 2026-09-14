@@ -103,8 +103,9 @@ function doGet(e) {
   e = e || {};
   var p = e.parameter || {};
   var t = readTable_(p.sheet || SHEET_DEFAULT);
-  // Sheet khusus (misal Statistik) dikembalikan mentah apa adanya
-  if (String(p.sheet || "") === "Statistik") {
+  // Sheet khusus (misal Statistik/Pengumuman) dikembalikan mentah apa adanya
+  var RAW_SHEETS = ["Statistik", "Pengumuman"];
+  if (RAW_SHEETS.indexOf(String(p.sheet || "")) !== -1) {
     var raw = [];
     for (var r = 1; r < t.rows.length; r++) raw.push(t.rows[r]);
     var json2 = JSON.stringify(raw);
@@ -143,6 +144,7 @@ function doPost(e) {
     if (action === "delmany") return jsonOut_(actionDelMany_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
     if (action === "track") return jsonOut_(actionTrack_(body));
+    if (action === "setinfo") return jsonOut_(actionSetInfo_(body));
     if (action === "inc") return jsonOut_(actionInc_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
@@ -303,6 +305,19 @@ function actionInc_(body) {
   } finally {
     try { lock.releaseLock(); } catch (e) {}
   }
+}
+
+// Teks pengumuman berjalan (tab "Pengumuman", sel A2). Boleh pakai <a> dan <b>.
+function actionSetInfo_(body) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName("Pengumuman");
+  if (!sh) {
+    sh = ss.insertSheet("Pengumuman");
+    sh.appendRow(["teks"]);
+    sh.appendRow([""]);
+  }
+  sh.getRange(2, 1).setValue(String(body.value || body.teks || ""));
+  return { result: "success" };
 }
 
 // Statistik klik web (ringan, tanpa auth). Sheet "Statistik": time | ev | nama | kat

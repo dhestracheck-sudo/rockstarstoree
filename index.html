@@ -1856,7 +1856,27 @@ function loadLiveStock(){
   });
 }
 
+/* ===== teks berjalan dari Sheet tab Pengumuman (bisa diganti via admin) ===== */
+function loadAnnounce(){
+  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const rows = JSON.parse(t);
+        let teks = "";
+        rows.forEach(r => {
+          const v = String((r && r[0] !== undefined) ? r[0] : "").trim();
+          if(v && v.toLowerCase() !== "teks") teks = v;
+        });
+        if(!teks) return;
+        teks = teks.replace(/<script[\s\S]*?<\/script>/gi, "");
+        const el = document.querySelector(".announce .run");
+        if(el) el.innerHTML = teks + " • " + teks;
+      } catch(e) {}
+    }).catch(() => {});
+}
+
 loadLiveStock().then(() => {
+  loadAnnounce();
   render();
   document.getElementById("searchInput").addEventListener("input", searchCatalog);
   setTimeout(() => {

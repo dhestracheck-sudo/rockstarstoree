@@ -52,6 +52,14 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <button onclick="loadItems()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
   </div>
 
+  <div class="card" id="infoCard" style="display:none;">
+    <label>📢 Teks berjalan (pengumuman atas web)</label>
+    <textarea id="infoInput" rows="3" placeholder="misal: PROMO AKHIR TAHUN DISKON 50% <b>...</b>" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
+    <button id="infoBtn" onclick="saveInfo()">💾 Simpan Teks Berjalan</button>
+    <div id="statusInfo"></div>
+    <p class="hint" style="margin-top:10px;">Boleh pakai <b>tebal</b>. Kosongkan + simpan untuk kembali ke teks utama.</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -197,7 +205,8 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","infoCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    loadInfo();
     loadItems();
   } else {
     alert("PIN salah.");
@@ -900,6 +909,33 @@ function prefillCat(){
   const img = document.getElementById("catOld");
   if(u) img.src = u; else img.removeAttribute("src");
   document.getElementById("catOldCap").textContent = u || "Belum ada foto display.";
+}
+
+function loadInfo(){
+  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const rows = JSON.parse(t);
+        rows.forEach(r => {
+          const v = String((r && r[0] !== undefined) ? r[0] : "").trim();
+          if(v && v.toLowerCase() !== "teks") document.getElementById("infoInput").value = v;
+        });
+      } catch(e) {}
+    }).catch(() => {});
+}
+
+function saveInfo(){
+  const v = document.getElementById("infoInput").value.trim();
+  const st = document.getElementById("statusInfo");
+  const btn = document.getElementById("infoBtn");
+  btn.disabled = true;
+  st.textContent = "Menyimpan...";
+  postOne({ action: "setinfo", value: v }).then(d => {
+    btn.disabled = false;
+    if(d.result === "success") st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>';
+    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
 }
 
 function postOne(body, ms){
