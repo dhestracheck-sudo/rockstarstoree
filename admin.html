@@ -322,6 +322,19 @@ function deleteProduct(){
   });
 }
 
+// Cek baris mana yang masih ada di Sheet (untuk pastikan hapus beneran).
+function verifyGone(names){
+  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const arr = JSON.parse(t);
+        const have = {};
+        arr.forEach(o => { have[String(o.name).trim()] = true; });
+        return names.filter(nm => have[nm]);
+      } catch(e){ return names; }
+    }).catch(() => names);
+}
+
 function deleteCategory(){
   const kat = document.getElementById("catRenameSel").value;
   const st = document.getElementById("statusCatRename");
@@ -374,10 +387,22 @@ function deleteCategory(){
     const secs = Math.round((Date.now() - t0) / 1000);
     if(d.result === "success"){ afterDel(d.deleted); st.innerHTML += ' <span style="color:var(--mut);">(' + secs + ' dtk)</span>'; return; }
     if(String(d.result || "").indexOf("unknown action") !== -1){ seqDel(); return; }
+    // tulisnya mungkin berhasil tapi laporannya gagal -> verifikasi ke Sheet
+    st.textContent = "Memeriksa ke Sheet...";
+    verifyGone(names).then(left => {
+      btn.disabled = false;
+      if(!left.length){ afterDel(names.length); st.innerHTML += ' <span style="color:var(--mut);">(terverifikasi)</span>'; }
+      else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + ' — sisa ' + left.length + ' baris, tekan lagi.</span>';
+    });
+  }).catch(() => {
     clearInterval(tick);
-    btn.disabled = false;
-    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  }).catch(() => { clearInterval(tick); btn.disabled = false; st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
+    st.textContent = "Koneksi putus, memeriksa ke Sheet...";
+    verifyGone(names).then(left => {
+      btn.disabled = false;
+      if(!left.length){ afterDel(names.length); st.innerHTML += ' <span style="color:var(--mut);">(terverifikasi)</span>'; }
+      else st.innerHTML = '<span class="err">Gagal kirim, sisa ' + left.length + ' baris — tekan lagi.</span>';
+    });
+  });
 }
 
 function saveAll(){
