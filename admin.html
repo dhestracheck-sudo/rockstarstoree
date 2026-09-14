@@ -427,6 +427,20 @@ function deleteCategory(){
   });
 }
 
+// POST dengan coba-ulang 1x khusus error transient (respon aneh/timeout).
+// Error permanen (unknown action, tidak ketemu, kosong, kolom) langsung dikembalikan.
+function postRetry(body, tries){
+  tries = tries || 2;
+  return postOne(body).then(d => {
+    if(d.result === "success") return d;
+    const r = String(d.result || "");
+    const permanen = r.indexOf("unknown action") !== -1 || r.indexOf("tidak ketemu") !== -1 ||
+      r.indexOf("sudah ada") !== -1 || r.indexOf("kosong") !== -1 || r.indexOf("kolom") !== -1;
+    if(permanen || tries <= 1) return d;
+    return postRetry(body, tries - 1);
+  });
+}
+
 function saveAll(){
   const name = document.getElementById("itemSel").value;
   const st = document.getElementById("statusAll");
@@ -468,7 +482,7 @@ function saveAll(){
       st.textContent = "Menyimpan " + (idx+1) + "/" + jobs.length + " (" + jb.label + ")...";
       // nama barang bisa berubah di tengah jalan: selalu pakai nama terbaru
       const cur = (idx > 0 && jobs[idx-1].col === 1) ? jobs[idx-1].value : document.getElementById("itemSel").value;
-      return postOne({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => {
+      return postRetry({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => {
         if(d.result === "success") return true;
         gagal.push(jb.label + " (" + (d.result || "?") + ")");
         return false;
