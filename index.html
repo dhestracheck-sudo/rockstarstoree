@@ -55,7 +55,8 @@ body {
 .stars { color: #ffd166; font-size: 13px; letter-spacing: 1px; }
 .stockbar { height: 8px; background: #1a2440; border-radius: 99px; overflow: hidden; margin-top: 6px; }
 .stockbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7CFC00); border-radius: 99px; }
-.stocktxt { font-size: 11.5px; color: var(--mut); margin-top: 4px; }
+.stocktxt { font-size: 12.5px; color: var(--txt); font-weight: 600; margin-top: 4px; }
+.stocklow { font-size: 12.5px; color: #ff8080; font-weight: 700; margin-top: 4px; }
 
 /* ===== announcement bar ===== */
 .announce {
@@ -1173,10 +1174,15 @@ function starsOf(item){
 }
 
 function stockBarHTML(item){
-  const sold = Number(item.sold) || 0, st = Number(item.stock) || 0;
-  if(!(sold > 0 && st > 0)) return "";
-  const pct = Math.min(100, Math.round(sold / (sold + st) * 100));
-  return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">Terjual ${sold} • Sisa ${st}</div>`;
+  const sold = Number(item.sold) || 0, st = Number(item.stock);
+  if(sold > 0 && st > 0){
+    const pct = Math.min(100, Math.round(sold / (sold + st) * 100));
+    const low = st < 5 ? `<div class="stocklow">⚠️ Sisa ${st} lagi, buruan sebelum habis!</div>` : ``;
+    return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">✅ Sudah laku: ${sold} • 📦 Sisa stok: ${st}</div>${low}`;
+  }
+  if(sold > 0) return `<div class="stocktxt">✅ Sudah laku: ${sold}</div>`;
+  if(st > 0) return `<div class="stocktxt">📦 Stok tersedia: ${st}</div>`;
+  return "";
 }
 
 /* ===== flash sale (diskon dari kolom coret) ===== */
