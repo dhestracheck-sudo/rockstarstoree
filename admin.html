@@ -306,19 +306,31 @@ function deleteProduct(){
   if(!confirm("HAPUS barang ini dari Sheet?\n" + name)) return;
   if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
   st.textContent = "Menghapus...";
+  const doneProd = () => {
+    st.innerHTML = '<span class="ok">✅ Barang dihapus!</span>';
+    ALL_ITEMS = ALL_ITEMS.filter(x => String(x.name).trim() !== name);
+    const sel = document.getElementById("itemSel");
+    const opt = Array.from(sel.options).find(p => p.value === name);
+    if(opt) opt.remove();
+    syncAfterProduct(sel.value);
+  };
   postOne({ action: "delete", item_name: name, sheet: CURSHEET() }).then(d => {
-    if(d.result === "success"){
-      st.innerHTML = '<span class="ok">✅ Barang dihapus!</span>';
-      ALL_ITEMS = ALL_ITEMS.filter(x => String(x.name).trim() !== name);
-      const sel = document.getElementById("itemSel");
-      const opt = Array.from(sel.options).find(p => p.value === name);
-      if(opt) opt.remove();
-      syncAfterProduct(sel.value);
-    } else if(String(d.result || "").indexOf("unknown action") !== -1){
+    if(d.result === "success"){ doneProd(); return; }
+    if(String(d.result || "").indexOf("unknown action") !== -1){
       st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
-    } else {
-      st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+      return;
     }
+    st.textContent = "Memeriksa ke Sheet...";
+    verifyGone([name]).then(left => {
+      if(!left.length){ doneProd(); st.innerHTML += ' <span style="color:var(--mut);">(terverifikasi)</span>'; }
+      else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+    });
+  }).catch(() => {
+    st.textContent = "Koneksi putus, memeriksa ke Sheet...";
+    verifyGone([name]).then(left => {
+      if(!left.length){ doneProd(); st.innerHTML += ' <span style="color:var(--mut);">(terverifikasi)</span>'; }
+      else st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>';
+    });
   });
 }
 
