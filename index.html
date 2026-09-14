@@ -14,7 +14,7 @@
   gtag('config', 'G-8CKBS3MNXH');
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -45,6 +45,17 @@ body {
   color: var(--txt);
   min-height: 100vh;
 }
+
+/* ===== loading screen ===== */
+#loader { position: fixed; inset: 0; z-index: 999; background: var(--bg); display: flex; flex-direction: column; gap: 18px; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
+#loader.hide { opacity: 0; pointer-events: none; }
+#loader img { width: 110px; border-radius: 18px; }
+#loader .spin { width: 44px; height: 44px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--blue2); animation: spin 0.9s linear infinite; }
+/* ===== rating & bar stok ===== */
+.stars { color: #ffd166; font-size: 13px; letter-spacing: 1px; }
+.stockbar { height: 8px; background: #1a2440; border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.stockbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7CFC00); border-radius: 99px; }
+.stocktxt { font-size: 11.5px; color: var(--mut); margin-top: 4px; }
 
 /* ===== announcement bar ===== */
 .announce {
@@ -138,7 +149,7 @@ header {
   margin-bottom: 16px;
 }
 .hero h1 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Baloo 2', sans-serif;
   font-size: 58px;
   line-height: 1.05;
   margin: 0 0 14px;
@@ -166,7 +177,7 @@ header {
 .hero-visual a { cursor: pointer; }
 .ava-caption {
   text-align: center;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Baloo 2', sans-serif;
   font-size: 14px;
   letter-spacing: 1.4px;
   line-height: 1.7;
@@ -229,12 +240,12 @@ header {
   padding: 16px 18px;
   text-align: center;
 }
-.stat b { display: block; font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.stat b { display: block; font-family: 'Baloo 2', sans-serif; font-size: 24px; color: #fff; }
 .stat span { font-size: 12.5px; color: var(--mut); }
 
 /* ===== section titles ===== */
 .section { max-width: 1200px; margin: 0 auto; padding: 44px 28px 8px; }
-.section h2 { font-family: 'Oswald', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
+.section h2 { font-family: 'Baloo 2', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
 .section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
 
 /* ===== flash sale ===== */
@@ -245,11 +256,11 @@ header {
   border: 1px solid var(--red); border-radius: var(--r);
   padding: 16px 20px; margin-bottom: 0; cursor: pointer; user-select: none;
 }
-.flashhead h3 { font-family: 'Oswald', sans-serif; font-size: 24px; margin: 0; }
+.flashhead h3 { font-family: 'Baloo 2', sans-serif; font-size: 24px; margin: 0; }
 .flashhead .arrow { margin-left: 4px; font-size: 18px; color: var(--blue2); }
 .flashhead .fomo { font-weight: 700; font-size: 13.5px; color: #ffb3b3; }
 .flashhead .timer {
-  margin-left: auto; font-family: 'Oswald', sans-serif; font-size: 22px;
+  margin-left: auto; font-family: 'Baloo 2', sans-serif; font-size: 22px;
   background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
 }
 .flashbody { margin-top: 18px; }
@@ -280,7 +291,7 @@ header {
   color: var(--blue2);
 }
 .banner small { color: var(--blue2); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; }
-.banner h3 { font-family: 'Oswald', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
+.banner h3 { font-family: 'Baloo 2', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
 .banner p { color: var(--mut); font-size: 13.5px; margin: 0; }
 
 /* ===== category cards ===== */
@@ -348,11 +359,16 @@ header {
 .item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
 .item .desc { font-size: 12.5px; color: var(--mut); margin: 0; line-height: 1.6; }
+.verified {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; background: var(--blue);
+  color: #fff; font-size: 11px; font-weight: 700; margin-left: 6px; vertical-align: middle;
+}
 .item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
 .item .meta .sold { color: #ffb3b3; font-weight: 600; }
 .item .meta .stock { color: var(--green); font-weight: 600; }
-.item .price { margin-top: auto; padding: 8px 12px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); border-radius: 10px; }
-.item .price .now { font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
+.item .price { margin-top: auto; padding-top: 6px; background: none; border: none; }
+.item .price .now { font-family: 'Baloo 2', sans-serif; font-size: 24px; color: #fff; }
 .item .price .was { font-size: 13px; color: var(--mut); text-decoration: line-through; margin-left: 8px; }
 .item .btn {
   margin-top: 10px;
@@ -369,11 +385,13 @@ header {
 }
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
-.item .kilat { font-size: 12px; color: #ffd166; font-weight: 700; margin-top: 6px; }
+.item .kilat { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 6px; background: none; border: none; box-shadow: none; padding: 0; }
+.item .kilat > span { font-size: 13.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.45); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
+.item .kilat .vtext { color: #fff; }
 .payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
 /* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
-.itemgrid { background: linear-gradient(135deg, #0a1230 0%, #14205c 45%, #0a1030 100%); border-radius: 18px; padding: 20px; border: 1px solid rgba(111,139,255,0.25); box-shadow: inset 0 0 60px rgba(43,78,255,0.12); }
+.itemgrid { background: transparent; border: none; box-shadow: none; padding: 0; }
 .item { border: 1px solid rgba(66,105,255,0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
 .item:hover { transform: translateY(-8px); border-color: rgba(111,139,255,0.65); box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 32px rgba(66,105,255,0.18); }
 .item .thumb { overflow: hidden; }
@@ -437,7 +455,7 @@ header {
   border-radius: 50%;
   background: var(--blue);
   color: #fff;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Baloo 2', sans-serif;
   font-size: 18px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 16px rgba(43,78,255,0.4);
@@ -559,7 +577,7 @@ header {
   padding: 24px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
-.modal h2 { font-family: 'Oswald', sans-serif; margin: 0 0 14px; font-size: 24px; }
+.modal h2 { font-family: 'Baloo 2', sans-serif; margin: 0 0 14px; font-size: 24px; }
 .mrow {
   display: flex;
   gap: 12px;
@@ -593,7 +611,7 @@ header {
 .detailmeta .stock { color: var(--green); font-weight: 600; }
 .detaildesc { font-size: 14px; line-height: 1.7; color: var(--txt); margin: 10px 0 0; }
 .detailprice { margin-top: 10px; }
-.detailprice .now { font-family: 'Oswald', sans-serif; font-size: 30px; }
+.detailprice .now { font-family: 'Baloo 2', sans-serif; font-size: 30px; }
 .detailprice .was { color: var(--mut); text-decoration: line-through; margin-left: 10px; }
 .mtotal { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; font-weight: 700; }
 .mtotal span { color: var(--mut); font-weight: 400; font-size: 13px; }
@@ -634,6 +652,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </style>
 </head>
 <body>
+
+<div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="announce">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></div>
 
@@ -1141,6 +1161,20 @@ function getCurrentCategories(){
   return catsOf(currentPage);
 }
 
+/* ===== rating & bar stok (dari angka Terjual/Sisa) ===== */
+function starsOf(item){
+  const s = Number(item.sold) || 0;
+  const full = s >= 100 ? 5 : s >= 20 ? 4 : 3;
+  return "★".repeat(full) + "☆".repeat(5 - full);
+}
+
+function stockBarHTML(item){
+  const sold = Number(item.sold) || 0, st = Number(item.stock) || 0;
+  if(!(sold > 0 && st > 0)) return "";
+  const pct = Math.min(100, Math.round(sold / (sold + st) * 100));
+  return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">Terjual ${sold} • Sisa ${st}</div>`;
+}
+
 /* ===== flash sale (diskon dari kolom coret) ===== */
 function flashItems(){
   const out = [];
@@ -1196,9 +1230,11 @@ function flashHTML(){
       <div class="ibody">
         <h3>${it.name}</h3>
         ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
+        <div class="stars">${starsOf(it)}</div>
         <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
+        ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
-        <div class="kilat">⚡ Proses kilat</div>
+        <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
         <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
       </div>
@@ -1336,17 +1372,19 @@ function itemCard(categories, i, j){
     <div class="ibody">
       <h3>${item.name}</h3>
       ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
+      <div class="stars">${starsOf(item)}</div>
       <div class="meta">
         <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
       </div>
+      ${stockBarHTML(item)}
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <div class="kilat">⚡ Proses kilat</div>
+      <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
       <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
       <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
@@ -1408,16 +1446,18 @@ function renderDetail(){
       `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
     ).join("") + `</div>` : ``}
     <h2 style="margin:14px 0 0;">${item.name}</h2>
+    <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
     ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
     <div class="detailmeta">
       <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} dilihat</span>
       ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
       ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
     </div>
+    ${stockBarHTML(item)}
     <div class="detailprice">
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
-    <div class="kilat">⚡ Proses kilat</div>
+    <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
     <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
     <div class="mactions">
@@ -1818,6 +1858,10 @@ function loadLiveStock(){
 loadLiveStock().then(() => {
   render();
   document.getElementById("searchInput").addEventListener("input", searchCatalog);
+  setTimeout(() => {
+    const l = document.getElementById("loader");
+    if(l) l.classList.add("hide");
+  }, 900);
 });
 </script>
 
