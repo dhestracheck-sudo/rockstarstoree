@@ -929,15 +929,23 @@ function prefillCat(){
   document.getElementById("catOldCap").textContent = u || "Belum ada foto display.";
 }
 
+function infoMap(rows){
+  const m = {};
+  (rows || []).forEach((r, i) => {
+    const k = String((r && r[0] !== undefined) ? r[0] : "").trim().toLowerCase();
+    if(["teks", "mode", "open", "close"].indexOf(k) !== -1 && !(k in m)){
+      m[k] = (i + 1 < rows.length && rows[i + 1][0] !== undefined) ? String(rows[i + 1][0]).trim() : "";
+    }
+  });
+  return m;
+}
+
 function loadInfo(){
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
-        const rows = JSON.parse(t);
-        rows.forEach(r => {
-          const v = String((r && r[0] !== undefined) ? r[0] : "").trim();
-          if(v && v.toLowerCase() !== "teks") document.getElementById("infoInput").value = v;
-        });
+        const info = infoMap(JSON.parse(t));
+        if(info.teks) document.getElementById("infoInput").value = info.teks;
       } catch(e) {}
     }).catch(() => {});
 }
@@ -946,12 +954,11 @@ function loadMode(){
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
-        const rows = JSON.parse(t);
-        const cell = i => (rows[i] && rows[i][0] !== undefined) ? String(rows[i][0]).trim() : "";
-        const v = cell(3).toLowerCase() || "auto";
+        const info = infoMap(JSON.parse(t));
+        const v = (info.mode || "auto").toLowerCase() || "auto";
         showMode(v === "online" || v === "offline" ? v : "auto");
-        if(cell(5) !== "") document.getElementById("openInput").value = cell(5);
-        if(cell(7) !== "") document.getElementById("closeInput").value = cell(7);
+        if(info.open !== "") document.getElementById("openInput").value = info.open;
+        if(info.close !== "") document.getElementById("closeInput").value = info.close;
       } catch(e) { showMode("auto"); }
     }).catch(() => { showMode("?"); });
 }

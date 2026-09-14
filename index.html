@@ -1872,17 +1872,27 @@ function loadLiveStock(){
 /* ===== teks berjalan + status online dari Sheet tab Pengumuman ===== */
 let shopMode = "auto";
 let shopOpen = 8, shopClose = 22;
+// Tab Pengumuman dibaca berbasis label (anti-geser): "teks"/"mode"/"open"/"close" -> nilai di baris bawahnya.
+function infoMap(rows){
+  const m = {};
+  (rows || []).forEach((r, i) => {
+    const k = String((r && r[0] !== undefined) ? r[0] : "").trim().toLowerCase();
+    if(["teks", "mode", "open", "close"].indexOf(k) !== -1 && !(k in m)){
+      m[k] = (i + 1 < rows.length && rows[i + 1][0] !== undefined) ? String(rows[i + 1][0]).trim() : "";
+    }
+  });
+  return m;
+}
 function loadAnnounce(){
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
         const rows = JSON.parse(t);
-        const cell = i => (rows[i] && rows[i][0] !== undefined) ? String(rows[i][0]).trim() : "";
-        let teks = cell(1);
-        if(teks.toLowerCase() === "teks") teks = "";
-        let mode = cell(3).toLowerCase();
+        const info = infoMap(rows);
+        let teks = info.teks || "";
+        let mode = (info.mode || "").toLowerCase();
         if(mode === "online" || mode === "offline" || mode === "auto") shopMode = mode;
-        const o = parseInt(cell(5), 10), c = parseInt(cell(7), 10);
+        const o = parseInt(info.open, 10), c = parseInt(info.close, 10);
         if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
         if(isFinite(c) && c >= 0 && c <= 23) shopClose = c;
         if(!teks) return;

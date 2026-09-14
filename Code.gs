@@ -307,29 +307,34 @@ function actionInc_(body) {
   }
 }
 
-// Teks pengumuman + jam operasional (tab "Pengumuman"):
-// A2 = teks | A4 = mode (auto/online/offline) | A6 = jam buka | A8 = jam tutup
+// Teks pengumuman + jam operasional (tab "Pengumuman", berbasis label anti-geser):
+// "teks" -> baris bawahnya | "mode" -> bawahnya | "open"/"close" -> bawahnya
+function infoGet_(sh, key) {
+  var vals = sh.getDataRange().getValues();
+  for (var r = 0; r < vals.length; r++) {
+    if (String(vals[r][0]).trim().toLowerCase() === key) {
+      return { row: r + 2, value: (r + 1 < vals.length) ? String(vals[r + 1][0]) : "" };
+    }
+  }
+  return null;
+}
+
+function infoSet_(sh, key, value) {
+  var f = infoGet_(sh, key);
+  if (f) sh.getRange(f.row, 1).setValue(String(value));
+  else { sh.appendRow([key]); sh.appendRow([String(value)]); }
+}
+
 function actionSetInfo_(body) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName("Pengumuman");
-  if (!sh) {
-    sh = ss.insertSheet("Pengumuman");
-    sh.appendRow(["teks"]);
-    sh.appendRow([""]);
-  }
+  if (!sh) sh = ss.insertSheet("Pengumuman");
   var key = norm_(body.key || body.k || "teks");
-  if (key === "mode" || key === "status" || key === "online") {
-    sh.getRange(3, 1).setValue("mode");
-    sh.getRange(4, 1).setValue(String(body.value || ""));
-  } else if (key === "open" || key === "buka") {
-    sh.getRange(5, 1).setValue("open");
-    sh.getRange(6, 1).setValue(String(body.value || ""));
-  } else if (key === "close" || key === "tutup") {
-    sh.getRange(7, 1).setValue("close");
-    sh.getRange(8, 1).setValue(String(body.value || ""));
-  } else {
-    sh.getRange(2, 1).setValue(String(body.value || body.teks || ""));
-  }
+  if (key === "status" || key === "online") key = "mode";
+  if (key === "buka") key = "open";
+  if (key === "tutup") key = "close";
+  if (["teks", "mode", "open", "close"].indexOf(key) === -1) key = "teks";
+  infoSet_(sh, key, body.value !== undefined ? body.value : body.teks);
   return { result: "success" };
 }
 
