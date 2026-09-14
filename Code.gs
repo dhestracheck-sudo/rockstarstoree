@@ -34,7 +34,8 @@ var HEADER_ALIASES = {
   stock: ["stock", "stok", "sisa"],
   soldout: ["soldout", "sold out", "habis", "sold_out"],
   image: ["image", "gambar", "foto", "img", "link", "url", "file"],
-  sold: ["sold", "terjual", "laku"]
+  sold: ["sold", "terjual", "laku"],
+  dilihat: ["dilihat", "views", "dilihat_count", "lihat"]
 };
 
 function norm_(s) { return String((s === undefined || s === null) ? "" : s).trim().toLowerCase(); }
@@ -68,7 +69,7 @@ function readTable_() {
     if (k && !(k in idx)) idx[k] = c;
   }
   // pastikan kolom kanonis ada; kalau belum, tambah di kanan
-  var need = ["name", "kategori", "price", "coret", "deskripsi", "stock", "soldout", "image", "sold"];
+  var need = ["name", "kategori", "price", "coret", "deskripsi", "stock", "soldout", "image", "sold", "dilihat"];
   var changed = false;
   need.forEach(function (k) {
     if (!(k in idx)) {
@@ -92,7 +93,8 @@ function toObj_(row, idx) {
     stock: Number(g("stock", 0)) || 0,
     soldout: String(g("soldout", "")),
     image: String(g("image", "")),
-    sold: Number(g("sold", 0)) || 0
+    sold: Number(g("sold", 0)) || 0,
+    dilihat: Number(g("dilihat", 0)) || 0
   };
 }
 
@@ -141,6 +143,7 @@ function doPost(e) {
     if (action === "delmany") return jsonOut_(actionDelMany_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
     if (action === "track") return jsonOut_(actionTrack_(body));
+    if (action === "inc") return jsonOut_(actionInc_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
     return jsonOut_({ result: "error: " + String(err && err.message || err) });
@@ -280,6 +283,26 @@ function actionUpload_(body) {
     t.sheet.appendRow(row);
   }
   return { result: "success", url: url, id: id };
+}
+
+// Counter penghitung (misal dilihat), aman konkuren pakai lock.
+function actionInc_(body) {
+  var name = String(body.item_name || body.name || "").trim();
+  if (!name) return { result: "error: item_name kosong" };
+  var lock = LockService.getScriptLock();
+  try { lock.waitLock(10000); } catch (e) { return { result: "error: sibuk, coba lagi" }; }
+  try {
+    var t = readTable_(body.sheet || SHEET_DEFAULT);
+    var k = canonKey_(body.col || "dilihat");
+    if (!(k && (k in t.idx))) return { result: "error: kolom tidak dikenal" };
+    var r = findRow_(t, name);
+    if (r < 0) return { result: "error: tidak ketemu: " + name };
+    var cur = Number(t.rows[r][t.idx[k]]) || 0;
+    t.sheet.getRange(r + 1, t.idx[k] + 1).setValue(cur + 1);
+    return { result: "success", value: cur + 1 };
+  } finally {
+    try { lock.releaseLock(); } catch (e) {}
+  }
 }
 
 // Statistik klik web (ringan, tanpa auth). Sheet "Statistik": time | ev | nama | kat

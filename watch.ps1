@@ -11,6 +11,8 @@ function Log($m) {
 
 Log("watcher mulai")
 
+$lastBeat = Get-Date
+
 $watcher = New-Object IO.FileSystemWatcher $repo
 $watcher.IncludeSubdirectories = $true
 $watcher.EnableRaisingEvents = $true
@@ -30,6 +32,11 @@ Register-ObjectEvent $watcher Renamed -Action $onChange | Out-Null
 
 while ($true) {
   Start-Sleep -Seconds 15
+  try {
+    if (((Get-Date) - $lastBeat).TotalMinutes -ge 60) {
+      $lastBeat = Get-Date
+      Log("watcher hidup")
+    }
   if (Test-Path -LiteralPath $pending) {
     try { $t = [datetime](Get-Content -LiteralPath $pending) } catch { $t = Get-Date }
     if (((Get-Date) - $t).TotalSeconds -ge 30) {
@@ -45,4 +52,5 @@ while ($true) {
       if ($LASTEXITCODE -eq 0) { Log("push OK $ts") } else { Log("push GAGAL: $out") }
     }
   }
+  } catch { Log("loop error (tetap jalan): " + $_.Exception.Message) }
 }

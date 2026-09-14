@@ -318,7 +318,7 @@ header {
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
-.item .thumb { position: relative; }
+.item .thumb { position: relative; cursor: zoom-in; }
 .item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; }
 /* Halaman akun: screenshot sering portrait — tampilkan utuh, jangan dipotong */
 .itemgrid.akun .thumb img, .itemgrid.akun .mthumb img { aspect-ratio: auto; max-height: 440px; object-fit: contain; }
@@ -566,6 +566,18 @@ header {
   cursor: pointer;
   font-size: 12px;
 }
+/* ===== detail produk (popup besar) ===== */
+.detailimg { width: 100%; max-height: 52vh; object-fit: contain; background: #05080f; border-radius: 12px; display: block; }
+.dthumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.dthumbs img { width: 62px; height: 62px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; }
+.dthumbs img.on { border-color: var(--blue2); }
+.detailmeta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--mut); margin-top: 8px; }
+.detailmeta .sold { color: #ffb3b3; font-weight: 600; }
+.detailmeta .stock { color: var(--green); font-weight: 600; }
+.detaildesc { font-size: 14px; line-height: 1.7; color: var(--txt); margin: 10px 0 0; }
+.detailprice { margin-top: 10px; }
+.detailprice .now { font-family: 'Oswald', sans-serif; font-size: 30px; }
+.detailprice .was { color: var(--mut); text-decoration: line-through; margin-left: 10px; }
 .mtotal { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; font-weight: 700; }
 .mtotal span { color: var(--mut); font-weight: 400; font-size: 13px; }
 .mactions { display: flex; gap: 10px; margin-top: 16px; }
@@ -716,6 +728,10 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button class="go" onclick="checkout()">Checkout</button>
     </div>
   </div>
+</div>
+
+<div class="overlay" id="detailModal" onclick="if(event.target.id==='detailModal')closeDetail()">
+  <div class="modal" id="detailBox" style="width:min(640px,94vw);"></div>
 </div>
 
 <section class="section server-cta" id="serverCta">
@@ -1155,7 +1171,7 @@ function flashHTML(){
   const cards = items.map(r => {
     const it = r.item;
     return `
-    <div class="item">
+    <div class="item" data-viewname="${it.name}" data-page="${r.page}">
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
         <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
@@ -1163,6 +1179,7 @@ function flashHTML(){
       <div class="ibody">
         <h3>${it.name}</h3>
         ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
+        <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <button class="btn" onclick="flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
       </div>
@@ -1226,6 +1243,7 @@ function render(){
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
+    watchViews();
     return;
   }
   const categories = getCurrentCategories();
@@ -1237,6 +1255,7 @@ function render(){
       <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)">
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
+  watchViews();
 }
 
 function searchCatalog(){
@@ -1264,6 +1283,7 @@ function searchCatalog(){
   title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
   el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
+  watchViews();
 }
 
 function itemCard(categories, i, j){
@@ -1276,7 +1296,7 @@ function itemCard(categories, i, j){
   const itemImg = item.img || (item.images && item.images[0]) || category.img;
   const off = discountOf(item);
   const thumb = hasCarousel ? `
-    <div class="thumb mthumb">
+    <div class="thumb mthumb" onclick="openDetail('${page}',${i},${j})">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
@@ -1286,18 +1306,19 @@ function itemCard(categories, i, j){
         ${item.images.map((_, idx) => `<i class="${idx === 0 ? 'on' : ''}" onclick="event.stopPropagation();carouselGoto(${i},${j},${idx})"></i>`).join('')}
       </div>
     </div>` : `
-    <div class="thumb">
+    <div class="thumb" onclick="openDetail('${page}',${i},${j})">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
   return `
-  <div class="item">
+  <div class="item" data-viewname="${item.name}" data-page="${page}">
     ${thumb}
     <div class="ibody">
       <h3>${item.name}</h3>
       ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
       <div class="meta">
+        <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
       </div>
@@ -1328,10 +1349,72 @@ function showItems(i){
   category.items.forEach(it => {
     (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
   });
+  watchViews();
 }
 
 function chatAdmin(){
   window.open("https://wa.me/6289664299571?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
+}
+
+/* ===== popup detail produk (klik gambar jadi besar) ===== */
+let detailCur = null;
+function openDetail(page, i, j){
+  detailCur = { page: page, i: i, j: j, k: 0 };
+  renderDetail();
+  document.getElementById("detailModal").style.display = "block";
+}
+function closeDetail(){
+  document.getElementById("detailModal").style.display = "none";
+  detailCur = null;
+}
+function renderDetail(){
+  if(!detailCur) return;
+  const cats = catsOf(detailCur.page);
+  const item = cats[detailCur.i].items[detailCur.j];
+  const category = cats[detailCur.i];
+  const files = (item.images && item.images.length) ? item.images : [(item.img || category.img)];
+  const k = Math.min(detailCur.k, files.length - 1);
+  detailCur.k = k;
+  const off = discountOf(item);
+  document.getElementById("detailBox").innerHTML = `
+    <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
+    ${files.length > 1 ? `<div class="dthumbs">` + files.map((f, idx) =>
+      `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
+    ).join("") + `</div>` : ``}
+    <h2 style="margin:14px 0 0;">${item.name}</h2>
+    ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
+    <div class="detailmeta">
+      <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} dilihat</span>
+      ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
+      ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
+    </div>
+    <div class="detailprice">
+      <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
+    </div>
+    ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
+    <div class="mactions">
+      <button class="ghost" onclick="closeDetail()">Tutup</button>
+      <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+    </div>`;
+}
+function detailGoto(k){
+  if(!detailCur) return;
+  detailCur.k = k;
+  renderDetail();
+}
+function detailAdd(){
+  if(!detailCur) return;
+  const cats = catsOf(detailCur.page);
+  const item = cats[detailCur.i].items[detailCur.j];
+  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name});
+  if(typeof gtag === "function"){
+    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
+  }
+  trackClick("tambah_keranjang", item.name, cats[detailCur.i].name);
+  syncCart();
+  closeDetail();
+  openCartModal();
 }
 
 function carouselNext(i, j){
@@ -1412,6 +1495,40 @@ function trackSearch(q){
   trackClick("cari_barang", q, "");
 }
 
+// Hitung dilihat per produk: tiap card yang tampil di layar +1 (sekali per render).
+let viewObs = null;
+function watchViews(){
+  try {
+    if(viewObs) viewObs.disconnect();
+    viewObs = new IntersectionObserver(es => {
+      es.forEach(en => {
+        if(!en.isIntersecting) return;
+        const el = en.target;
+        viewObs.unobserve(el);
+        const nm = el.dataset.viewname, pg = el.dataset.page;
+        if(!nm || pg === "topup") return;
+        fetch(SHEET_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({ action: "inc", item_name: nm, col: "dilihat", sheet: pg === "akun" ? "Akun" : "Brainrot" }),
+          keepalive: true
+        }).then(r => r.text()).then(t => {
+          try {
+            const d = JSON.parse(t);
+            if(d.result === "success"){
+              const c = el.querySelector(".viewcount");
+              if(c) c.textContent = "👁 " + Number(d.value).toLocaleString("id-ID");
+            }
+          } catch(e) {}
+        }).catch(() => {});
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.item[data-viewname]').forEach(el => {
+      if(el.dataset.page !== "topup") viewObs.observe(el);
+    });
+  } catch(e) {}
+}
+
 // Statistik sendiri ke Sheet tab "Statistik" (ringan, tidak menunggu respon).
 function trackClick(ev, nama, kat){
   try {
@@ -1424,7 +1541,7 @@ function trackClick(ev, nama, kat){
   } catch(e) {}
 }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwglRXeW_g08CbTVGuy31YbvWOcOkgG8q3kicY8kGW2A0yKQazWy5Nnyw9pJLQqYA8_/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwOwspxu7rC9I4p1pLJQ0OxsUN-nkcKm2SOwziBGkmdoTZwm5ZkW5TvCDO8RZsV3qEv/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1605,6 +1722,7 @@ function rebuildFromSheet(arr, targetCats){
     const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
             const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
             if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            it.dilihat = Number(o.dilihat) || 0;
             if (String(o.deskripsi || "").trim()) it.deskripsi = String(o.deskripsi).trim();
             if (Number(o.coret) > it.price) it.originalPrice = Number(o.coret);
     if (files.length > 1) it.images = files;
@@ -1619,7 +1737,7 @@ function rebuildFromSheet(arr, targetCats){
 
 function mergeFromSheet(arr){
   const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, deskripsi: String(o.deskripsi || ""), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, deskripsi: String(o.deskripsi || ""), dilihat: Number(o.dilihat) || 0, soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
   [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
     cats.forEach(c => {
       const catKey = "CAT:" + String(c.name).trim();
@@ -1635,6 +1753,7 @@ function mergeFromSheet(arr){
               it.stock = flagged ? 0 : v.stock;
               if (v.price > 0) it.price = v.price;
               if (v.sold > 0) it.sold = v.sold;
+              it.dilihat = v.dilihat;
               it.deskripsi = String(v.deskripsi || "").trim() || null;
               if (v.coret > it.price) it.originalPrice = v.coret;
               else if (!(v.coret > 0)) it.originalPrice = null;

@@ -37,12 +37,13 @@ h1 { font-family:'Oswald',sans-serif; }
   </div>
   <div class="panel"><h2>🟢 Live — lagi diklik 5 menit terakhir <span id="liveCount" style="color:var(--green);"></span></h2><div id="live"></div><p class="hint">Otomatis refresh tiap 15 detik.</p></div>
   <div class="panel"><h2>🔥 Produk paling laris (masuk keranjang)</h2><div id="topProd"></div></div>
+  <div class="panel"><h2>👁️ Produk paling banyak dilihat</h2><div id="topView"></div></div>
   <div class="panel"><h2>📂 Kategori paling dibuka</h2><div id="topKat"></div></div>
   <div class="panel"><h2>🔍 Kata paling dicari</h2><div id="topCari"></div></div>
   <div class="panel"><h2>📅 Klik 7 hari terakhir</h2><div id="perHari"></div></div>
 </div>
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwglRXeW_g08CbTVGuy31YbvWOcOkgG8q3kicY8kGW2A0yKQazWy5Nnyw9pJLQqYA8_/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwOwspxu7rC9I4p1pLJQ0OxsUN-nkcKm2SOwziBGkmdoTZwm5ZkW5TvCDO8RZsV3qEv/exec";
 
 function bar(el, list){
   const box = document.getElementById(el);
@@ -105,6 +106,7 @@ window.__statCb = rows => {
   bar("topKat", count(rows, "buka_kategori"));
   bar("topCari", count(rows, "cari_barang"));
   live(rows);
+  muatLihat();
   const days = {};
   rows.forEach(r => {
     const d = wib(r[0]).day;
@@ -124,6 +126,24 @@ function muat(){
 }
 muat();
 setInterval(muat, 15000);
+
+function muatLihat(){
+  const got = [];
+  const done = () => {
+    if(got.length < 2) return;
+    const all = got[0].concat(got[1]).filter(o => o.name && o.name.indexOf("CAT:") !== 0);
+    all.sort((a, b) => (Number(b.dilihat) || 0) - (Number(a.dilihat) || 0));
+    bar("topView", all.slice(0, 10).map(o => [String(o.name).slice(0, 50), Number(o.dilihat) || 0]));
+  };
+  ["Brainrot", "Akun"].forEach((sh, idx) => {
+    const cb = "__lihatCb" + idx;
+    window[cb] = data => { got[idx] = Array.isArray(data) ? data : []; done(); };
+    const sc = document.createElement("script");
+    sc.src = SHEET_URL + "?callback=" + cb + "&sheet=" + sh + "&t=" + Date.now();
+    sc.onerror = () => { got[idx] = []; done(); };
+    document.head.appendChild(sc);
+  });
+}
 </script>
 </body>
 </html>
