@@ -335,8 +335,7 @@ function deleteProduct(){
 }
 
 // Cek baris mana yang masih ada di Sheet (untuk pastikan hapus beneran).
-function verifyGone(names){
-  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+function verifyGone(names){  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
         const arr = JSON.parse(t);
@@ -345,6 +344,17 @@ function verifyGone(names){
         return names.filter(nm => have[nm]);
       } catch(e){ return names; }
     }).catch(() => names);
+}
+
+// Cek apakah 1 nama SUDAH ada di Sheet (untuk pastikan tambah beneran).
+function verifyExists(name){
+  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const arr = JSON.parse(t);
+        return arr.some(o => String(o.name).trim() === name);
+      } catch(e){ return false; }
+    }).catch(() => false);
 }
 
 function deleteCategory(){
@@ -775,7 +785,15 @@ function addCategory(){
   st.textContent = "Menambah kategori...";
   postOne({ action: "add", item_name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
     if(needAdd_(d, st, btn)) return;
-    if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
+    if(d.result !== "success"){
+      st.textContent = "Memeriksa ke Sheet...";
+      verifyExists("CAT:" + kat).then(ex => {
+        btn.disabled = false;
+        if(ex){ st.innerHTML = '<span class="ok">✅ Kategori ternyata sudah masuk! (terverifikasi)</span>'; addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: "", sold: 0 }); document.getElementById("catSel").value = kat; prefillCat(); }
+        else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+      });
+      return;
+    }
     if(!f){
       st.innerHTML = '<span class="ok">✅ Kategori ditambah! Refresh web untuk lihat.</span>';
       document.getElementById("addCatName").value = "";
@@ -819,7 +837,15 @@ function addProduct(){
   const coretVal = (coretRaw !== "" && !isNaN(Number(coretRaw))) ? Number(coretRaw) : 0;
   postOne({ action: "add", item_name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0, sheet: CURSHEET() }).then(d => {
     if(needAdd_(d, st, btn)) return;
-    if(d.result !== "success"){ st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>'; btn.disabled = false; return; }
+    if(d.result !== "success"){
+      st.textContent = "Memeriksa ke Sheet...";
+      verifyExists(nm).then(ex => {
+        btn.disabled = false;
+        if(ex){ st.innerHTML = '<span class="ok">✅ Produk ternyata sudah masuk! (terverifikasi)</span>'; addLocalRow({ name: nm, kategori: kat, price: price, coret: coretVal, deskripsi: descVal, stock: Number(stockRaw), soldout: "", image: "", sold: 0 }); document.getElementById("itemSel").value = nm; syncAfterProduct(nm); }
+        else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+      });
+      return;
+    }
     if(!f){
       st.innerHTML = '<span class="ok">✅ Produk ditambah! Tambah fotonya via panel slide.</span>';
       document.getElementById("addName").value = "";
