@@ -316,6 +316,7 @@ header {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 }
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
 .item .thumb { position: relative; cursor: zoom-in; }
@@ -1174,7 +1175,7 @@ function flashHTML(){
   const cards = items.map(r => {
     const it = r.item;
     return `
-    <div class="item" data-viewname="${it.name}" data-page="${r.page}">
+    <div class="item" data-viewname="${it.name}" data-page="${r.page}" onclick="openDetail('${r.page}',${r.i},${r.j})">
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
         <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
@@ -1186,7 +1187,7 @@ function flashHTML(){
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat">⚡ Proses kilat</div>
         <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>BCA</span>
-        <button class="btn" onclick="flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
+        <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
       </div>
     </div>`;
   }).join("");
@@ -1301,7 +1302,7 @@ function itemCard(categories, i, j){
   const itemImg = item.img || (item.images && item.images[0]) || category.img;
   const off = discountOf(item);
   const thumb = hasCarousel ? `
-    <div class="thumb mthumb" onclick="openDetail('${page}',${i},${j})">
+    <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
@@ -1311,13 +1312,13 @@ function itemCard(categories, i, j){
         ${item.images.map((_, idx) => `<i class="${idx === 0 ? 'on' : ''}" onclick="event.stopPropagation();carouselGoto(${i},${j},${idx})"></i>`).join('')}
       </div>
     </div>` : `
-    <div class="thumb" onclick="openDetail('${page}',${i},${j})">
+    <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
   return `
-  <div class="item" data-viewname="${item.name}" data-page="${page}">
+  <div class="item" data-viewname="${item.name}" data-page="${page}" onclick="openDetail('${page}',${i},${j})">
     ${thumb}
     <div class="ibody">
       <h3>${item.name}</h3>
@@ -1334,7 +1335,7 @@ function itemCard(categories, i, j){
       </div>
       <div class="kilat">⚡ Proses kilat</div>
       <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
   </div>`;
 }
