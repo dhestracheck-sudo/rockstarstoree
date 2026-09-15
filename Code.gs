@@ -270,6 +270,15 @@ function actionUpload_(body) {
   var r = findRow_(t, name);
   var ii = t.idx["image"];
   if (r >= 0) {
+    var cur = String(t.rows[r][ii] || "");
+    // append=1: tambah di belakang tanpa menghapus yang ada (aman dari data loss)
+    if (body.append) {
+      var parts = cur.split("|").map(function (s) { return s.trim(); }).filter(Boolean);
+      parts.push(url);
+      var full = parts.join("|");
+      t.sheet.getRange(r + 1, ii + 1).setValue(full);
+      return { result: "success", url: url, full: full, id: id };
+    }
     t.sheet.getRange(r + 1, ii + 1).setValue(url);
   } else {
     // tambah baris baru. CAT:* = foto kategori (disembunyikan dari produk oleh web).
