@@ -1922,11 +1922,21 @@ function renderShopStatus(){
     : `<span class="off">🔴 Offline — slow respon</span>`;
 }
 
+// Pengaman: loader tidak boleh nyangkut apapun yang terjadi.
+window.addEventListener("error", function(){
+  const l = document.getElementById("loader");
+  if(l) l.classList.add("hide");
+});
+setTimeout(function(){
+  const l = document.getElementById("loader");
+  if(l) l.classList.add("hide");
+}, 6000);
+
 loadLiveStock().then(() => {
-  loadAnnounce();
-  renderShopStatus();
-  render();
-  document.getElementById("searchInput").addEventListener("input", searchCatalog);
+  try { loadAnnounce(); } catch(e) {}
+  try { renderShopStatus(); } catch(e) {}
+  try { render(); } catch(e) {}
+  try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
   setTimeout(() => {
     const l = document.getElementById("loader");
     if(l) l.classList.add("hide");
