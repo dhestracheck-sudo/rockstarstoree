@@ -1394,7 +1394,7 @@ function loadCached(sheet){
     const raw = localStorage.getItem("rockstar_" + sheet);
     if(!raw) return [];
     const o = JSON.parse(raw);
-    if(!o || !o.t || (Date.now() - o.t) > 7*24*3600*1000) return [];
+    if(!o || !o.t || (Date.now() - o.t) > 1 * 3600 * 1000) return [];
     return Array.isArray(o.data) ? o.data : [];
   } catch(e){ return []; }
 }
