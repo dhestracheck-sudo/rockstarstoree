@@ -972,6 +972,15 @@ function render(){
     return;
   }
   const categories = getCurrentCategories();
+  if(!categories.length){
+    title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
+      <h2>Katalog kosong</h2><p>Data belum termuat (koneksi lambat).</p>`;
+    el.innerHTML = `<div style="text-align:center;padding:30px 10px;">
+      <p style="color:var(--mut);">😢 Katalog belum tampil. Biasanya karena sinyal.</p>
+      <button class="btn-primary" onclick="location.reload()">🔄 Muat Ulang</button>
+    </div>`;
+    return;
+  }
   title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
     <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
