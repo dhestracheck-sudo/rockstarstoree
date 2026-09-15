@@ -1417,16 +1417,16 @@ function fetchSheet(sheet, cbName){
 // (bukan data kode lama) supaya kategori baru tidak hilang-timbul.
 function loadCached(sheet){
   try {
-    const raw = localStorage.getItem("rockstar_" + sheet);
+    const raw = localStorage.getItem("rs_" + sheet);
     if(!raw) return [];
     const o = JSON.parse(raw);
-    if(!o || !o.t || (Date.now() - o.t) > 1 * 3600 * 1000) return [];
+    if(!o || !o.t || (Date.now() - o.t) > 7 * 24 * 3600 * 1000) return [];
     return Array.isArray(o.data) ? o.data : [];
   } catch(e){ return []; }
 }
 
 function saveCached(sheet, data){
-  try { localStorage.setItem("rockstar_" + sheet, JSON.stringify({ t: Date.now(), data: data })); } catch(e){}
+  try { localStorage.setItem("rs_" + sheet, JSON.stringify({ t: Date.now(), data: data })); } catch(e){}
 }
 
 function hasKatArr(arr){
@@ -1566,7 +1566,7 @@ function infoMap(rows){
 function loadAnnounce(){
   // tampilkan cache dulu (10 menit), lalu segarkan di background
   try {
-    const c = JSON.parse(localStorage.getItem("rockstar_pengumuman") || "null");
+    const c = JSON.parse(localStorage.getItem("rs_info") || "null");
     if(c && (Date.now() - c.t) < 10 * 60 * 1000){
       applyAnnounce(c);
       if(c.mode === "online" || c.mode === "offline" || c.mode === "auto") shopMode = c.mode;
@@ -1586,7 +1586,7 @@ function loadAnnounce(){
         const o = parseInt(info.open, 10), cl = parseInt(info.close, 10);
         if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
         if(isFinite(cl) && cl >= 0 && cl <= 23) shopClose = cl;
-        try { localStorage.setItem("rockstar_pengumuman", JSON.stringify({ t: Date.now(), teks, mode: shopMode, open: shopOpen, close: shopClose })); } catch(e) {}
+        try { localStorage.setItem("rs_info", JSON.stringify({ t: Date.now(), teks, mode: shopMode, open: shopOpen, close: shopClose })); } catch(e) {}
         if(!teks){
           const cr = document.getElementById("customrun");
           if(cr) cr.style.display = "none";
