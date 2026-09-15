@@ -852,8 +852,6 @@ function uploadCat(){
   sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }, (ALL_ITEMS.find(x => String(x.name).trim() === "CAT:" + kat) || { image: "" }).image || "").then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">✅ Foto kategori terpasang!' + (d.verified ? ' (terverifikasi)' : '') + ' Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
-    if(d.result === "success"){
-      st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
       updItem("CAT:" + kat, { image: d.url });
       if(!ALL_ITEMS.some(x => String(x.name).trim() === "CAT:" + kat)){
         addLocalRow({ name: "CAT:" + kat, kategori: kat, price: 0, stock: 0, soldout: "YA", image: d.url, sold: 0 });
