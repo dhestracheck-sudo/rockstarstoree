@@ -448,16 +448,29 @@ function deleteCategory(){
 
 // POST dengan coba-ulang 1x khusus error transient (respon aneh/timeout).
 // Error permanen (unknown action, tidak ketemu, kosong, kolom) langsung dikembalikan.
-function postRetry(body, tries){
+function postRetry(body, tries, ms){
   tries = tries || 2;
-  return postOne(body).then(d => {
+  return postOne(body, ms).then(d => {
     if(d.result === "success") return d;
     const r = String(d.result || "");
     const permanen = r.indexOf("unknown action") !== -1 || r.indexOf("tidak ketemu") !== -1 ||
       r.indexOf("sudah ada") !== -1 || r.indexOf("kosong") !== -1 || r.indexOf("kolom") !== -1;
     if(permanen || tries <= 1) return d;
-    return postRetry(body, tries - 1);
+    return postRetry(body, tries - 1, ms);
   });
+}
+
+// Cek isi kolom image di Sheet berubah atau tidak (untuk pastikan upload beneran).
+function verifyImg(name, oldFull){
+  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const arr = JSON.parse(t);
+        const o = arr.find(x => String(x.name).trim() === name);
+        const v = o ? String(o.image || "").trim() : "";
+        return (v && v !== String(oldFull || "").trim()) ? v : "";
+      } catch(e){ return ""; }
+    }).catch(() => "");
 }
 
 function saveAll(){
@@ -1025,13 +1038,37 @@ function validImageFile(f){
 
 // Upload file yang sudah lolos validasi. body = {action:"upload", item_name, ...} tanpa file.
 // Foto dikompres dulu (maks 1600px) supaya upload jauh lebih cepat.
-function sendUpload(f, body){
+function sendUpload(f, body, oldFull){
+  // file <= 1MB dikirim asli tanpa kompres (cepat + kualitas utuh)
+  if(f.size <= 1048576){
+    return new Promise(resolve => {
+      const rd = new FileReader();
+      rd.onload = () => {
+        body.file = String(rd.result).split(",")[1];
+        postRetry(body, 3, 90000).then(resolve);
+      };
+      rd.onerror = () => resolve({ result: "error: gagal baca file" });
+      rd.readAsDataURL(f);
+    }).then(d => {
+      if(d.result === "success") return d;
+      return verifyImg(body.item_name, oldFull || "").then(full => {
+        if(full) return { result: "success", url: full.split("|").map(s => s.trim()).filter(Boolean)[0] || full, verified: true };
+        return d;
+      });
+    });
+  }
   return prepImage(f).then(p => {
     if(!p.ok) return { result: "error: file rusak / bukan gambar (pakai JPG/PNG)" };
     body.file = p.base64;
     body.mime = p.mime;
     body.filename = p.name;
-    return postOne(body);
+    return postRetry(body, 3, 90000).then(d => {
+      if(d.result === "success") return d;
+      return verifyImg(body.item_name, oldFull || "").then(full => {
+        if(full) return { result: "success", url: full.split("|").map(s => s.trim()).filter(Boolean)[0] || full, verified: true };
+        return d;
+      });
+    });
   });
 }
 
