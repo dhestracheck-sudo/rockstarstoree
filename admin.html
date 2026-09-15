@@ -985,7 +985,7 @@ function sendUpload(f, body){
     body.file = p.base64;
     body.mime = p.mime;
     body.filename = p.name;
-    return postOne(body);
+    return postRetry(body, 3);
   });
 }
 
