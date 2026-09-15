@@ -1919,7 +1919,7 @@ function renderShopStatus(){
   }
   el.innerHTML = online
     ? `<span class="on">🟢 Online — fast respon</span>`
-    : `<span class="off">🔴 Offline — slow respon, buka jam ` + String(shopOpen).padStart(2, "0") + `:00</span>`;
+    : `<span class="off">🔴 Offline — slow respon</span>`;
 }
 
 loadLiveStock().then(() => {
