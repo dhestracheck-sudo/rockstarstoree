@@ -1292,18 +1292,10 @@ function watchViews(){
 }
 
 // Statistik sendiri ke Sheet tab "Statistik" (ringan, tidak menunggu respon).
-function trackClick(ev, nama, kat){
-  try {
-    fetch(SHEET_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "track", ev: ev, nama: nama || "", kat: kat || "" }),
-      keepalive: true
-    }).catch(() => {});
-  } catch(e) {}
-}
+// trackClick dinonaktifkan (hemat kuota) — tinggal gtag Analytics saja.
+function trackClick(ev, nama, kat){ return; }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbziuecvrv3XIpQuRXj73016wGGcnKgUDaydAUMqf1xTXpHxvTboxTrlbVmmJYyEBQYq/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwNyuGHwJCTH8VTR_-OyxzQ11b2XE2myyVqBgavUu4ewUtIJPBwYAr_K71GUCSM-bA/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1549,68 +1541,6 @@ function loadLiveStock(){
   });
 }
 
-/* ===== teks berjalan + status online dari Sheet tab Pengumuman ===== */
-let shopMode = "auto";
-let shopOpen = 8, shopClose = 22;
-// Tab Pengumuman dibaca berbasis label (anti-geser): "teks"/"mode"/"open"/"close" -> nilai di baris bawahnya.
-function infoMap(rows){
-  const m = {};
-  (rows || []).forEach((r, i) => {
-    const k = String((r && r[0] !== undefined) ? r[0] : "").trim().toLowerCase();
-    if(["teks", "mode", "open", "close"].indexOf(k) !== -1 && !(k in m)){
-      m[k] = (i + 1 < rows.length && rows[i + 1][0] !== undefined) ? String(rows[i + 1][0]).trim() : "";
-    }
-  });
-  return m;
-}
-function loadAnnounce(){
-  // tampilkan cache dulu (10 menit), lalu segarkan di background
-  try {
-    const c = JSON.parse(localStorage.getItem("rs_info") || "null");
-    if(c && (Date.now() - c.t) < 10 * 60 * 1000){
-      applyAnnounce(c);
-      if(c.mode === "online" || c.mode === "offline" || c.mode === "auto") shopMode = c.mode;
-      if(isFinite(c.open)) shopOpen = c.open;
-      if(isFinite(c.close)) shopClose = c.close;
-      renderShopStatus();
-    }
-  } catch(e) {}
-  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const rows = JSON.parse(t);
-        const info = infoMap(rows);
-        let teks = info.teks || "";
-        let mode = (info.mode || "").toLowerCase();
-        if(mode === "online" || mode === "offline" || mode === "auto") shopMode = mode;
-        const o = parseInt(info.open, 10), cl = parseInt(info.close, 10);
-        if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
-        if(isFinite(cl) && cl >= 0 && cl <= 23) shopClose = cl;
-        try { localStorage.setItem("rs_info", JSON.stringify({ t: Date.now(), teks, mode: shopMode, open: shopOpen, close: shopClose })); } catch(e) {}
-        if(!teks){
-          const cr = document.getElementById("customrun");
-          if(cr) cr.style.display = "none";
-          const hd0 = document.querySelector("header");
-          if(hd0) hd0.style.top = "37px";
-        }
-        applyAnnounce({ teks });
-      } catch(e) {}
-      renderShopStatus();
-    }).catch(() => { renderShopStatus(); });
-}
-
-function applyAnnounce(c){
-  if(!c.teks) return;
-  const teks = String(c.teks).replace(/<script[\s\S]*?<\/script>/gi, "");
-  const el = document.getElementById("customrun");
-  const hd = document.querySelector("header");
-  if(el){ el.innerHTML = "<span>" + teks + " • " + teks + "</span>"; el.style.display = ""; }
-  if(hd) hd.style.top = "74px";
-}
-
-// Badge Online/Offline: nonaktif (disembunyikan atas permintaan). Logika dipertahankan.
-function renderShopStatus(){ return; }
-
 // Pengaman: loader tidak boleh nyangkut apapun yang terjadi.
 window.addEventListener("error", function(){
   const l = document.getElementById("loader");
@@ -1622,8 +1552,6 @@ setTimeout(function(){
 }, 6000);
 
 loadLiveStock().then(() => {
-  try { loadAnnounce(); } catch(e) {}
-  try { renderShopStatus(); } catch(e) {}
   try { render(); } catch(e) {}
   try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
   setTimeout(() => {

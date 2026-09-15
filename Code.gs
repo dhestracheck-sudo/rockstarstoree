@@ -103,19 +103,6 @@ function doGet(e) {
   e = e || {};
   var p = e.parameter || {};
   var t = readTable_(p.sheet || SHEET_DEFAULT);
-  // Sheet khusus (misal Statistik/Pengumuman) dikembalikan mentah apa adanya
-  var RAW_SHEETS = ["Statistik", "Pengumuman"];
-  if (RAW_SHEETS.indexOf(String(p.sheet || "")) !== -1) {
-    var raw = [];
-    for (var r = 1; r < t.rows.length; r++) raw.push(t.rows[r]);
-    var json2 = JSON.stringify(raw);
-    if (p.callback) {
-      return ContentService.createTextOutput(p.callback + "(" + json2 + ");")
-        .setMimeType(ContentService.MimeType.JAVASCRIPT);
-    }
-    return ContentService.createTextOutput(json2)
-      .setMimeType(ContentService.MimeType.JSON);
-  }
   var out = [];
   var slim = String(p.ringkas || "") === "1";
   for (var r = 1; r < t.rows.length; r++) {
@@ -145,8 +132,6 @@ function doPost(e) {
     if (action === "delete") return jsonOut_(actionDelete_(body));
     if (action === "delmany") return jsonOut_(actionDelMany_(body));
     if (action === "upload") return jsonOut_(actionUpload_(body));
-    if (action === "track") return jsonOut_(actionTrack_(body));
-    if (action === "setinfo") return jsonOut_(actionSetInfo_(body));
     if (action === "inc") return jsonOut_(actionInc_(body));
     if (action === "incmany") return jsonOut_(actionIncMany_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
@@ -319,37 +304,6 @@ function actionInc_(body) {
   }
 }
 
-// Teks pengumuman + jam operasional (tab "Pengumuman", berbasis label anti-geser):
-// "teks" -> baris bawahnya | "mode" -> bawahnya | "open"/"close" -> bawahnya
-function infoGet_(sh, key) {
-  var vals = sh.getDataRange().getValues();
-  for (var r = 0; r < vals.length; r++) {
-    if (String(vals[r][0]).trim().toLowerCase() === key) {
-      return { row: r + 2, value: (r + 1 < vals.length) ? String(vals[r + 1][0]) : "" };
-    }
-  }
-  return null;
-}
-
-function infoSet_(sh, key, value) {
-  var f = infoGet_(sh, key);
-  if (f) sh.getRange(f.row, 1).setValue(String(value));
-  else { sh.appendRow([key]); sh.appendRow([String(value)]); }
-}
-
-function actionSetInfo_(body) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName("Pengumuman");
-  if (!sh) sh = ss.insertSheet("Pengumuman");
-  var key = norm_(body.key || body.k || "teks");
-  if (key === "status" || key === "online") key = "mode";
-  if (key === "buka") key = "open";
-  if (key === "tutup") key = "close";
-  if (["teks", "mode", "open", "close"].indexOf(key) === -1) key = "teks";
-  infoSet_(sh, key, body.value !== undefined ? body.value : body.teks);
-  return { result: "success" };
-}
-
 // Counter massal sekaligus (hemat request): {names:[...]} -> {values:{name:count}}
 function actionIncMany_(body) {
   var names = body.names || [];
@@ -384,18 +338,6 @@ function actionIncMany_(body) {
   } finally {
     try { lock.releaseLock(); } catch (e) {}
   }
-}
-
-// Statistik klik web (ringan, tanpa auth). Sheet "Statistik": time | ev | nama | kat
-function actionTrack_(body) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName("Statistik");
-  if (!sh) {
-    sh = ss.insertSheet("Statistik");
-    sh.appendRow(["time", "ev", "nama", "kat"]);
-  }
-  sh.appendRow([new Date(), String(body.ev || ""), String(body.nama || ""), String(body.kat || "")]);
-  return { result: "success" };
 }
 
 // Test manual dari editor: Run testRead lalu lihat View > Logs
