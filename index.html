@@ -1154,23 +1154,6 @@ function getCurrentCategories(){
   return catsOf(currentPage);
 }
 
-/* ===== rating & bar stok (dari angka Terjual/Sisa) ===== */
-function starsOf(item){
-  return "★★★★★";
-}
-
-function stockBarHTML(item){
-  const sold = Number(item.sold) || 0, st = Number(item.stock);
-  if(sold > 0 && st > 0){
-    const pct = Math.min(100, Math.round(sold / (sold + st) * 100));
-    const low = st < 5 ? `<div class="stocklow">⚠️ Sisa ${st} lagi, buruan sebelum habis!</div>` : ``;
-    return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">✅ Sudah laku: ${sold} • 📦 Sisa stok: ${st}</div>${low}`;
-  }
-  if(sold > 0) return `<div class="stocktxt">✅ Sudah laku: ${sold}</div>`;
-  if(st > 0) return `<div class="stocktxt">📦 Stok tersedia: ${st}</div>`;
-  return "";
-}
-
 /* ===== flash sale (diskon dari kolom coret) ===== */
 function flashItems(){
   const out = [];
@@ -1226,9 +1209,7 @@ function flashHTML(){
       <div class="ibody">
         <h3>${it.name}</h3>
         ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
-        <div class="stars">${starsOf(it)}</div>
         <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
-        ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
         <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
@@ -1368,13 +1349,11 @@ function itemCard(categories, i, j){
     <div class="ibody">
       <h3>${item.name}</h3>
       ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
-      <div class="stars">${starsOf(item)}</div>
       <div class="meta">
         <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
       </div>
-      ${stockBarHTML(item)}
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
@@ -1442,14 +1421,12 @@ function renderDetail(){
       `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
     ).join("") + `</div>` : ``}
     <h2 style="margin:14px 0 0;">${item.name}</h2>
-    <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
     ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
     <div class="detailmeta">
       <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} dilihat</span>
       ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
       ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
     </div>
-    ${stockBarHTML(item)}
     <div class="detailprice">
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
@@ -1933,25 +1910,11 @@ function applyAnnounce(c){
 // Badge Online/Offline: nonaktif (disembunyikan atas permintaan). Logika dipertahankan.
 function renderShopStatus(){ return; }
 
-// Pengaman: loader tidak boleh nyangkut apapun yang terjadi.
-window.addEventListener("error", function(){
-  const l = document.getElementById("loader");
-  if(l) l.classList.add("hide");
-});
-setTimeout(function(){
-  const l = document.getElementById("loader");
-  if(l) l.classList.add("hide");
-}, 6000);
-
 loadLiveStock().then(() => {
   try { loadAnnounce(); } catch(e) {}
   try { renderShopStatus(); } catch(e) {}
   try { render(); } catch(e) {}
   try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
-  setTimeout(() => {
-    const l = document.getElementById("loader");
-    if(l) l.classList.add("hide");
-  }, 900);
 });
 </script>
 
