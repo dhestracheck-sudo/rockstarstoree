@@ -849,7 +849,9 @@ function uploadCat(){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   btn.disabled = true;
   st.textContent = "Memeriksa & mengupload foto kategori, tunggu...";
-  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(d => {
+  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }, (ALL_ITEMS.find(x => String(x.name).trim() === "CAT:" + kat) || { image: "" }).image || "").then(d => {
+    if(d.result === "success"){
+      st.innerHTML = '<span class="ok">✅ Foto kategori terpasang!' + (d.verified ? ' (terverifikasi)' : '') + ' Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
       updItem("CAT:" + kat, { image: d.url });
