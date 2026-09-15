@@ -597,14 +597,42 @@ function loadItems(retry){
         document.getElementById("catSearch").value = "";
         fillProductOptions("");
         fillCatOptions("");
+        muatFotoBackground();
       } catch(e) {}
       resolve();
     };
     const s = document.createElement("script");
-    s.src = SHEET_URL + "?callback=__names&sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now();
+    // ringkas=1: daftar tanpa kolom foto (cepat), foto menyusul di background
+    s.src = SHEET_URL + "?callback=__names&sheet=" + encodeURIComponent(CURSHEET()) + "&ringkas=1&t=" + Date.now();
     s.onerror = () => { clearTimeout(timer); resolve(); };
     document.head.appendChild(s);
   });
+}
+
+// Tarik data lengkap (termasuk foto) diam-diam setelah daftar tampil.
+function muatFotoBackground(){
+  const cb = "__full" + Date.now();
+  window[cb] = data => {
+    try {
+      const arr = Array.isArray(data) ? data : [];
+      if(!arr.length) return;
+      const byName = {};
+      ALL_ITEMS.forEach(o => { byName[String(o.name).trim()] = o; });
+      arr.forEach(o => {
+        const k = String(o.name || "").trim();
+        if(k && byName[k]) Object.assign(byName[k], o);
+      });
+      prefill();
+      renderSlides();
+      const nm = document.getElementById("itemSel").value;
+      const cur = ALL_ITEMS.find(x => String(x.name).trim() === nm);
+      if(cur) renderPreview(nm, cur);
+    } catch(e) {}
+  };
+  const s = document.createElement("script");
+  s.src = SHEET_URL + "?callback=" + cb + "&sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now();
+  s.onerror = () => {};
+  document.head.appendChild(s);
 }
 
 document.getElementById("catFileInput").addEventListener("change", e => {

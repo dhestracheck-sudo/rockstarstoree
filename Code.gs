@@ -117,9 +117,11 @@ function doGet(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
   var out = [];
+  var slim = String(p.ringkas || "") === "1";
   for (var r = 1; r < t.rows.length; r++) {
     var o = toObj_(t.rows[r], t.idx);
     if (!String(o.name).trim()) continue;
+    if (slim) delete o.image; // daftar saja, tanpa foto (jauh lebih ringan)
     out.push(o);
   }
   var json = JSON.stringify(out);
