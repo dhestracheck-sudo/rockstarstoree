@@ -709,7 +709,7 @@ function renderSlides(){
   });
 }
 
-function saveSlides(arr, stMsg){
+function saveSlides(arr, stMsg, onFail){
   const name = document.getElementById("itemSel").value;
   const st = document.getElementById("statusSlide");
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
@@ -721,7 +721,11 @@ function saveSlides(arr, stMsg){
       syncAfterProduct(name);
     } else {
       st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+      if(onFail) onFail();
     }
+  }).catch(() => {
+    st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>';
+    if(onFail) onFail();
   });
 }
 
@@ -730,17 +734,23 @@ function slideUploadToSlot(i, f){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   st.textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+  const backup = curSlides().join("|");
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, backup).then(d => {
     if(d.result === "success" && d.url){
       const arr = curSlides();
       arr[i] = d.url;
-      saveSlides(arr, '✅ Slide ' + (i+1) + ' diganti!');
+      saveSlides(arr, '✅ Slide ' + (i+1) + ' diganti!', () => {
+        // gabung gagal setelah timpa: kembalikan foto lama
+        postOne({ action: "set", item_name: name, col: "image", value: backup, sheet: CURSHEET() });
+      });
       document.getElementById("slideFileInput").value = "";
     } else if(String(d.result || "").indexOf("file rusak") !== -1){
       st.innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
     } else {
       st.innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
     }
+  });
+}
   });
 }
 
@@ -772,10 +782,12 @@ function slideAddFile(){
   if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
-    if(d.result === "success" && d.url){
-      arr.push(d.url);
-      saveSlides(arr, '✅ Slide ditambah!');
+  sendUpload(f, { action: "upload", append: 1, item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
+    if(d.result === "success" && (d.full || d.url)){
+      const full = d.full || d.url;
+      updItem(name, { image: full });
+      syncAfterProduct(name);
+      document.getElementById("statusSlide").innerHTML = '<span class="ok">✅ Slide ditambah!</span>';
       document.getElementById("slideFileInput").value = "";
     } else if(String(d.result || "").indexOf("file rusak") !== -1){
       document.getElementById("statusSlide").innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
