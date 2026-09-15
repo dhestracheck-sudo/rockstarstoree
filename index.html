@@ -1846,6 +1846,11 @@ function mergeFromSheet(arr){
   );
 }
 
+function hideLoader(){
+  const l = document.getElementById("loader");
+  if(l) l.classList.add("hide");
+}
+
 function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Akun"));
@@ -1854,7 +1859,6 @@ function loadLiveStock(){
   } catch(e) {}
   // pengaman: loader tidak boleh lebih dari 4 detik walau fetch macet
   setTimeout(hideLoader, 4000);
-  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
   return once().then(res => {
     if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
