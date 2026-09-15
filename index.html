@@ -74,6 +74,8 @@ body {
 }
 .announce a { color: #fff; font-weight: 700; text-decoration: underline; }
 .announce .run { display: inline-block; padding-left: 100%; animation: run 18s linear infinite; }
+.announce .customrun { display: block; white-space: nowrap; overflow: hidden; color: #ffd166; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
+.announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
 @keyframes run { to { transform: translateX(-100%); } }
 
 /* ===== header ===== */
@@ -665,7 +667,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
-<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span></div>
+<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
@@ -1907,6 +1909,12 @@ function loadAnnounce(){
         if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
         if(isFinite(cl) && cl >= 0 && cl <= 23) shopClose = cl;
         try { localStorage.setItem("rockstar_pengumuman", JSON.stringify({ t: Date.now(), teks, mode: shopMode, open: shopOpen, close: shopClose })); } catch(e) {}
+        if(!teks){
+          const cr = document.getElementById("customrun");
+          if(cr) cr.style.display = "none";
+          const hd0 = document.querySelector("header");
+          if(hd0) hd0.style.top = "37px";
+        }
         applyAnnounce({ teks });
       } catch(e) {}
       renderShopStatus();
@@ -1916,8 +1924,10 @@ function loadAnnounce(){
 function applyAnnounce(c){
   if(!c.teks) return;
   const teks = String(c.teks).replace(/<script[\s\S]*?<\/script>/gi, "");
-  const el = document.querySelector(".announce .run");
-  if(el) el.innerHTML = teks + " • " + teks;
+  const el = document.getElementById("customrun");
+  const hd = document.querySelector("header");
+  if(el){ el.innerHTML = "<span>" + teks + " • " + teks + "</span>"; el.style.display = ""; }
+  if(hd) hd.style.top = "74px";
 }
 
 // Badge Online/Offline: manual dari admin (online/offline) atau otomatis jam 08–22 WIB.
