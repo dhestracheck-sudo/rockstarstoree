@@ -1573,8 +1573,41 @@ function trackSearch(q){
   trackClick("cari_barang", q, "");
 }
 
-// Hitung dilihat per produk: tiap card yang tampil di layar +1 (sekali per render).
+// Hitung dilihat per produk: antre dulu, kirim GABUNGAN tiap 8 detik (1 request).
 let viewObs = null;
+let viewQueue = [];
+function flushViews(){
+  if(!viewQueue.length) return;
+  const batch = viewQueue.splice(0, viewQueue.length);
+  const bySheet = {};
+  batch.forEach(v => {
+    const sh = v.page === "akun" ? "Akun" : "Brainrot";
+    (bySheet[sh] = bySheet[sh] || []).push(v);
+  });
+  Object.keys(bySheet).forEach(sh => {
+    const vs = bySheet[sh];
+    fetch(SHEET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "incmany", names: vs.map(v => v.name), col: "dilihat", sheet: sh }),
+      keepalive: true
+    }).then(r => r.text()).then(t => {
+      try {
+        const d = JSON.parse(t);
+        if(d.result === "success" && d.values){
+          vs.forEach(v => {
+            if(d.values[v.name] !== undefined && v.el.isConnected){
+              const c = v.el.querySelector(".viewcount");
+              if(c) c.textContent = "👁 " + Number(d.values[v.name]).toLocaleString("id-ID");
+            }
+          });
+        }
+      } catch(e) {}
+    }).catch(() => {});
+  });
+}
+setInterval(flushViews, 8000);
+window.addEventListener("pagehide", flushViews);
 function watchViews(){
   try {
     if(viewObs) viewObs.disconnect();
@@ -1585,20 +1618,7 @@ function watchViews(){
         viewObs.unobserve(el);
         const nm = el.dataset.viewname, pg = el.dataset.page;
         if(!nm || pg === "topup") return;
-        fetch(SHEET_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify({ action: "inc", item_name: nm, col: "dilihat", sheet: pg === "akun" ? "Akun" : "Brainrot" }),
-          keepalive: true
-        }).then(r => r.text()).then(t => {
-          try {
-            const d = JSON.parse(t);
-            if(d.result === "success"){
-              const c = el.querySelector(".viewcount");
-              if(c) c.textContent = "👁 " + Number(d.value).toLocaleString("id-ID");
-            }
-          } catch(e) {}
-        }).catch(() => {});
+        viewQueue.push({ name: nm, page: pg, el: el });
       });
     }, { threshold: 0.3 });
     document.querySelectorAll('.item[data-viewname]').forEach(el => {
