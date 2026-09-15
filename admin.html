@@ -587,17 +587,29 @@ function fillCatOptions(filter){
 }
 
 function loadItems(){
+  // cache 10 menit: daftar langsung tampil, data segar menyusul di background
+  try {
+    const c = JSON.parse(localStorage.getItem("rockstar_admin_" + CURSHEET()) || "null");
+    if(c && (Date.now() - c.t) < 10 * 60 * 1000 && Array.isArray(c.data) && c.data.length){
+      ALL_ITEMS = c.data;
+      fillProductOptions(document.getElementById("itemSearch").value.toLowerCase());
+      fillCatOptions(document.getElementById("catSearch").value.toLowerCase());
+    }
+  } catch(e) {}
   return new Promise(resolve => {
-    const timer = setTimeout(resolve, 8000);
+    const timer = setTimeout(resolve, 20000);
     window.__names = data => {
       clearTimeout(timer);
       try {
         const arr = Array.isArray(data) ? data : [];
-        ALL_ITEMS = arr;
-        document.getElementById("itemSearch").value = "";
-        document.getElementById("catSearch").value = "";
-        fillProductOptions("");
-        fillCatOptions("");
+        if(arr.length){
+          ALL_ITEMS = arr;
+          try { localStorage.setItem("rockstar_admin_" + CURSHEET(), JSON.stringify({ t: Date.now(), data: arr })); } catch(e) {}
+          document.getElementById("itemSearch").value = "";
+          document.getElementById("catSearch").value = "";
+          fillProductOptions("");
+          fillCatOptions("");
+        }
       } catch(e) {}
       resolve();
     };
@@ -998,7 +1010,7 @@ function prepImage(f){
       im.onload = () => {
         URL.revokeObjectURL(url);
         try {
-          const MAX = 1600;
+          const MAX = 1280;
           const sc = Math.min(1, MAX / Math.max(im.naturalWidth, im.naturalHeight));
           const cv = document.createElement("canvas");
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
@@ -1006,7 +1018,7 @@ function prepImage(f){
           cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
           const keepPng = String(f.type || "") === "image/png";
           const mime = keepPng ? "image/png" : "image/jpeg";
-          const dataUrl = keepPng ? cv.toDataURL(mime) : cv.toDataURL(mime, 0.85);
+          const dataUrl = keepPng ? cv.toDataURL(mime) : cv.toDataURL(mime, 0.82);
           let nm = String(f.name || "foto");
           nm = keepPng ? nm.replace(/\.[^.]+$/, "") + ".png" : nm.replace(/\.[^.]+$/, "") + ".jpg";
           resolve({ ok: true, base64: dataUrl.split(",")[1], mime: mime, name: nm });
