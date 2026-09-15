@@ -1418,10 +1418,6 @@ function showItems(i){
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
     `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
-  // preload semua foto kategori yang dibuka supaya carousel langsung tampil
-  category.items.forEach(it => {
-    (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
-  });
   watchViews();
 }
 
@@ -1854,7 +1850,11 @@ function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Akun"));
     render();
+    setTimeout(hideLoader, 900);
   } catch(e) {}
+  // pengaman: loader tidak boleh lebih dari 4 detik walau fetch macet
+  setTimeout(hideLoader, 4000);
+  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
   return once().then(res => {
     if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
