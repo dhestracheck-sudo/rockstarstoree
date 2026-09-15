@@ -49,7 +49,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
       <option value="Akun">Akun</option>
     </select>
     <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
-    <button onclick="loadItems()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
+    <button id="reloadBtn" onclick="muatUlang()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
+    <div id="statusReload" style="font-size:12.5px;color:var(--mut);margin-top:6px;"></div>
   </div>
 
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
@@ -576,6 +577,17 @@ function fillCatOptions(filter){
   document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
   document.getElementById("catSel").onchange = prefillCat;
   prefillCat();
+}
+
+function muatUlang(){
+  const st = document.getElementById("statusReload");
+  const btn = document.getElementById("reloadBtn");
+  btn.disabled = true;
+  st.textContent = "Memuat...";
+  loadItems().then(() => {
+    btn.disabled = false;
+    st.textContent = "✅ Daftar termuat (" + document.getElementById("itemSel").options.length + " barang).";
+  });
 }
 
 function loadItems(retry){
