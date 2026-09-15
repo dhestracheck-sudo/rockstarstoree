@@ -1061,6 +1061,8 @@ function itemCard(categories, i, j){
   </div>`;
 }
 
+const PAGE_N = 12;
+let shownCat = -1, shownN = PAGE_N;
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
@@ -1068,17 +1070,28 @@ function showItems(i){
   if(typeof gtag === "function"){
     gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
   }
+  shownCat = i;
+  shownN = PAGE_N;
+  paintItems();
+}
+function paintItems(){
+  const categories = getCurrentCategories();
+  const category = categories[shownCat];
+  if(!category) return;
+  const y = window.scrollY;
   const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
-    `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
-  // preload semua foto kategori yang dibuka supaya carousel langsung tampil
-  category.items.forEach(it => {
-    (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
-  });
+    `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => j < shownN ? itemCard(categories, shownCat, j) : "").join("") + `</div>` +
+    (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">Lihat Selengkapnya (${category.items.length - shownN} lagi)</button></div>` : ``);
+  window.scrollTo(0, y);
   watchViews();
+}
+function moreItems(){
+  shownN += PAGE_N;
+  paintItems();
 }
 
 function chatAdmin(){
