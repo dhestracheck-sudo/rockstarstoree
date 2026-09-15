@@ -39,7 +39,7 @@ while ($true) {
     }
   if (Test-Path -LiteralPath $pending) {
     try { $t = [datetime](Get-Content -LiteralPath $pending) } catch { $t = Get-Date }
-    if (((Get-Date) - $t).TotalSeconds -ge 30) {
+    if (((Get-Date) - $t).TotalSeconds -ge 10) {
       Remove-Item -LiteralPath $pending -Force -ErrorAction SilentlyContinue
       Log("perubahan terdeteksi, push...")
       git add -A 2>&1 | Out-Null
