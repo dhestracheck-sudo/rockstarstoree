@@ -52,31 +52,6 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <button onclick="loadItems()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
   </div>
 
-  <div class="card" id="infoCard" style="display:none;">
-    <label>📢 Teks berjalan (pengumuman atas web)</label>
-    <textarea id="infoInput" rows="3" placeholder="misal: PROMO AKHIR TAHUN DISKON 50% <b>...</b>" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
-    <button id="infoBtn" onclick="saveInfo()">💾 Simpan Teks Berjalan</button>
-    <div id="statusInfo"></div>
-    <p class="hint" style="margin-top:10px;">Boleh pakai <b>tebal</b>. Kosongkan + simpan untuk kembali ke teks utama.</p>
-  </div>
-
-  <div class="card" id="modeCard" style="display:none;">
-    <label>🟢 Status toko (Online/Offline)</label>
-    <div id="modeNow" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;margin-bottom:10px;">-</div>
-    <div style="display:flex;gap:8px;">
-      <button id="modeAutoBtn" onclick="setMode('auto')" style="flex:1;">🤖 Auto</button>
-      <button id="modeOnBtn" onclick="setMode('online')" style="flex:1;">🟢 Online</button>
-      <button id="modeOffBtn" onclick="setMode('offline')" style="flex:1;">🔴 Offline</button>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <input type="number" id="openInput" min="0" max="23" placeholder="buka (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-      <input type="number" id="closeInput" min="0" max="23" placeholder="tutup (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-      <button id="hoursBtn" onclick="saveHours()" style="flex:1;">⏰ Simpan Jam</button>
-    </div>
-    <div id="statusMode"></div>
-    <p class="hint" style="margin-top:10px;">Auto = ikut jam buka-tutup di atas (WIB). Online/Offline = paksa tampil itu terus.</p>
-  </div>
-
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -222,9 +197,7 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","infoCard","modeCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
-    loadInfo();
-    loadMode();
+    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadItems();
   } else {
     alert("PIN salah.");
@@ -938,78 +911,6 @@ function infoMap(rows){
     }
   });
   return m;
-}
-
-function loadInfo(){
-  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const info = infoMap(JSON.parse(t));
-        if(info.teks) document.getElementById("infoInput").value = info.teks;
-      } catch(e) {}
-    }).catch(() => {});
-}
-
-function loadMode(){
-  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const info = infoMap(JSON.parse(t));
-        const v = (info.mode || "auto").toLowerCase() || "auto";
-        showMode(v === "online" || v === "offline" ? v : "auto");
-        if(info.open !== "") document.getElementById("openInput").value = info.open;
-        if(info.close !== "") document.getElementById("closeInput").value = info.close;
-      } catch(e) { showMode("auto"); }
-    }).catch(() => { showMode("?"); });
-}
-
-function showMode(v){
-  const el = document.getElementById("modeNow");
-  el.textContent = v === "online" ? "🟢 Paksa Online" : v === "offline" ? "🔴 Paksa Offline" : v === "?" ? "Tidak terbaca" : "🤖 Auto (08–22 WIB)";
-}
-
-function saveHours(){
-  const o = document.getElementById("openInput").value;
-  const c = document.getElementById("closeInput").value;
-  const st = document.getElementById("statusMode");
-  const btn = document.getElementById("hoursBtn");
-  if(o === "" || c === "" || isNaN(Number(o)) || isNaN(Number(c)) || Number(o) < 0 || Number(o) > 23 || Number(c) < 0 || Number(c) > 23){
-    st.innerHTML = '<span class="err">Isi jam 0–23 dulu.</span>'; return;
-  }
-  btn.disabled = true;
-  st.textContent = "Menyimpan jam...";
-  postOne({ action: "setinfo", key: "open", value: Number(o) }).then(() =>
-    postOne({ action: "setinfo", key: "close", value: Number(c) })
-  ).then(d => {
-    btn.disabled = false;
-    if(d.result === "success") st.innerHTML = '<span class="ok">✅ Jam operasional tersimpan!</span>';
-    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
-    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  });
-}
-
-function setMode(v){
-  const st = document.getElementById("statusMode");
-  st.textContent = "Menyimpan...";
-  postOne({ action: "setinfo", key: "mode", value: v }).then(d => {
-    if(d.result === "success"){ showMode(v); st.innerHTML = '<span class="ok">✅ Tersimpan!</span>'; }
-    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
-    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  });
-}
-
-function saveInfo(){
-  const v = document.getElementById("infoInput").value.trim();
-  const st = document.getElementById("statusInfo");
-  const btn = document.getElementById("infoBtn");
-  btn.disabled = true;
-  st.textContent = "Menyimpan...";
-  postOne({ action: "setinfo", value: v }).then(d => {
-    btn.disabled = false;
-    if(d.result === "success") st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>';
-    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
-    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  });
 }
 
 function postOne(body, ms){
