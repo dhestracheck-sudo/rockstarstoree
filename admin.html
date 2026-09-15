@@ -336,6 +336,23 @@ function deleteProduct(){
   });
 }
 
+// Cek nilai 1 sel di Sheet (untuk pastikan simpan beneran).
+function verifySet(name, col, value){
+  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const arr = JSON.parse(t);
+        const o = arr.find(x => String(x.name).trim() === name);
+        if(!o) return false;
+        const key = col === 1 ? "name" : col === 2 ? "price" : col === 3 ? "stock" : col;
+        const a = (o[key] !== undefined) ? String(o[key]).trim() : "";
+        const b = String(value).trim();
+        if(key === "price" || key === "stock" || key === "sold" || key === "coret") return Number(a) === Number(b);
+        return a === b;
+      } catch(e){ return false; }
+    }).catch(() => false);
+}
+
 // Cek baris mana yang masih ada di Sheet (untuk pastikan hapus beneran).
 function verifyGone(names){  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
     .then(r => r.text()).then(t => {
@@ -484,10 +501,13 @@ function saveAll(){
       st.textContent = "Menyimpan " + (idx+1) + "/" + jobs.length + " (" + jb.label + ")...";
       // nama barang bisa berubah di tengah jalan: selalu pakai nama terbaru
       const cur = (idx > 0 && jobs[idx-1].col === 1) ? jobs[idx-1].value : document.getElementById("itemSel").value;
-      return postRetry({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }).then(d => {
+      return postRetry({ action: "set", item_name: idx === 0 ? name : cur, col: jb.col, value: jb.value, sheet: CURSHEET() }, 3).then(d => {
         if(d.result === "success") return true;
-        gagal.push(jb.label + " (" + (d.result || "?") + ")");
-        return false;
+        return verifySet(idx === 0 ? name : cur, jb.col, jb.value).then(sama => {
+          if(sama){ jb.verified = true; return true; }
+          gagal.push(jb.label + " (" + (d.result || "?") + ")");
+          return false;
+        });
       });
     });
   });
