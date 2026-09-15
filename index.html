@@ -46,18 +46,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== loading screen ===== */
-#loader { position: fixed; inset: 0; z-index: 999; background: var(--bg); display: flex; flex-direction: column; gap: 18px; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
-#loader.hide { opacity: 0; pointer-events: none; }
-#loader img { width: 110px; border-radius: 18px; }
-#loader .spin { width: 44px; height: 44px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--blue2); animation: spin 0.9s linear infinite; }
-/* ===== rating & bar stok ===== */
-.stars { color: #ffd166; font-size: 13px; letter-spacing: 1px; }
-.stockbar { height: 8px; background: #1a2440; border-radius: 99px; overflow: hidden; margin-top: 6px; }
-.stockbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7CFC00); border-radius: 99px; }
-.stocktxt { font-size: 12.5px; color: var(--txt); font-weight: 600; margin-top: 4px; }
-.stocklow { font-size: 12.5px; color: #ff8080; font-weight: 700; margin-top: 4px; }
-
 /* ===== announcement bar ===== */
 .announce {
   position: sticky;
@@ -659,8 +647,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </style>
 </head>
 <body>
-
-<div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span></div>
 
