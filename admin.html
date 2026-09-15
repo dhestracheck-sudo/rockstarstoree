@@ -438,16 +438,29 @@ function deleteCategory(){
 
 // POST dengan coba-ulang 1x khusus error transient (respon aneh/timeout).
 // Error permanen (unknown action, tidak ketemu, kosong, kolom) langsung dikembalikan.
-function postRetry(body, tries){
+function postRetry(body, tries, ms){
   tries = tries || 2;
-  return postOne(body).then(d => {
+  return postOne(body, ms).then(d => {
     if(d.result === "success") return d;
     const r = String(d.result || "");
     const permanen = r.indexOf("unknown action") !== -1 || r.indexOf("tidak ketemu") !== -1 ||
       r.indexOf("sudah ada") !== -1 || r.indexOf("kosong") !== -1 || r.indexOf("kolom") !== -1;
     if(permanen || tries <= 1) return d;
-    return postRetry(body, tries - 1);
+    return postRetry(body, tries - 1, ms);
   });
+}
+
+// Cek isi kolom image di Sheet berubah atau tidak (untuk pastikan upload beneran).
+function verifyImg(name, oldFull){
+  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const arr = JSON.parse(t);
+        const o = arr.find(x => String(x.name).trim() === name);
+        const v = o ? String(o.image || "").trim() : "";
+        return (v && v !== String(oldFull || "").trim()) ? v : "";
+      } catch(e){ return ""; }
+    }).catch(() => "");
 }
 
 function saveAll(){
@@ -691,7 +704,7 @@ function slideUploadToSlot(i, f){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   st.textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, curSlides().join("|")).then(d => {
     if(d.result === "success" && d.url){
       const arr = curSlides();
       arr[i] = d.url;
@@ -733,7 +746,7 @@ function slideAddFile(){
   if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
     if(d.result === "success" && d.url){
       arr.push(d.url);
       saveSlides(arr, '✅ Slide ditambah!');
@@ -766,7 +779,7 @@ function uploadCat(){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   btn.disabled = true;
   st.textContent = "Memeriksa & mengupload foto kategori, tunggu...";
-  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(d => {
+  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }, (ALL_ITEMS.find(x => String(x.name).trim() === "CAT:" + kat) || { image: "" }).image || "").then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
       updItem("CAT:" + kat, { image: d.url });
@@ -979,13 +992,19 @@ function validImageFile(f){
 
 // Upload file yang sudah lolos validasi. body = {action:"upload", item_name, ...} tanpa file.
 // Foto dikompres dulu (maks 1600px) supaya upload jauh lebih cepat.
-function sendUpload(f, body){
+function sendUpload(f, body, oldFull){
   return prepImage(f).then(p => {
     if(!p.ok) return { result: "error: file rusak / bukan gambar (pakai JPG/PNG)" };
     body.file = p.base64;
     body.mime = p.mime;
     body.filename = p.name;
-    return postRetry(body, 3);
+    return postRetry(body, 3, 90000).then(d => {
+      if(d.result === "success") return d;
+      return verifyImg(body.item_name, oldFull || "").then(full => {
+        if(full) return { result: "success", url: full.split("|").map(s => s.trim()).filter(Boolean)[0] || full, verified: true };
+        return d;
+      });
+    });
   });
 }
 
