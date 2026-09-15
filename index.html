@@ -14,7 +14,7 @@
   gtag('config', 'G-8CKBS3MNXH');
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -48,28 +48,20 @@ body {
 
 /* ===== announcement bar ===== */
 .announce {
-  position: sticky;
-  top: 0;
-  z-index: 101;
   background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
-  padding: 9px 0;
+  text-align: center;
+  padding: 9px 14px;
   letter-spacing: 0.2px;
-  overflow: hidden;
-  white-space: nowrap;
 }
 .announce a { color: #fff; font-weight: 700; text-decoration: underline; }
-.announce .run { display: inline-block; padding-left: 100%; animation: run 18s linear infinite; }
-.announce .customrun { display: block; white-space: nowrap; overflow: hidden; color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
-.announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
-@keyframes run { to { transform: translateX(-100%); } }
 
 /* ===== header ===== */
 header {
   position: sticky;
-  top: 37px;
+  top: 0;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -146,7 +138,7 @@ header {
   margin-bottom: 16px;
 }
 .hero h1 {
-  font-family: 'Baloo 2', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 58px;
   line-height: 1.05;
   margin: 0 0 14px;
@@ -174,7 +166,7 @@ header {
 .hero-visual a { cursor: pointer; }
 .ava-caption {
   text-align: center;
-  font-family: 'Baloo 2', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 14px;
   letter-spacing: 1.4px;
   line-height: 1.7;
@@ -237,31 +229,15 @@ header {
   padding: 16px 18px;
   text-align: center;
 }
-.stat b { display: block; font-family: 'Baloo 2', sans-serif; font-size: 24px; color: #fff; }
+.stat b { display: block; font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
 .stat span { font-size: 12.5px; color: var(--mut); }
 
 /* ===== section titles ===== */
 .section { max-width: 1200px; margin: 0 auto; padding: 44px 28px 8px; }
-.section h2 { font-family: 'Baloo 2', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
+.section h2 { font-family: 'Oswald', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
 .section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
 
-/* ===== flash sale ===== */
-.flashsec { margin-top: 26px; }
-.flashhead {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  background: linear-gradient(90deg, #3d0a0a, #7a1010);
-  border: 1px solid var(--red); border-radius: var(--r);
-  padding: 16px 20px; margin-bottom: 0; cursor: pointer; user-select: none;
-}
-.flashhead h3 { font-family: 'Baloo 2', sans-serif; font-size: 24px; margin: 0; }
-.flashhead .arrow { margin-left: 4px; font-size: 18px; color: var(--blue2); }
-.flashhead .fomo { font-weight: 700; font-size: 13.5px; color: #ffb3b3; }
-.flashhead .timer {
-  margin-left: auto; font-family: 'Baloo 2', sans-serif; font-size: 22px;
-  background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
-}
-.flashbody { margin-top: 18px; }
-.flashgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+/* ===== home banners ===== */
 .banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
 .banner {
   position: relative;
@@ -288,7 +264,7 @@ header {
   color: var(--blue2);
 }
 .banner small { color: var(--blue2); font-weight: 700; letter-spacing: 1.5px; font-size: 12px; }
-.banner h3 { font-family: 'Baloo 2', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
+.banner h3 { font-family: 'Oswald', sans-serif; font-size: clamp(22px, 3vw, 30px); margin: 6px 0 4px; line-height: 1.15; overflow-wrap: break-word; }
 .banner p { color: var(--mut); font-size: 13.5px; margin: 0; }
 
 /* ===== category cards ===== */
@@ -325,13 +301,10 @@ header {
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  cursor: pointer;
 }
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
-.item .thumb { position: relative; cursor: zoom-in; }
+.item .thumb { position: relative; }
 .item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; }
-/* Halaman akun: screenshot sering portrait — tampilkan utuh, jangan dipotong */
-.itemgrid.akun .thumb img, .itemgrid.akun .mthumb img { aspect-ratio: auto; max-height: 440px; object-fit: contain; }
 .badge-off {
   position: absolute;
   top: 12px; left: 12px;
@@ -355,17 +328,11 @@ header {
 }
 .item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
-.item .desc { font-size: 12.5px; color: var(--mut); margin: 0; line-height: 1.6; }
-.verified {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 18px; height: 18px; border-radius: 50%; background: var(--blue);
-  color: #fff; font-size: 11px; font-weight: 700; margin-left: 6px; vertical-align: middle;
-}
 .item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
 .item .meta .sold { color: #ffb3b3; font-weight: 600; }
 .item .meta .stock { color: var(--green); font-weight: 600; }
-.item .price { margin-top: auto; padding-top: 6px; background: none; border: none; }
-.item .price .now { font-family: 'Baloo 2', sans-serif; font-size: 24px; color: #fff; }
+.item .price { margin-top: auto; padding-top: 6px; }
+.item .price .now { font-family: 'Oswald', sans-serif; font-size: 24px; color: #fff; }
 .item .price .was { font-size: 13px; color: var(--mut); text-decoration: line-through; margin-left: 8px; }
 .item .btn {
   margin-top: 10px;
@@ -382,23 +349,6 @@ header {
 }
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
-.item .kilat { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 6px; background: none; border: none; box-shadow: none; padding: 0; }
-.item .kilat > span { font-size: 13.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.45); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
-.item .kilat .vtext { color: #fff; }
-.payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-.payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
-/* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
-.itemgrid { background: transparent; border: none; box-shadow: none; padding: 0; }
-.item { border: 1px solid rgba(66,105,255,0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
-.item:hover { transform: translateY(-8px); border-color: rgba(111,139,255,0.65); box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 32px rgba(66,105,255,0.18); }
-.item .thumb { overflow: hidden; }
-.item .thumb img { transition: transform 0.5s ease; }
-.item:hover .thumb img { transform: scale(1.06); }
-.item .price .now { color: #f3d27a; }
-.badge-off { background: var(--red); }
-.catcard { border: 1px solid rgba(66,105,255,0.18); }
-.catcard:hover { border-color: rgba(111,139,255,0.6); box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 24px rgba(66,105,255,0.12); }
-.catcard h3 { color: #dbe4ff; }
 
 /* carousel inside item (multi-photo) */
 .mthumb { position: relative; }
@@ -452,14 +402,13 @@ header {
   border-radius: 50%;
   background: var(--blue);
   color: #fff;
-  font-family: 'Baloo 2', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 18px;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 16px rgba(43,78,255,0.4);
 }
 .step b { font-size: 14.5px; }
 .step p { margin: 4px 0 0; font-size: 13px; color: var(--mut); line-height: 1.6; }
-.step .simg { display: block; font-size: 40px; margin-bottom: 8px; }
 
 /* ===== bottom server CTA ===== */
 .server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
@@ -522,36 +471,6 @@ header {
 .fab-row button.checkout { background: var(--wa); border-color: var(--wa); color: #062b16; }
 .fab-row button.cancel { background: transparent; color: var(--mut); }
 
-/* ===== tombol WA mengambang + popup ===== */
-.wafab { position: fixed; left: 22px; bottom: 22px; z-index: 90; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-.wafab .wabtnrow { display: flex; gap: 10px; align-items: center; }
-#testiPop { position: absolute; left: calc(100% + 12px); bottom: 0; width: 230px; min-height: 280px; justify-content: center; }
-.wabtn {
-  width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
-  background: var(--wa); display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 12px 30px rgba(37,211,102,0.5); overflow: hidden; padding: 0;
-}
-.wabtn img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.wabtn.testibtn { width: 60px; height: 60px; padding: 0; background: rgba(6,9,19,0.88); border: 1px solid var(--line); border-radius: 50%; position: relative; }
-.wabtn.testibtn img { width: 26px; height: 26px; border-radius: 50%; position: absolute; }
-.wabtn.testibtn .tring { position: absolute; inset: 0; animation: spin 14s linear infinite; }
-.wabtn.testibtn .tring svg { width: 100%; height: 100%; }
-.wabtn.testibtn .tring text { fill: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; font-family: 'Poppins', sans-serif; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.wabtn.testibtn img { width: 36px; height: 36px; border-radius: 50%; }
-.wapop {
-  background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
-  padding: 14px; width: 230px; box-shadow: 0 18px 44px rgba(0,0,0,0.5);
-  display: flex; flex-direction: column; gap: 10px; align-items: stretch; text-align: center;
-}
-.wapop img { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; }
-.wapop .watext b { display: block; font-size: 14.5px; }
-.wapop .watext span { font-size: 12.5px; color: var(--mut); }
-.wapop a {
-  background: var(--wa); color: #062b16; font-weight: 700; font-size: 14px;
-  border-radius: 10px; padding: 12px; text-decoration: none; font-family: 'Poppins', sans-serif;
-}
-
 /* ===== modal ===== */
 .overlay {
   display: none;
@@ -574,7 +493,7 @@ header {
   padding: 24px;
   box-shadow: 0 30px 80px rgba(0,0,0,0.6);
 }
-.modal h2 { font-family: 'Baloo 2', sans-serif; margin: 0 0 14px; font-size: 24px; }
+.modal h2 { font-family: 'Oswald', sans-serif; margin: 0 0 14px; font-size: 24px; }
 .mrow {
   display: flex;
   gap: 12px;
@@ -598,18 +517,6 @@ header {
   cursor: pointer;
   font-size: 12px;
 }
-/* ===== detail produk (popup besar) ===== */
-.detailimg { width: 100%; max-height: 52vh; object-fit: contain; background: #05080f; border-radius: 12px; display: block; }
-.dthumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.dthumbs img { width: 62px; height: 62px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; }
-.dthumbs img.on { border-color: var(--blue2); }
-.detailmeta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--mut); margin-top: 8px; }
-.detailmeta .sold { color: #ffb3b3; font-weight: 600; }
-.detailmeta .stock { color: var(--green); font-weight: 600; }
-.detaildesc { font-size: 14px; line-height: 1.7; color: var(--txt); margin: 10px 0 0; }
-.detailprice { margin-top: 10px; }
-.detailprice .now { font-family: 'Baloo 2', sans-serif; font-size: 30px; }
-.detailprice .was { color: var(--mut); text-decoration: line-through; margin-left: 10px; }
 .mtotal { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; font-weight: 700; }
 .mtotal span { color: var(--mut); font-weight: 400; font-size: 13px; }
 .mactions { display: flex; gap: 10px; margin-top: 16px; }
@@ -650,7 +557,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </head>
 <body>
 
-<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
+<div class="announce">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></div>
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
@@ -661,13 +568,12 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <section class="hero">
   <div class="hero-text">
     <span class="hero-kicker">#1 STORE BRAINROT TERLENGKAP DI INDONESIA</span>
-    <h1>SOLUSI SEPUH <span>ROBLOX</span> KAMU 🇮🇩🇲🇾</h1>
-    <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. <b style="color:var(--blue2);">Waktunya naik kelas! 🚀</b></p>
+    <h1>SOLUSI SEPUH <span>ROBLOX</span> KAMU</h1>
+    <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Bikin Roblox-mu sepuh, bikin temanmu iri. 🚀</p>
     <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">📢 Join Saluran WhatsApp</a>
     <div class="hero-cta">
-      <button class="btn-primary" onclick="goToBrainrot()">Katalog Brainrot 🧠</button>
+      <button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button>
       <button class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
-      <button class="btn-ghost" onclick="goToAkun()">Katalog Akun 👤</button>
     </div>
   </div>
   <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
@@ -684,11 +590,11 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <h2>Cara Beli</h2>
   <p>5 langkah, beres dalam hitungan menit</p>
   <div class="steps">
-    <div class="step"><span class="snum">1</span><div><span class="simg">🛍️</span><b>Pilih item</b><p>Klik <b>Tambah ke Keranjang</b> pada item yang kamu mau.</p></div></div>
-    <div class="step"><span class="snum">2</span><div><span class="simg">🛒</span><b>Checkout</b><p>Buka keranjang 🛒, cek pesanan, klik <b>Checkout</b>.</p></div></div>
-    <div class="step"><span class="snum">3</span><div><span class="simg">💬</span><b>Kirim ke Admin</b><p>Klik <b>✓ Kirim ke Admin</b> — chat WA terbuka otomatis berisi pesananmu.</p></div></div>
-    <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b>Bayar</b><p>Transfer via QRIS / e-wallet / bank sesuai instruksi admin, kirim bukti.</p></div></div>
-    <div class="step"><span class="snum">5</span><div><span class="simg">🎮</span><b>Terima item</b><p>Admin trade/kirim item di dalam game. Cek dan konfirmasi terima. 🚀</p></div></div>
+    <div class="step"><span class="snum">1</span><div><b>Pilih item</b><p>Klik <b>Tambah ke Keranjang</b> pada item yang kamu mau.</p></div></div>
+    <div class="step"><span class="snum">2</span><div><b>Checkout</b><p>Buka keranjang 🛒, cek pesanan, klik <b>Checkout</b>.</p></div></div>
+    <div class="step"><span class="snum">3</span><div><b>Kirim ke Admin</b><p>Klik <b>✓ Kirim ke Admin</b> — chat WA terbuka otomatis berisi pesananmu.</p></div></div>
+    <div class="step"><span class="snum">4</span><div><b>Bayar</b><p>Transfer via QRIS / e-wallet / bank sesuai instruksi admin, kirim bukti.</p></div></div>
+    <div class="step"><span class="snum">5</span><div><b>Terima item</b><p>Admin trade/kirim item di dalam game. Cek dan konfirmasi terima. 🚀</p></div></div>
   </div>
 </section>
 
@@ -706,32 +612,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
 </div>
 
-<div class="wafab">
-  <div class="wapop" id="testiPop" style="display:none;">
-    <div class="watext"><b>⭐ Testimoni Customer</b><span>100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
-    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
-  </div>
-  <div class="wabtnrow">
-  <button class="wabtn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
-    <img src="logo wa.jpg" alt="WA">
-  </button>
-  <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni">
-    <span class="tring">
-      <svg viewBox="0 0 100 100">
-        <defs><path id="tcirc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
-        <text><textPath href="#tcirc">KLIK INI LIHAT TESTI • KLIK INI LIHAT TESTI •</textPath></text>
-      </svg>
-    </span>
-    <img src="ROCKSTARLOGO.png" alt="Rockstar">
-  </button>
-  </div>
-  <div class="wapop" id="waPop" style="display:none;">
-    <img src="logo wa.jpg" alt="WhatsApp Admin" onerror="this.style.display='none'">
-    <div class="watext"><b>Butuh bantuan?</b><span>Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
-    <a href="https://wa.me/6289664299571?text=Halo%20admin%20Rockstar.Store!" target="_blank" rel="noopener">Chat WhatsApp</a>
-  </div>
-</div>
-
 <div class="overlay" id="serverModal">
   <div class="modal">
     <h2>🔗 Link Server Rock Star</h2>
@@ -743,7 +623,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <a class="serverbtn" href="https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" target="_blank" rel="noopener">🌱 Server Grow A Garden 2</a>
       <a class="serverbtn" href="https://www.roblox.com/share?code=592596d70f7d1044ae692f625524368e&type=Server" target="_blank" rel="noopener">🐔 Server Tarik Telur</a>
       <a class="serverbtn" href="https://www.roblox.com/share?code=555c4557fd120c4ab3a050b2116a2e6c&type=Server" target="_blank" rel="noopener">🎲 Server Dadu Anime</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=33212d5bded8e24e8e290f40fd34b8cf&type=Server" target="_blank" rel="noopener">🥊 Server Boxing for Brainrot</a>
     </div>
     <div class="mactions">
       <button class="ghost" onclick="closeServerModal()">Tutup</button>
@@ -760,10 +639,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button class="go" onclick="checkout()">Checkout</button>
     </div>
   </div>
-</div>
-
-<div class="overlay" id="detailModal" onclick="if(event.target.id==='detailModal')closeDetail()">
-  <div class="modal" id="detailBox" style="width:min(640px,94vw);"></div>
 </div>
 
 <section class="section server-cta" id="serverCta">
@@ -784,22 +659,6 @@ let carouselState = {};
 const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
 function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
-// Gambar gagal load (umumnya thumbnail Drive kena throttle sesaat): coba sekali lagi
-// dengan cache-bust, baru fallback. Mencegah gambar hilang-timbul tiap refresh.
-function imgErr(el){
-  if(!el.dataset.retry){
-    el.dataset.retry = "1";
-    const s = el.src;
-    el.src = s + (s.indexOf("?") === -1 ? "?" : "&") + "r=" + Date.now();
-  } else {
-    el.onerror = null;
-    el.src = FALLBACK_IMG;
-  }
-}
-// Pecah daftar file dipisah "|", buang spasi & koma nyasar (misal "foto.png,").
-function splitFiles(v){
-  return String(v || "").split("|").map(s => s.trim().replace(/,+$/, "").trim()).filter(Boolean);
-}
 
 const brainrotCategories = [
   {    name: "KOTAK GULUNG UNTUK BRAINROT",
@@ -1156,90 +1015,6 @@ function getCurrentCategories(){
   return catsOf(currentPage);
 }
 
-/* ===== flash sale (diskon dari kolom coret) ===== */
-function flashItems(){
-  const out = [];
-  ['brainrot', 'topup', 'akun'].forEach(page => {
-    catsOf(page).forEach((c, i) => {
-      c.items.forEach((item, j) => {
-        if(item.originalPrice && item.originalPrice > item.price && item.stock !== 0){
-          out.push({ page, i, j, item, off: Math.round((1 - item.price / item.originalPrice) * 100) });
-        }
-      });
-    });
-  });
-  out.sort((a, b) => b.off - a.off);
-  return out.slice(0, 12);
-}
-
-function flashAdd(page, i, j){
-  const item = catsOf(page)[i].items[j];
-  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item});
-  trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
-  if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
-  }
-  syncCart();
-}
-
-function flashTick(){
-  const el = document.getElementById("flashtime");
-  if(!el) return;
-  const now = new Date();
-  const end = new Date(now);
-  end.setHours(23, 59, 59, 999);
-  let s = Math.floor((end - now) / 1000);
-  if (s <= 0) s = 24 * 3600 - 1; // tidak pernah mati: langsung mulai lagi 23:59:59
-  const h = String(Math.floor(s / 3600)).padStart(2, "0");
-  const m = String(Math.floor((s % 3600) / 60)).padStart(2, "0");
-  const ss = String(s % 60).padStart(2, "0");
-  el.textContent = h + ":" + m + ":" + ss;
-}
-
-function flashHTML(){
-  const items = flashItems();
-  if(!items.length) return "";
-  const cards = items.map(r => {
-    const it = r.item;
-    return `
-    <div class="item" data-viewname="${it.name}" data-page="${r.page}" onclick="openDetail('${r.page}',${r.i},${r.j})">
-      <div class="thumb">
-        <span class="badge-off">-${r.off}%</span>
-        <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
-      </div>
-      <div class="ibody">
-        <h3>${it.name}</h3>
-        ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
-        <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
-        <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
-        <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
-        <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-        <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
-      </div>
-    </div>`;
-  }).join("");
-  return `
-  <div class="flashsec">
-    <div class="flashhead" onclick="toggleFlash()"><h3>⚡ FLASH SALE</h3><span class="arrow" id="flasharrow">▼</span><span>👆 Klik Flash Sale untuk melihat barang diskon</span><span class="fomo">🔥 Buruan! Keburu habis:</span><span class="timer" id="flashtime">--:--:--</span></div>
-    <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid">${cards}</div></div>
-  </div>`;
-}
-
-function toggleFlash(){
-  const b = document.getElementById("flashbody");
-  const a = document.getElementById("flasharrow");
-  const open = b.style.display === "none";
-  b.style.display = open ? "" : "none";
-  if(a) a.textContent = open ? "▲" : "▼";
-}
-
-function startFlashTick(){
-  if(window.__flashT) clearInterval(window.__flashT);
-  flashTick();
-  window.__flashT = setInterval(flashTick, 1000);
-}
-
 function discountOf(item){
   if(!item.originalPrice || !item.price || item.originalPrice <= item.price) return 0;
   return Math.round((1 - item.price / item.originalPrice) * 100);
@@ -1273,11 +1048,7 @@ function render(){
           <h3>👤 Akun Roblox</h3>
           <p>Akun sepuh, data polos, berbagai map — siap pakai.</p>
         </div>
-      </div>
-      <div id="flashwrap"></div>`;
-    document.getElementById("flashwrap").outerHTML = flashHTML();
-    if(document.getElementById("flashtime")) startFlashTick();
-    watchViews();
+      </div>`;
     return;
   }
   const categories = getCurrentCategories();
@@ -1286,10 +1057,9 @@ function render(){
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
-      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)">
+      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
-  watchViews();
 }
 
 function searchCatalog(){
@@ -1297,7 +1067,6 @@ function searchCatalog(){
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
   if(q === ""){ render(); return; }
-  trackSearch(q);
   const out = [];
   ['brainrot', 'topup', 'akun'].forEach(page => {
     const cats = catsOf(page);
@@ -1317,7 +1086,6 @@ function searchCatalog(){
   title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
   el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
-  watchViews();
 }
 
 function itemCard(categories, i, j){
@@ -1333,7 +1101,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
-      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
+      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
       <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
       <div class="mdots" id="dots-${i}-${j}">
@@ -1343,16 +1111,14 @@ function itemCard(categories, i, j){
     <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
-      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
+      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
     </div>`;
   return `
-  <div class="item" data-viewname="${item.name}" data-page="${page}" onclick="openDetail('${page}',${i},${j})">
+  <div class="item">
     ${thumb}
     <div class="ibody">
       <h3>${item.name}</h3>
-      ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
       <div class="meta">
-        <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
       </div>
@@ -1361,9 +1127,7 @@ function itemCard(categories, i, j){
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
-      <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-      <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <button class="btn" onclick="addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
   </div>`;
 }
@@ -1371,93 +1135,15 @@ function itemCard(categories, i, j){
 function showItems(i){
   const categories = getCurrentCategories();
   const category = categories[i];
-  trackClick("buka_kategori", category.name, "");
-  if(typeof gtag === "function"){
-    gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
-  }
-  const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
-    `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
-  // preload semua foto kategori yang dibuka supaya carousel langsung tampil
-  category.items.forEach(it => {
-    (it.images || [it.img]).forEach(f => { if(f){ const pre = new Image(); pre.src = fixImg(f); } });
-  });
-  watchViews();
+    `<div class="itemgrid">` + category.items.map((_, j) => itemCard(categories, i, j)).join("") + `</div>`;
 }
 
 function chatAdmin(){
   window.open("https://wa.me/6289664299571?text=Halo%20admin%2C%20mau%20tanya%20harga%20FISH%20IT!");
-}
-
-/* ===== popup detail produk (klik gambar jadi besar) ===== */
-let detailCur = null;
-function openDetail(page, i, j){
-  detailCur = { page: page, i: i, j: j, k: 0 };
-  renderDetail();
-  document.getElementById("detailModal").style.display = "block";
-}
-function closeDetail(){
-  document.getElementById("detailModal").style.display = "none";
-  detailCur = null;
-}
-function renderDetail(){
-  if(!detailCur) return;
-  const cats = catsOf(detailCur.page);
-  const item = cats[detailCur.i].items[detailCur.j];
-  const category = cats[detailCur.i];
-  const files = (item.images && item.images.length) ? item.images : [(item.img || category.img)];
-  const k = Math.min(detailCur.k, files.length - 1);
-  detailCur.k = k;
-  const off = discountOf(item);
-  document.getElementById("detailBox").innerHTML = `
-    <div style="position:relative;">
-      <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
-      ${files.length > 1 ? `
-      <button class="mnav l" onclick="detailGoto(${(k - 1 + files.length) % files.length})">❮</button>
-      <button class="mnav r" onclick="detailGoto(${(k + 1) % files.length})">❯</button>` : ``}
-    </div>
-    ${files.length > 1 ? `<div class="dthumbs">` + files.map((f, idx) =>
-      `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
-    ).join("") + `</div>` : ``}
-    <h2 style="margin:14px 0 0;">${item.name}</h2>
-    ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
-    <div class="detailmeta">
-      <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} dilihat</span>
-      ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
-      ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
-    </div>
-    <div class="detailprice">
-      <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
-    </div>
-    <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
-    <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-    ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
-    <div class="mactions">
-      <button class="ghost" onclick="closeDetail()">Tutup</button>
-      <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
-    </div>`;
-}
-function detailGoto(k){
-  if(!detailCur) return;
-  detailCur.k = k;
-  renderDetail();
-}
-function detailAdd(){
-  if(!detailCur) return;
-  const cats = catsOf(detailCur.page);
-  const item = cats[detailCur.i].items[detailCur.j];
-  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name});
-  if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
-  }
-  trackClick("tambah_keranjang", item.name, cats[detailCur.i].name);
-  syncCart();
-  closeDetail();
-  openCartModal();
 }
 
 function carouselNext(i, j){
@@ -1483,33 +1169,13 @@ function updateCarousel(i, j, index){
   const item = categories[i].items[j];
   const imgEl = document.getElementById(`carousel-${i}-${j}`);
   const dotsContainer = document.getElementById(`dots-${i}-${j}`);
-  if(imgEl){
-    delete imgEl.dataset.retry;
-    imgEl.onerror = function(){ imgErr(imgEl); };
-    imgEl.src = fixImg(item.images[index]);
-    // preload slide tetangga biar pindah slide instan
-    [index + 1, index - 1].forEach(k => {
-      const n = (k + item.images.length) % item.images.length;
-      const pre = new Image();
-      pre.src = fixImg(item.images[n]);
-    });
-  }
+  if(imgEl) imgEl.src = fixImg(item.images[index]);
   if(dotsContainer){
     dotsContainer.querySelectorAll('i').forEach((d, idx) => d.classList.toggle('on', idx === index));
   }
 }
 
 function goHome(){ currentPage = 'home'; render(); }
-
-function toggleWaPop(){
-  const p = document.getElementById("waPop");
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
-}
-
-function toggleTestiPop(){
-  const p = document.getElementById("testiPop");
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
-}
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
@@ -1524,87 +1190,13 @@ function addItem(i,j){
   const item = categories[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
-  trackClick("tambah_keranjang", item.name, categories[i].name);
   if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
+    gtag("event", "add_to_cart", { item_name: item.name, price: item.price, currency: "IDR" });
   }
   syncCart();
 }
 
-function trackSearch(q){
-  if(typeof gtag === "function"){
-    gtag("event", "cari_barang", { kata_cari: q });
-  }
-  trackClick("cari_barang", q, "");
-}
-
-// Hitung dilihat per produk: antre dulu, kirim GABUNGAN tiap 8 detik (1 request).
-let viewObs = null;
-let viewQueue = [];
-function flushViews(){
-  if(!viewQueue.length) return;
-  const batch = viewQueue.splice(0, viewQueue.length);
-  const bySheet = {};
-  batch.forEach(v => {
-    const sh = v.page === "akun" ? "Akun" : "Brainrot";
-    (bySheet[sh] = bySheet[sh] || []).push(v);
-  });
-  Object.keys(bySheet).forEach(sh => {
-    const vs = bySheet[sh];
-    fetch(SHEET_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "incmany", names: vs.map(v => v.name), col: "dilihat", sheet: sh }),
-      keepalive: true
-    }).then(r => r.text()).then(t => {
-      try {
-        const d = JSON.parse(t);
-        if(d.result === "success" && d.values){
-          vs.forEach(v => {
-            if(d.values[v.name] !== undefined && v.el.isConnected){
-              const c = v.el.querySelector(".viewcount");
-              if(c) c.textContent = "👁 " + Number(d.values[v.name]).toLocaleString("id-ID");
-            }
-          });
-        }
-      } catch(e) {}
-    }).catch(() => {});
-  });
-}
-setInterval(flushViews, 8000);
-window.addEventListener("pagehide", flushViews);
-function watchViews(){
-  try {
-    if(viewObs) viewObs.disconnect();
-    viewObs = new IntersectionObserver(es => {
-      es.forEach(en => {
-        if(!en.isIntersecting) return;
-        const el = en.target;
-        viewObs.unobserve(el);
-        const nm = el.dataset.viewname, pg = el.dataset.page;
-        if(!nm || pg === "topup") return;
-        viewQueue.push({ name: nm, page: pg, el: el });
-      });
-    }, { threshold: 0.3 });
-    document.querySelectorAll('.item[data-viewname]').forEach(el => {
-      if(el.dataset.page !== "topup") viewObs.observe(el);
-    });
-  } catch(e) {}
-}
-
-// Statistik sendiri ke Sheet tab "Statistik" (ringan, tidak menunggu respon).
-function trackClick(ev, nama, kat){
-  try {
-    fetch(SHEET_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ action: "track", ev: ev, nama: nama || "", kat: kat || "" }),
-      keepalive: true
-    }).catch(() => {});
-  } catch(e) {}
-}
-
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzPrEJpQrFVJ0tXCEqWgOrtsQMYX-VGp1AO4IzAK7-kNAyrQruXWELomedA70voyQ83/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBzZeScxeCdCCSZiDRGJcVEYzG7_5ftK-qZnV8knIA8u8qWsLfkoRZ2hCEBiwIbXBz/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1621,7 +1213,7 @@ function checkout(){
     let itemImage = fixImg(item.img || item.categoryImg);
     previewHTML += `
       <div class="mrow">
-        <img src="${itemImage}" onerror="imgErr(this)">
+        <img src="${itemImage}" onerror="this.src='${FALLBACK_IMG}'">
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
       </div>`;
   });
@@ -1644,7 +1236,7 @@ function sendToAdmin(){
   if(cart.length==0){ alert("Keranjang kosong!"); return; }
   if(typeof gtag === "function"){
     const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
-    gtag("event", "kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" });
+    gtag("event", "checkout_whatsapp", { item_count: cart.length, value: totalValue, currency: "IDR" });
   }
   let text = "Halo saya mau beli:%0A";
   cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
@@ -1700,211 +1292,103 @@ function cancelCheckout(){
   }
 }
 
-function fetchSheet(sheet, cbName){
+function loadLiveStock(){
   return new Promise(resolve => {
-    const timer = setTimeout(() => resolve(null), 15000);
-    window[cbName] = data => {
+    const timer = setTimeout(resolve, 5000);
+    window.__stockCb = data => {
       clearTimeout(timer);
-      resolve(Array.isArray(data) ? data : []);
+      try {
+        const arr = Array.isArray(data) ? data : [];
+        const hasKat = arr.some(o => String(o.kategori || "").trim() !== "");
+        if (hasKat) {
+          const codeImg = {};
+          [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+            cats.forEach(c => {
+              const ck = "CAT:" + String(c.name).trim();
+              if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
+              c.items.forEach(it => {
+                const k = String(it.name).trim();
+                if (!(k in codeImg)) {
+                  codeImg[k] = (it.images && it.images[0]) || it.img || "";
+                  if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
+                }
+              });
+            }));
+          const groups = {};
+          const order = [];
+          const catImgSheet = {};
+          // OVERRIDE FOTO KATEGORI VIA SHEET (tanpa edit kode):
+          // Tambah baris di Sheet Brainrot: name = "CAT:<nama kategori persis>", kategori = "<nama kategori persis>", image = "namafile.png" atau URL drive.
+          // Contoh: name="CAT:be flash for brainrot", kategori="be flash for brainrot", image="BE FLASH BARU.png"
+          // Baris CAT:* tidak tampil sebagai produk, hanya jadi foto display kategori. Sheet menang atas img di kode.
+          arr.forEach(o => {
+            const nm = String(o.name || "").trim();
+            if (!nm || nm.indexOf("CAT:") !== 0) return;
+            const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
+            const f = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+            if (targetKat && f) catImgSheet[targetKat] = f;
+          });
+          arr.forEach(o => {
+            const name = String(o.name || "").trim();
+            if (!name) return;
+            if (name.indexOf("CAT:") === 0) return;
+            const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
+            if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
+            let files = String(o.image || "").split("|").map(s => s.trim()).filter(Boolean);
+            if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
+            if (!files.length && codeImg[name]) files = [codeImg[name]];
+            const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
+            if (Number(o.sold) > 0) it.sold = Number(o.sold);
+            if (files.length > 1) it.images = files;
+            const g = groups[kat];
+            g.items.push(it);
+            if (!g.img && files[0]) g.img = files[0];
+          });
+          Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
+          brainrotCategories.length = 0;
+          order.forEach(k => brainrotCategories.push(groups[k]));
+        } else {
+        const map = {};
+        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
+        [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+          cats.forEach(c => {
+            const catKey = "CAT:" + String(c.name).trim();
+            if (catKey in map && map[catKey].image) {
+              const cf = map[catKey].image.split("|").map(s => s.trim()).filter(Boolean);
+              if (cf.length) c.img = cf[0];
+            }
+            c.items.forEach(it => {
+            const k = String(it.name).trim();
+            if (k in map) {
+              const v = map[k];
+              const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
+              it.stock = flagged ? 0 : v.stock;
+              if (v.price > 0) it.price = v.price;
+              if (v.sold > 0) it.sold = v.sold;
+              if (v.image) {
+                const files = v.image.split("|").map(s => s.trim()).filter(Boolean);
+                if (files.length > 1) { it.img = files[0]; it.images = files; }
+                else if (files.length === 1) { it.img = files[0]; it.images = null; }
+              }
+            }
+            });
+          })
+        );
+        }
+      } catch(e) {}
+      resolve();
     };
     const s = document.createElement('script');
-    s.src = SHEET_URL + "?callback=" + cbName + "&sheet=" + encodeURIComponent(sheet) + "&t=" + Date.now();
-    s.onerror = () => { clearTimeout(timer); resolve(null); };
+    s.src = SHEET_URL + "?callback=__stockCb&t=" + Date.now();
+    s.onerror = () => { clearTimeout(timer); resolve(); };
     document.head.appendChild(s);
   });
 }
 
-// Cache data Sheet terakhir di browser: kalau fetch lambat/gagal, tampilkan cache
-// (bukan data kode lama) supaya kategori baru tidak hilang-timbul.
-function loadCached(sheet){
-  try {
-    const raw = localStorage.getItem("rockstar_" + sheet);
-    if(!raw) return [];
-    const o = JSON.parse(raw);
-    if(!o || !o.t || (Date.now() - o.t) > 7*24*3600*1000) return [];
-    return Array.isArray(o.data) ? o.data : [];
-  } catch(e){ return []; }
-}
-
-function saveCached(sheet, data){
-  try { localStorage.setItem("rockstar_" + sheet, JSON.stringify({ t: Date.now(), data: data })); } catch(e){}
-}
-
-function hasKatArr(arr){
-  return arr.length > 0 && arr.some(o => String(o.kategori || "").trim() !== "");
-}
-
-function applySnap(b, a){
-  if (hasKatArr(b)) rebuildFromSheet(b, brainrotCategories);
-  else if (b.length) mergeFromSheet(b);
-  if (hasKatArr(a)) rebuildFromSheet(a, akunCategories);
-  else if (a.length) mergeFromSheet(a);
-}
-
-function buildCodeImg(){
-  const codeImg = {};
-  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
-    cats.forEach(c => {
-      const ck = "CAT:" + String(c.name).trim();
-      if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
-      c.items.forEach(it => {
-        const k = String(it.name).trim();
-        if (!(k in codeImg)) {
-          codeImg[k] = (it.images && it.images[0]) || it.img || "";
-          if (it.images && it.images.length > 1) codeImg[k + "||IMAGES"] = it.images;
-        }
-      });
-    }));
-  return codeImg;
-}
-
-// Bangun ulang 1 halaman katalog dari 1 tab Sheet (sistem sama untuk Brainrot & Akun).
-// Tab Sheet: name | kategori | price | stock | soldout | image | sold
-// Baris name = "CAT:<nama kategori>" = foto display kategori (tidak tampil sebagai produk).
-function rebuildFromSheet(arr, targetCats){
-  const codeImg = buildCodeImg();
-  const groups = {};
-  const order = [];
-  const catImgSheet = {};
-  arr.forEach(o => {
-    const nm = String(o.name || "").trim();
-    if (!nm || nm.indexOf("CAT:") !== 0) return;
-    const targetKat = String(o.kategori || nm.slice(4)).trim() || nm.slice(4).trim();
-    const f = splitFiles(o.image)[0] || "";
-    if (targetKat && f) catImgSheet[targetKat] = f;
-  });
-  arr.forEach(o => {
-    const name = String(o.name || "").trim();
-    if (!name) return;
-    if (name.indexOf("CAT:") === 0) return;
-    const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
-    if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
-    let files = splitFiles(o.image);
-    if (!files.length && codeImg[name + "||IMAGES"]) files = codeImg[name + "||IMAGES"];
-    if (!files.length && codeImg[name]) files = [codeImg[name]];
-    const flagged = /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
-            const it = { name: name, price: Number(o.price) || 0, stock: flagged ? 0 : (Number(o.stock) || 0), img: files[0] || "" };
-            if (Number(o.sold) > 0) it.sold = Number(o.sold);
-            it.dilihat = Number(o.dilihat) || 0;
-            if (String(o.deskripsi || "").trim()) it.deskripsi = String(o.deskripsi).trim();
-            if (Number(o.coret) > it.price) it.originalPrice = Number(o.coret);
-    if (files.length > 1) it.images = files;
-    const g = groups[kat];
-    g.items.push(it);
-    if (!g.img && files[0]) g.img = files[0];
-  });
-  Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
-  targetCats.length = 0;
-  order.forEach(k => targetCats.push(groups[k]));
-}
-
-function mergeFromSheet(arr){
-  const map = {};
-        arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, deskripsi: String(o.deskripsi || ""), dilihat: Number(o.dilihat) || 0, soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
-  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
-    cats.forEach(c => {
-      const catKey = "CAT:" + String(c.name).trim();
-      if (catKey in map && map[catKey].image) {
-        const cf = splitFiles(map[catKey].image);
-        if (cf.length) c.img = cf[0];
-      }
-      c.items.forEach(it => {
-      const k = String(it.name).trim();
-      if (k in map) {
-        const v = map[k];
-        const flagged = /^(ya|y|yes|habis|sold)/i.test(v.soldout);
-              it.stock = flagged ? 0 : v.stock;
-              if (v.price > 0) it.price = v.price;
-              if (v.sold > 0) it.sold = v.sold;
-              it.dilihat = v.dilihat;
-              it.deskripsi = String(v.deskripsi || "").trim() || null;
-              if (v.coret > it.price) it.originalPrice = v.coret;
-              else if (!(v.coret > 0)) it.originalPrice = null;
-        if (v.image) {
-          const files = splitFiles(v.image);
-          if (files.length > 1) { it.img = files[0]; it.images = files; }
-          else if (files.length === 1) { it.img = files[0]; it.images = null; }
-        }
-      }
-      });
-    })
-  );
-}
-
-function loadLiveStock(){
-  try {
-    applySnap(loadCached("Brainrot"), loadCached("Akun"));
-    render();
-  } catch(e) {}
-  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
-  return once().then(res => {
-    if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
-    return res;
-  }).then(res => {
-    const b = res[0] || [], a = res[1] || [];
-    try {
-      applySnap(b, a);
-      if (b.length) saveCached("Brainrot", b);
-      if (a.length) saveCached("Akun", a);
-    } catch(e) {}
-  });
-}
-
-/* ===== teks berjalan + status online dari Sheet tab Pengumuman ===== */
-let shopMode = "auto";
-let shopOpen = 8, shopClose = 22;
-// Tab Pengumuman dibaca berbasis label (anti-geser): "teks"/"mode"/"open"/"close" -> nilai di baris bawahnya.
-function infoMap(rows){
-  const m = {};
-  (rows || []).forEach((r, i) => {
-    const k = String((r && r[0] !== undefined) ? r[0] : "").trim().toLowerCase();
-    if(["teks", "mode", "open", "close"].indexOf(k) !== -1 && !(k in m)){
-      m[k] = (i + 1 < rows.length && rows[i + 1][0] !== undefined) ? String(rows[i + 1][0]).trim() : "";
-    }
-  });
-  return m;
-}
-function loadAnnounce(){
-  // tampilkan cache dulu (10 menit), lalu segarkan di background
-  try {
-    const c = JSON.parse(localStorage.getItem("rockstar_pengumuman") || "null");
-    if(c && (Date.now() - c.t) < 10 * 60 * 1000) applyAnnounce(c);
-  } catch(e) {}
-  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const rows = JSON.parse(t);
-        const info = infoMap(rows);
-        const teks = info.teks || "";
-        try { localStorage.setItem("rockstar_pengumuman", JSON.stringify({ t: Date.now(), teks })); } catch(e) {}
-        if(!teks){
-          const cr = document.getElementById("customrun");
-          if(cr) cr.style.display = "none";
-          const hd0 = document.querySelector("header");
-          if(hd0) hd0.style.top = "37px";
-        }
-        applyAnnounce({ teks });
-      } catch(e) {}
-    }).catch(() => {});
-}
-
-function applyAnnounce(c){
-  if(!c.teks) return;
-  const teks = String(c.teks).replace(/<script[\s\S]*?<\/script>/gi, "");
-  const el = document.getElementById("customrun");
-  const hd = document.querySelector("header");
-  if(el){ el.innerHTML = "<span>" + teks + " • " + teks + "</span>"; el.style.display = ""; }
-  if(hd) hd.style.top = "74px";
-}
-
-// Badge Online/Offline: nonaktif (disembunyikan atas permintaan). Logika dipertahankan.
-function renderShopStatus(){ return; }
-
 loadLiveStock().then(() => {
-  try { loadAnnounce(); } catch(e) {}
-  try { renderShopStatus(); } catch(e) {}
-  try { render(); } catch(e) {}
-  try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
+  render();
+  document.getElementById("searchInput").addEventListener("input", searchCatalog);
 });
 </script>
 
