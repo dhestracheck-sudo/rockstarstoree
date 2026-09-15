@@ -60,6 +60,23 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:10px;">Boleh pakai <b>tebal</b>. Kosongkan + simpan untuk kembali ke teks utama.</p>
   </div>
 
+  <div class="card" id="modeCard" style="display:none;">
+    <label>🟢 Status toko (Online/Offline)</label>
+    <div id="modeNow" style="padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);font-size:14px;font-weight:700;margin-bottom:10px;">-</div>
+    <div style="display:flex;gap:8px;">
+      <button id="modeAutoBtn" onclick="setMode('auto')" style="flex:1;">🤖 Auto</button>
+      <button id="modeOnBtn" onclick="setMode('online')" style="flex:1;">🟢 Online</button>
+      <button id="modeOffBtn" onclick="setMode('offline')" style="flex:1;">🔴 Offline</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input type="number" id="openInput" min="0" max="23" placeholder="buka (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <input type="number" id="closeInput" min="0" max="23" placeholder="tutup (0-23)" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <button id="hoursBtn" onclick="saveHours()" style="flex:1;">⏰ Simpan Jam</button>
+    </div>
+    <div id="statusMode"></div>
+    <p class="hint" style="margin-top:10px;">Auto = ikut jam buka-tutup di atas (WIB). Online/Offline = paksa tampil itu terus.</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -187,7 +204,7 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 </div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzPrEJpQrFVJ0tXCEqWgOrtsQMYX-VGp1AO4IzAK7-kNAyrQruXWELomedA70voyQ83/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx6WkanlH4jaLGQfg5IDyHiDm0ZcmIPdohk8jO0azSbVzkmhbY1KbnIpSZfQpavDQvO/exec";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
 const ADMIN_V = "12m-label";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
@@ -205,8 +222,9 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","infoCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","infoCard","modeCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadInfo();
+    loadMode();
     loadItems();
   } else {
     alert("PIN salah.");
@@ -438,29 +456,16 @@ function deleteCategory(){
 
 // POST dengan coba-ulang 1x khusus error transient (respon aneh/timeout).
 // Error permanen (unknown action, tidak ketemu, kosong, kolom) langsung dikembalikan.
-function postRetry(body, tries, ms){
+function postRetry(body, tries){
   tries = tries || 2;
-  return postOne(body, ms).then(d => {
+  return postOne(body).then(d => {
     if(d.result === "success") return d;
     const r = String(d.result || "");
     const permanen = r.indexOf("unknown action") !== -1 || r.indexOf("tidak ketemu") !== -1 ||
       r.indexOf("sudah ada") !== -1 || r.indexOf("kosong") !== -1 || r.indexOf("kolom") !== -1;
     if(permanen || tries <= 1) return d;
-    return postRetry(body, tries - 1, ms);
+    return postRetry(body, tries - 1);
   });
-}
-
-// Cek isi kolom image di Sheet berubah atau tidak (untuk pastikan upload beneran).
-function verifyImg(name, oldFull){
-  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const arr = JSON.parse(t);
-        const o = arr.find(x => String(x.name).trim() === name);
-        const v = o ? String(o.image || "").trim() : "";
-        return (v && v !== String(oldFull || "").trim()) ? v : "";
-      } catch(e){ return ""; }
-    }).catch(() => "");
 }
 
 function saveAll(){
@@ -704,7 +709,7 @@ function slideUploadToSlot(i, f){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   st.textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, curSlides().join("|")).then(d => {
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
     if(d.result === "success" && d.url){
       const arr = curSlides();
       arr[i] = d.url;
@@ -746,7 +751,7 @@ function slideAddFile(){
   if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
+  sendUpload(f, { action: "upload", item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }).then(d => {
     if(d.result === "success" && d.url){
       arr.push(d.url);
       saveSlides(arr, '✅ Slide ditambah!');
@@ -779,7 +784,7 @@ function uploadCat(){
   if(f.size > 8 * 1024 * 1024){ st.innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
   btn.disabled = true;
   st.textContent = "Memeriksa & mengupload foto kategori, tunggu...";
-  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }, (ALL_ITEMS.find(x => String(x.name).trim() === "CAT:" + kat) || { image: "" }).image || "").then(d => {
+  sendUpload(f, { action: "upload", item_name: "CAT:" + kat, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET(), kategori: kat }).then(d => {
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">✅ Foto kategori terpasang! Refresh web utama untuk lihat.</span><br><a href="' + d.url + '" target="_blank" style="color:var(--blue2);">Lihat foto</a>';
       updItem("CAT:" + kat, { image: d.url });
@@ -945,6 +950,54 @@ function loadInfo(){
     }).catch(() => {});
 }
 
+function loadMode(){
+  fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
+    .then(r => r.text()).then(t => {
+      try {
+        const info = infoMap(JSON.parse(t));
+        const v = (info.mode || "auto").toLowerCase() || "auto";
+        showMode(v === "online" || v === "offline" ? v : "auto");
+        if(info.open !== "") document.getElementById("openInput").value = info.open;
+        if(info.close !== "") document.getElementById("closeInput").value = info.close;
+      } catch(e) { showMode("auto"); }
+    }).catch(() => { showMode("?"); });
+}
+
+function showMode(v){
+  const el = document.getElementById("modeNow");
+  el.textContent = v === "online" ? "🟢 Paksa Online" : v === "offline" ? "🔴 Paksa Offline" : v === "?" ? "Tidak terbaca" : "🤖 Auto (08–22 WIB)";
+}
+
+function saveHours(){
+  const o = document.getElementById("openInput").value;
+  const c = document.getElementById("closeInput").value;
+  const st = document.getElementById("statusMode");
+  const btn = document.getElementById("hoursBtn");
+  if(o === "" || c === "" || isNaN(Number(o)) || isNaN(Number(c)) || Number(o) < 0 || Number(o) > 23 || Number(c) < 0 || Number(c) > 23){
+    st.innerHTML = '<span class="err">Isi jam 0–23 dulu.</span>'; return;
+  }
+  btn.disabled = true;
+  st.textContent = "Menyimpan jam...";
+  postOne({ action: "setinfo", key: "open", value: Number(o) }).then(() =>
+    postOne({ action: "setinfo", key: "close", value: Number(c) })
+  ).then(d => {
+    btn.disabled = false;
+    if(d.result === "success") st.innerHTML = '<span class="ok">✅ Jam operasional tersimpan!</span>';
+    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
+}
+
+function setMode(v){
+  const st = document.getElementById("statusMode");
+  st.textContent = "Menyimpan...";
+  postOne({ action: "setinfo", key: "mode", value: v }).then(d => {
+    if(d.result === "success"){ showMode(v); st.innerHTML = '<span class="ok">✅ Tersimpan!</span>'; }
+    else if(String(d.result || "").indexOf("unknown action") !== -1) st.innerHTML = '<span class="err">Backend belum update. Deploy ulang Code.gs terbaru (New version).</span>';
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
+}
+
 function saveInfo(){
   const v = document.getElementById("infoInput").value.trim();
   const st = document.getElementById("statusInfo");
@@ -992,19 +1045,13 @@ function validImageFile(f){
 
 // Upload file yang sudah lolos validasi. body = {action:"upload", item_name, ...} tanpa file.
 // Foto dikompres dulu (maks 1600px) supaya upload jauh lebih cepat.
-function sendUpload(f, body, oldFull){
+function sendUpload(f, body){
   return prepImage(f).then(p => {
     if(!p.ok) return { result: "error: file rusak / bukan gambar (pakai JPG/PNG)" };
     body.file = p.base64;
     body.mime = p.mime;
     body.filename = p.name;
-    return postRetry(body, 3, 90000).then(d => {
-      if(d.result === "success") return d;
-      return verifyImg(body.item_name, oldFull || "").then(full => {
-        if(full) return { result: "success", url: full.split("|").map(s => s.trim()).filter(Boolean)[0] || full, verified: true };
-        return d;
-      });
-    });
+    return postOne(body);
   });
 }
 
