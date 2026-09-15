@@ -266,8 +266,9 @@ function postSet(col, value, stEl, btn, okMsg){
 
 // Tambah baris ke data lokal + dropdown TANPA reset pilihan (tidak seperti loadItems).
 function addLocalRow(o){
-  ALL_ITEMS.push(o);
   const nm = String(o.name).trim();
+  if(ALL_ITEMS.some(x => String(x.name).trim() === nm)) return;
+  ALL_ITEMS.push(o);
   if(nm.indexOf("CAT:") !== 0){
     const sel = document.getElementById("itemSel");
     const op = document.createElement("option");
@@ -577,9 +578,16 @@ function fillCatOptions(filter){
   prefillCat();
 }
 
-function loadItems(){
+function loadItems(retry){
   return new Promise(resolve => {
-    const timer = setTimeout(resolve, 8000);
+    const timer = setTimeout(() => {
+      // timeout tapi daftar masih kosong -> coba sekali lagi otomatis
+      if(!retry && document.getElementById("itemSel").options.length <= 1){
+        resolve(loadItems(true));
+        return;
+      }
+      resolve();
+    }, 12000);
     window.__names = data => {
       clearTimeout(timer);
       try {
