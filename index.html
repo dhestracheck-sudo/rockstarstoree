@@ -1007,7 +1007,18 @@ function searchCatalog(){
   syncCta();
   title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
     <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
-  el.innerHTML = `<div class="itemgrid">` + out.map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>`;
+  searchOut = out;
+  searchN = PAGE_N;
+  paintSearch();
+}
+
+let searchOut = [], searchN = 12;
+function paintSearch(){
+  const y = window.scrollY;
+  const el = document.getElementById("products");
+  el.innerHTML = `<div class="itemgrid">` + searchOut.slice(0, searchN).map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>` +
+    (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=12;paintSearch();">Lihat Selengkapnya (${searchOut.length - searchN} lagi)</button></div>` : ``);
+  window.scrollTo(0, y);
   watchViews();
 }
 
