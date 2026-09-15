@@ -1868,26 +1868,15 @@ function loadAnnounce(){
   // tampilkan cache dulu (10 menit), lalu segarkan di background
   try {
     const c = JSON.parse(localStorage.getItem("rockstar_pengumuman") || "null");
-    if(c && (Date.now() - c.t) < 10 * 60 * 1000){
-      applyAnnounce(c);
-      if(c.mode === "online" || c.mode === "offline" || c.mode === "auto") shopMode = c.mode;
-      if(isFinite(c.open)) shopOpen = c.open;
-      if(isFinite(c.close)) shopClose = c.close;
-      renderShopStatus();
-    }
+    if(c && (Date.now() - c.t) < 10 * 60 * 1000) applyAnnounce(c);
   } catch(e) {}
   fetch(SHEET_URL + "?sheet=Pengumuman&t=" + Date.now())
     .then(r => r.text()).then(t => {
       try {
         const rows = JSON.parse(t);
         const info = infoMap(rows);
-        let teks = info.teks || "";
-        let mode = (info.mode || "").toLowerCase();
-        if(mode === "online" || mode === "offline" || mode === "auto") shopMode = mode;
-        const o = parseInt(info.open, 10), cl = parseInt(info.close, 10);
-        if(isFinite(o) && o >= 0 && o <= 23) shopOpen = o;
-        if(isFinite(cl) && cl >= 0 && cl <= 23) shopClose = cl;
-        try { localStorage.setItem("rockstar_pengumuman", JSON.stringify({ t: Date.now(), teks, mode: shopMode, open: shopOpen, close: shopClose })); } catch(e) {}
+        const teks = info.teks || "";
+        try { localStorage.setItem("rockstar_pengumuman", JSON.stringify({ t: Date.now(), teks })); } catch(e) {}
         if(!teks){
           const cr = document.getElementById("customrun");
           if(cr) cr.style.display = "none";
@@ -1896,8 +1885,7 @@ function loadAnnounce(){
         }
         applyAnnounce({ teks });
       } catch(e) {}
-      renderShopStatus();
-    }).catch(() => { renderShopStatus(); });
+    }).catch(() => {});
 }
 
 function applyAnnounce(c){
