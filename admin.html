@@ -514,7 +514,8 @@ function saveAll(){
   chain.then(() => {
     btn.disabled = false;
     if(!gagal.length){
-      st.innerHTML = '<span class="ok">✅ Semua tersimpan berbarengan!</span>';
+      const v = jobs.some(jb => jb.verified) ? ' (terverifikasi)' : '';
+      st.innerHTML = '<span class="ok">✅ Semua tersimpan berbarengan!' + v + '</span>';
       let finalName = name;
       jobs.forEach(jb => {
         if(jb.col === 1){
