@@ -146,6 +146,7 @@ function doPost(e) {
     if (action === "track") return jsonOut_(actionTrack_(body));
     if (action === "setinfo") return jsonOut_(actionSetInfo_(body));
     if (action === "inc") return jsonOut_(actionInc_(body));
+    if (action === "incmany") return jsonOut_(actionIncMany_(body));
     return jsonOut_({ result: "error: unknown action (pakai set / add / delete / delmany / upload). Kalau dapat ini, Deploy ulang Code.gs versi terbaru." });
   } catch (err) {
     return jsonOut_({ result: "error: " + String(err && err.message || err) });
@@ -336,6 +337,42 @@ function actionSetInfo_(body) {
   if (["teks", "mode", "open", "close"].indexOf(key) === -1) key = "teks";
   infoSet_(sh, key, body.value !== undefined ? body.value : body.teks);
   return { result: "success" };
+}
+
+// Counter massal sekaligus (hemat request): {names:[...]} -> {values:{name:count}}
+function actionIncMany_(body) {
+  var names = body.names || [];
+  if (!names || !names.length) return { result: "success", values: {} };
+  var lock = LockService.getScriptLock();
+  try { lock.waitLock(15000); } catch (e) { return { result: "error: sibuk, coba lagi" }; }
+  try {
+    var t = readTable_(body.sheet || SHEET_DEFAULT);
+    var k = canonKey_(body.col || "dilihat");
+    if (!(k && (k in t.idx))) return { result: "error: kolom tidak dikenal" };
+    var times = {};
+    for (var i = 0; i < names.length; i++) {
+      var nm = String(names[i]).trim();
+      if (nm) times[nm] = (times[nm] || 0) + 1;
+    }
+    var ni = t.idx["name"];
+    var rowByName = {};
+    for (var r = 1; r < t.rows.length; r++) {
+      var nm0 = String(t.rows[r][ni]).trim();
+      if (nm0 && !(nm0 in rowByName)) rowByName[nm0] = r;
+    }
+    var vals = {};
+    for (var key in times) {
+      if (key in rowByName) {
+        var rr = rowByName[key];
+        var cur = Number(t.rows[rr][t.idx[k]]) || 0;
+        t.sheet.getRange(rr + 1, t.idx[k] + 1).setValue(cur + times[key]);
+        vals[key] = cur + times[key];
+      }
+    }
+    return { result: "success", values: vals };
+  } finally {
+    try { lock.releaseLock(); } catch (e) {}
+  }
 }
 
 // Statistik klik web (ringan, tanpa auth). Sheet "Statistik": time | ev | nama | kat
