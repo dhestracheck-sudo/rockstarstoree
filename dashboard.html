@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistik Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --green:#2ecc71; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); padding:24px 16px 60px; }
+.wrap { max-width: 720px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; }
+.cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap:12px; margin:16px 0; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center; }
+.stat b { display:block; font-family:'Oswald',sans-serif; font-size:28px; }
+.stat span { font-size:12px; color:var(--mut); }
+.panel { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:14px; }
+.panel h2 { font-family:'Oswald',sans-serif; font-size:18px; margin:0 0 12px; }
+.row { margin-bottom:10px; }
+.row .lbl { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+.row .lbl b { color:var(--green); }
+.bar { height:10px; background:#1a2440; border-radius:99px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--blue); border-radius:99px; }
+.hint { font-size:12.5px; color:var(--mut); }
+#status { color:var(--mut); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><img src="ROCKSTARLOGO.png" alt="Rockstar" style="height:44px;vertical-align:middle;border-radius:10px;margin-right:8px;">📊 Statistik Rockstar.Store</h1>
+  <p class="hint">Data klik pengunjung dari web, bahasa Indonesia. <span id="status">Memuat...</span></p>
+  <div class="cards">
+    <div class="stat"><b id="tTotal">-</b><span>Total klik</span></div>
+    <div class="stat"><b id="tToday">-</b><span>Klik hari ini</span></div>
+    <div class="stat"><b id="tCart">-</b><span>Masuk keranjang</span></div>
+  </div>
+  <div class="panel"><h2>🟢 Live — lagi diklik 5 menit terakhir <span id="liveCount" style="color:var(--green);"></span></h2><div id="live"></div><p class="hint">Otomatis refresh tiap 15 detik.</p></div>
+  <div class="panel"><h2>🔥 Produk paling laris (masuk keranjang)</h2><div id="topProd"></div></div>
+  <div class="panel"><h2>👁️ Produk paling banyak dilihat</h2><div id="topView"></div></div>
+  <div class="panel"><h2>📂 Kategori paling dibuka</h2><div id="topKat"></div></div>
+  <div class="panel"><h2>🔍 Kata paling dicari</h2><div id="topCari"></div></div>
+  <div class="panel"><h2>📅 Klik 7 hari terakhir</h2><div id="perHari"></div></div>
+</div>
+<script>
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbzPrEJpQrFVJ0tXCEqWgOrtsQMYX-VGp1AO4IzAK7-kNAyrQruXWELomedA70voyQ83/exec";
+
+function bar(el, list){
+  const box = document.getElementById(el);
+  if(!list.length){ box.innerHTML = '<p class="hint">Belum ada data.</p>'; return; }
+  const max = list[0][1];
+  box.innerHTML = list.map(([nama, n]) =>
+    '<div class="row"><div class="lbl"><span>' + nama + '</span><b>' + n + 'x</b></div>' +
+    '<div class="bar"><i style="width:' + Math.round(n / max * 100) + '%"></i></div></div>'
+  ).join("");
+}
+
+function count(rows, ev){
+  const m = {};
+  rows.forEach(r => {
+    if(String(r[1] || "") !== ev) return;
+    const k = String(r[2] || "(kosong)").trim() || "(kosong)";
+    m[k] = (m[k] || 0) + 1;
+  });
+  return Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 10);
+}
+
+const EV_ID = { buka_kategori: "📂 Buka kategori", tambah_keranjang: "🛒 Keranjang", cari_barang: "🔍 Cari" };
+
+// Waktu Indonesia (WIB). Backend kirim UTC, jadi harus dikonversi.
+function wib(v){
+  const t = new Date(v);
+  if(isNaN(t)) return { day: String(v).slice(0, 10), time: String(v).slice(11, 19) };
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jakarta", year: "numeric", month: "2-digit", day: "2-digit" }).format(t);
+  const time = new Intl.DateTimeFormat("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(t);
+  return { day: day, time: time };
+}
+
+function live(rows){
+  const box = document.getElementById("live");
+  const now = Date.now();
+  const rec = rows.filter(r => {
+    const t = new Date(r[0]).getTime();
+    return isFinite(t) && (now - t) < 5 * 60 * 1000;
+  }).slice(-15).reverse();
+  document.getElementById("liveCount").textContent = rec.length ? "(" + rec.length + ")" : "";
+  if(!rec.length){ box.innerHTML = '<p class="hint">Sepi — tidak ada klik 5 menit terakhir.</p>'; return; }
+  box.innerHTML = rec.map(r => {
+    const ev = EV_ID[String(r[1])] || String(r[1]);
+    const nama = String(r[2] || "-");
+    const kat = String(r[3] || "");
+    return '<div class="row"><div class="lbl"><span>' + ev + ': <b style="color:var(--txt);">' + nama + '</b>' +
+      (kat ? ' <span style="color:var(--mut);">(' + kat + ')</span>' : '') + '</span><span>' +
+      wib(r[0]).time + ' WIB</span></div></div>';
+  }).join("");
+}
+
+window.__statCb = rows => {
+  rows = Array.isArray(rows) ? rows : [];
+  document.getElementById("status").textContent = rows.length + " baris.";
+  document.getElementById("tTotal").textContent = rows.length;
+  const today = wib(new Date()).day;
+  document.getElementById("tToday").textContent = rows.filter(r => wib(r[0]).day === today).length;
+  document.getElementById("tCart").textContent = rows.filter(r => String(r[1]) === "tambah_keranjang").length;
+  bar("topProd", count(rows, "tambah_keranjang"));
+  bar("topKat", count(rows, "buka_kategori"));
+  bar("topCari", count(rows, "cari_barang"));
+  live(rows);
+  muatLihat();
+  const days = {};
+  rows.forEach(r => {
+    const d = wib(r[0]).day;
+    if(d && d !== "Invalid Date") days[d] = (days[d] || 0) + 1;
+  });
+  bar("perHari", Object.entries(days).sort().slice(-7));
+};
+
+function muat(){
+  const old = document.getElementById("statJsonp");
+  if(old) old.remove();
+  const sc = document.createElement("script");
+  sc.id = "statJsonp";
+  sc.src = SHEET_URL + "?callback=__statCb&sheet=Statistik&t=" + Date.now();
+  sc.onerror = () => { document.getElementById("status").textContent = "Gagal memuat. Cek koneksi / Deploy."; };
+  document.head.appendChild(sc);
+}
+muat();
+setInterval(muat, 15000);
+
+function muatLihat(){
+  const got = [];
+  const done = () => {
+    if(got.length < 2) return;
+    const all = got[0].concat(got[1]).filter(o => o.name && o.name.indexOf("CAT:") !== 0);
+    all.sort((a, b) => (Number(b.dilihat) || 0) - (Number(a.dilihat) || 0));
+    bar("topView", all.slice(0, 10).map(o => [String(o.name).slice(0, 50), Number(o.dilihat) || 0]));
+  };
+  ["Brainrot", "Akun"].forEach((sh, idx) => {
+    const cb = "__lihatCb" + idx;
+    window[cb] = data => { got[idx] = Array.isArray(data) ? data : []; done(); };
+    const sc = document.createElement("script");
+    sc.src = SHEET_URL + "?callback=" + cb + "&sheet=" + sh + "&t=" + Date.now();
+    sc.onerror = () => { got[idx] = []; done(); };
+    document.head.appendChild(sc);
+  });
+}
+</script>
+</body>
+</html>
