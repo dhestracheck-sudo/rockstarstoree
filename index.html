@@ -106,9 +106,6 @@ header {
   outline: none;
 }
 #searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
-#shopstatus { font-size: 12px; font-weight: 700; white-space: nowrap; }
-#shopstatus .on { color: var(--green); }
-#shopstatus .off { color: #ff8080; }
 .cartbtn {
   display: flex;
   align-items: center;
@@ -671,7 +668,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
-  <span id="shopstatus"></span>
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..."></div>
   <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
 </header>
@@ -1930,23 +1926,8 @@ function applyAnnounce(c){
   if(hd) hd.style.top = "74px";
 }
 
-// Badge Online/Offline: manual dari admin (online/offline) atau otomatis jam 08–22 WIB.
-function renderShopStatus(){
-  const el = document.getElementById("shopstatus");
-  if(!el) return;
-  let online;
-  if(shopMode === "online") online = true;
-  else if(shopMode === "offline") online = false;
-  else {
-    try {
-      const h = Number(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Jakarta", hour: "2-digit", hour12: false }).format(new Date()));
-      online = shopOpen <= shopClose ? (h >= shopOpen && h < shopClose) : (h >= shopOpen || h < shopClose);
-    } catch(e) { online = true; }
-  }
-  el.innerHTML = online
-    ? `<span class="on">🟢 Online — fast respon</span>`
-    : `<span class="off">🔴 Offline — slow respon</span>`;
-}
+// Badge Online/Offline: nonaktif (disembunyikan atas permintaan). Logika dipertahankan.
+function renderShopStatus(){ return; }
 
 // Pengaman: loader tidak boleh nyangkut apapun yang terjadi.
 window.addEventListener("error", function(){
