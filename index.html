@@ -485,6 +485,7 @@ header {
   box-shadow: 0 10px 30px rgba(0,0,0,0.45);
 }
 .tutemoji { font-size: 84px; line-height: 1.2; }
+.tutimg { width: 100%; max-height: 340px; object-fit: contain; border-radius: 12px; background: #05080f; }
 .tutnum { color: var(--blue2); font-weight: 700; font-size: 14px; letter-spacing: 2px; margin-top: 8px; }
 .tuttit { font-family: 'Baloo 2', sans-serif; font-size: 28px; margin: 6px 0 4px; }
 .tuttxt { color: var(--mut); font-size: 16px; line-height: 1.6; }
@@ -731,6 +732,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   </div>
   <div class="tutwrap">
     <div class="tutcard" id="tutCard">
+      <img class="tutimg" id="tutImg" alt="Langkah cara order" style="display:none;" onerror="this.style.display='none';document.getElementById('tutEmoji').style.display='';">
       <div class="tutemoji" id="tutEmoji">🛍️</div>
       <div class="tutnum" id="tutNum">1 / 5</div>
       <div class="tuttit" id="tutTit">Pilih mainanmu</div>
@@ -746,16 +748,19 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </section>
 <script>
 var TUT_STEPS = [
-  { e: "🛍️", t: "Pilih mainanmu", x: "Lihat-lihat, klik Tambah ke Keranjang 🛒" },
-  { e: "🧺", t: "Cek keranjang", x: "Buka 🛒 di atas, pastikan pesananmu benar." },
-  { e: "💬", t: "Chat admin", x: "Klik ✓ Kirim ke Admin, WA terbuka sendiri." },
-  { e: "💳", t: "Bayar", x: "Bayar via QRIS, lalu kirim buktinya ke admin." },
-  { e: "🎁", t: "Item datang!", x: "Admin kirim item di dalam game. Selamat main! 🚀" }
+  { e: "🛍️", img: "CARA%20ORDER%201.png", t: "Pilih mainanmu", x: "Lihat-lihat, klik Tambah ke Keranjang 🛒" },
+  { e: "🧺", img: "CARA%20ORDER%202.png", t: "Cek keranjang", x: "Buka 🛒 di atas, pastikan pesananmu benar." },
+  { e: "💬", img: "CARA%20ORDER%203.png", t: "Chat admin", x: "Klik ✓ Kirim ke Admin, WA terbuka sendiri." },
+  { e: "💳", img: "CARA%20ORDER%204.png", t: "Bayar", x: "Bayar via QRIS, lalu kirim buktinya ke admin." },
+  { e: "🎁", img: "CARA%20ORDER%205.png", t: "Item datang!", x: "Admin kirim item di dalam game. Selamat main! 🚀" }
 ];
 var tutIdx = 0, tutTimer = null;
 function tutShow(i){
   tutIdx = (i + TUT_STEPS.length) % TUT_STEPS.length;
   var s = TUT_STEPS[tutIdx];
+  var im = document.getElementById("tutImg");
+  if(s.img){ im.src = s.img; im.style.display = ""; document.getElementById("tutEmoji").style.display = "none"; }
+  else { im.removeAttribute("src"); im.style.display = "none"; document.getElementById("tutEmoji").style.display = ""; }
   document.getElementById("tutEmoji").textContent = s.e;
   document.getElementById("tutNum").textContent = (tutIdx + 1) + " / " + TUT_STEPS.length;
   document.getElementById("tutTit").textContent = s.t;
