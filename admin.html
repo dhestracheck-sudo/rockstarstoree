@@ -216,7 +216,7 @@ function sbH(extra){
   return h;
 }
 function sbList(sheet){
-  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*", { headers: sbH() })
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan", { headers: sbH() })
     .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
 }
 function b64ToBlob(b64, mime){
@@ -1085,10 +1085,16 @@ async function sbAction(action, tbl, body, signal){
     var kat = String(body.kategori || "").trim();
     if(!kat && nm.indexOf("CAT:") === 0) kat = nm.slice(4).trim();
     if(!kat) kat = "Lainnya";
+    var maxU = 0;
+    try {
+      var mr = await fetch(SB_URL + "/rest/v1/" + tbl + "?select=urutan&order=urutan.desc&limit=1", { headers: sbH(), signal: signal });
+      var ma = await mr.json();
+      if(Array.isArray(ma) && ma[0] && isFinite(Number(ma[0].urutan))) maxU = Number(ma[0].urutan);
+    } catch(e) {}
     var row = { name: nm, kategori: kat, price: Number(body.price) || 0, coret: Number(body.coret) || 0,
       deskripsi: String(body.deskripsi || ""), stock: Number(body.stock) || 0,
       soldout: String(body.soldout || (nm.indexOf("CAT:") === 0 ? "YA" : "")),
-      image: String(body.image || ""), sold: Number(body.sold) || 0, dilihat: 0 };
+      image: String(body.image || ""), sold: Number(body.sold) || 0, dilihat: 0, urutan: maxU + 1 };
     var r2 = await fetch(SB_URL + "/rest/v1/" + tbl, {
       method: "POST", headers: sbH({ Prefer: "return=representation" }),
       body: JSON.stringify(row), signal: signal
