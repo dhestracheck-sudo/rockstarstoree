@@ -194,6 +194,37 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxFQEIeLqMYXC6tN7SG8i5Un7FDM_QgEJ7-Y78uihxjHBfC01TvyEk082nKzG5y5aip/exec";
 const TEKS_SHEET = "Info";
 const TEKS_NAME = "INFO_TEKS";
+// Supabase (sumber data utama pengganti Sheet)
+const SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
+const SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
+function sbTable(sheet){
+  sheet = String(sheet || "").toLowerCase();
+  if(sheet === "akun") return "akun";
+  if(sheet === "info") return "info";
+  return "brainrot";
+}
+function sbCol(col){
+  if(col === 1 || col === "1") return "name";
+  if(col === 2 || col === "2") return "price";
+  if(col === 3 || col === "3") return "stock";
+  var k = String(col == null ? "" : col).trim().toLowerCase();
+  return ["name","kategori","price","coret","deskripsi","stock","soldout","image","sold","dilihat"].indexOf(k) !== -1 ? k : "";
+}
+function sbH(extra){
+  var h = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
+  if(extra) for(var k in extra) h[k] = extra[k];
+  return h;
+}
+function sbList(sheet){
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*", { headers: sbH() })
+    .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+}
+function b64ToBlob(b64, mime){
+  var bin = atob(b64), n = bin.length, u8 = new Uint8Array(n);
+  for(var i = 0; i < n; i++) u8[i] = bin.charCodeAt(i);
+  return new Blob([u8], { type: mime || "image/jpeg" });
+}
+function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
 const ADMIN_V = "12r-tanpa-pengumuman";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
@@ -258,13 +289,7 @@ function postSet(col, value, stEl, btn, okMsg){
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return Promise.resolve(false); }
   btn.disabled = true;
   st.textContent = "Menyimpan...";
-  return fetch(SHEET_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({ action: "set", item_name: name, col: col, value: value, sheet: CURSHEET() })
-  }).then(r => r.text()).then(t => {
-    let d = {};
-    try { d = JSON.parse(t); } catch(e) {}
+  return postOne({ action: "set", item_name: name, col: col, value: value, sheet: CURSHEET() }).then(d => {
     btn.disabled = false;
     if(d.result === "success"){
       st.innerHTML = '<span class="ok">' + okMsg + '</span>';
@@ -350,14 +375,12 @@ function deleteProduct(){
   });
 }
 
-// Cek nilai 1 sel di Sheet (untuk pastikan simpan beneran).
+// Cek nilai 1 sel di database (untuk pastikan simpan beneran).
 function verifySet(name, col, value){
-  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
-    .then(r => r.text()).then(t => {
-      try {
-        const arr = JSON.parse(t);
-        const o = arr.find(x => String(x.name).trim() === name);
-        if(!o) return false;
+  return sbList(CURSHEET()).then(arr => {
+    try {
+      const o = arr.find(x => String(x.name).trim() === name);
+      if(!o) return false;
         const key = col === 1 ? "name" : col === 2 ? "price" : col === 3 ? "stock" : col;
         const a = (o[key] !== undefined) ? String(o[key]).trim() : "";
         const b = String(value).trim();
@@ -367,11 +390,10 @@ function verifySet(name, col, value){
     }).catch(() => false);
 }
 
-// Cek baris mana yang masih ada di Sheet (untuk pastikan hapus beneran).
-function verifyGone(names){  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
-    .then(r => r.text()).then(t => {
+// Cek baris mana yang masih ada di database (untuk pastikan hapus beneran).
+function verifyGone(names){  return sbList(CURSHEET())
+    .then(arr => {
       try {
-        const arr = JSON.parse(t);
         const have = {};
         arr.forEach(o => { have[String(o.name).trim()] = true; });
         return names.filter(nm => have[nm]);
@@ -379,12 +401,11 @@ function verifyGone(names){  return fetch(SHEET_URL + "?sheet=" + encodeURICompo
     }).catch(() => names);
 }
 
-// Cek apakah 1 nama SUDAH ada di Sheet (untuk pastikan tambah beneran).
+// Cek apakah 1 nama SUDAH ada di database (untuk pastikan tambah beneran).
 function verifyExists(name){
-  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
-    .then(r => r.text()).then(t => {
+  return sbList(CURSHEET())
+    .then(arr => {
       try {
-        const arr = JSON.parse(t);
         return arr.some(o => String(o.name).trim() === name);
       } catch(e){ return false; }
     }).catch(() => false);
@@ -474,12 +495,11 @@ function postRetry(body, tries, ms){
   });
 }
 
-// Cek isi kolom image di Sheet berubah atau tidak (untuk pastikan upload beneran).
+// Cek isi kolom image di database berubah atau tidak (untuk pastikan upload beneran).
 function verifyImg(name, oldFull){
-  return fetch(SHEET_URL + "?sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now())
-    .then(r => r.text()).then(t => {
+  return sbList(CURSHEET())
+    .then(arr => {
       try {
-        const arr = JSON.parse(t);
         const o = arr.find(x => String(x.name).trim() === name);
         const v = o ? String(o.image || "").trim() : "";
         return (v && v !== String(oldFull || "").trim()) ? v : "";
@@ -630,19 +650,13 @@ function fillCatOptions(filter){
 }
 
 function loadTeks(){
-  // Sheet baru "Info", tidak campur Brainrot. Auto-buat tab via backend saat fetch pertama.
-  var cb = "__teks" + Date.now();
-  window[cb] = function(data){
+  // Tabel "info" Supabase, tidak campur Brainrot.
+  sbList("Info").then(function(arr){
     try {
-      var arr = Array.isArray(data) ? data : [];
-      var o = arr.find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
+      var o = (arr || []).find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
     } catch(e) {}
-  };
-  var s = document.createElement("script");
-  s.src = SHEET_URL + "?callback=" + cb + "&sheet=" + encodeURIComponent(TEKS_SHEET) + "&t=" + Date.now();
-  s.onerror = function(){};
-  document.head.appendChild(s);
+  });
 }
 
 function saveTeks(){
@@ -691,44 +705,24 @@ function muatUlang(){
   });
 }
 
-function loadItems(retry){
-  return new Promise(resolve => {
-    const timer = setTimeout(() => {
-      // timeout tapi daftar masih kosong -> coba sekali lagi otomatis
-      if(!retry && document.getElementById("itemSel").options.length <= 1){
-        resolve(loadItems(true));
-        return;
-      }
-      resolve();
-    }, 25000);
-    window.__names = data => {
-      clearTimeout(timer);
-      try {
-        const arr = Array.isArray(data) ? data : [];
-        ALL_ITEMS = arr;
-        document.getElementById("itemSearch").value = "";
-        document.getElementById("catSearch").value = "";
-        fillProductOptions("");
-        fillCatOptions("");
-        loadTeks();
-        muatFotoBackground();
-      } catch(e) {}
-      resolve();
-    };
-    const s = document.createElement("script");
-    // ringkas=1: daftar tanpa kolom foto (cepat), foto menyusul di background
-    s.src = SHEET_URL + "?callback=__names&sheet=" + encodeURIComponent(CURSHEET()) + "&ringkas=1&t=" + Date.now();
-    s.onerror = () => { clearTimeout(timer); resolve(); };
-    document.head.appendChild(s);
+function loadItems(){
+  return sbList(CURSHEET()).then(arr => {
+    try {
+      ALL_ITEMS = Array.isArray(arr) ? arr : [];
+      document.getElementById("itemSearch").value = "";
+      document.getElementById("catSearch").value = "";
+      fillProductOptions("");
+      fillCatOptions("");
+      loadTeks();
+      muatFotoBackground();
+    } catch(e) {}
   });
 }
 
-// Tarik data lengkap (termasuk foto) diam-diam setelah daftar tampil.
+// Data Supabase sudah lengkap (termasuk foto) — sinkron ulang diam-diam.
 function muatFotoBackground(){
-  const cb = "__full" + Date.now();
-  window[cb] = data => {
+  sbList(CURSHEET()).then(arr => {
     try {
-      const arr = Array.isArray(data) ? data : [];
       if(!arr.length) return;
       const byName = {};
       ALL_ITEMS.forEach(o => { byName[String(o.name).trim()] = o; });
@@ -742,11 +736,7 @@ function muatFotoBackground(){
       const cur = ALL_ITEMS.find(x => String(x.name).trim() === nm);
       if(cur) renderPreview(nm, cur);
     } catch(e) {}
-  };
-  const s = document.createElement("script");
-  s.src = SHEET_URL + "?callback=" + cb + "&sheet=" + encodeURIComponent(CURSHEET()) + "&t=" + Date.now();
-  s.onerror = () => {};
-  document.head.appendChild(s);
+  });
 }
 
 document.getElementById("catFileInput").addEventListener("change", e => {
@@ -1073,22 +1063,126 @@ function infoMap(rows){
   return m;
 }
 
-function postOne(body, ms){
+async function sbAction(action, tbl, body, signal){
+  if(action === "set"){
+    var name = String(body.item_name || body.name || "").trim();
+    var col = sbCol(body.col);
+    if(!name) return { result: "error: item_name kosong" };
+    if(!col) return { result: "error: kolom tidak dikenal: " + body.col };
+    var patch = {}; patch[col] = body.value;
+    var r = await fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(name), {
+      method: "PATCH", headers: sbH({ Prefer: "return=representation" }),
+      body: JSON.stringify(patch), signal: signal
+    });
+    if(!r.ok) return { result: "error: gagal simpan (" + r.status + ")" };
+    var a = await r.json();
+    if(Array.isArray(a) && a.length) return { result: "success" };
+    return { result: "error: barang tidak ketemu: " + name };
+  }
+  if(action === "add"){
+    var nm = String(body.item_name || body.name || "").trim();
+    if(!nm) return { result: "error: item_name kosong" };
+    var kat = String(body.kategori || "").trim();
+    if(!kat && nm.indexOf("CAT:") === 0) kat = nm.slice(4).trim();
+    if(!kat) kat = "Lainnya";
+    var row = { name: nm, kategori: kat, price: Number(body.price) || 0, coret: Number(body.coret) || 0,
+      deskripsi: String(body.deskripsi || ""), stock: Number(body.stock) || 0,
+      soldout: String(body.soldout || (nm.indexOf("CAT:") === 0 ? "YA" : "")),
+      image: String(body.image || ""), sold: Number(body.sold) || 0, dilihat: 0 };
+    var r2 = await fetch(SB_URL + "/rest/v1/" + tbl, {
+      method: "POST", headers: sbH({ Prefer: "return=representation" }),
+      body: JSON.stringify(row), signal: signal
+    });
+    if(r2.status === 409) return { result: "error: sudah ada: " + nm };
+    if(!r2.ok) return { result: "error: gagal tambah (" + r2.status + ")" };
+    return { result: "success" };
+  }
+  if(action === "delete"){
+    var dn = String(body.item_name || body.name || "").trim();
+    if(!dn) return { result: "error: item_name kosong" };
+    var r3 = await fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(dn), {
+      method: "DELETE", headers: sbH(), signal: signal
+    });
+    if(!r3.ok) return { result: "error: gagal hapus (" + r3.status + ")" };
+    return { result: "success" };
+  }
+  if(action === "delmany"){
+    var names = body.names || body.items || [];
+    var ok = 0;
+    for(var i = 0; i < names.length; i++){
+      var x = String(names[i]).trim();
+      if(!x) continue;
+      try {
+        var rd = await fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(x), {
+          method: "DELETE", headers: sbH(), signal: signal
+        });
+        if(rd.ok) ok++;
+      } catch(e) {}
+    }
+    return { result: "success", deleted: ok, total: names.length };
+  }
+  if(action === "upload"){
+    var un = String(body.item_name || "").trim();
+    if(!un) return { result: "error: item_name kosong" };
+    if(!body.file) return { result: "error: file kosong" };
+    var blob = b64ToBlob(body.file, body.mime);
+    var path = Date.now() + "_" + safeName(body.filename || (un + ".jpg"));
+    var up = await fetch(SB_URL + "/storage/v1/object/foto/" + path, {
+      method: "PUT",
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
+        "Content-Type": body.mime || "application/octet-stream", "x-upsert": "true" },
+      body: blob, signal: signal
+    });
+    if(!up.ok) return { result: "error: upload foto gagal (" + up.status + ")" };
+    var url = SB_URL + "/storage/v1/object/public/foto/" + path;
+    var cur = null;
+    try {
+      var gr = await fetch(SB_URL + "/rest/v1/" + tbl + "?select=image&name=eq." + encodeURIComponent(un), { headers: sbH(), signal: signal });
+      var ga = await gr.json();
+      cur = (Array.isArray(ga) && ga[0]) || null;
+    } catch(e) {}
+    if(cur){
+      if(body.append){
+        var parts = String(cur.image || "").split("|").map(function(s){ return s.trim(); }).filter(Boolean);
+        parts.push(url);
+        var full = parts.join("|");
+        await fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(un), {
+          method: "PATCH", headers: sbH(), body: JSON.stringify({ image: full }), signal: signal
+        });
+        return { result: "success", url: url, full: full };
+      }
+      await fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(un), {
+        method: "PATCH", headers: sbH(), body: JSON.stringify({ image: url }), signal: signal
+      });
+    } else {
+      var kc = String(body.kategori || "").trim();
+      if(!kc && un.indexOf("CAT:") === 0) kc = un.slice(4).trim();
+      if(!kc) kc = "Lainnya";
+      await fetch(SB_URL + "/rest/v1/" + tbl, {
+        method: "POST", headers: sbH(),
+        body: JSON.stringify({ name: un, kategori: kc, price: 0, coret: 0, deskripsi: "", stock: 0,
+          soldout: un.indexOf("CAT:") === 0 ? "YA" : "", image: url, sold: 0, dilihat: 0 }), signal: signal
+      });
+    }
+    return { result: "success", url: url };
+  }
+  return { result: "error: unknown action (" + action + ")" };
+}
+
+async function postOne(body, ms){
   ms = ms || 45000;
   const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), ms);
-  return fetch(SHEET_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(body),
-    signal: ctl.signal
-  }).then(r => r.text()).then(t => {
+  const timer = setTimeout(() => { try { ctl.abort(); } catch(e) {} }, ms);
+  try {
+    var action = String((body && body.action) || "").toLowerCase();
+    var tbl = sbTable(body && body.sheet);
+    var out = await sbAction(action, tbl, body || {}, ctl.signal);
     clearTimeout(timer);
-    try { return JSON.parse(t); } catch(e) { return { result: "error: respon aneh" }; }
-  }).catch(err => {
+    return out;
+  } catch(err) {
     clearTimeout(timer);
     return { result: "error: timeout/koneksi (> " + Math.round(ms/1000) + "s)" };
-  });
+  }
 }
 
 // Cek file benar-benar gambar yang bisa dibuka browser (tolak file rusak/HEIC/tipe aneh).

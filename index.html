@@ -1280,20 +1280,21 @@ function watchViews(){
         viewObs.unobserve(el);
         const nm = el.dataset.viewname, pg = el.dataset.page;
         if(!nm || pg === "topup") return;
-        fetch(SHEET_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify({ action: "inc", item_name: nm, col: "dilihat", sheet: pg === "akun" ? "Akun" : "Brainrot" }),
-          keepalive: true
-        }).then(r => r.text()).then(t => {
-          try {
-            const d = JSON.parse(t);
-            if(d.result === "success"){
-              const c = el.querySelector(".viewcount");
-              if(c) c.textContent = "👁 " + Number(d.value).toLocaleString("id-ID");
-            }
-          } catch(e) {}
-        }).catch(() => {});
+        (function(nm, pg, el){
+          const tbl = pg === "akun" ? "akun" : "brainrot";
+          const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
+          fetch(SB_URL + "/rest/v1/" + tbl + "?select=dilihat&name=eq." + encodeURIComponent(nm), { headers: H })
+            .then(r => r.json()).then(a => {
+              const cur = (a && a[0] && Number(a[0].dilihat)) || 0;
+              return fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
+                method: "PATCH", headers: H, body: JSON.stringify({ dilihat: cur + 1 })
+              }).then(r => r.json()).then(u => {
+                const v = (u && u[0] && u[0].dilihat !== undefined) ? u[0].dilihat : cur + 1;
+                const c = el.querySelector(".viewcount");
+                if(c) c.textContent = "👁 " + Number(v).toLocaleString("id-ID");
+              });
+            }).catch(() => {});
+        })(nm, pg, el);
       });
     }, { threshold: 0.3 });
     document.querySelectorAll('.item[data-viewname]').forEach(el => {
@@ -1402,18 +1403,21 @@ function cancelCheckout(){
   }
 }
 
+const SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
+const SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
+function sbTableOf(sheet){
+  sheet = String(sheet || "").toLowerCase();
+  if(sheet === "akun") return "akun";
+  if(sheet === "info") return "info";
+  return "brainrot";
+}
+function sbGet(path){
+  return fetch(SB_URL + "/rest/v1/" + path, {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+}
 function fetchSheet(sheet, cbName){
-  return new Promise(resolve => {
-    const timer = setTimeout(() => resolve(null), 15000);
-    window[cbName] = data => {
-      clearTimeout(timer);
-      resolve(Array.isArray(data) ? data : []);
-    };
-    const s = document.createElement('script');
-    s.src = SHEET_URL + "?callback=" + cbName + "&sheet=" + encodeURIComponent(sheet) + "&t=" + Date.now();
-    s.onerror = () => { clearTimeout(timer); resolve(null); };
-    document.head.appendChild(s);
-  });
+  return sbGet(sbTableOf(sheet) + "?select=*");
 }
 
 // Cache data Sheet terakhir di browser: kalau fetch lambat/gagal, tampilkan cache
