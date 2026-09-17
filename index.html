@@ -55,8 +55,8 @@ body {
 .stars { color: #ffd166; font-size: 13px; letter-spacing: 1px; }
 .stockbar { height: 8px; background: #1a2440; border-radius: 99px; overflow: hidden; margin-top: 6px; }
 .stockbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7CFC00); border-radius: 99px; }
-.stocktxt { font-size: 12.5px; color: var(--txt); font-weight: 600; margin-top: 4px; }
-.stocklow { font-size: 12.5px; color: #ff8080; font-weight: 700; margin-top: 4px; }
+.stocktxt { font-size: 14px; color: var(--txt); font-weight: 600; margin-top: 4px; }
+.stocklow { font-size: 14px; color: #ff8080; font-weight: 700; margin-top: 4px; }
 
 /* ===== announcement bar ===== */
 .announce {
@@ -65,7 +65,7 @@ body {
   z-index: 101;
   background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   padding: 9px 14px;
   letter-spacing: 0.2px;
@@ -104,7 +104,7 @@ header {
   background: var(--bg2) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%238b96b3"><path d="M11.7 10.3l3.5 3.5-1.4 1.4-3.5-3.5A6 6 0 1 1 11.7 10.3zm-5.7.7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/></svg>') 14px center no-repeat;
   color: var(--txt);
   font-family: 'Poppins', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   outline: none;
 }
 #searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
@@ -318,7 +318,7 @@ header {
 .catcard:hover { transform: translateY(-5px); border-color: var(--blue); }
 .catcard img { width: 100%; height: 170px; object-fit: cover; display: block; }
 .catcard .catbody { padding: 14px 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.catcard h3 { font-size: 14.5px; margin: 0; font-weight: 600; }
+.catcard h3 { font-size: 16px; margin: 0; font-weight: 600; }
 .catcard .go {
   flex-shrink: 0;
   width: 34px; height: 34px;
@@ -368,14 +368,14 @@ header {
   border: 1px solid var(--red);
 }
 .item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.item h3 { font-size: 14.5px; margin: 0; font-weight: 600; line-height: 1.45; }
+.item h3 { font-size: 16px; margin: 0; font-weight: 600; line-height: 1.45; }
 .item .desc { font-size: 12.5px; color: var(--mut); margin: 0; line-height: 1.6; }
 .verified {
   display: inline-flex; align-items: center; justify-content: center;
   width: 18px; height: 18px; border-radius: 50%; background: var(--blue);
   color: #fff; font-size: 11px; font-weight: 700; margin-left: 6px; vertical-align: middle;
 }
-.item .meta { font-size: 12.5px; color: var(--mut); display: flex; gap: 12px; }
+.item .meta { font-size: 14px; color: var(--mut); display: flex; gap: 12px; }
 .item .meta .sold { color: #ffb3b3; font-weight: 600; }
 .item .meta .stock { color: var(--green); font-weight: 600; }
 .item .price { margin-top: auto; padding-top: 6px; background: none; border: none; }
@@ -387,10 +387,10 @@ header {
   color: #fff;
   border: none;
   border-radius: 12px;
-  padding: 13px;
+  padding: 15px;
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: filter 0.15s ease;
 }
@@ -443,7 +443,7 @@ header {
   padding: 9px 16px;
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  font-size: 13.5px;
+  font-size: 15px;
   cursor: pointer;
   margin-bottom: 18px;
 }
@@ -471,9 +471,9 @@ header {
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 6px 16px rgba(43,78,255,0.4);
 }
-.step b { font-size: 14.5px; }
-.step p { margin: 4px 0 0; font-size: 13px; color: var(--mut); line-height: 1.6; }
-.step .simg { display: block; font-size: 40px; margin-bottom: 8px; }
+.step b { font-size: 16.5px; }
+.step p { margin: 4px 0 0; font-size: 15px; color: var(--mut); line-height: 1.6; }
+.step .simg { display: block; font-size: 58px; margin-bottom: 8px; }
 
 /* ===== bottom server CTA ===== */
 .server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
@@ -620,7 +620,7 @@ header {
 .detailmeta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--mut); margin-top: 8px; }
 .detailmeta .sold { color: #ffb3b3; font-weight: 600; }
 .detailmeta .stock { color: var(--green); font-weight: 600; }
-.detaildesc { font-size: 14px; line-height: 1.7; color: var(--txt); margin: 10px 0 0; }
+.detaildesc { font-size: 15.5px; line-height: 1.7; color: var(--txt); margin: 10px 0 0; }
 .detailprice { margin-top: 10px; }
 .detailprice .now { font-family: 'Baloo 2', sans-serif; font-size: 30px; }
 .detailprice .was { color: var(--mut); text-decoration: line-through; margin-left: 10px; }
@@ -697,14 +697,14 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </div>
 
 <section class="section" id="carabeli">
-  <h2>Cara Beli</h2>
-  <p>5 langkah, beres dalam hitungan menit</p>
+  <h2>Cara Beli 🎮</h2>
+  <p>5 langkah gampang, ikuti gambarnya ya!</p>
   <div class="steps">
-    <div class="step"><span class="snum">1</span><div><span class="simg">🛍️</span><b>Pilih item</b><p>Klik <b>Tambah ke Keranjang</b> pada item yang kamu mau.</p></div></div>
-    <div class="step"><span class="snum">2</span><div><span class="simg">🛒</span><b>Checkout</b><p>Buka keranjang 🛒, cek pesanan, klik <b>Checkout</b>.</p></div></div>
-    <div class="step"><span class="snum">3</span><div><span class="simg">💬</span><b>Kirim ke Admin</b><p>Klik <b>✓ Kirim ke Admin</b> — chat WA terbuka otomatis berisi pesananmu.</p></div></div>
-    <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b>Bayar</b><p>Transfer via QRIS / e-wallet / bank sesuai instruksi admin, kirim bukti.</p></div></div>
-    <div class="step"><span class="snum">5</span><div><span class="simg">🎮</span><b>Terima item</b><p>Admin trade/kirim item di dalam game. Cek dan konfirmasi terima. 🚀</p></div></div>
+    <div class="step"><span class="snum">1</span><div><span class="simg">🛍️</span><b>Pilih mainanmu</b><p>Lihat-lihat, klik <b>Tambah ke Keranjang</b> 🛒</p></div></div>
+    <div class="step"><span class="snum">2</span><div><span class="simg">🧺</span><b>Cek keranjang</b><p>Buka 🛒 di atas, pastikan pesananmu benar.</p></div></div>
+    <div class="step"><span class="snum">3</span><div><span class="simg">💬</span><b>Chat admin</b><p>Klik <b>✓ Kirim ke Admin</b>, WA terbuka sendiri.</p></div></div>
+    <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b>Bayar (minta tolong ayah/bunda ya)</b><p>Bayar via QRIS, lalu kirim buktinya ke admin.</p></div></div>
+    <div class="step"><span class="snum">5</span><div><span class="simg">🎁</span><b>Item datang!</b><p>Admin kirim item di dalam game. Selamat main! 🚀</p></div></div>
   </div>
 </section>
 
