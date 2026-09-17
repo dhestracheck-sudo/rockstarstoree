@@ -65,6 +65,13 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
   </div>
 
+  <div class="card" id="analCard" style="display:none;">
+    <label>📊 Analisis pengunjung (dari counter dilihat)</label>
+    <button id="analBtn" onclick="loadAnalisis()">📊 Muat Analisis</button>
+    <div id="analBox" style="margin-top:14px;font-size:13.5px;line-height:1.7;"></div>
+    <p class="hint" style="margin-top:10px;">Dihitung live dari Supabase. Counter naik tiap produk terlihat di layar pengunjung.</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -244,7 +251,7 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","teksCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","teksCard","analCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadTeks();
     loadItems();
   } else {
@@ -694,6 +701,59 @@ function defaultTeks(){
     if(d.result === "success"){ document.getElementById("teksInput").value = ""; st.innerHTML = '<span class="ok">✅ Kembali default!</span>'; }
     else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
   });
+}
+
+function escHtml(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+function loadAnalisis(){
+  const box = document.getElementById("analBox");
+  const btn = document.getElementById("analBtn");
+  btn.disabled = true;
+  box.textContent = "Menghitung...";
+  Promise.all([sbList("Brainrot"), sbList("Akun"), sbList("Topup")]).then(function(rs){
+    btn.disabled = false;
+    try {
+      const tabs = ["Brainrot", "Akun", "Topup"];
+      const all = [];
+      rs.forEach(function(arr, ti){
+        (arr || []).forEach(function(o){
+          const nm = String(o.name || "").trim();
+          if(!nm || nm.indexOf("CAT:") === 0) return;
+          all.push({ tab: tabs[ti], name: nm,
+            kat: String(o.kategori || "-").trim() || "-",
+            lihat: Number(o.dilihat) || 0, stok: Number(o.stock),
+            laku: Number(o.sold) || 0 });
+        });
+      });
+      const totLihat = all.reduce(function(s, o){ return s + o.lihat; }, 0);
+      const top = all.slice().sort(function(a, b){ return b.lihat - a.lihat; }).slice(0, 10);
+      const perKat = {};
+      all.forEach(function(o){ const k = o.tab + " / " + o.kat; perKat[k] = (perKat[k] || 0) + o.lihat; });
+      const topKat = Object.keys(perKat).map(function(k){ return { k: k, v: perKat[k] }; })
+        .sort(function(a, b){ return b.v - a.v; }).slice(0, 5);
+      const tipis = all.filter(function(o){ return o.stok > 0 && o.stok <= 3; })
+        .sort(function(a, b){ return a.stok - b.stok; }).slice(0, 10);
+      const maxV = top.length ? top[0].lihat : 0;
+      function bar(v){
+        const p = maxV ? Math.max(4, Math.round(v / maxV * 100)) : 0;
+        return '<div style="height:8px;background:#1a2440;border-radius:99px;margin:4px 0 8px;"><i style="display:block;height:100%;width:' + p + '%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:99px;"></i></div>';
+      }
+      let h = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">' +
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + totLihat.toLocaleString("id-ID") + '</div><div style="color:var(--mut);font-size:12px;">Total dilihat</div></div>' +
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + all.length + '</div><div style="color:var(--mut);font-size:12px;">Produk aktif</div></div></div>';
+      h += '<b>🔥 Paling sering dilihat</b>';
+      if(!top.length || !maxV) h += '<p class="hint">Belum ada data (counter masih 0).</p>';
+      top.forEach(function(o, i){
+        h += '<div style="margin-top:8px;">' + (i + 1) + '. ' + escHtml(o.name).slice(0, 60) +
+          ' <span style="color:var(--mut);">(' + escHtml(o.tab) + ' • 👁 ' + o.lihat.toLocaleString("id-ID") + ' • terjual ' + o.laku.toLocaleString("id-ID") + ')</span>' + bar(o.lihat) + '</div>';
+      });
+      h += '<b style="display:block;margin-top:14px;">📂 Kategori terlaris dilihat</b><p>' +
+        (topKat.length ? topKat.map(function(k, i){ return (i + 1) + ". " + escHtml(k.k) + " — 👁 " + k.v.toLocaleString("id-ID"); }).join("<br>") : '<span class="hint">Belum ada data.</span>') + '</p>';
+      h += '<b>⚠️ Stok menipis (≤3)</b><p>' +
+        (tipis.length ? tipis.map(function(o){ return "• " + escHtml(o.name).slice(0, 55) + " — sisa " + o.stok; }).join("<br>") : "Aman, tidak ada stok menipis.") + '</p>';
+      box.innerHTML = h;
+    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
+  }).catch(function(){ btn.disabled = false; box.innerHTML = '<span class="err">Gagal ambil data, cek koneksi.</span>'; });
 }
 
 function muatUlang(){
