@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisis — Rockstar.Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
+.wrap { max-width: 640px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
+label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
+input[type=password] {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px;
+}
+button {
+  width:100%; margin-top:16px; padding:13px; border:none; border-radius:12px;
+  background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+}
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+.ok { color:var(--green); } .err { color:var(--red); }
+.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+a { color:var(--blue2); }
+#analBox { margin-top:14px; font-size:13.5px; line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 Analisis Rockstar.Store</h1>
+
+  <div class="card" id="pinCard">
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
+    <button onclick="unlock()">Buka Analisis</button>
+    <p class="hint" style="margin-top:12px;"><a href="admin.html">← Kembali ke Admin</a></p>
+  </div>
+
+  <div class="card" id="mainCard" style="display:none;">
+    <div style="display:flex;gap:8px;">
+      <button id="analBtn" onclick="loadAnalisis()" style="flex:1;">🔄 Muat Ulang</button>
+      <a href="admin.html" style="flex:1;text-decoration:none;"><button type="button" style="background:#232c44;">← Admin</button></a>
+    </div>
+    <div id="analBox"></div>
+    <p class="hint" style="margin-top:10px;">Dihitung live dari Supabase. Counter naik tiap produk terlihat di layar pengunjung.</p>
+  </div>
+</div>
+
+<script>
+const ADMIN_PIN = "12345"; // <-- samakan dengan admin.html
+const SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
+const SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
+
+function sbTable(sheet){
+  sheet = String(sheet || "").toLowerCase();
+  if(sheet === "akun") return "akun";
+  if(sheet === "info") return "info";
+  if(sheet === "topup") return "topup";
+  return "brainrot";
+}
+function sbList(sheet){
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan", {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+}
+function escHtml(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+function unlock(){
+  if(document.getElementById("pinInput").value === ADMIN_PIN){
+    document.getElementById("pinCard").style.display = "none";
+    document.getElementById("mainCard").style.display = "block";
+    loadAnalisis();
+  } else {
+    alert("PIN salah.");
+  }
+}
+
+function loadAnalisis(){
+  const box = document.getElementById("analBox");
+  const btn = document.getElementById("analBtn");
+  btn.disabled = true;
+  box.textContent = "Menghitung...";
+  Promise.all([sbList("Brainrot"), sbList("Akun"), sbList("Topup")]).then(function(rs){
+    btn.disabled = false;
+    try {
+      const tabs = ["Brainrot", "Akun", "Topup"];
+      const all = [];
+      rs.forEach(function(arr, ti){
+        (arr || []).forEach(function(o){
+          const nm = String(o.name || "").trim();
+          if(!nm || nm.indexOf("CAT:") === 0) return;
+          all.push({ tab: tabs[ti], name: nm,
+            kat: String(o.kategori || "-").trim() || "-",
+            lihat: Number(o.dilihat) || 0, stok: Number(o.stock),
+            laku: Number(o.sold) || 0 });
+        });
+      });
+      const totLihat = all.reduce(function(s, o){ return s + o.lihat; }, 0);
+      const top = all.slice().sort(function(a, b){ return b.lihat - a.lihat; }).slice(0, 10);
+      const perKat = {};
+      all.forEach(function(o){ const k = o.tab + " / " + o.kat; perKat[k] = (perKat[k] || 0) + o.lihat; });
+      const topKat = Object.keys(perKat).map(function(k){ return { k: k, v: perKat[k] }; })
+        .sort(function(a, b){ return b.v - a.v; }).slice(0, 5);
+      const tipis = all.filter(function(o){ return o.stok > 0 && o.stok <= 3; })
+        .sort(function(a, b){ return a.stok - b.stok; }).slice(0, 10);
+      const maxV = top.length ? top[0].lihat : 0;
+      function bar(v){
+        const p = maxV ? Math.max(4, Math.round(v / maxV * 100)) : 0;
+        return '<div style="height:8px;background:#1a2440;border-radius:99px;margin:4px 0 8px;"><i style="display:block;height:100%;width:' + p + '%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:99px;"></i></div>';
+      }
+      let h = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">' +
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + totLihat.toLocaleString("id-ID") + '</div><div style="color:var(--mut);font-size:12px;">Total dilihat</div></div>' +
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + all.length + '</div><div style="color:var(--mut);font-size:12px;">Produk aktif</div></div></div>';
+      h += '<b>🔥 Paling sering dilihat</b>';
+      if(!top.length || !maxV) h += '<p class="hint">Belum ada data (counter masih 0).</p>';
+      top.forEach(function(o, i){
+        h += '<div style="margin-top:8px;">' + (i + 1) + '. ' + escHtml(o.name).slice(0, 60) +
+          ' <span style="color:var(--mut);">(' + escHtml(o.tab) + ' • 👁 ' + o.lihat.toLocaleString("id-ID") + ' • terjual ' + o.laku.toLocaleString("id-ID") + ')</span>' + bar(o.lihat) + '</div>';
+      });
+      h += '<b style="display:block;margin-top:14px;">📂 Kategori terlaris dilihat</b><p>' +
+        (topKat.length ? topKat.map(function(k, i){ return (i + 1) + ". " + escHtml(k.k) + " — 👁 " + k.v.toLocaleString("id-ID"); }).join("<br>") : '<span class="hint">Belum ada data.</span>') + '</p>';
+      h += '<b>⚠️ Stok menipis (≤3)</b><p>' +
+        (tipis.length ? tipis.map(function(o){ return "• " + escHtml(o.name).slice(0, 55) + " — sisa " + o.stok; }).join("<br>") : "Aman, tidak ada stok menipis.") + '</p>';
+      box.innerHTML = h;
+    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
+  }).catch(function(){ btn.disabled = false; box.innerHTML = '<span class="err">Gagal ambil data, cek koneksi.</span>'; });
+}
+</script>
+</body>
+</html>
