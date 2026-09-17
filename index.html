@@ -474,6 +474,29 @@ header {
 .step b { font-size: 16.5px; }
 .step p { margin: 4px 0 0; font-size: 15px; color: var(--mut); line-height: 1.6; }
 .step .simg { display: block; font-size: 58px; margin-bottom: 8px; }
+/* ===== slideshow tutorial otomatis (ringan, tanpa video) ===== */
+.tutwrap { max-width: 560px; margin: 22px auto 0; }
+.tutcard {
+  background: var(--card);
+  border: 1px solid var(--blue);
+  border-radius: var(--r);
+  padding: 30px 24px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+.tutemoji { font-size: 84px; line-height: 1.2; }
+.tutnum { color: var(--blue2); font-weight: 700; font-size: 14px; letter-spacing: 2px; margin-top: 8px; }
+.tuttit { font-family: 'Baloo 2', sans-serif; font-size: 28px; margin: 6px 0 4px; }
+.tuttxt { color: var(--mut); font-size: 16px; line-height: 1.6; }
+.tutdots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+.tutdots i { width: 12px; height: 12px; border-radius: 50%; background: #2a3350; cursor: pointer; }
+.tutdots i.on { background: var(--blue2); }
+.tutnav { display: flex; justify-content: center; gap: 10px; margin-top: 12px; }
+.tutnav button {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--bg2); color: var(--txt);
+  font-size: 22px; cursor: pointer;
+}
 
 /* ===== bottom server CTA ===== */
 .server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
@@ -706,7 +729,56 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b>Bayar</b><p>Bayar via QRIS, lalu kirim buktinya ke admin.</p></div></div>
     <div class="step"><span class="snum">5</span><div><span class="simg">🎁</span><b>Item datang!</b><p>Admin kirim item di dalam game. Selamat main! 🚀</p></div></div>
   </div>
+  <div class="tutwrap">
+    <div class="tutcard" id="tutCard">
+      <div class="tutemoji" id="tutEmoji">🛍️</div>
+      <div class="tutnum" id="tutNum">1 / 5</div>
+      <div class="tuttit" id="tutTit">Pilih mainanmu</div>
+      <div class="tuttxt" id="tutTxt">Lihat-lihat, klik Tambah ke Keranjang 🛒</div>
+      <div class="tutdots" id="tutDots"></div>
+    </div>
+    <div class="tutnav">
+      <button onclick="tutGo(-1)" aria-label="Sebelumnya">‹</button>
+      <button id="tutPlayBtn" onclick="tutToggle()" aria-label="Putar/Jeda">⏸</button>
+      <button onclick="tutGo(1)" aria-label="Berikutnya">›</button>
+    </div>
+  </div>
 </section>
+<script>
+var TUT_STEPS = [
+  { e: "🛍️", t: "Pilih mainanmu", x: "Lihat-lihat, klik Tambah ke Keranjang 🛒" },
+  { e: "🧺", t: "Cek keranjang", x: "Buka 🛒 di atas, pastikan pesananmu benar." },
+  { e: "💬", t: "Chat admin", x: "Klik ✓ Kirim ke Admin, WA terbuka sendiri." },
+  { e: "💳", t: "Bayar", x: "Bayar via QRIS, lalu kirim buktinya ke admin." },
+  { e: "🎁", t: "Item datang!", x: "Admin kirim item di dalam game. Selamat main! 🚀" }
+];
+var tutIdx = 0, tutTimer = null;
+function tutShow(i){
+  tutIdx = (i + TUT_STEPS.length) % TUT_STEPS.length;
+  var s = TUT_STEPS[tutIdx];
+  document.getElementById("tutEmoji").textContent = s.e;
+  document.getElementById("tutNum").textContent = (tutIdx + 1) + " / " + TUT_STEPS.length;
+  document.getElementById("tutTit").textContent = s.t;
+  document.getElementById("tutTxt").textContent = s.x;
+  var d = document.getElementById("tutDots");
+  d.innerHTML = TUT_STEPS.map(function(_, j){
+    return '<i onclick="tutGo(' + (j - tutIdx) + ')" class="' + (j === tutIdx ? "on" : "") + '"></i>';
+  }).join("");
+}
+function tutGo(n){ tutShow(tutIdx + n); tutRestart(); }
+function tutRestart(){
+  if(tutTimer) clearInterval(tutTimer);
+  if(document.getElementById("tutPlayBtn").textContent === "⏸"){
+    tutTimer = setInterval(function(){ tutShow(tutIdx + 1); }, 3000);
+  }
+}
+function tutToggle(){
+  var b = document.getElementById("tutPlayBtn");
+  if(b.textContent === "⏸"){ b.textContent = "▶"; if(tutTimer) clearInterval(tutTimer); tutTimer = null; }
+  else { b.textContent = "⏸"; tutRestart(); }
+}
+try { tutShow(0); tutRestart(); } catch(e) {}
+</script>
 
 <main class="section">
   <div id="pageTitle"></div>
