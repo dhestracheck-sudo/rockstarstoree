@@ -906,7 +906,7 @@ function flashHTML(){
         <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
         ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
-        <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
+        <div class="kilat"><span>⚡ Proses kilat • 🛡️ SAFE 100%</span><span class="vtext">✅ Verified</span></div>
         <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
       </div>
@@ -1076,7 +1076,7 @@ function itemCard(categories, i, j){
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
+      <div class="kilat"><span>⚡ Proses kilat • 🛡️ SAFE 100%</span><span class="vtext">✅ Verified</span></div>
       <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
       <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>
@@ -1162,7 +1162,7 @@ function renderDetail(){
     <div class="detailprice">
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
-    <div class="kilat"><span>⚡ Proses kilat</span><span class="vtext">✅ Verified</span></div>
+    <div class="kilat"><span>⚡ Proses kilat • 🛡️ SAFE 100%</span><span class="vtext">✅ Verified</span></div>
     <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
     <div class="mactions">
