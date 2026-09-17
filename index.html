@@ -959,6 +959,7 @@ function flashAdd(page, i, j){
   const item = catsOf(page)[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, page});
+  logAksi("keranjang", item.name, catsOf(page)[i].name, item.price, page);
   trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
@@ -1245,6 +1246,7 @@ function chatAdmin(){
 let detailCur = null;
 function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
+  try { var _c = catsOf(page), _it = _c[i].items[j]; logAksi("klik", _it.name, _c[i].name, _it.price, page); } catch(e) {}
   renderDetail();
   document.getElementById("detailModal").style.display = "block";
 }
@@ -1302,6 +1304,7 @@ function detailAdd(){
   const item = cats[detailCur.i].items[detailCur.j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
+  logAksi("keranjang", item.name, cats[detailCur.i].name, item.price, detailCur.page);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
   }
@@ -1375,6 +1378,7 @@ function addItem(i,j){
   const item = categories[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name, page: currentPage});
+  logAksi("keranjang", item.name, categories[i].name, item.price, currentPage);
   trackClick("tambah_keranjang", item.name, categories[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
@@ -1470,6 +1474,7 @@ function sendToAdmin(){
     const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
     gtag("event", "kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" });
   }
+  logAksi("checkout", cart.length + " item", "", cart.reduce((s, p) => s + (p.price || 0), 0), "");
   let text = "Halo saya mau beli:%0A";
   cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
   if(cart.length > 3){ closeCheckoutPreview(); window.open("https://wa.me/6289664299571?text="+text); return; }
@@ -1544,6 +1549,18 @@ function sbGet(path){
 }
 function fetchSheet(sheet, cbName){
   return sbGet(sbTableOf(sheet) + "?select=*&order=urutan");
+}
+/* ===== catat aktivitas pengunjung (klik / keranjang / checkout) — tanpa data pribadi ===== */
+function logAksi(aksi, name, kat, price, page){
+  try {
+    fetch(SB_URL + "/rest/v1/klik", {
+      method: "POST",
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ aksi: aksi, name: String(name || "").slice(0, 200),
+        kategori: String(kat || "").slice(0, 100), tab: String(page || ""), price: Number(price) || 0 }),
+      keepalive: true
+    }).catch(function(){});
+  } catch(e) {}
 }
 
 // Cache data Sheet terakhir di browser: kalau fetch lambat/gagal, tampilkan cache

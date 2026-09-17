@@ -124,9 +124,43 @@ function loadAnalisis(){
         (topKat.length ? topKat.map(function(k, i){ return (i + 1) + ". " + escHtml(k.k) + " — 👁 " + k.v.toLocaleString("id-ID"); }).join("<br>") : '<span class="hint">Belum ada data.</span>') + '</p>';
       h += '<b>⚠️ Stok menipis (≤3)</b><p>' +
         (tipis.length ? tipis.map(function(o){ return "• " + escHtml(o.name).slice(0, 55) + " — sisa " + o.stok; }).join("<br>") : "Aman, tidak ada stok menipis.") + '</p>';
+      h += '<b>🛒 Aktivitas 7 hari</b><p id="analAct">Memuat...</p>';
       box.innerHTML = h;
+      loadAktivitas();
     } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
   }).catch(function(){ btn.disabled = false; box.innerHTML = '<span class="err">Gagal ambil data, cek koneksi.</span>'; });
+}
+
+function loadAktivitas(){
+  const el = document.getElementById("analAct");
+  if(!el) return;
+  const since = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+  fetch(SB_URL + "/rest/v1/klik?select=aksi,name,price&order=waktu.desc&limit=5000&waktu=gte." + encodeURIComponent(since), {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(function(rows){
+    try {
+      rows = Array.isArray(rows) ? rows : [];
+      const cnt = { klik: 0, keranjang: 0, checkout: 0 };
+      const topKlik = {}, topKer = {};
+      rows.forEach(function(o){
+        const a = String(o.aksi || "");
+        if(cnt[a] !== undefined) cnt[a]++;
+        const nm = String(o.name || "").slice(0, 55);
+        if(a === "klik" && nm) topKlik[nm] = (topKlik[nm] || 0) + 1;
+        if(a === "keranjang" && nm) topKer[nm] = (topKer[nm] || 0) + 1;
+      });
+      function toplist(m, n){
+        return Object.keys(m).map(function(k){ return { k: k, v: m[k] }; })
+          .sort(function(a, b){ return b.v - a.v; }).slice(0, n);
+      }
+      let h = '👁 Diklik: <b>' + cnt.klik + '</b> • 🛒 Masuk keranjang: <b>' + cnt.keranjang + '</b> • 💬 Checkout: <b>' + cnt.checkout + '</b><br>';
+      h += '<span style="color:var(--mut);">Corong: ' + cnt.klik + ' → ' + cnt.keranjang + ' → ' + cnt.checkout + '</span>';
+      const tk = toplist(topKlik, 5), tc = toplist(topKer, 5);
+      h += '<br><br><b>Paling diklik:</b><br>' + (tk.length ? tk.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
+      h += '<br><br><b>Paling dimasukkan keranjang:</b><br>' + (tc.length ? tc.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
+      el.innerHTML = h;
+    } catch(e){ el.textContent = "Gagal hitung aktivitas."; }
+  }).catch(function(){ el.textContent = "Gagal ambil aktivitas."; });
 }
 </script>
 </body>
