@@ -76,6 +76,8 @@ body {
 }
 .announce a { color: #fff; font-weight: 700; text-decoration: underline; }
 .announce .run { display: inline-block; padding-left: 100%; animation: run 18s linear infinite; }
+.announce .customrun { display: block; white-space: nowrap; overflow: hidden; color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
+.announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
 @keyframes run { to { transform: translateX(-100%); } }
 
 /* ===== header ===== */
@@ -664,7 +666,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
-<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span></div>
+<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
@@ -1021,7 +1023,7 @@ function searchCatalog(){
   paintSearch();
 }
 
-let searchOut = [], searchN = 12;
+let searchOut = [], searchN = 10000;
 function paintSearch(){
   const y = window.scrollY;
   const el = document.getElementById("products");
@@ -1081,7 +1083,7 @@ function itemCard(categories, i, j){
   </div>`;
 }
 
-const PAGE_N = 12;
+const PAGE_N = 10000;
 let shownCat = -1, shownN = PAGE_N;
 function showItems(i){
   const categories = getCurrentCategories();
@@ -1304,7 +1306,7 @@ function watchViews(){
 // trackClick dinonaktifkan (hemat kuota) — tinggal gtag Analytics saja.
 function trackClick(ev, nama, kat){ return; }
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbw2-SJh4owK9prdByb2uBYfQuQT_D0JMcSbuwpNpsjoT64fPjf3Eb8hkjiBFtBIzcI8/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxFQEIeLqMYXC6tN7SG8i5Un7FDM_QgEJ7-Y78uihxjHBfC01TvyEk082nKzG5y5aip/exec";
 
 function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
@@ -1434,11 +1436,36 @@ function hasKatArr(arr){
   return arr.length > 0 && arr.some(o => String(o.kategori || "").trim() !== "");
 }
 
-function applySnap(b, a){
+let infoTeksValue = "";
+function applyInfoTeks(){
+  const el = document.getElementById("customrun");
+  const hd = document.querySelector("header");
+  if(!el) return;
+  if(infoTeksValue){
+    el.innerHTML = "<span>" + infoTeksValue + " • " + infoTeksValue + "</span>";
+    el.style.display = "";
+    if(hd) hd.style.top = "74px";
+  } else {
+    el.style.display = "none";
+    if(hd) hd.style.top = "37px";
+  }
+}
+
+function applySnap(b, a, info){
+  infoTeksValue = "";
   if (hasKatArr(b)) rebuildFromSheet(b, brainrotCategories);
   else if (b.length) mergeFromSheet(b);
   if (hasKatArr(a)) rebuildFromSheet(a, akunCategories);
   else if (a.length) mergeFromSheet(a);
+  // Prioritas: sheet Info baru (tab "Info", baris INFO_TEKS). Kalau ada, timpa fallback Brainrot.
+  if (Array.isArray(info)) {
+    for (var i = 0; i < info.length; i++) {
+      var io = info[i];
+      if (String(io.name || "").trim() === "INFO_TEKS") { infoTeksValue = String(io.deskripsi || "").trim(); break; }
+    }
+    // Kalau tab Info belum punya baris INFO_TEKS, biarkan fallback dari Brainrot (masa migrasi).
+  }
+  applyInfoTeks();
 }
 
 function buildCodeImg(){
@@ -1473,10 +1500,11 @@ function rebuildFromSheet(arr, targetCats){
     const f = splitFiles(o.image)[0] || "";
     if (targetKat && f) catImgSheet[targetKat] = f;
   });
-  arr.forEach(o => {
-    const name = String(o.name || "").trim();
-    if (!name) return;
-    if (name.indexOf("CAT:") === 0) return;
+          arr.forEach(o => {
+            const name = String(o.name || "").trim();
+            if (!name) return;
+            if (name === "INFO_TEKS") { infoTeksValue = String(o.deskripsi || "").trim(); return; }
+            if (name.indexOf("CAT:") === 0) return;
     const kat = String(o.kategori || "Lainnya").trim() || "Lainnya";
     if (!groups[kat]) { groups[kat] = { name: kat, img: catImgSheet[kat] || codeImg["CAT:" + kat] || "", items: [] }; order.push(kat); }
     let files = splitFiles(o.image);
@@ -1533,19 +1561,20 @@ function mergeFromSheet(arr){
 
 function loadLiveStock(){
   try {
-    applySnap(loadCached("Brainrot"), loadCached("Akun"));
+    applySnap(loadCached("Brainrot"), loadCached("Akun"), loadCached("Info"));
     render();
   } catch(e) {}
-  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb")]);
+  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
     if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
     return res;
   }).then(res => {
-    const b = res[0] || [], a = res[1] || [];
+    const b = res[0] || [], a = res[1] || [], info = res[2] || [];
     try {
-      applySnap(b, a);
+      applySnap(b, a, info);
       if (b.length) saveCached("Brainrot", b);
       if (a.length) saveCached("Akun", a);
+      if (info.length) saveCached("Info", info);
     } catch(e) {}
   });
 }

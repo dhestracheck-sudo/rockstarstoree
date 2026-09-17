@@ -53,6 +53,17 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <div id="statusReload" style="font-size:12.5px;color:var(--mut);margin-top:6px;"></div>
   </div>
 
+  <div class="card" id="teksCard" style="display:none;">
+    <label>📢 Teks berjalan web (baris kedua, kuning)</label>
+    <textarea id="teksInput" rows="2" placeholder="tulis pengumuman..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
+    <div style="display:flex;gap:8px;">
+      <button id="teksBtn" onclick="saveTeks()" style="flex:1;">💾 Simpan Teks</button>
+      <button id="teksDefBtn" onclick="defaultTeks()" style="flex:1;background:#232c44;">↩️ Balikin Default</button>
+    </div>
+    <div id="statusTeks"></div>
+    <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -180,7 +191,9 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 </div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbw2-SJh4owK9prdByb2uBYfQuQT_D0JMcSbuwpNpsjoT64fPjf3Eb8hkjiBFtBIzcI8/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxFQEIeLqMYXC6tN7SG8i5Un7FDM_QgEJ7-Y78uihxjHBfC01TvyEk082nKzG5y5aip/exec";
+const TEKS_SHEET = "Info";
+const TEKS_NAME = "INFO_TEKS";
 const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
 const ADMIN_V = "12r-tanpa-pengumuman";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
@@ -198,7 +211,8 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["sheetCard","teksCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    loadTeks();
     loadItems();
   } else {
     alert("PIN salah.");
@@ -569,7 +583,7 @@ function fillProductOptions(filter){
   sel.innerHTML = "";
   ALL_ITEMS.forEach(o => {
     const nm = String(o.name || "").trim();
-    if (!nm || nm.indexOf("CAT:") === 0) return;
+    if (!nm || nm.indexOf("CAT:") === 0 || nm.indexOf("INFO_") === 0) return;
     if (filter && nm.toLowerCase().indexOf(filter) === -1) return;
     const op = document.createElement("option");
     op.value = nm;
@@ -584,8 +598,10 @@ function fillProductOptions(filter){
 function catList(){
   const cats = [];
   ALL_ITEMS.forEach(o => {
+    const nm = String(o.name || "").trim();
+    if (nm.indexOf("INFO_") === 0) return;
     const k = String(o.kategori || "").trim();
-    if (k && cats.indexOf(k) === -1) cats.push(k);
+    if (k && k !== "INFO" && cats.indexOf(k) === -1) cats.push(k);
   });
   cats.sort();
   return cats;
@@ -611,6 +627,57 @@ function fillCatOptions(filter){
   document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
   document.getElementById("catSel").onchange = prefillCat;
   prefillCat();
+}
+
+function loadTeks(){
+  // Sheet baru "Info", tidak campur Brainrot. Auto-buat tab via backend saat fetch pertama.
+  var cb = "__teks" + Date.now();
+  window[cb] = function(data){
+    try {
+      var arr = Array.isArray(data) ? data : [];
+      var o = arr.find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
+      document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
+    } catch(e) {}
+  };
+  var s = document.createElement("script");
+  s.src = SHEET_URL + "?callback=" + cb + "&sheet=" + encodeURIComponent(TEKS_SHEET) + "&t=" + Date.now();
+  s.onerror = function(){};
+  document.head.appendChild(s);
+}
+
+function saveTeks(){
+  const v = document.getElementById("teksInput").value.trim();
+  const st = document.getElementById("statusTeks");
+  const btn = document.getElementById("teksBtn");
+  btn.disabled = true;
+  st.textContent = "Menyimpan ke sheet Info...";
+  postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: v, sheet: TEKS_SHEET }, 2).then(function(d){
+    if(d.result === "success"){ st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>'; btn.disabled = false; return; }
+    // Baris belum ada di sheet Info baru -> buat otomatis sekali
+    if(String(d.result || "").indexOf("tidak ketemu") !== -1 || String(d.result || "").indexOf("barang tidak ketemu") !== -1){
+      postRetry({ action: "add", item_name: TEKS_NAME, kategori: "INFO", deskripsi: v, sheet: TEKS_SHEET }, 2).then(function(d2){
+        btn.disabled = false;
+        if(d2.result === "success") st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>';
+        else st.innerHTML = '<span class="err">Gagal: ' + (d2.result || "?") + '</span>';
+      });
+      return;
+    }
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
+}
+
+function defaultTeks(){
+  const st = document.getElementById("statusTeks");
+  const btn = document.getElementById("teksDefBtn");
+  if(!confirm("Kembalikan teks berjalan ke bawaan?")) return;
+  btn.disabled = true;
+  st.textContent = "Menyimpan...";
+  postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: "", sheet: TEKS_SHEET }, 2).then(function(d){
+    btn.disabled = false;
+    if(d.result === "success"){ document.getElementById("teksInput").value = ""; st.innerHTML = '<span class="ok">✅ Kembali default!</span>'; }
+    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
 }
 
 function muatUlang(){
@@ -643,6 +710,7 @@ function loadItems(retry){
         document.getElementById("catSearch").value = "";
         fillProductOptions("");
         fillCatOptions("");
+        loadTeks();
         muatFotoBackground();
       } catch(e) {}
       resolve();
