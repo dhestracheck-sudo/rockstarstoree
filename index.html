@@ -938,7 +938,7 @@ function flashItems(){
 function flashAdd(page, i, j){
   const item = catsOf(page)[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item});
+  cart.push({...item, page});
   trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
@@ -1252,7 +1252,7 @@ function detailAdd(){
   const cats = catsOf(detailCur.page);
   const item = cats[detailCur.i].items[detailCur.j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name});
+  cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
   }
@@ -1325,7 +1325,7 @@ function addItem(i,j){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
   if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item, categoryImg: categories[i].img, category: categories[i].name});
+  cart.push({...item, categoryImg: categories[i].img, category: categories[i].name, page: currentPage});
   trackClick("tambah_keranjang", item.name, categories[i].name);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
@@ -1424,16 +1424,20 @@ function sendToAdmin(){
   let text = "Halo saya mau beli:%0A";
   cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
   if(cart.length > 3){ closeCheckoutPreview(); window.open("https://wa.me/6289664299571?text="+text); return; }
-  const hasFishIt = cart.some(item => item.name.toLowerCase().includes("fish it"));
-  const hasSab = cart.some(item => item.name.toLowerCase().includes("sab"));
-  const hasTopUp = cart.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
-  const hasGamepass = cart.some(item => item.name.toLowerCase().includes("gamepass"));
-  const hasSteal = cart.some(item => item.name.toLowerCase().includes("steal"));
-  const hasGrowAGarden = cart.some(item => item.name.toLowerCase().includes("grow a garden"));
-  const hasIceGolem = cart.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
-  const hasToken = cart.some(item => item.name.toLowerCase().includes("token"));
+  // Aturan nomor khusus hanya untuk item non-akun (nama akun mengandung "steal" tapi tetap ke admin utama).
+  // Keranjang lama tanpa info halaman tetap pakai aturan lama.
+  const tagged = cart.some(p => p.page);
+  const scope = tagged ? cart.filter(p => String(p.page || "") !== "akun") : cart;
+  const hasFishIt = scope.some(item => item.name.toLowerCase().includes("fish it"));
+  const hasSab = scope.some(item => item.name.toLowerCase().includes("sab"));
+  const hasTopUp = scope.some(item => item.name.toLowerCase().includes("robux") || item.name.toLowerCase().includes("premium") || item.name.toLowerCase().includes("bundle"));
+  const hasGamepass = scope.some(item => item.name.toLowerCase().includes("gamepass"));
+  const hasSteal = scope.some(item => item.name.toLowerCase().includes("steal"));
+  const hasGrowAGarden = scope.some(item => item.name.toLowerCase().includes("grow a garden"));
+  const hasIceGolem = scope.some(item => item.name.toLowerCase().includes("ice golem titan(prismatic)"));
+  const hasToken = scope.some(item => item.name.toLowerCase().includes("token"));
   let adminNumber = "6289664299571";
-  if(hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal) adminNumber = "6283114900053";
+  if(scope.length && (hasFishIt || hasSab || hasTopUp || hasGamepass || hasSteal)) adminNumber = "6283114900053";
   if(hasGrowAGarden) adminNumber = "6289664299571";
   if(hasIceGolem) adminNumber = "6289664299571";
   if(hasToken) adminNumber = "6283114900053";
