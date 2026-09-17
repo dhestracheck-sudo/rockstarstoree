@@ -108,6 +108,21 @@ header {
   outline: none;
 }
 #searchInput:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(43,78,255,0.25); }
+/* ===== saran cari otomatis (tanpa scroll/Enter) ===== */
+.searchwrap { position: relative; }
+#searchSug {
+  position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  width: min(420px, 100%); background: var(--bg2); border: 1px solid var(--blue);
+  border-radius: 14px; overflow: hidden; z-index: 150; box-shadow: 0 18px 44px rgba(0,0,0,0.6);
+  max-height: 60vh; overflow-y: auto;
+}
+#searchSug .sug { display: flex; gap: 10px; align-items: center; padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--line); }
+#searchSug .sug:last-child { border-bottom: none; }
+#searchSug .sug:hover { background: rgba(43,78,255,0.15); }
+#searchSug img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #05080f; }
+#searchSug .sug b { display: block; font-size: 13.5px; }
+#searchSug .sug span { font-size: 12.5px; color: var(--mut); }
+#searchSug .sug .pr { margin-left: auto; font-weight: 700; color: #f3d27a; font-size: 13.5px; white-space: nowrap; }
 .cartbtn {
   display: flex;
   align-items: center;
@@ -694,7 +709,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
-  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..."></div>
+  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
   <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
 </header>
 
@@ -1075,7 +1090,7 @@ function searchCatalog(){
   const q = document.getElementById("searchInput").value.toLowerCase().trim();
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
-  if(q === ""){ render(); return; }
+  if(q === ""){ render(); sugHide(); return; }
   trackSearch(q);
   const out = [];
   ['brainrot', 'topup', 'akun'].forEach(page => {
@@ -1086,6 +1101,7 @@ function searchCatalog(){
       });
     });
   });
+  sugShow(q, out.slice(0, 6));
   if(out.length === 0){
     title.innerHTML = `<h2>Hasil pencarian</h2><p>Tidak ada item cocok dengan "${q}"</p>`;
     el.innerHTML = "";
@@ -1109,6 +1125,34 @@ function paintSearch(){
   window.scrollTo(0, y);
   watchViews();
 }
+
+/* ===== saran cari: muncul saat mengetik, klik = buka detail ===== */
+function sugHide(){ const s = document.getElementById("searchSug"); if(s) s.style.display = "none"; }
+function sugShow(q, rows){
+  const box = document.getElementById("searchSug");
+  if(!box || !rows.length){ sugHide(); return; }
+  box.innerHTML = rows.map(r => {
+    const cats = catsOf(r.page);
+    const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
+    const pr = (r.item.stock === 0) ? "HABIS" : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    const nm = String(r.item.name || "").replace(/</g, "&lt;");
+    return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
+      `<img src="${fixImg(im)}" alt="" loading="lazy" onerror="this.style.display='none'">` +
+      `<div><b>${nm}</b><span>${String(r.cname || "").replace(/</g, "&lt;")}</span></div>` +
+      `<div class="pr">${pr}</div></div>`;
+  }).join("");
+  box.style.display = "block";
+}
+function sugPick(page, i, j){
+  sugHide();
+  try { document.getElementById("searchInput").blur(); } catch(e) {}
+  openDetail(page, i, j);
+}
+document.addEventListener("click", e => {
+  const w = document.querySelector(".searchwrap");
+  if(w && !w.contains(e.target)) sugHide();
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape") sugHide(); });
 
 function itemCard(categories, i, j){
   const item = categories[i].items[j];
