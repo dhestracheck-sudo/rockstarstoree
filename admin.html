@@ -47,8 +47,9 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <select id="sheetSel" onchange="loadItems()">
       <option value="Brainrot">Brainrot</option>
       <option value="Akun">Akun</option>
+      <option value="Topup">Topup</option>
     </select>
-    <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun sama persis dengan Brainrot.</p>
+    <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun & Topup sama persis dengan Brainrot.</p>
     <button id="reloadBtn" onclick="muatUlang()" style="background:#232c44;">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
     <div id="statusReload" style="font-size:12.5px;color:var(--mut);margin-top:6px;"></div>
   </div>
@@ -201,6 +202,7 @@ function sbTable(sheet){
   sheet = String(sheet || "").toLowerCase();
   if(sheet === "akun") return "akun";
   if(sheet === "info") return "info";
+  if(sheet === "topup") return "topup";
   return "brainrot";
 }
 function sbCol(col){

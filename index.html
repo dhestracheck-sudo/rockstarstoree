@@ -1409,6 +1409,7 @@ function sbTableOf(sheet){
   sheet = String(sheet || "").toLowerCase();
   if(sheet === "akun") return "akun";
   if(sheet === "info") return "info";
+  if(sheet === "topup") return "topup";
   return "brainrot";
 }
 function sbGet(path){
@@ -1455,10 +1456,11 @@ function applyInfoTeks(){
   }
 }
 
-function applySnap(b, a, info){
+function applySnap(b, t, a, info){
   infoTeksValue = "";
   if (hasKatArr(b)) rebuildFromSheet(b, brainrotCategories);
   else if (b.length) mergeFromSheet(b);
+  if (Array.isArray(t) && t.length) rebuildFromSheet(t, topupCategories);
   if (hasKatArr(a)) rebuildFromSheet(a, akunCategories);
   else if (a.length) mergeFromSheet(a);
   // Prioritas: sheet Info baru (tab "Info", baris INFO_TEKS). Kalau ada, timpa fallback Brainrot.
@@ -1565,18 +1567,19 @@ function mergeFromSheet(arr){
 
 function loadLiveStock(){
   try {
-    applySnap(loadCached("Brainrot"), loadCached("Akun"), loadCached("Info"));
+    applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Info"));
     render();
   } catch(e) {}
-  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Info", "__infoCb")]);
+  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
     if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
     return res;
   }).then(res => {
-    const b = res[0] || [], a = res[1] || [], info = res[2] || [];
+    const b = res[0] || [], t = res[1] || [], a = res[2] || [], info = res[3] || [];
     try {
-      applySnap(b, a, info);
+      applySnap(b, t, a, info);
       if (b.length) saveCached("Brainrot", b);
+      if (t.length) saveCached("Topup", t);
       if (a.length) saveCached("Akun", a);
       if (info.length) saveCached("Info", info);
     } catch(e) {}
