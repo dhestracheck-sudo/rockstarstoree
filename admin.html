@@ -36,6 +36,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 <div class="wrap">
   <h1><img src="ROCKSTARLOGO.png" alt="Rockstar" style="height:44px;vertical-align:middle;border-radius:10px;margin-right:8px;">🔧 Admin Rockstar.Store <span id="adminV" style="font-size:12px;color:var(--mut);font-family:'Poppins',sans-serif;"></span></h1>
 
+  <a id="analTopBtn" href="analisis.html" style="display:none;text-align:center;background:linear-gradient(90deg,#12225e,var(--blue),#12225e);color:#fff;font-weight:700;font-size:15px;border-radius:12px;padding:14px;text-decoration:none;margin-top:4px;box-shadow:0 6px 20px rgba(43,78,255,.4);">📊 Buka Panel Analisis →</a>
+
   <div class="card" id="pinCard">
     <label>PIN Admin</label>
     <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
@@ -245,7 +247,7 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["sheetCard","teksCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","sheetCard","teksCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadTeks();
     loadItems();
   } else {
