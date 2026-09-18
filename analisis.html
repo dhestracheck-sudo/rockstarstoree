@@ -182,12 +182,32 @@ function orderBeep(){
     o.stop(c.currentTime + 0.6);
   } catch(e) {}
 }
-function orderItemsTxt(s){
-  try {
-    var a = JSON.parse(s);
-    if(Array.isArray(a)) return a.map(function(d){ return "• " + d.n + " ×" + d.q; }).join("<br>");
-  } catch(e) {}
-  return escHtml(s).slice(0, 300);
+var stkJobs = [];
+function orderItemsHtml(o, oid){
+  let det = [];
+  try { det = JSON.parse(o.items) || []; } catch(e) {}
+  if(!Array.isArray(det) || !det.length) return escHtml(o.items).slice(0, 300);
+  return det.map(function(d, ix){
+    stkJobs.push({ id: "stk-" + oid + "-" + ix, tbl: sbTable(d.p), nm: d.n, q: Number(d.q) || 0 });
+    return "• " + escHtml(d.n).slice(0, 55) + " ×" + (Number(d.q) || 0) +
+      ' <span id="stk-' + oid + '-' + ix + '" style="color:var(--mut);">cek stok...</span>';
+  }).join("<br>");
+}
+function refreshOrderStocks(){
+  stkJobs.forEach(function(job){
+    fetch(SB_URL + "/rest/v1/" + job.tbl + "?select=stock&name=eq." + encodeURIComponent(job.nm), { headers: sbH() })
+    .then(r => r.json()).then(function(rr){
+      const el = document.getElementById(job.id);
+      if(!el) return;
+      if(!(rr && rr[0] && rr[0].stock !== undefined && rr[0].stock !== null)){
+        el.textContent = "(produk tidak ketemu di database!)";
+        el.style.color = "var(--red)";
+        return;
+      }
+      el.textContent = "(stok kini: " + rr[0].stock + ")";
+    }).catch(function(){});
+  });
+  stkJobs = [];
 }
 function orderWaktu(s){
   try { return new Date(s).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
@@ -219,6 +239,7 @@ function loadOrders(first){
         } catch(e) {}
       });
       const stBadge = { baru: "var(--blue2)", lunas: "var(--green)", batal: "var(--mut)" };
+      stkJobs = [];
       let h = '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
         '<b style="font-size:16px;">📦 Order masuk' + (baru.length ? ' (' + baru.length + ' baru)' : '') + '</b>' +
         '<button onclick="notifOn()" style="width:auto;margin:0;padding:8px 14px;font-size:13px;">🔔 Notif</button>' +
@@ -232,7 +253,7 @@ function loadOrders(first){
           ';border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13px;">' +
           '<div><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escHtml(st.toUpperCase()) + '</span>' +
           ' <span style="color:var(--mut);">• ' + orderWaktu(o.waktu) + ' • Rp ' + Number(o.total || 0).toLocaleString("id-ID") + '</span></div>' +
-          '<div style="margin-top:4px;">' + orderItemsTxt(o.items) + '</div>';
+          '<div style="margin-top:4px;">' + orderItemsHtml(o, o.id) + '</div>';
         if(st === "baru")
           h += '<div style="display:flex;gap:8px;margin-top:8px;">' +
             '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
@@ -240,6 +261,7 @@ function loadOrders(first){
         h += '</div>';
       });
       box.innerHTML = h;
+      refreshOrderStocks();
     } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan order.</span>'; }
   }).catch(function(){ if(first) box.innerHTML = '<span class="err">Gagal ambil order.</span>'; });
 }
