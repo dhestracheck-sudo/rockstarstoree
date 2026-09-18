@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /analisis.html
+
+Sitemap: https://rockstarstore.id/sitemap.xml
