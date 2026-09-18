@@ -47,6 +47,7 @@ a { color:var(--blue2); }
       <a href="admin.html" style="flex:1;text-decoration:none;"><button type="button" style="background:#232c44;">← Admin</button></a>
     </div>
     <div id="orderBox" style="margin-top:16px;"></div>
+    <div id="rekapBox" style="margin-top:16px;"></div>
     <div id="analBox"></div>
     <p class="hint" style="margin-top:10px;">Dihitung live dari Supabase. Counter naik tiap produk terlihat di layar pengunjung.</p>
   </div>
@@ -77,6 +78,7 @@ function unlock(){
     document.getElementById("mainCard").style.display = "block";
     loadAnalisis();
     loadOrders(true);
+    loadRekap();
     if(window.__orderTimer) clearInterval(window.__orderTimer);
     window.__orderTimer = setInterval(function(){ loadOrders(false); }, 20000);
   } else {
@@ -270,6 +272,46 @@ function notifOn(){
     if(!window.Notification){ alert("Browser tidak dukung notifikasi."); return; }
     Notification.requestPermission().then(function(p){ alert(p === "granted" ? "Notifikasi aktif ✅" : "Notifikasi ditolak."); });
   } catch(e){ alert("Browser tidak dukung notifikasi."); }
+}
+
+/* ===== rekap uang: omzet lunas per periode ===== */
+function loadRekap(){
+  const box = document.getElementById("rekapBox");
+  box.innerHTML = '<p class="hint">Menghitung rekap...</p>';
+  fetch(SB_URL + "/rest/v1/orders?select=status,total,waktu&order=waktu.desc&limit=5000", { headers: sbH() })
+  .then(r => r.json()).then(function(rows){
+    try {
+      rows = Array.isArray(rows) ? rows : [];
+      const now = new Date();
+      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+      const start7 = startDay - 6 * 86400000;
+      const start30 = startDay - 29 * 86400000;
+      const P = { day: { n: 0, rp: 0 }, w7: { n: 0, rp: 0 }, m30: { n: 0, rp: 0 }, all: { n: 0, rp: 0 } };
+      let hutang = 0, hutangRp = 0;
+      rows.forEach(function(o){
+        if(String(o.status) !== "lunas"){
+          if(String(o.status) === "baru"){ hutang++; hutangRp += Number(o.total) || 0; }
+          return;
+        }
+        const t = new Date(o.waktu).getTime();
+        const rp = Number(o.total) || 0;
+        P.all.n++; P.all.rp += rp;
+        if(t >= start30){ P.m30.n++; P.m30.rp += rp; }
+        if(t >= start7){ P.w7.n++; P.w7.rp += rp; }
+        if(t >= startDay){ P.day.n++; P.day.rp += rp; }
+      });
+      function card(t, p){
+        return '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;">' +
+          '<div style="font-family:Oswald,sans-serif;font-size:20px;color:var(--green);">Rp ' + p.rp.toLocaleString("id-ID") + '</div>' +
+          '<div style="font-size:12.5px;">' + p.n + ' order</div>' +
+          '<div style="color:var(--mut);font-size:12px;">' + t + '</div></div>';
+      }
+      box.innerHTML = '<b style="font-size:16px;">💰 Rekap omzet (lunas)</b>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">' +
+        card("Hari ini", P.day) + card("7 hari", P.w7) + card("30 hari", P.m30) + card("Semua", P.all) + '</div>' +
+        '<p class="hint">⏳ Menunggu bayar: <b style="color:var(--txt);">' + hutang + ' order (Rp ' + hutangRp.toLocaleString("id-ID") + ')</b> — tagih via WA sebelum stok dibuka lagi.</p>';
+    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung rekap.</span>'; }
+  }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil rekap.</span>'; });
 }
 function orderSet(id, st){
   const box = document.getElementById("orderBox");
