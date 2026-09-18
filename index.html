@@ -1676,7 +1676,8 @@ function toggleWish(page, i, j, el){
     const it = catsOf(page)[i].items[j];
     let w = wishList();
     const k = w.indexOf(it.name);
-    if(k === -1) w.push(it.name); else w.splice(k, 1);
+    if(k === -1){ w.push(it.name); logAksi("wishlist+", it.name, catsOf(page)[i].name, it.price, page); }
+    else { w.splice(k, 1); logAksi("wishlist-", it.name, catsOf(page)[i].name, it.price, page); }
     saveWish(w);
     syncWishCount();
     if(el && el.classList && el.classList.contains("wishbtn")){

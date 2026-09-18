@@ -150,24 +150,26 @@ function loadAktivitas(){
   }).then(r => r.json()).then(function(rows){
     try {
       rows = Array.isArray(rows) ? rows : [];
-      const cnt = { klik: 0, keranjang: 0, checkout: 0 };
-      const topKlik = {}, topKer = {};
+      const cnt = { klik: 0, keranjang: 0, checkout: 0, "wishlist+": 0 };
+      const topKlik = {}, topKer = {}, topWish = {};
       rows.forEach(function(o){
         const a = String(o.aksi || "");
         if(cnt[a] !== undefined) cnt[a]++;
         const nm = String(o.name || "").slice(0, 55);
         if(a === "klik" && nm) topKlik[nm] = (topKlik[nm] || 0) + 1;
         if(a === "keranjang" && nm) topKer[nm] = (topKer[nm] || 0) + 1;
+        if(a === "wishlist+" && nm) topWish[nm] = (topWish[nm] || 0) + 1;
       });
       function toplist(m, n){
         return Object.keys(m).map(function(k){ return { k: k, v: m[k] }; })
           .sort(function(a, b){ return b.v - a.v; }).slice(0, n);
       }
-      let h = '👁 Diklik: <b>' + cnt.klik + '</b> • 🛒 Masuk keranjang: <b>' + cnt.keranjang + '</b> • 💬 Checkout: <b>' + cnt.checkout + '</b><br>';
+      let h = '👁 Diklik: <b>' + cnt.klik + '</b> • 🛒 Masuk keranjang: <b>' + cnt.keranjang + '</b> • 💬 Checkout: <b>' + cnt.checkout + '</b> • ❤️ Difavoritkan: <b>' + cnt["wishlist+"] + '</b><br>';
       h += '<span style="color:var(--mut);">Corong: ' + cnt.klik + ' → ' + cnt.keranjang + ' → ' + cnt.checkout + '</span>';
-      const tk = toplist(topKlik, 5), tc = toplist(topKer, 5);
+      const tk = toplist(topKlik, 5), tc = toplist(topKer, 5), tw = toplist(topWish, 5);
       h += '<br><br><b>Paling diklik:</b><br>' + (tk.length ? tk.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
       h += '<br><br><b>Paling dimasukkan keranjang:</b><br>' + (tc.length ? tc.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
+      h += '<br><br><b>Paling difavoritkan ❤️:</b><br>' + (tw.length ? tw.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
       el.innerHTML = h;
     } catch(e){ el.textContent = "Gagal hitung aktivitas."; }
   }).catch(function(){ el.textContent = "Gagal ambil aktivitas."; });
