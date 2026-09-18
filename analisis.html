@@ -46,6 +46,7 @@ a { color:var(--blue2); }
       <button id="analBtn" onclick="loadAnalisis()" style="flex:1;">🔄 Muat Ulang</button>
       <a href="admin.html" style="flex:1;text-decoration:none;"><button type="button" style="background:#232c44;">← Admin</button></a>
     </div>
+    <div id="orderBox" style="margin-top:16px;"></div>
     <div id="analBox"></div>
     <p class="hint" style="margin-top:10px;">Dihitung live dari Supabase. Counter naik tiap produk terlihat di layar pengunjung.</p>
   </div>
@@ -75,6 +76,9 @@ function unlock(){
     document.getElementById("pinCard").style.display = "none";
     document.getElementById("mainCard").style.display = "block";
     loadAnalisis();
+    loadOrders(true);
+    if(window.__orderTimer) clearInterval(window.__orderTimer);
+    window.__orderTimer = setInterval(function(){ loadOrders(false); }, 20000);
   } else {
     alert("PIN salah.");
   }
@@ -163,6 +167,117 @@ function loadAktivitas(){
       el.innerHTML = h;
     } catch(e){ el.textContent = "Gagal hitung aktivitas."; }
   }).catch(function(){ el.textContent = "Gagal ambil aktivitas."; });
+}
+
+/* ===== inbox order: status baru/lunas/batal + notif + rekap ===== */
+var lastBaru = -1;
+function sbH(){ return { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }; }
+function orderBeep(){
+  try {
+    var C = window.AudioContext || window.webkitAudioContext;
+    var c = new C(), o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.frequency.value = 880; g.gain.value = 0.08; o.start();
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.6);
+    o.stop(c.currentTime + 0.6);
+  } catch(e) {}
+}
+function orderItemsTxt(s){
+  try {
+    var a = JSON.parse(s);
+    if(Array.isArray(a)) return a.map(function(d){ return "• " + d.n + " ×" + d.q; }).join("<br>");
+  } catch(e) {}
+  return escHtml(s).slice(0, 300);
+}
+function orderWaktu(s){
+  try { return new Date(s).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
+  catch(e){ return ""; }
+}
+function loadOrders(first){
+  const box = document.getElementById("orderBox");
+  fetch(SB_URL + "/rest/v1/orders?select=*&order=waktu.desc&limit=30", { headers: sbH() })
+  .then(r => r.json()).then(function(rows){
+    try {
+      rows = Array.isArray(rows) ? rows : [];
+      const baru = rows.filter(o => String(o.status) === "baru");
+      if(!first && lastBaru >= 0 && baru.length > lastBaru){
+        orderBeep();
+        try {
+          if(window.Notification && Notification.permission === "granted")
+            new Notification("Order baru!", { body: baru.length + " menunggu diproses" });
+        } catch(e) {}
+      }
+      lastBaru = baru.length;
+      document.title = (baru.length ? "(" + baru.length + ") " : "") + "Analisis — Rockstar.Store";
+      const today = new Date().toDateString();
+      let rekapN = 0, rekapRp = 0;
+      rows.forEach(function(o){
+        try {
+          if(String(o.status) === "lunas" && new Date(o.waktu).toDateString() === today){
+            rekapN++; rekapRp += Number(o.total) || 0;
+          }
+        } catch(e) {}
+      });
+      const stBadge = { baru: "var(--blue2)", lunas: "var(--green)", batal: "var(--mut)" };
+      let h = '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
+        '<b style="font-size:16px;">📦 Order masuk' + (baru.length ? ' (' + baru.length + ' baru)' : '') + '</b>' +
+        '<button onclick="notifOn()" style="width:auto;margin:0;padding:8px 14px;font-size:13px;">🔔 Notif</button>' +
+        '<button onclick="loadOrders(false)" style="width:auto;margin:0;padding:8px 14px;font-size:13px;background:#232c44;">🔄</button></div>';
+      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + baru.length + ' menunggu</p>';
+      if(!rows.length) h += '<p class="hint">Belum ada order.</p>';
+      rows.slice(0, 20).forEach(function(o){
+        const st = String(o.status || "baru");
+        const col = stBadge[st] || "var(--mut)";
+        h += '<div style="background:var(--bg2);border:1px solid var(--line);border-left:4px solid ' + col +
+          ';border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13px;">' +
+          '<div><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escHtml(st.toUpperCase()) + '</span>' +
+          ' <span style="color:var(--mut);">• ' + orderWaktu(o.waktu) + ' • Rp ' + Number(o.total || 0).toLocaleString("id-ID") + '</span></div>' +
+          '<div style="margin-top:4px;">' + orderItemsTxt(o.items) + '</div>';
+        if(st === "baru")
+          h += '<div style="display:flex;gap:8px;margin-top:8px;">' +
+            '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
+            '<button onclick="orderSet(' + o.id + ',\'batal\')" style="margin:0;padding:9px;font-size:13px;background:var(--red);">✖ Batal</button></div>';
+        h += '</div>';
+      });
+      box.innerHTML = h;
+    } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan order.</span>'; }
+  }).catch(function(){ if(first) box.innerHTML = '<span class="err">Gagal ambil order.</span>'; });
+}
+function notifOn(){
+  try {
+    if(!window.Notification){ alert("Browser tidak dukung notifikasi."); return; }
+    Notification.requestPermission().then(function(p){ alert(p === "granted" ? "Notifikasi aktif ✅" : "Notifikasi ditolak."); });
+  } catch(e){ alert("Browser tidak dukung notifikasi."); }
+}
+function orderSet(id, st){
+  const box = document.getElementById("orderBox");
+  if(st === "batal" && !confirm("Batalkan order #" + id + "? Stok dikembalikan.")) return;
+  // ambil detail dulu (untuk kembalikan stok bila batal)
+  fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
+  .then(r => r.json()).then(function(rows){
+    const o = (rows && rows[0]) || null;
+    if(!o) return;
+    fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
+      method: "PATCH", headers: sbH(), body: JSON.stringify({ status: st })
+    }).then(function(){
+      if(st === "batal"){
+        let det = [];
+        try { det = JSON.parse(o.items) || []; } catch(e) {}
+        if(!Array.isArray(det)) det = [];
+        det.forEach(function(d){
+          const tbl = sbTable(d.p);
+          fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+          .then(r => r.json()).then(function(rr){
+            const cur = (rr && rr[0]) ? Number(rr[0].stock) || 0 : 0;
+            fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+              method: "PATCH", headers: sbH(), body: JSON.stringify({ stock: cur + (Number(d.q) || 0) })
+            }).catch(function(){});
+          }).catch(function(){});
+        });
+      }
+      loadOrders(false);
+    });
+  }).catch(function(){ alert("Gagal ubah status."); });
 }
 </script>
 </body>

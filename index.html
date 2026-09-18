@@ -1523,8 +1523,40 @@ function sendToAdmin(){
   if(hasGrowAGarden) adminNumber = "6289664299571";
   if(hasIceGolem) adminNumber = "6289664299571";
   if(hasToken) adminNumber = "6283114900053";
+  catatOrder();
   closeCheckoutPreview();
   window.open("https://wa.me/"+adminNumber+"?text="+text);
+}
+
+/* Catat order + kunci stok (kurangi sejumlah dibeli). Batal/lunas diatur admin. */
+function catatOrder(){
+  try {
+    if(!cart.length) return;
+    const cnt = {};
+    cart.forEach(p => {
+      const k = String(p.name || "");
+      if(!k) return;
+      if(!cnt[k]) cnt[k] = { q: 0, page: p.page || "" };
+      cnt[k].q++;
+    });
+    const det = Object.keys(cnt).map(nm => ({ n: nm, q: cnt[nm].q, p: cnt[nm].page }));
+    const total = cart.reduce((s, p) => s + (p.price || 0), 0);
+    const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
+    fetch(SB_URL + "/rest/v1/orders", { method: "POST", headers: H,
+      body: JSON.stringify({ items: JSON.stringify(det), total: total, status: "baru" }), keepalive: true })
+    .then(r => r.json()).then(a => {
+      det.forEach(d => {
+        const tbl = sbTableOf(d.p);
+        fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock&name=eq." + encodeURIComponent(d.n), { headers: H })
+        .then(r => r.json()).then(rows => {
+          const cur = (rows && rows[0]) ? Number(rows[0].stock) || 0 : 0;
+          fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+            method: "PATCH", headers: H, body: JSON.stringify({ stock: Math.max(0, cur - d.q) })
+          }).catch(function(){});
+        }).catch(function(){});
+      });
+    }).catch(function(){});
+  } catch(e) {}
 }
 
 function openCartModal(){
