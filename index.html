@@ -8,6 +8,11 @@
 <meta name="keywords" content="rockstarstore, rockstar store roblox, top up robux murah, steal a brainrot, grow a garden, beli akun roblox">
 <link rel="canonical" href="https://rockstarstore.id/">
 <meta name="theme-color" content="#060913">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rockstar">
+<link rel="manifest" href="manifest.json">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Rockstar.Store">
 <meta property="og:title" content="Rockstar.Store — Solusi Sepuh Roblox Kamu">
@@ -135,6 +140,16 @@ header {
 #searchSug .sug b { display: block; font-size: 13.5px; }
 #searchSug .sug span { font-size: 12.5px; color: var(--mut); }
 #searchSug .sug .pr { margin-left: auto; font-weight: 700; color: #f3d27a; font-size: 13.5px; white-space: nowrap; }
+/* ===== bar install aplikasi ===== */
+#pwaBar {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 92px; z-index: 95;
+  display: none; align-items: center; gap: 10px; max-width: 92vw;
+  background: var(--bg2); border: 1px solid var(--blue); border-radius: 999px;
+  padding: 10px 12px 10px 18px; font-size: 13.5px; box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+}
+#pwaBar.show { display: flex; }
+#pwaBar button.go { background: var(--blue); color: #fff; border: none; border-radius: 999px; padding: 9px 16px; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; white-space: nowrap; }
+#pwaBar button.x { background: transparent; border: none; color: var(--mut); font-size: 16px; cursor: pointer; }
 .cartbtn {
   display: flex;
   align-items: center;
@@ -820,12 +835,56 @@ function tutToggle(){
 }
 try { tutShow(0); tutRestart(); } catch(e) {}
 </script>
+<script>
+/* ===== PWA: install ke HP ===== */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+}
+let pwaEvt = null;
+function showPwaBar(txt, withBtn){
+  try {
+    document.getElementById("pwaTxt").textContent = txt;
+    document.getElementById("pwaBtn").style.display = withBtn ? "" : "none";
+    document.getElementById("pwaBar").classList.add("show");
+  } catch(e) {}
+}
+function hidePwaBar(){
+  try {
+    document.getElementById("pwaBar").classList.remove("show");
+    localStorage.setItem("rs_pwa_hide", "1");
+  } catch(e) {}
+}
+function pwaInstall(){
+  if(pwaEvt){
+    pwaEvt.prompt();
+    pwaEvt.userChoice.then(function(){ pwaEvt = null; hidePwaBar(); }).catch(function(){});
+  }
+}
+(function pwaInit(){
+  try {
+    if(localStorage.getItem("rs_pwa_hide") === "1") return;
+    const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if(standalone) return;
+    const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(isiOS){
+      setTimeout(function(){ showPwaBar("iPhone: ketuk Bagikan ⎙ lalu Tambah ke Layar Utama 📲", false); }, 4000);
+      return;
+    }
+    window.addEventListener("beforeinstallprompt", function(e){
+      e.preventDefault();
+      pwaEvt = e;
+      showPwaBar("Pasang Rockstar.Store ke HP? Buka kilat tanpa browser.", true);
+    });
+    document.getElementById("pwaBtn").addEventListener("click", pwaInstall);
+  } catch(e) {}
+})();
 
 <main class="section">
   <div id="pageTitle"></div>
   <div id="products"></div>
 </main>
 
+<div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
 <div class="fab">
   <div class="fab-row">
     <button onclick="openCartModal()">Lihat</button>
