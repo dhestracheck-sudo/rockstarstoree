@@ -851,7 +851,7 @@ function showPwaBar(txt, withBtn){
 function hidePwaBar(){
   try {
     document.getElementById("pwaBar").classList.remove("show");
-    localStorage.setItem("rs_pwa_hide", "1");
+    localStorage.setItem("rs_pwa_hide", String(Date.now()));
   } catch(e) {}
 }
 function pwaInstall(){
@@ -862,7 +862,8 @@ function pwaInstall(){
 }
 (function pwaInit(){
   try {
-    if(localStorage.getItem("rs_pwa_hide") === "1") return;
+    const h = localStorage.getItem("rs_pwa_hide");
+    if(h && h !== "1" && (Date.now() - Number(h)) < 7 * 24 * 3600 * 1000) return;
     const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
     if(standalone) return;
     const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
