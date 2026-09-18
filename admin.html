@@ -1230,24 +1230,7 @@ function validImageFile(f){
 // Upload file yang sudah lolos validasi. body = {action:"upload", item_name, ...} tanpa file.
 // Foto dikompres dulu (maks 1600px) supaya upload jauh lebih cepat.
 function sendUpload(f, body, oldFull){
-  // file <= 1MB dikirim asli tanpa kompres (cepat + kualitas utuh)
-  if(f.size <= 1048576){
-    return new Promise(resolve => {
-      const rd = new FileReader();
-      rd.onload = () => {
-        body.file = String(rd.result).split(",")[1];
-        postRetry(body, 3, 90000).then(resolve);
-      };
-      rd.onerror = () => resolve({ result: "error: gagal baca file" });
-      rd.readAsDataURL(f);
-    }).then(d => {
-      if(d.result === "success") return d;
-      return verifyImg(body.item_name, oldFull || "").then(full => {
-        if(full) return { result: "success", url: full.split("|").map(s => s.trim()).filter(Boolean)[0] || full, verified: true };
-        return d;
-      });
-    });
-  }
+  // Semua file lewat kompres WebP q82 (file kecil tetap cepat + kualitas utuh)
   return prepImage(f).then(p => {
     if(!p.ok) return { result: "error: file rusak / bukan gambar (pakai JPG/PNG)" };
     body.file = p.base64;
@@ -1278,11 +1261,18 @@ function prepImage(f){
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
           cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
           cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-          const keepPng = String(f.type || "") === "image/png";
-          const mime = keepPng ? "image/png" : "image/jpeg";
-          const dataUrl = keepPng ? cv.toDataURL(mime) : cv.toDataURL(mime, 0.85);
-          let nm = String(f.name || "foto");
-          nm = keepPng ? nm.replace(/\.[^.]+$/, "") + ".png" : nm.replace(/\.[^.]+$/, "") + ".jpg";
+          // Samakan optimasi web: selalu WebP q82 (fallback JPEG bila browser jadul)
+          let mime = "image/webp";
+          let dataUrl = "";
+          try { dataUrl = cv.toDataURL(mime, 0.82); } catch(e) { dataUrl = ""; }
+          let nm = String(f.name || "foto").replace(/\.[^.]+$/, "");
+          if(!dataUrl || dataUrl === "data:,"){
+            mime = "image/jpeg";
+            dataUrl = cv.toDataURL(mime, 0.85);
+            nm = nm + ".jpg";
+          } else {
+            nm = nm + ".webp";
+          }
           resolve({ ok: true, base64: dataUrl.split(",")[1], mime: mime, name: nm });
         } catch(e){ resolve({ ok: false }); }
       };
