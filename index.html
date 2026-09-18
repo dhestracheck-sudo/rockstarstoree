@@ -331,7 +331,9 @@ header {
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .catcard:hover { transform: translateY(-5px); border-color: var(--blue); }
-.catcard img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.catcard .catimgwrap { position: relative; height: 170px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #101b3d, #0a1024); }
+.catcard .catimgwrap .catemoji { font-size: 64px; }
+.catcard .catimgwrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 .catcard .catbody { padding: 14px 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .catcard h3 { font-size: 16px; margin: 0; font-weight: 600; }
 .catcard .go {
@@ -892,6 +894,21 @@ let carouselState = {};
 const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.png";
 function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
+/* Emoji cadangan tiap kategori (tampil di atas background biru bila foto kosong/gagal) */
+function catEmoji(nm){
+  const n = String(nm || "").toLowerCase();
+  if(n.includes("robux")) return "💰";
+  if(n.includes("bundle")) return "🎁";
+  if(n.includes("gamepass") || n.includes("game pass")) return "🎫";
+  if(n.includes("akun")) return "👤";
+  if(n.includes("telur") || n.includes("egg")) return "🥚";
+  if(n.includes("garden") || n.includes("tanam") || n.includes("seed")) return "🌱";
+  if(n.includes("fish") || n.includes("pancing") || n.includes("dadu")) return "🎣";
+  if(n.includes("ayam") || n.includes("curi")) return "🐔";
+  if(n.includes("koin") || n.includes("coin")) return "🪙";
+  if(n.includes("kupon") || n.includes("roll") || n.includes("gulung")) return "🎰";
+  return "🧠";
+}
 // Gambar gagal load (umumnya thumbnail Drive kena throttle sesaat): coba sekali lagi
 // dengan cache-bust, baru fallback. Mencegah gambar hilang-timbul tiap refresh.
 function imgErr(el){
@@ -1081,7 +1098,7 @@ function render(){
     <p>${categories.length} kategori — klik untuk lihat item</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
-      <img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)">
+      <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span><img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)"></div>
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
   watchViews();
