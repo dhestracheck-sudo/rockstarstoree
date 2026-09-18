@@ -429,6 +429,9 @@ header {
 .item .kilat > span { font-size: 13.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.45); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
 .item .kilat .vbadge { display:inline-flex; align-items:center; gap:6px; color:#fff; font-size:13.5px; font-weight:700; }
 .item .kilat .vbadge i { font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#2ecc71; color:#0a1f14; font-size:12px; font-weight:900; flex-shrink:0; }
+/* ===== wishlist ===== */
+.wishbtn { position:absolute; bottom:10px; right:10px; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:19px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
+.wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
 .payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
 /* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
@@ -726,6 +729,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
+  <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
   <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
 </header>
 </div>
@@ -883,6 +887,16 @@ try { tutShow(0); tutRestart(); } catch(e) {}
     <div class="mactions">
       <button class="ghost" onclick="closeCartModal()">Lanjut Belanja</button>
       <button class="go" onclick="checkout()">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="wishModal">
+  <div class="modal">
+    <h2>❤️ Wishlist Saya</h2>
+    <div id="wishList"></div>
+    <div class="mactions">
+      <button class="ghost" onclick="closeWishModal()">Tutup</button>
     </div>
   </div>
 </div>
@@ -1201,6 +1215,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
       <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
@@ -1211,6 +1226,7 @@ function itemCard(categories, i, j){
     <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
   return `
@@ -1323,6 +1339,7 @@ function renderDetail(){
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
     <div class="mactions">
       <button class="ghost" onclick="closeDetail()">Tutup</button>
+      <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
     </div>`;
 }
@@ -1587,6 +1604,9 @@ function closeCartModal(){ document.getElementById("cartModal").style.display = 
 document.getElementById("cartModal").addEventListener('click', e => {
   if(e.target.id === "cartModal") closeCartModal();
 });
+document.getElementById("wishModal").addEventListener('click', e => {
+  if(e.target.id === "wishModal") closeWishModal();
+});
 function cancelCheckout(){
   if(cart.length==0){ alert("Keranjang sudah kosong!"); return; }
   if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus.")){
@@ -1622,6 +1642,102 @@ function logAksi(aksi, name, kat, price, page){
         kategori: String(kat || "").slice(0, 100), tab: String(page || ""), price: Number(price) || 0 }),
       keepalive: true
     }).catch(function(){});
+  } catch(e) {}
+}
+
+/* ===== wishlist (tersimpan di HP, tanpa login) ===== */
+function wishList(){ try { const a = JSON.parse(localStorage.getItem("rs_wish") || "[]"); return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+function saveWish(a){ try { localStorage.setItem("rs_wish", JSON.stringify(a)); } catch(e){} }
+function isWished(nm){ return wishList().indexOf(nm) !== -1; }
+function resolveWish(nm){
+  const pages = ["brainrot", "topup", "akun"];
+  for(let p = 0; p < pages.length; p++){
+    const cats = catsOf(pages[p]);
+    for(let i = 0; i < cats.length; i++)
+      for(let j = 0; j < cats[i].items.length; j++)
+        if(cats[i].items[j].name === nm) return { page: pages[p], i: i, j: j, item: cats[i].items[j], cat: cats[i] };
+  }
+  return null;
+}
+function syncWishCount(){
+  const n = wishList().length;
+  const a = document.getElementById("wishCount");
+  if(a) a.textContent = n;
+}
+function syncWishBtns(nm){
+  const on = isWished(nm);
+  document.querySelectorAll('[data-wish="' + encodeURIComponent(nm) + '"]').forEach(el => {
+    el.textContent = on ? "❤️" : "🤍";
+    el.classList.toggle("on", on);
+  });
+}
+function toggleWish(page, i, j, el){
+  try {
+    const it = catsOf(page)[i].items[j];
+    let w = wishList();
+    const k = w.indexOf(it.name);
+    if(k === -1) w.push(it.name); else w.splice(k, 1);
+    saveWish(w);
+    syncWishCount();
+    if(el && el.classList && el.classList.contains("wishbtn")){
+      el.textContent = k === -1 ? "❤️" : "🤍";
+      el.classList.toggle("on", k === -1);
+    } else {
+      syncWishBtns(it.name);
+      if(el){ el.textContent = k === -1 ? "❤️" : "🤍"; }
+    }
+    if(document.getElementById("wishModal").style.display === "block") openWishModal();
+  } catch(e) {}
+}
+function openWishModal(){
+  const w = wishList();
+  let html = "";
+  let shown = 0;
+  w.forEach((nm, idx) => {
+    const r = resolveWish(nm);
+    if(!r) return;
+    shown++;
+    const pr = (r.item.stock === 0) ? "HABIS" : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    html += `<div class="mrow">
+      <div class="grow"><strong>${escWish(nm)}</strong><br><span style="color:var(--blue2);font-weight:600;">${pr}</span></div>
+      <button class="del" style="background:var(--blue);" onclick="wishAdd('${r.page}',${r.i},${r.j})">🛒</button>
+      <button class="del" onclick="wishRemoveAt(${idx})">Hapus</button>
+    </div>`;
+  });
+  document.getElementById("wishList").innerHTML = shown ? html : `<p style="color:var(--mut);text-align:center;padding:16px 0;">🤍 Belum ada favorit.<br>Ketuk hati di foto produk untuk simpan.</p>`;
+  document.getElementById("wishModal").style.display = "block";
+}
+function escWish(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function closeWishModal(){ document.getElementById("wishModal").style.display = "none"; }
+function wishRemove(nm){
+  saveWish(wishList().filter(x => x !== nm));
+  syncWishCount();
+  syncWishBtns(nm);
+  openWishModal();
+}
+function wishRemoveAt(idx){
+  const w = wishList();
+  const nm = w[idx];
+  w.splice(idx, 1);
+  saveWish(w);
+  syncWishCount();
+  if(nm) syncWishBtns(nm);
+  openWishModal();
+}
+function wishAdd(page, i, j){
+  try {
+    const cats = catsOf(page);
+    const item = cats[i].items[j];
+    if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+    cart.push({...item, categoryImg: cats[i].img, category: cats[i].name, page: page});
+    logAksi("keranjang", item.name, cats[i].name, item.price, page);
+    trackClick("tambah_keranjang", item.name, cats[i].name);
+    if(typeof gtag === "function"){
+      gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
+    }
+    syncCart();
+    closeWishModal();
+    openCartModal();
   } catch(e) {}
 }
 
@@ -1802,6 +1918,7 @@ setTimeout(function(){
 
 loadLiveStock().then(() => {
   try { render(); } catch(e) {}
+  try { syncWishCount(); } catch(e) {}
   try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
   setTimeout(() => {
     const l = document.getElementById("loader");
