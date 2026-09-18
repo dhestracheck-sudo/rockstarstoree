@@ -1528,7 +1528,7 @@ function sendToAdmin(){
   window.open("https://wa.me/"+adminNumber+"?text="+text);
 }
 
-/* Catat order + kunci stok (kurangi sejumlah dibeli). Batal/lunas diatur admin. */
+/* Catat order saat checkout. Stok & terjual berubah saat admin tekan Lunas. */
 function catatOrder(){
   try {
     if(!cart.length) return;
@@ -1544,18 +1544,7 @@ function catatOrder(){
     const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
     fetch(SB_URL + "/rest/v1/orders", { method: "POST", headers: H,
       body: JSON.stringify({ items: JSON.stringify(det), total: total, status: "baru" }), keepalive: true })
-    .then(r => r.json()).then(a => {
-      det.forEach(d => {
-        const tbl = sbTableOf(d.p);
-        fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock&name=eq." + encodeURIComponent(d.n), { headers: H })
-        .then(r => r.json()).then(rows => {
-          const cur = (rows && rows[0]) ? Number(rows[0].stock) || 0 : 0;
-          fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
-            method: "PATCH", headers: H, body: JSON.stringify({ stock: Math.max(0, cur - d.q) })
-          }).catch(function(){});
-        }).catch(function(){});
-      });
-    }).catch(function(){});
+    .catch(function(){});
   } catch(e) {}
 }
 

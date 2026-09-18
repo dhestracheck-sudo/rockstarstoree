@@ -273,8 +273,9 @@ function notifOn(){
 }
 function orderSet(id, st){
   const box = document.getElementById("orderBox");
-  if(st === "batal" && !confirm("Batalkan order #" + id + "? Stok dikembalikan.")) return;
-  // ambil detail dulu (untuk kembalikan stok bila batal)
+  if(st === "batal" && !confirm("Batalkan order #" + id + "?")) return;
+  if(st === "lunas" && !confirm("Lunaskan order #" + id + "? Stok berkurang, terjual bertambah.")) return;
+  // ambil detail dulu (untuk ubah stok/terjual bila lunas)
   fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
   .then(r => r.json()).then(function(rows){
     const o = (rows && rows[0]) || null;
@@ -282,17 +283,21 @@ function orderSet(id, st){
     fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
       method: "PATCH", headers: sbH(), body: JSON.stringify({ status: st })
     }).then(function(){
-      if(st === "batal"){
+      if(st === "lunas"){
         let det = [];
         try { det = JSON.parse(o.items) || []; } catch(e) {}
         if(!Array.isArray(det)) det = [];
         det.forEach(function(d){
           const tbl = sbTable(d.p);
-          fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+          const q = Number(d.q) || 0;
+          fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock,sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
           .then(r => r.json()).then(function(rr){
-            const cur = (rr && rr[0]) ? Number(rr[0].stock) || 0 : 0;
+            if(!(rr && rr[0])) return;
+            const curS = Number(rr[0].stock) || 0;
+            const curT = Number(rr[0].sold) || 0;
             fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
-              method: "PATCH", headers: sbH(), body: JSON.stringify({ stock: cur + (Number(d.q) || 0) })
+              method: "PATCH", headers: sbH(),
+              body: JSON.stringify({ stock: Math.max(0, curS - q), sold: curT + q })
             }).catch(function(){});
           }).catch(function(){});
         });
