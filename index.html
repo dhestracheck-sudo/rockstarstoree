@@ -876,7 +876,6 @@ function pwaInstall(){
       pwaEvt = e;
       showPwaBar("Pasang Rockstar.Store ke HP? Buka kilat tanpa browser.", true);
     });
-    document.getElementById("pwaBtn").addEventListener("click", pwaInstall);
   } catch(e) {}
 })();
 </script>
@@ -886,7 +885,7 @@ function pwaInstall(){
   <div id="products"></div>
 </main>
 
-<div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
+<div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;" onclick="pwaInstall()">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
 <div class="fab">
   <div class="fab-row">
     <button onclick="openCartModal()">Lihat</button>
