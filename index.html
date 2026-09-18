@@ -71,11 +71,13 @@ body {
 .stocktxt { font-size: 14px; color: var(--txt); font-weight: 600; margin-top: 4px; }
 .stocklow { font-size: 14px; color: #ff8080; font-weight: 700; margin-top: 4px; }
 
-/* ===== announcement bar ===== */
-.announce {
+/* ===== announcement bar + header menempel (tanpa renggang) ===== */
+.topwrap {
   position: sticky;
   top: 0;
   z-index: 101;
+}
+.announce {
   background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
   color: #fff;
   font-size: 14px;
@@ -95,9 +97,6 @@ body {
 
 /* ===== header ===== */
 header {
-  position: sticky;
-  top: 37px;
-  z-index: 100;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -721,6 +720,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 
 <div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
+<div class="topwrap">
 <div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
@@ -728,6 +728,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
   <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
 </header>
+</div>
 
 <section class="hero">
   <div class="hero-text">
