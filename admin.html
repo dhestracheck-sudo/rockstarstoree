@@ -266,7 +266,7 @@ function b64ToBlob(b64, mime){
   return new Blob([u8], { type: mime || "image/jpeg" });
 }
 function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
-const ADMIN_PIN = "12345"; // <-- GANTI PIN INI
+const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
 const ADMIN_V = "12r-tanpa-pengumuman";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
