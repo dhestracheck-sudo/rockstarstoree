@@ -252,6 +252,9 @@ header {
 @keyframes point { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 .hero-visual img.hero-logo {
   width: min(200px, 60%);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  object-fit: contain;
   border-radius: 14px;
   border: 1px solid var(--line);
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -775,7 +778,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()" data-i18n="cta_akun">Katalog Akun 👤</button>
     </div>
   </div>
-  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store" width="500" height="500" fetchpriority="high" decoding="async"></div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png?v=2" alt="Rockstar.Store" width="500" height="500" fetchpriority="high" decoding="async"></div>
 </section>
 
 <div class="stats">
