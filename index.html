@@ -770,7 +770,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()" data-i18n="cta_akun">Katalog Akun 👤</button>
     </div>
   </div>
-  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store" fetchpriority="high" decoding="async"></div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store" width="500" height="500" fetchpriority="high" decoding="async"></div>
 </section>
 
 <div class="stats">
@@ -975,7 +975,7 @@ function pwaInstall(){
 </div>
 
 <section class="section server-cta" id="serverCta">
-  <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.webp" alt="Rockstar Avatar - Link Server"></a>
+  <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.webp" alt="Rockstar Avatar - Link Server" width="581" height="583" loading="lazy" decoding="async"></a>
   <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
 </section>
 
@@ -1342,7 +1342,7 @@ function searchCatalog(){
   title.innerHTML = `<button class="backbtn" onclick="render()">${tr("back")}</button>
     <h2>${tr("hasil")}</h2><p>${out.length} ${tr("cocok_a")} "${q}"</p>`;
   searchOut = out;
-  searchN = PAGE_N;
+  searchN = 24;
   paintSearch();
 }
 
@@ -2101,7 +2101,31 @@ loadLiveStock().then(() => {
   try { render(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
-  try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
+  try { let searchTimer = null;
+/* Saran instan (ringan, maks 6) — render penuh ditunda biar ketikan tidak nyendat */
+function searchSuggestNow(){
+  const inp = document.getElementById("searchInput");
+  const q = inp.value.toLowerCase().trim();
+  if(q === ""){ sugHide(); return; }
+  const out = [];
+  const pages = ["brainrot", "topup", "akun"];
+  for(let p = 0; p < pages.length && out.length < 6; p++){
+    const cats = catsOf(pages[p]);
+    for(let i = 0; i < cats.length && out.length < 6; i++)
+      for(let j = 0; j < cats[i].items.length && out.length < 6; j++){
+        const it = cats[i].items[j];
+        if((cats[i].name + " " + it.name).toLowerCase().includes(q))
+          out.push({ page: pages[p], i: i, j: j, cname: cats[i].name, item: it });
+      }
+  }
+  sugShow(q, out);
+}
+function searchType(){
+  searchSuggestNow();
+  if(searchTimer) clearTimeout(searchTimer);
+  searchTimer = setTimeout(searchCatalog, 200);
+}
+document.getElementById("searchInput").addEventListener("input", searchType); } catch(e) {}
   hideLoader();
 });
 </script>
