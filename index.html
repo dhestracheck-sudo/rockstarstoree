@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/baloo2/v23/wXKrE3kTposypRyd51jcAA.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2">
 <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co">
 <title>Rockstar.Store — Solusi Sepuh Roblox Kamu</title>
 <meta name="description" content="Rockstar Store: top up Robux, item Brainrot, dan akun Roblox premium termurah se-Indonesia & Malaysia. Proses kilat, aman 100%, testimoni 100.000+.">
@@ -449,8 +452,9 @@ header {
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
 .item .kilat { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; background: none; border: none; box-shadow: none; padding: 0; }
-.item .kilat > span { font-size: 13.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.45); border: 1px solid var(--line); border-radius: 10px; padding: 7px 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
-.item .kilat .vbadge { display:inline-flex; align-items:center; gap:6px; color:#fff; font-size:13.5px; font-weight:700; }
+.item .kilat > span { font-size: 12.5px; font-weight: 700; color: #fff; background: rgba(0,0,0,0.45); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.5); white-space: nowrap; }
+.item .price { margin-top: auto; padding-top: 6px; background: none; border: none; min-height: 32px; }
+.item .kilat .vbadge { display:inline-flex; align-items:center; gap:6px; color:#fff; font-size:12.5px; font-weight:700; }
 .item .kilat .vbadge i { font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:#2ecc71; color:#0a1f14; font-size:12px; font-weight:900; flex-shrink:0; }
 /* ===== wishlist ===== */
 .wishbtn { position:absolute; bottom:10px; right:10px; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:19px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
