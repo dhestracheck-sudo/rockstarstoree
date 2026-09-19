@@ -10,53 +10,47 @@
 <link rel="apple-touch-icon" href="ROCKSTARLOGO.png">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; --gold:#f3d27a; }
+:root { --bg:#060913; --bg2:#0b1120; --card:#0c1322; --line:rgba(120,150,255,.12); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; --gold:#f3d27a; }
 * { box-sizing: border-box; }
-body { margin:0; font-family:'Poppins',sans-serif; color:var(--txt); min-height:100vh; padding:24px 16px 60px;
-  background:
-    radial-gradient(700px 260px at 85% -60px, rgba(43,78,255,.20), transparent 60%),
-    radial-gradient(600px 260px at 5% 0%, rgba(43,78,255,.10), transparent 60%),
-    var(--bg);
-}
-.wrap { max-width: 620px; margin: 0 auto; }
-h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; font-size:26px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-h1 img { box-shadow:0 6px 18px rgba(43,78,255,.35); }
-h2.sect { font-family:'Oswald',sans-serif; letter-spacing:1px; font-size:15px; margin:30px 0 0; color:#fff;
-  display:inline-block; background:linear-gradient(90deg, rgba(43,78,255,.35), rgba(43,78,255,.08));
-  border:1px solid rgba(111,139,255,.4); border-radius:999px; padding:8px 18px; }
-.curprod { font-size:13px; color:var(--mut); margin:12px 0 0; background:rgba(43,78,255,.08); border:1px dashed rgba(111,139,255,.4); border-radius:10px; padding:8px 12px; }
-.curprod b { color:var(--gold); }
-.card { background:linear-gradient(180deg, rgba(20,28,52,.9), var(--card)); border:1px solid var(--line); border-radius:20px; padding:22px; margin-top:16px; box-shadow:0 14px 40px rgba(0,0,0,.45); animation:fadeUp .35s ease; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-label { display:block; font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--blue2); margin:16px 0 6px; }
+body { margin:0; font-family:'Poppins',sans-serif; color:var(--txt); background:var(--bg); min-height:100vh; padding:20px 14px 60px; }
+.wrap { max-width: 560px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; font-size:22px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 4px; }
+h1 img { border-radius:10px; }
+h2.sect { font-family:'Poppins',sans-serif; font-weight:700; letter-spacing:.4px; font-size:14px; margin:28px 0 0; color:var(--txt); }
+.minibar { display:none; position:sticky; top:0; z-index:50; background:rgba(6,9,19,.92); backdrop-filter:blur(10px); padding:10px 0; margin-top:12px; border-bottom:1px solid var(--line); }
+.minibar.show { display:block; }
+.minibar a { display:inline-block; font-size:12.5px; font-weight:600; color:var(--mut); text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:7px 13px; margin:0 6px 6px 0; }
+.minibar a:hover { color:var(--txt); border-color:var(--blue); }
+.curprod { font-size:13px; color:var(--mut); margin:10px 0 0; }
+.curprod b { color:var(--txt); }
+.card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:14px; }
+label { display:block; font-size:12.5px; font-weight:600; color:var(--mut); margin:14px 0 6px; }
 select, input[type=password], input[type=text], input[type=number], textarea {
-  width:100%; padding:13px 15px; border-radius:12px; border:1px solid var(--line);
-  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:15px; outline:none;
-  transition:border-color .15s ease, box-shadow .15s ease;
+  width:100%; padding:12px 13px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px; outline:none;
 }
-select:focus, input:focus, textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(43,78,255,.25); }
-input[type=file] { width:100%; font-size:13px; color:var(--mut); background:var(--bg2); border:1px dashed rgba(111,139,255,.4); border-radius:12px; padding:12px; cursor:pointer; }
-input[type=file]::file-selector-button { background:var(--blue); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:'Poppins',sans-serif; font-weight:700; cursor:pointer; margin-right:10px; }
+select:focus, input:focus, textarea:focus { border-color:var(--blue); }
+input[type=file] { width:100%; font-size:13px; color:var(--mut); }
 button {
-  width:100%; margin-top:14px; padding:14px; border:none; border-radius:12px;
-  background:linear-gradient(135deg, var(--blue), #5a78ff); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
-  box-shadow:0 8px 22px rgba(43,78,255,.35); transition:transform .12s ease, filter .12s ease;
+  width:100%; margin-top:12px; padding:13px; border:none; border-radius:10px;
+  background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:14px; cursor:pointer;
 }
-button:hover:not(:disabled) { filter:brightness(1.12); transform:translateY(-1px); }
-button:active:not(:disabled) { transform:translateY(0); }
-button:disabled { background:#232c44; color:var(--mut); cursor:wait; box-shadow:none; }
-#preview { width:100%; border-radius:12px; margin-top:14px; display:none; border:1px solid var(--line); }
-#status { margin-top:14px; font-size:13.5px; line-height:1.6; }
-.ok { display:inline-block; background:rgba(46,204,113,.12); border:1px solid rgba(46,204,113,.4); color:var(--green); border-radius:10px; padding:8px 12px; }
-.err { display:inline-block; background:rgba(255,93,93,.1); border:1px solid rgba(255,93,93,.4); color:#ff8080; border-radius:10px; padding:8px 12px; }
-.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+#preview { width:100%; border-radius:10px; margin-top:12px; display:none; border:1px solid var(--line); }
+#status { margin-top:12px; font-size:13px; line-height:1.6; }
+.ok { color:var(--green); } .err { color:#ff8080; }
+.hint { font-size:12px; color:var(--mut); line-height:1.6; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1><img src="ROCKSTARLOGO.png" alt="Rockstar" style="height:44px;vertical-align:middle;border-radius:10px;margin-right:8px;">🔧 Admin Rockstar.Store <span id="adminV" style="font-size:12px;color:var(--mut);font-family:'Poppins',sans-serif;"></span></h1>
 
-  <a id="analTopBtn" href="analisis.html" style="display:none;text-align:center;background:linear-gradient(90deg,#12225e,var(--blue),#12225e);color:#fff;font-weight:700;font-size:15px;border-radius:12px;padding:14px;text-decoration:none;margin-top:4px;box-shadow:0 6px 20px rgba(43,78,255,.4);">📊 Buka Panel Analisis →</a>
+  <a id="analTopBtn" href="analisis.html" style="display:none;text-align:center;background:#1a2440;color:var(--txt);font-weight:700;font-size:14px;border-radius:10px;padding:12px;text-decoration:none;margin-top:4px;border:1px solid var(--line);">📊 Buka Panel Analisis →</a>
+
+  <nav class="minibar" id="miniNav">
+    <a href="#teksCard">Teks</a><a href="#akunDataCard">Data Akun</a><a href="#mainCard">Produk</a><a href="#slideCard">Foto</a><a href="#catCard">Kategori</a><a href="#addCard">Tambah</a>
+  </nav>
 
   <div class="card" id="pinCard">
     <label>PIN Admin</label>
@@ -285,7 +279,7 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","sheetCard","teksCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","miniNav","sheetCard","teksCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadTeks();
     loadItems();
     loadAkunProds();
