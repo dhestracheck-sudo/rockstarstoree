@@ -1038,11 +1038,11 @@ function stockBarHTML(item){
   const sold = Number(item.sold) || 0, st = Number(item.stock);
   if(sold > 0 && st > 0){
     const pct = Math.min(100, Math.round(sold / (sold + st) * 100));
-    const low = st < 5 ? `<div class="stocklow">⚠️ Sisa ${st} lagi, buruan sebelum habis!</div>` : ``;
-    return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">✅ Sudah laku: ${sold} • 📦 Sisa stok: ${st}</div>${low}`;
+    const low = st < 5 ? `<div class="stocklow">⚠️ ${tr("low_a")} ${st} ${tr("low_b")}</div>` : ``;
+    return `<div class="stockbar"><i style="width:${pct}%"></i></div><div class="stocktxt">✅ ${tr("sold_done")}: ${sold} • 📦 ${tr("rest_stock")}: ${st}</div>${low}`;
   }
-  if(sold > 0) return `<div class="stocktxt">✅ Sudah laku: ${sold}</div>`;
-  if(st > 0) return `<div class="stocktxt">📦 Stok tersedia: ${st}</div>`;
+  if(sold > 0) return `<div class="stocktxt">✅ ${tr("sold_done")}: ${sold}</div>`;
+  if(st > 0) return `<div class="stocktxt">📦 ${tr("avail_stock")}: ${st}</div>`;
   return "";
 }
 
@@ -1166,6 +1166,8 @@ lanjut: "Lanjut Belanja", preview: "📸 Preview Pesanan", kirim: "✓ Kirim ke 
 kosong: "Keranjang kosong!", habis_alert: "Maaf, item ini sudah habis!",
 cancel_q: "Yakin ingin membatalkan checkout? Semua item akan dihapus.",
 dilihat_w: "dilihat", wish_title: "❤️ Wishlist Saya", hapus: "Hapus",
+sold_done: "Sudah laku", rest_stock: "Sisa stok", avail_stock: "Stok tersedia",
+low_a: "Sisa", low_b: "lagi, buruan sebelum habis!",
 server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni",
 b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Roblox",
@@ -1196,6 +1198,8 @@ lanjut: "Continue Shopping", preview: "📸 Order Preview", kirim: "✓ Send to 
 kosong: "Cart is empty!", habis_alert: "Sorry, this item is sold out!",
 cancel_q: "Cancel checkout? All items will be removed.",
 dilihat_w: "views", wish_title: "❤️ My Wishlist", hapus: "Remove",
+sold_done: "Sold", rest_stock: "Stock left", avail_stock: "Available stock",
+low_a: "Only", low_b: "left, hurry before it's gone!",
 server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
 wa_t: "Need help?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
 b_brain_t: "🧠 Brainrot Catalog", b_top_t: "💰 Top Up", b_akun_t: "👤 Roblox Accounts",
