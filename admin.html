@@ -94,6 +94,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; box-shadow:
     <label>Produk akun</label>
     <select id="akunProdSel" onchange="loadAkunData()"><option>Memuat...</option></select>
     <div id="akunCount" style="font-size:13px;color:var(--mut);margin-top:8px;"></div>
+    <button id="akunRekapBtn" onclick="loadAkunRekap()" style="background:#232c44;">📋 Rekap Semua Produk</button>
+    <div id="akunRekap" style="margin-top:8px;font-size:13px;"></div>
     <label>ID akun baru</label>
     <input type="text" id="akunIdInput" placeholder="id- ..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Password baru</label>
@@ -312,6 +314,7 @@ function loadAkunProds(){
         sel.appendChild(op);
       });
       loadAkunData();
+      loadAkunRekap();
     } catch(e) {}
   });
 }
@@ -342,6 +345,36 @@ function loadAkunData(){
   }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil (cek PIN/koneksi).</span>'; });
 }
 function escAkun(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function loadAkunRekap(){
+  const box = document.getElementById("akunRekap");
+  box.innerHTML = '<p class="hint">Memuat...</p>';
+  fetch(SB_URL + "/rest/v1/akun_data?select=product,status", { headers: pinH() })
+  .then(r => r.json()).then(function(arr){
+    try {
+      const m = {};
+      (arr || []).forEach(function(o){
+        const p = String(o.product || "").trim() || "-";
+        if(!m[p]) m[p] = { ready: 0, sold: 0 };
+        if(String(o.status) === "ready") m[p].ready++;
+        else m[p].sold++;
+      });
+      const keys = Object.keys(m).sort();
+      if(!keys.length){ box.innerHTML = '<p class="hint">Brankas kosong.</p>'; return; }
+      box.innerHTML = keys.map(function(p){
+        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:6px;">' +
+          '<div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escAkun(p).slice(0, 50) + '</div>' +
+          '<span style="color:var(--green);font-weight:700;white-space:nowrap;">READY ' + m[p].ready + '</span>' +
+          '<span style="color:var(--mut);white-space:nowrap;">SOLD ' + m[p].sold + '</span>' +
+          '<button onclick="akunRekapPilih(\'' + p.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\')" style="width:auto;margin:0;padding:7px 12px;font-size:12px;">Buka</button></div>';
+      }).join("");
+    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
+  }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil.</span>'; });
+}
+function akunRekapPilih(p){
+  const sel = document.getElementById("akunProdSel");
+  sel.value = p;
+  loadAkunData();
+}
 function togglePw(id){
   const o = AKUN_ROWS.find(x => x.id === id);
   const el = document.getElementById("pw-" + id);
@@ -365,13 +398,14 @@ function addAkunData(){
       document.getElementById("akunIdInput").value = "";
       document.getElementById("akunPwInput").value = "";
       loadAkunData();
+      loadAkunRekap();
     } else st.innerHTML = '<span class="err">Gagal simpan.</span>';
   }).catch(function(){ st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 function delAkunData(id){
   if(!confirm("Hapus data #" + id + "?")) return;
   fetch(SB_URL + "/rest/v1/akun_data?id=eq." + id, { method: "DELETE", headers: pinH() })
-  .then(function(){ loadAkunData(); })
+  .then(function(){ loadAkunData(); loadAkunRekap(); })
   .catch(function(){ alert("Gagal hapus."); });
 }
 
