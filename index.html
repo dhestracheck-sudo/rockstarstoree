@@ -773,7 +773,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <div class="stats">
   <div class="stat"><b>100K+</b><span data-i18n="st1">Testimoni amanah</span></div>
   <div class="stat"><b>⚡</b><span data-i18n="st2">Proses hitungan menit</span></div>
-  <div class="stat"><b>🌍</b><span data-i18n="st3">Semua payment</span><div class="payicons" style="justify-content:center;margin-top:10px;"><span>+ All Payment</span></div></div>
+  <div class="stat"><b>🌍</b><span data-i18n="st3">Semua payment</span></div>
   <div class="stat"><b>🎁</b><span data-i18n="st4">Ribuan item & pet</span></div>
 </div>
 
@@ -1112,7 +1112,6 @@ function flashHTML(){
         ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-        <div class="payicons"><span>+ All Payment</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
     </div>`;
@@ -1427,7 +1426,6 @@ function itemCard(categories, i, j){
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-      <div class="payicons"><span>+ All Payment</span></div>
       <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>
   </div>`;
@@ -1514,7 +1512,6 @@ function renderDetail(){
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
     <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-    <div class="payicons"><span>+ All Payment</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">${tr("hemat")} -${off}%</span></div>` : ``}
     <div class="mactions">
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
