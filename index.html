@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co">
 <title>Rockstar.Store — Solusi Sepuh Roblox Kamu</title>
 <meta name="description" content="Rockstar Store: top up Robux, item Brainrot, dan akun Roblox premium termurah se-Indonesia & Malaysia. Proses kilat, aman 100%, testimoni 100.000+.">
 <meta name="keywords" content="rockstarstore, rockstar store roblox, top up robux murah, steal a brainrot, grow a garden, beli akun roblox">
@@ -767,7 +770,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()" data-i18n="cta_akun">Katalog Akun 👤</button>
     </div>
   </div>
-  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store" fetchpriority="high" decoding="async"></div>
 </section>
 
 <div class="stats">
@@ -2065,10 +2068,13 @@ function mergeFromSheet(arr){
   );
 }
 
+function hideLoader(){ const l = document.getElementById("loader"); if(l) l.classList.add("hide"); }
+
 function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Info"));
     render();
+    hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
@@ -2087,14 +2093,8 @@ function loadLiveStock(){
 }
 
 // Pengaman: loader tidak boleh nyangkut apapun yang terjadi.
-window.addEventListener("error", function(){
-  const l = document.getElementById("loader");
-  if(l) l.classList.add("hide");
-});
-setTimeout(function(){
-  const l = document.getElementById("loader");
-  if(l) l.classList.add("hide");
-}, 6000);
+window.addEventListener("error", function(){ hideLoader(); });
+setTimeout(function(){ hideLoader(); }, 6000);
 
 loadLiveStock().then(() => {
   try { applyLang(); } catch(e) {}
@@ -2102,10 +2102,7 @@ loadLiveStock().then(() => {
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
   try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
-  setTimeout(() => {
-    const l = document.getElementById("loader");
-    if(l) l.classList.add("hide");
-  }, 900);
+  hideLoader();
 });
 </script>
 
