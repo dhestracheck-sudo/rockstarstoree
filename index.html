@@ -739,47 +739,48 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <div id="loader"><img src="ROCKSTARLOGO.png" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="topwrap">
-<div class="announce"><span class="run">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
+<div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
   <div class="brand"><img src="ROCKSTARLOGO.png" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
-  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
+  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
+  <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
   <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
-  <button class="cartbtn" onclick="openCartModal()">🛒 Keranjang <small id="cartCount">0</small></button>
+  <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
 </header>
 </div>
 
 <section class="hero">
   <div class="hero-text">
-    <span class="hero-kicker">#1 STORE BRAINROT TERLENGKAP DI INDONESIA DAN MALAYSIA</span>
-    <h1>SOLUSI SEPUH <span>ROBLOX</span> KAMU 🇮🇩🇲🇾</h1>
-    <p>Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Rockstar Store menyediakan brainrot kualitas premium dan akun kualitas premium. Yang bikin Roblox-mu sepuh dan sudah pasti bikin temanmu iri dan kepanasan. <b style="color:var(--blue2);">Waktunya naik kelas! 🚀</b></p>
-    <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">📢 Join Saluran WhatsApp</a>
+    <span class="hero-kicker" data-i18n="kicker">#1 STORE BRAINROT TERLENGKAP DI INDONESIA DAN MALAYSIA</span>
+    <h1 data-i18n-html="hero_h1">SOLUSI SEPUH <span>ROBLOX</span> KAMU 🇮🇩🇲🇾</h1>
+    <p data-i18n-html="hero_p">Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Rockstar Store menyediakan brainrot kualitas premium dan akun kualitas premium. Yang bikin Roblox-mu sepuh dan sudah pasti bikin temanmu iri dan kepanasan. <b style="color:var(--blue2);">Waktunya naik kelas! 🚀</b></p>
+    <a class="channel-link" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener" data-i18n="channel">📢 Join Saluran WhatsApp</a>
     <div class="hero-cta">
-      <button id="ctaBrainrot" class="btn-primary" onclick="goToBrainrot()">Katalog Brainrot 🧠</button>
-      <button id="ctaTopup" class="btn-ghost" onclick="goToTopUp()">Top Up Robux 💰</button>
-      <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()">Katalog Akun 👤</button>
+      <button id="ctaBrainrot" class="btn-primary" onclick="goToBrainrot()" data-i18n="cta_brainrot">Katalog Brainrot 🧠</button>
+      <button id="ctaTopup" class="btn-ghost" onclick="goToTopUp()" data-i18n="cta_topup">Top Up Robux 💰</button>
+      <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()" data-i18n="cta_akun">Katalog Akun 👤</button>
     </div>
   </div>
   <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.png" alt="Rockstar.Store"></div>
 </section>
 
 <div class="stats">
-  <div class="stat"><b>100K+</b><span>Testimoni amanah</span></div>
-  <div class="stat"><b>⚡</b><span>Proses hitungan menit</span></div>
-  <div class="stat"><b>🌍</b><span>Semua payment</span></div>
-  <div class="stat"><b>🎁</b><span>Ribuan item & pet</span></div>
+  <div class="stat"><b>100K+</b><span data-i18n="st1">Testimoni amanah</span></div>
+  <div class="stat"><b>⚡</b><span data-i18n="st2">Proses hitungan menit</span></div>
+  <div class="stat"><b>🌍</b><span data-i18n="st3">Semua payment</span></div>
+  <div class="stat"><b>🎁</b><span data-i18n="st4">Ribuan item & pet</span></div>
 </div>
 
 <section class="section" id="carabeli">
-  <h2>Cara Beli 🎮</h2>
-  <p>5 langkah gampang, ikuti gambarnya ya!</p>
+  <h2 data-i18n="cb_title">Cara Beli 🎮</h2>
+  <p data-i18n="cb_sub">5 langkah gampang, ikuti gambarnya ya!</p>
   <div class="steps">
-    <div class="step"><span class="snum">1</span><div><span class="simg">🛍️</span><b>Pilih mainanmu</b><p>Lihat-lihat, klik <b>Tambah ke Keranjang</b> 🛒</p></div></div>
-    <div class="step"><span class="snum">2</span><div><span class="simg">🧺</span><b>Cek keranjang</b><p>Buka 🛒 di atas, pastikan pesananmu benar.</p></div></div>
-    <div class="step"><span class="snum">3</span><div><span class="simg">💬</span><b>Chat admin</b><p>Klik <b>✓ Kirim ke Admin</b>, WA terbuka sendiri.</p></div></div>
-    <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b>Bayar</b><p>Bayar via QRIS, lalu kirim buktinya ke admin.</p></div></div>
-    <div class="step"><span class="snum">5</span><div><span class="simg">🎁</span><b>Item datang!</b><p>Admin kirim item di dalam game. Selamat main! 🚀</p></div></div>
+    <div class="step"><span class="snum">1</span><div><span class="simg">🛍️</span><b data-i18n="s1t">Pilih mainanmu</b><p data-i18n-html="s1x">Lihat-lihat, klik <b>Tambah ke Keranjang</b> 🛒</p></div></div>
+    <div class="step"><span class="snum">2</span><div><span class="simg">🧺</span><b data-i18n="s2t">Cek keranjang</b><p data-i18n-html="s2x">Buka 🛒 di atas, pastikan pesananmu benar.</p></div></div>
+    <div class="step"><span class="snum">3</span><div><span class="simg">💬</span><b data-i18n="s3t">Chat admin</b><p data-i18n-html="s3x">Klik <b>✓ Kirim ke Admin</b>, WA terbuka sendiri.</p></div></div>
+    <div class="step"><span class="snum">4</span><div><span class="simg">💳</span><b data-i18n="s4t">Bayar</b><p data-i18n-html="s4x">Bayar via QRIS, lalu kirim buktinya ke admin.</p></div></div>
+    <div class="step"><span class="snum">5</span><div><span class="simg">🎁</span><b data-i18n="s5t">Item datang!</b><p data-i18n-html="s5x">Admin kirim item di dalam game. Selamat main! 🚀</p></div></div>
   </div>
   <div class="tutwrap">
     <div class="tutcard" id="tutCard">
@@ -799,11 +800,11 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 </section>
 <script>
 var TUT_STEPS = [
-  { e: "🛍️", img: "CARA%20ORDER%201.webp", t: "Pilih mainanmu", x: "Lihat-lihat, klik Tambah ke Keranjang 🛒" },
-  { e: "🧺", img: "CARA%20ORDER%202.webp", t: "Cek keranjang", x: "Buka 🛒 di atas, pastikan pesananmu benar." },
-  { e: "💬", img: "CARA%20ORDER%203.webp", t: "Chat admin", x: "Klik ✓ Kirim ke Admin, WA terbuka sendiri." },
-  { e: "💳", img: "CARA%20ORDER%204.webp", t: "Bayar", x: "Bayar via QRIS, lalu kirim buktinya ke admin." },
-  { e: "🎁", img: "CARA%20ORDER%205.webp", t: "Item datang!", x: "Admin kirim item di dalam game. Selamat main! 🚀" }
+  { e: "🛍️", img: "CARA%20ORDER%201.webp", tk: "s1t", xk: "s1x" },
+  { e: "🧺", img: "CARA%20ORDER%202.webp", tk: "s2t", xk: "s2x" },
+  { e: "💬", img: "CARA%20ORDER%203.webp", tk: "s3t", xk: "s3x" },
+  { e: "💳", img: "CARA%20ORDER%204.webp", tk: "s4t", xk: "s4x" },
+  { e: "🎁", img: "CARA%20ORDER%205.webp", tk: "s5t", xk: "s5x" }
 ];
 var tutIdx = 0, tutTimer = null;
 function tutShow(i){
@@ -814,8 +815,8 @@ function tutShow(i){
   else { im.removeAttribute("src"); im.style.display = "none"; document.getElementById("tutEmoji").style.display = ""; }
   document.getElementById("tutEmoji").textContent = s.e;
   document.getElementById("tutNum").textContent = (tutIdx + 1) + " / " + TUT_STEPS.length;
-  document.getElementById("tutTit").textContent = s.t;
-  document.getElementById("tutTxt").textContent = s.x;
+  document.getElementById("tutTit").textContent = (typeof tr === "function") ? tr(s.tk) : s.tk;
+  document.getElementById("tutTxt").textContent = (typeof tr === "function") ? tr(s.xk) : s.xk;
   var d = document.getElementById("tutDots");
   d.innerHTML = TUT_STEPS.map(function(_, j){
     return '<i onclick="tutGo(' + (j - tutIdx) + ')" class="' + (j === tutIdx ? "on" : "") + '"></i>';
@@ -888,17 +889,17 @@ function pwaInstall(){
 <div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;" onclick="pwaInstall()">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
 <div class="fab">
   <div class="fab-row">
-    <button onclick="openCartModal()">Lihat</button>
-    <button class="checkout" onclick="checkout()">Checkout</button>
-    <button class="cancel" onclick="cancelCheckout()">Batal</button>
+    <button onclick="openCartModal()" data-i18n="lihat">Lihat</button>
+    <button class="checkout" onclick="checkout()" data-i18n="checkout">Checkout</button>
+    <button class="cancel" onclick="cancelCheckout()" data-i18n="batal">Batal</button>
   </div>
   <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
 </div>
 
 <div class="wafab">
   <div class="wapop" id="testiPop" style="display:none;">
-    <div class="watext"><b>⭐ Testimoni Customer</b><span>100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
-    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Lihat Testimoni</a>
+    <div class="watext"><b data-i18n="testi_t">⭐ Testimoni Customer</b><span data-i18n="testi_x">100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
+    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener" data-i18n="testi_btn">Lihat Testimoni</a>
   </div>
   <div class="wabtnrow">
   <button class="wabtn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
@@ -916,15 +917,15 @@ function pwaInstall(){
   </div>
   <div class="wapop" id="waPop" style="display:none;">
     <img src="logo wa.jpg" alt="WhatsApp Admin" onerror="this.style.display='none'">
-    <div class="watext"><b>Butuh bantuan?</b><span>Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
-    <a href="https://wa.me/6289664299571?text=Halo%20admin%20Rockstar.Store!" target="_blank" rel="noopener">Chat WhatsApp</a>
+    <div class="watext"><b data-i18n="wa_t">Butuh bantuan?</b><span data-i18n="wa_x">Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
+    <a href="https://wa.me/6289664299571?text=Halo%20admin%20Rockstar.Store!" target="_blank" rel="noopener" data-i18n="wa_btn">Chat WhatsApp</a>
   </div>
 </div>
 
 <div class="overlay" id="serverModal">
   <div class="modal">
-    <h2>🔗 Link Server Rock Star</h2>
-    <p style="color:var(--mut);font-size:13.5px;margin:0 0 14px;">Klik server untuk join langsung dari Roblox</p>
+    <h2 data-i18n="server_t">🔗 Link Server Rock Star</h2>
+    <p style="color:var(--mut);font-size:13.5px;margin:0 0 14px;" data-i18n="server_sub">Klik server untuk join langsung dari Roblox</p>
     <div class="serverbtns" style="flex-direction:column;">
       <a class="serverbtn" href="https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" target="_blank" rel="noopener">🎲 Server Kotak Gulung untuk Brainrot</a>
       <a class="serverbtn" href="https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" target="_blank" rel="noopener">🍂 Server Fall for Brainrot</a>
@@ -935,28 +936,28 @@ function pwaInstall(){
       <a class="serverbtn" href="https://www.roblox.com/share?code=33212d5bded8e24e8e290f40fd34b8cf&type=Server" target="_blank" rel="noopener">🥊 Server Boxing for Brainrot</a>
     </div>
     <div class="mactions">
-      <button class="ghost" onclick="closeServerModal()">Tutup</button>
+      <button class="ghost" onclick="closeServerModal()" data-i18n="tutup">Tutup</button>
     </div>
   </div>
 </div>
 
 <div class="overlay" id="cartModal">
   <div class="modal">
-    <h2>📋 Keranjang Saya</h2>
+    <h2 data-i18n="cart_title">📋 Keranjang Saya</h2>
     <div id="cartList"></div>
     <div class="mactions">
-      <button class="ghost" onclick="closeCartModal()">Lanjut Belanja</button>
-      <button class="go" onclick="checkout()">Checkout</button>
+      <button class="ghost" onclick="closeCartModal()" data-i18n="lanjut">Lanjut Belanja</button>
+      <button class="go" onclick="checkout()" data-i18n="checkout">Checkout</button>
     </div>
   </div>
 </div>
 
 <div class="overlay" id="wishModal">
   <div class="modal">
-    <h2>❤️ Wishlist Saya</h2>
+    <h2 data-i18n="wish_title">❤️ Wishlist Saya</h2>
     <div id="wishList"></div>
     <div class="mactions">
-      <button class="ghost" onclick="closeWishModal()">Tutup</button>
+      <button class="ghost" onclick="closeWishModal()" data-i18n="tutup">Tutup</button>
     </div>
   </div>
 </div>
@@ -971,8 +972,8 @@ function pwaInstall(){
 </section>
 
 <footer>
-  No WA Admin: <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
-  TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu
+  <span data-i18n="foot_wa">No WA Admin:</span> <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
+  <span data-i18n="foot_tag">TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu</span>
 </footer>
 
 <script>
@@ -1063,7 +1064,7 @@ function flashItems(){
 
 function flashAdd(page, i, j){
   const item = catsOf(page)[i].items[j];
-  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  if(item.stock === 0){ alert(tr("habis_alert")); return; }
   cart.push({...item, page});
   logAksi("keranjang", item.name, catsOf(page)[i].name, item.price, page);
   trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
@@ -1105,15 +1106,15 @@ function flashHTML(){
         <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
         ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
-        <div class="kilat"><span>⚡ Proses kilat</span><span>🛡️ SAFE 100%</span><span class="vbadge"><i>✓</i>VERIFIED</span></div>
-        <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-        <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">Tambah ke Keranjang</button>
+        <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
+        <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>₿ Crypto</span><span>Binance</span><span>+ All Payment</span></div>
+        <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
     </div>`;
   }).join("");
   return `
   <div class="flashsec">
-    <div class="flashhead" onclick="toggleFlash()"><h3>⚡ FLASH SALE</h3><span class="arrow" id="flasharrow">▼</span><span>👆 Klik Flash Sale untuk melihat barang diskon</span><span class="fomo">🔥 Buruan! Keburu habis:</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▼</span><span>${tr("flash_click")}</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
     <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid">${cards}</div></div>
   </div>`;
 }
@@ -1142,29 +1143,138 @@ function syncCta(){
   if(cta) cta.style.display = (currentPage === 'home') ? "" : "none";
 }
 
+/* ===== bahasa ID/EN ===== */
+const I18N = {
+id: {
+search_ph: "Cari item, misal: moon bloom, robux...", cart: "🛒 Keranjang",
+kicker: "#1 STORE BRAINROT TERLENGKAP DI INDONESIA DAN MALAYSIA",
+channel: "📢 Join Saluran WhatsApp", cta_brainrot: "Katalog Brainrot 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Katalog Akun 👤",
+st1: "Testimoni amanah", st2: "Proses hitungan menit", st3: "Semua payment", st4: "Ribuan item & pet",
+cb_title: "Cara Beli 🎮", cb_sub: "5 langkah gampang, ikuti gambarnya ya!",
+s1t: "Pilih mainanmu", s2t: "Cek keranjang", s3t: "Chat admin", s4t: "Bayar", s5t: "Item datang!",
+foot_wa: "No WA Admin:", back: "← Kembali", back_home: "← Beranda",
+cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up",
+cat_sub: "kategori — klik untuk lihat item", cat_empty: "Katalog kosong", cat_empty_x: "Data belum termuat (koneksi lambat).",
+cat_empty_msg: "😢 Katalog belum tampil. Biasanya karena sinyal.", reload: "🔄 Muat Ulang",
+mulai: "Mulai Belanja", pilih_sub: "Pilih kategori di bawah ini",
+hasil: "Hasil pencarian", cocok_a: "item cocok dengan", none_a: "Tidak ada item cocok dengan",
+add_cart: "Tambah ke Keranjang", sold_out_btn: "Stok Habis", habis: "HABIS", habis_txt: "Stok habis",
+stock: "Stok:", stock_na: "Stok: -", sold_w: "terjual", kilat: "⚡ Proses kilat", safe: "🛡️ SAFE 100%", verified: "VERIFIED",
+hubungi: "Hubungi admin untuk harga", more_a: "Lihat Selengkapnya", more_b: "lagi", hemat: "HEMAT",
+tutup: "Tutup", lihat: "Lihat", checkout: "Checkout", batal: "Batal", cart_title: "📋 Keranjang Saya",
+lanjut: "Lanjut Belanja", preview: "📸 Preview Pesanan", kirim: "✓ Kirim ke Admin",
+kosong: "Keranjang kosong!", habis_alert: "Maaf, item ini sudah habis!",
+cancel_q: "Yakin ingin membatalkan checkout? Semua item akan dihapus.",
+dilihat_w: "dilihat", wish_title: "❤️ Wishlist Saya", hapus: "Hapus",
+server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
+wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni",
+b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Roblox",
+b_brain_d: "Solusi sepuh roblox kamu — puluhan kategori item.", b_top_d: "Top up Robux & gamepass harga terbaik.", b_akun_d: "Akun sepuh, data polos, berbagai map — siap pakai.",
+lihat: "Lihat", server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
+cart_title: "📋 Keranjang Saya", lanjut: "Lanjut Belanja", wish_title: "❤️ Wishlist Saya",
+testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni", wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp",
+flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan! Keburu habis:",
+},
+en: {
+search_ph: "Search items, e.g.: moon bloom, robux...", cart: "🛒 Cart",
+kicker: "#1 MOST COMPLETE BRAINROT STORE IN INDONESIA AND MALAYSIA",
+channel: "📢 Join WhatsApp Channel", cta_brainrot: "Brainrot Catalog 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Account Catalog 👤",
+st1: "Trusted reviews", st2: "Minutes-fast process", st3: "All payments", st4: "Thousands of items & pets",
+cb_title: "How to Buy 🎮", cb_sub: "5 easy steps, follow the pictures!",
+s1t: "Pick your item", s2t: "Check cart", s3t: "Chat admin", s4t: "Pay", s5t: "Item arrives!",
+foot_wa: "Admin WA:", back: "← Back", back_home: "← Home",
+cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up",
+cat_sub: "categories — click to view items", cat_empty: "Empty catalog", cat_empty_x: "Data not loaded (slow connection).",
+cat_empty_msg: "😢 Catalog not showing. Usually the signal.", reload: "🔄 Reload",
+mulai: "Start Shopping", pilih_sub: "Choose a category below",
+hasil: "Search results", cocok_a: "items matching", none_a: "No items match",
+add_cart: "Add to Cart", sold_out_btn: "Sold Out", habis: "SOLD OUT", habis_txt: "Out of stock",
+stock: "Stock:", stock_na: "Stock: -", sold_w: "sold", kilat: "⚡ Fast process", safe: "🛡️ 100% SAFE", verified: "VERIFIED",
+hubungi: "Contact admin for price", more_a: "See More", more_b: "more", hemat: "SAVE",
+tutup: "Close", lihat: "View", checkout: "Checkout", batal: "Cancel", cart_title: "📋 My Cart",
+lanjut: "Continue Shopping", preview: "📸 Order Preview", kirim: "✓ Send to Admin",
+kosong: "Cart is empty!", habis_alert: "Sorry, this item is sold out!",
+cancel_q: "Cancel checkout? All items will be removed.",
+dilihat_w: "views", wish_title: "❤️ My Wishlist", hapus: "Remove",
+server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
+wa_t: "Need help?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
+b_brain_t: "🧠 Brainrot Catalog", b_top_t: "💰 Top Up", b_akun_t: "👤 Roblox Accounts",
+b_brain_d: "Your roblox upgrade solution — dozens of item categories.", b_top_d: "Top up Robux & gamepasses at the best price.", b_akun_d: "Pro-level accounts, fresh data, many maps — ready to use.",
+lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
+flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry! Selling out:",
+}};
+I18N.id.hero_h1 = 'SOLUSI SEPUH <span>ROBLOX</span> KAMU 🇮🇩🇲🇾';
+I18N.en.hero_h1 = 'YOUR <span>ROBLOX</span> UPGRADE SOLUTION 🇮🇩🇲🇾';
+I18N.id.hero_p = 'Item murah, proses cepat, semua payment tersedia. Dipercaya 100.000+ customer dengan testimoni amanah. Rockstar Store menyediakan brainrot kualitas premium dan akun kualitas premium. Yang bikin Roblox-mu sepuh dan sudah pasti bikin temanmu iri dan kepanasan. <b style="color:var(--blue2);">Waktunya naik kelas! 🚀</b>';
+I18N.en.hero_p = 'Cheap items, fast process, all payments accepted. Trusted by 100,000+ customers with honest reviews. Rockstar Store provides premium brainrot and premium accounts that make your Roblox pro and your friends jealous. <b style="color:var(--blue2);">Time to level up! 🚀</b>';
+I18N.id.run_html = '⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a>';
+I18N.en.run_html = '⚡ Fast process • 💰 Cheapest prices • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join WA channel</a> • ⚡ Fast process • 💰 Cheapest prices • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join WA channel</a>';
+I18N.id.s1x = 'Lihat-lihat, klik <b>Tambah ke Keranjang</b> 🛒';
+I18N.en.s1x = 'Look around, click <b>Add to Cart</b> 🛒';
+I18N.id.s2x = 'Buka 🛒 di atas, pastikan pesananmu benar.';
+I18N.en.s2x = 'Open 🛒 above, make sure your order is right.';
+I18N.id.s3x = 'Klik <b>✓ Kirim ke Admin</b>, WA terbuka sendiri.';
+I18N.en.s3x = 'Click <b>✓ Send to Admin</b>, WA opens by itself.';
+I18N.id.s4x = 'Bayar via QRIS, lalu kirim buktinya ke admin.';
+I18N.en.s4x = 'Pay via QRIS, then send the receipt to admin.';
+I18N.id.s5x = 'Admin kirim item di dalam game. Selamat main! 🚀';
+I18N.en.s5x = 'Admin sends the item in-game. Happy playing! 🚀';
+I18N.id.foot_tag = 'TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu';
+I18N.en.foot_tag = 'TikTok @rockstarstoree • Rockstar.Store — your roblox upgrade solution';
+I18N.id.testi_x = '100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA';
+I18N.en.testi_x = '100K+ trusted reviews, click below to see the WA channel';
+I18N.id.wa_x = 'Klik tombol di bawah langsung ke WA admin ROCKSTAR';
+I18N.en.wa_x = 'Click below to chat ROCKSTAR admin on WA directly';
+I18N.id.wish_empty = '🤍 Belum ada favorit.<br>Ketuk hati di foto produk untuk simpan.';
+I18N.en.wish_empty = '🤍 No favorites yet.<br>Tap the heart on product photos to save.';
+function lang(){ try { return localStorage.getItem("rs_lang") || "id"; } catch(e){ return "id"; } }
+function tr(k){ const L = I18N[lang()] || {}; if(L[k] !== undefined) return L[k]; const D = I18N.id || {}; return (D[k] !== undefined) ? D[k] : k; }
+function applyLang(){
+  const L = lang();
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const k = el.getAttribute("data-i18n");
+    if(I18N[L] && I18N[L][k] !== undefined) el.textContent = I18N[L][k];
+  });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => {
+    const k = el.getAttribute("data-i18n-ph");
+    if(I18N[L] && I18N[L][k] !== undefined) el.setAttribute("placeholder", I18N[L][k]);
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => {
+    const k = el.getAttribute("data-i18n-html");
+    if(I18N[L] && I18N[L][k] !== undefined) el.innerHTML = I18N[L][k];
+  });
+  const b = document.getElementById("langBtn");
+  if(b) b.textContent = (L === "id") ? "🇬🇧 EN" : "🇮🇩 ID";
+}
+function toggleLang(){
+  try { localStorage.setItem("rs_lang", lang() === "id" ? "en" : "id"); } catch(e) {}
+  applyLang();
+  try { render(); } catch(e) {}
+  try { tutShow(tutIdx); } catch(e) {}
+}
 function render(){
   try { syncHeroCta(); } catch(e) {}
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
   syncCta();
   if(currentPage === 'home'){
-    title.innerHTML = `<h2>Mulai Belanja</h2><p>Pilih kategori di bawah ini</p>`;
+    title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
-          <h3>🧠 Katalog Brainrot</h3>
-          <p>Solusi sepuh roblox kamu — puluhan kategori item.</p>
+          <h3>${tr("b_brain_t")}</h3>
+          <p>${tr("b_brain_d")}</p>
         </div>
         <div class="banner" onclick="goToTopUp()">
           <small>ROBUX • GAMEPASS</small>
-          <h3>💰 Top Up</h3>
-          <p>Top up Robux & gamepass harga terbaik.</p>
+          <h3>${tr("b_top_t")}</h3>
+          <p>${tr("b_top_d")}</p>
         </div>
         <div class="banner" onclick="goToAkun()">
           <small>AKUN ROBLOX</small>
-          <h3>👤 Akun Roblox</h3>
-          <p>Akun sepuh, data polos, berbagai map — siap pakai.</p>
+          <h3>${tr("b_akun_t")}</h3>
+          <p>${tr("b_akun_d")}</p>
         </div>
       </div>
       <div id="flashwrap"></div>`;
@@ -1175,17 +1285,17 @@ function render(){
   }
   const categories = getCurrentCategories();
   if(!categories.length){
-    title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
-      <h2>Katalog kosong</h2><p>Data belum termuat (koneksi lambat).</p>`;
+    title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>
+      <h2>${tr("cat_empty")}</h2><p>${tr("cat_empty_x")}</p>`;
     el.innerHTML = `<div style="text-align:center;padding:30px 10px;">
-      <p style="color:var(--mut);">😢 Katalog belum tampil. Biasanya karena sinyal.</p>
-      <button class="btn-primary" onclick="location.reload()">🔄 Muat Ulang</button>
+      <p style="color:var(--mut);">${tr("cat_empty_msg")}</p>
+      <button class="btn-primary" onclick="location.reload()">${tr("reload")}</button>
     </div>`;
     return;
   }
-  title.innerHTML = `<button class="backbtn" onclick="goHome()">← Beranda</button>
-    <h2>${currentPage === 'brainrot' ? 'Katalog Brainrot' : (currentPage === 'akun' ? 'Katalog Akun' : 'Top Up')}</h2>
-    <p>${categories.length} kategori — klik untuk lihat item</p>`;
+  title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>
+    <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : tr("cat_topup"))}</h2>
+    <p>${categories.length} ${tr("cat_sub")}</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
       <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span><img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)"></div>
@@ -1211,14 +1321,14 @@ function searchCatalog(){
   });
   sugShow(q, out.slice(0, 6));
   if(out.length === 0){
-    title.innerHTML = `<h2>Hasil pencarian</h2><p>Tidak ada item cocok dengan "${q}"</p>`;
+    title.innerHTML = `<h2>${tr("hasil")}</h2><p>${tr("none_a")} "${q}"</p>`;
     el.innerHTML = "";
     return;
   }
   currentPage = out[0].page;
   syncCta();
-  title.innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
-    <h2>Hasil pencarian</h2><p>${out.length} item cocok dengan "${q}"</p>`;
+  title.innerHTML = `<button class="backbtn" onclick="render()">${tr("back")}</button>
+    <h2>${tr("hasil")}</h2><p>${out.length} ${tr("cocok_a")} "${q}"</p>`;
   searchOut = out;
   searchN = PAGE_N;
   paintSearch();
@@ -1229,7 +1339,7 @@ function paintSearch(){
   const y = window.scrollY;
   const el = document.getElementById("products");
   el.innerHTML = `<div class="itemgrid">` + searchOut.slice(0, searchN).map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>` +
-    (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=12;paintSearch();">Lihat Selengkapnya (${searchOut.length - searchN} lagi)</button></div>` : ``);
+    (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=12;paintSearch();">${tr("more_a")} (${searchOut.length - searchN} ${tr("more_b")})</button></div>` : ``);
   window.scrollTo(0, y);
   watchViews();
 }
@@ -1242,7 +1352,7 @@ function sugShow(q, rows){
   box.innerHTML = rows.map(r => {
     const cats = catsOf(r.page);
     const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
-    const pr = (r.item.stock === 0) ? "HABIS" : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    const pr = (r.item.stock === 0) ? tr("habis") : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
     const nm = String(r.item.name || "").replace(/</g, "&lt;");
     return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
       `<img src="${fixImg(im)}" alt="" loading="lazy" onerror="this.style.display='none'">` +
@@ -1274,7 +1384,7 @@ function itemCard(categories, i, j){
   const thumb = hasCarousel ? `
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
-      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">${tr("habis")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
@@ -1283,9 +1393,9 @@ function itemCard(categories, i, j){
         ${item.images.map((_, idx) => `<i class="${idx === 0 ? 'on' : ''}" onclick="event.stopPropagation();carouselGoto(${i},${j},${idx})"></i>`).join('')}
       </div>
     </div>` : `
-    <div class="thumb">
+      <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
-      ${item.stock === 0 ? `<span class="badge-out">HABIS</span>` : ``}
+      ${item.stock === 0 ? `<span class="badge-out">${tr("habis")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
@@ -1298,18 +1408,18 @@ function itemCard(categories, i, j){
       <div class="stars">${starsOf(item)}</div>
       <div class="meta">
         <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
-        ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
-        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">Stok: ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">Stok: -</span>`)}
+        ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
+        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">${tr("habis_txt")}</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">${tr("stock")} ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">${tr("stock_na")}</span>`)}
       </div>
       ${stockBarHTML(item)}
       <div class="price">
         ${hidePrice
-          ? `<span style="color:var(--red);font-weight:600;font-size:14px;">Hubungi admin untuk harga</span>`
+          ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
-      <div class="kilat"><span>⚡ Proses kilat</span><span>🛡️ SAFE 100%</span><span class="vbadge"><i>✓</i>VERIFIED</span></div>
-      <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-      <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
+      <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>₿ Crypto</span><span>Binance</span><span>+ All Payment</span></div>
+      <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>
   </div>`;
 }
@@ -1334,11 +1444,11 @@ function paintItems(){
   const y = window.scrollY;
   const akunCls = (categories === akunCategories) ? " akun" : "";
   syncCta();
-  document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">← Kembali</button>
+  document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">${tr("back")}</button>
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
     `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => j < shownN ? itemCard(categories, shownCat, j) : "").join("") + `</div>` +
-    (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">Lihat Selengkapnya (${category.items.length - shownN} lagi)</button></div>` : ``);
+    (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">${tr("more_a")} (${category.items.length - shownN} ${tr("more_b")})</button></div>` : ``);
   window.scrollTo(0, y);
   watchViews();
 }
@@ -1386,21 +1496,21 @@ function renderDetail(){
     <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
     ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
     <div class="detailmeta">
-      <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} dilihat</span>
-      ${item.sold ? `<span class="sold">🔥 ${item.sold} terjual</span>` : ``}
-      ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">Stok habis</span>` : (item.stock ? `<span class="stock">Stok: ${item.stock}</span>` : ``)}
+      <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} ${tr("dilihat_w")}</span>
+      ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
+      ${item.stock === 0 ? `<span style="color:var(--red);font-weight:600;">${tr("habis_txt")}</span>` : (item.stock ? `<span class="stock">${tr("stock")} ${item.stock}</span>` : ``)}
     </div>
     ${stockBarHTML(item)}
     <div class="detailprice">
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
-    <div class="kilat"><span>⚡ Proses kilat</span><span>🛡️ SAFE 100%</span><span class="vbadge"><i>✓</i>VERIFIED</span></div>
-    <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>+ All Payment</span></div>
-    ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">HEMAT -${off}%</span></div>` : ``}
+    <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
+    <div class="payicons"><span>QRIS</span><span>DANA</span><span>OVO</span><span>GoPay</span><span>BCA</span><span>BRI</span><span>₿ Crypto</span><span>Binance</span><span>+ All Payment</span></div>
+    ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">${tr("hemat")} -${off}%</span></div>` : ``}
     <div class="mactions">
-      <button class="ghost" onclick="closeDetail()">Tutup</button>
+      <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
       <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
-      <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? 'Stok Habis' : 'Tambah ke Keranjang'}</button>
+      <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>`;
 }
 function detailGoto(k){
@@ -1412,8 +1522,8 @@ function detailAdd(){
   if(!detailCur) return;
   const cats = catsOf(detailCur.page);
   const item = cats[detailCur.i].items[detailCur.j];
-  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
-  cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
+    if(item.stock === 0){ alert(tr("habis_alert")); return; }
+    cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
   logAksi("keranjang", item.name, cats[detailCur.i].name, item.price, detailCur.page);
   if(typeof gtag === "function"){
     gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
@@ -1494,7 +1604,7 @@ function syncCart(){
 function addItem(i,j){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
-  if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+  if(item.stock === 0){ alert(tr("habis_alert")); return; }
   cart.push({...item, categoryImg: categories[i].img, category: categories[i].name, page: currentPage});
   logAksi("keranjang", item.name, categories[i].name, item.price, currentPage);
   trackClick("tambah_keranjang", item.name, categories[i].name);
@@ -1559,8 +1669,8 @@ document.getElementById("serverModal").addEventListener('click', e => {
 });
 
 function checkout(){
-  if(cart.length==0){ alert("Keranjang kosong!"); return; }
-  let previewHTML = '<h2>📸 Preview Pesanan</h2>';
+  if(cart.length==0){ alert(tr("kosong")); return; }
+  let previewHTML = `<h2>${tr("preview")}</h2>`;
   let totalPrice = 0;
   cart.forEach((item, index) => {
     totalPrice += item.price;
@@ -1578,8 +1688,8 @@ function checkout(){
   m.style.display = 'block';
   m.innerHTML = `<div class="modal">${previewHTML}
     <div class="mactions">
-      <button class="danger" onclick="closeCheckoutPreview()">Batal</button>
-      <button class="wa" onclick="sendToAdmin()">✓ Kirim ke Admin</button>
+      <button class="danger" onclick="closeCheckoutPreview()">${tr("batal")}</button>
+      <button class="wa" onclick="sendToAdmin()">${tr("kirim")}</button>
     </div></div>`;
   document.body.appendChild(m);
   m.addEventListener('click', e => { if(e.target === m) closeCheckoutPreview(); });
@@ -1587,7 +1697,7 @@ function checkout(){
 function closeCheckoutPreview(){ const m = document.getElementById('checkoutModal'); if(m) m.remove(); }
 
 function sendToAdmin(){
-  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  if(cart.length==0){ alert(tr("kosong")); return; }
   if(typeof gtag === "function"){
     const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
     gtag("event", "kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" });
@@ -1639,7 +1749,7 @@ function catatOrder(){
 }
 
 function openCartModal(){
-  if(cart.length==0){ alert("Keranjang kosong!"); return; }
+  if(cart.length==0){ alert(tr("kosong")); return; }
   let html = '';
   let totalPrice = 0;
   cart.forEach((item, index) => {
@@ -1647,7 +1757,7 @@ function openCartModal(){
     html += `
       <div class="mrow">
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">Rp ${item.price.toLocaleString()}</span></div>
-        <button class="del" onclick="removeFromCart(${index})">Hapus</button>
+        <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
       </div>`;
   });
   html += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
@@ -1669,7 +1779,7 @@ document.getElementById("wishModal").addEventListener('click', e => {
 });
 function cancelCheckout(){
   if(cart.length==0){ alert("Keranjang sudah kosong!"); return; }
-  if(confirm("Yakin ingin membatalkan checkout? Semua item akan dihapus.")){
+  if(confirm(tr("cancel_q"))){
     cart = [];
     syncCart();
   }
@@ -1762,10 +1872,10 @@ function openWishModal(){
     html += `<div class="mrow">
       <div class="grow"><strong>${escWish(nm)}</strong><br><span style="color:var(--blue2);font-weight:600;">${pr}</span></div>
       <button class="del" style="background:var(--blue);" onclick="wishAdd('${r.page}',${r.i},${r.j})">🛒</button>
-      <button class="del" onclick="wishRemoveAt(${idx})">Hapus</button>
+      <button class="del" onclick="wishRemoveAt(${idx})">${tr("hapus")}</button>
     </div>`;
   });
-  document.getElementById("wishList").innerHTML = shown ? html : `<p style="color:var(--mut);text-align:center;padding:16px 0;">🤍 Belum ada favorit.<br>Ketuk hati di foto produk untuk simpan.</p>`;
+  document.getElementById("wishList").innerHTML = shown ? html : `<p style="color:var(--mut);text-align:center;padding:16px 0;">${tr("wish_empty")}</p>`;
   document.getElementById("wishModal").style.display = "block";
 }
 function escWish(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
@@ -1789,7 +1899,7 @@ function wishAdd(page, i, j){
   try {
     const cats = catsOf(page);
     const item = cats[i].items[j];
-    if(item.stock === 0){ alert("Maaf, item ini sudah habis!"); return; }
+    if(item.stock === 0){ alert(tr("habis_alert")); return; }
     cart.push({...item, categoryImg: cats[i].img, category: cats[i].name, page: page});
     logAksi("keranjang", item.name, cats[i].name, item.price, page);
     trackClick("tambah_keranjang", item.name, cats[i].name);
@@ -1978,8 +2088,10 @@ setTimeout(function(){
 }, 6000);
 
 loadLiveStock().then(() => {
+  try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
+  try { tutShow(tutIdx); } catch(e) {}
   try { document.getElementById("searchInput").addEventListener("input", searchCatalog); } catch(e) {}
   setTimeout(() => {
     const l = document.getElementById("loader");
