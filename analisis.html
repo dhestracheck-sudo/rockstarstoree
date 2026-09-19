@@ -178,6 +178,12 @@ function loadAktivitas(){
 /* ===== inbox order: status baru/lunas/batal + notif + rekap ===== */
 var lastBaru = -1;
 function sbH(){ return { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }; }
+function pinH(){
+  const h = sbH();
+  const p = document.getElementById("pinInput");
+  h["x-admin-pin"] = p ? (p.value || "") : "";
+  return h;
+}
 function orderBeep(){
   try {
     var C = window.AudioContext || window.webkitAudioContext;
@@ -259,7 +265,8 @@ function loadOrders(first){
           ';border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13px;">' +
           '<div><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escHtml(st.toUpperCase()) + '</span>' +
           ' <span style="color:var(--mut);">• ' + orderWaktu(o.waktu) + ' • Rp ' + Number(o.total || 0).toLocaleString("id-ID") + '</span></div>' +
-          '<div style="margin-top:4px;">' + orderItemsHtml(o, o.id) + '</div>';
+          '<div style="margin-top:4px;">' + orderItemsHtml(o, o.id) + '</div>' +
+          (st === "lunas" ? '<div data-cred="' + o.id + '"></div>' : '');
         if(st === "baru")
           h += '<div style="display:flex;gap:8px;margin-top:8px;">' +
             '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
@@ -268,6 +275,7 @@ function loadOrders(first){
       });
       box.innerHTML = h;
       refreshOrderStocks();
+      refreshOrderCreds();
     } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan order.</span>'; }
   }).catch(function(){ if(first) box.innerHTML = '<span class="err">Gagal ambil order.</span>'; });
 }
@@ -319,9 +327,9 @@ function loadRekap(){
 }
 function orderSet(id, st){
   const box = document.getElementById("orderBox");
-  if(st === "batal" && !confirm("Batalkan order #" + id + "?")) return;
-  if(st === "lunas" && !confirm("Lunaskan order #" + id + "? Stok berkurang, terjual bertambah.")) return;
-  // ambil detail dulu (untuk ubah stok/terjual bila lunas)
+  if(st === "batal" && !confirm("Batalkan order #" + id + "? Data akun kembali READY.")) return;
+  if(st === "lunas" && !confirm("Lunaskan order #" + id + "? Stok berkurang, terjual bertambah, akun diambilkan.")) return;
+  // ambil detail dulu
   fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
   .then(r => r.json()).then(function(rows){
     const o = (rows && rows[0]) || null;
@@ -329,28 +337,95 @@ function orderSet(id, st){
     fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
       method: "PATCH", headers: sbH(), body: JSON.stringify({ status: st })
     }).then(function(){
+      let det = [];
+      try { det = JSON.parse(o.items) || []; } catch(e) {}
+      if(!Array.isArray(det)) det = [];
       if(st === "lunas"){
-        let det = [];
-        try { det = JSON.parse(o.items) || []; } catch(e) {}
-        if(!Array.isArray(det)) det = [];
         det.forEach(function(d){
           const tbl = sbTable(d.p);
           const q = Number(d.q) || 0;
-          fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock,sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
-          .then(r => r.json()).then(function(rr){
-            if(!(rr && rr[0])) return;
-            const curS = Number(rr[0].stock) || 0;
-            const curT = Number(rr[0].sold) || 0;
-            fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
-              method: "PATCH", headers: sbH(),
-              body: JSON.stringify({ stock: Math.max(0, curS - q), sold: curT + q })
+          const isAkun = String(d.p || "").toLowerCase() === "akun";
+          if(isAkun){
+            // ambilkan data READY tertua (maks q), sold +1, stok ikut trigger
+            for(let k = 0; k < q; k++){
+              fetch(SB_URL + "/rest/v1/akun_data?select=id&product=eq." + encodeURIComponent(d.n) + "&status=eq.ready&order=id&limit=1", { headers: pinH() })
+              .then(r => r.json()).then(function(rr){
+                if(!(rr && rr[0])) return;
+                const rid = rr[0].id;
+                fetch(SB_URL + "/rest/v1/akun_data?id=eq." + rid + "&status=eq.ready", {
+                  method: "PATCH", headers: pinH({ Prefer: "return=representation" }),
+                  body: JSON.stringify({ status: "sold", order_id: id })
+                }).then(r => r.json()).then(function(ok){
+                  if(!(ok && ok[0])) return;
+                  fetch(SB_URL + "/rest/v1/" + tbl + "?select=sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+                  .then(r => r.json()).then(function(sr){
+                    const curT = (sr && sr[0]) ? Number(sr[0].sold) || 0 : 0;
+                    fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+                      method: "PATCH", headers: sbH(), body: JSON.stringify({ sold: curT + 1 })
+                    }).catch(function(){});
+                  }).catch(function(){});
+                }).catch(function(){});
+              }).catch(function(){});
+            }
+          } else {
+            fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock,sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+            .then(r => r.json()).then(function(rr){
+              if(!(rr && rr[0])) return;
+              const curS = Number(rr[0].stock) || 0;
+              const curT = Number(rr[0].sold) || 0;
+              fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+                method: "PATCH", headers: sbH(),
+                body: JSON.stringify({ stock: Math.max(0, curS - q), sold: curT + q })
+              }).catch(function(){});
             }).catch(function(){});
-          }).catch(function(){});
+          }
         });
+      }
+      if(st === "batal"){
+        // kembalikan data akun order ini ke READY (trigger betulkan stok otomatis)
+        fetch(SB_URL + "/rest/v1/akun_data?select=id&order_id=eq." + id, { headers: pinH() })
+        .then(r => r.json()).then(function(rr){
+          (rr || []).forEach(function(x){
+            fetch(SB_URL + "/rest/v1/akun_data?id=eq." + x.id, {
+              method: "PATCH", headers: pinH(),
+              body: JSON.stringify({ status: "ready", order_id: null })
+            }).catch(function(){});
+          });
+        }).catch(function(){});
       }
       loadOrders(false);
     });
   }).catch(function(){ alert("Gagal ubah status."); });
+}
+function copyTxt(t, el){
+  const done = function(){ if(el){ const o = el.textContent; el.textContent = "✅"; setTimeout(function(){ el.textContent = o; }, 1200); } };
+  try {
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(done).catch(function(){ fallbackCopy(t); done(); });
+    } else { fallbackCopy(t); done(); }
+  } catch(e){ fallbackCopy(t); done(); }
+}
+function fallbackCopy(t){
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+  } catch(e) {}
+}
+function refreshOrderCreds(){
+  document.querySelectorAll("[data-cred]").forEach(function(el){
+    const oid = el.getAttribute("data-cred");
+    fetch(SB_URL + "/rest/v1/akun_data?select=product,akun_id,akun_pw&order_id=eq." + oid + "&order=id", { headers: pinH() })
+    .then(r => r.json()).then(function(rr){
+      if(!rr || !rr.length) return;
+      el.innerHTML = rr.map(function(x){
+        const tag = escHtml(String(x.akun_id)) + " / " + escHtml(String(x.akun_pw));
+        return '<div style="background:#0a2a16;border:1px solid rgba(46,204,113,.4);border-radius:8px;padding:6px 10px;margin-top:6px;font-size:13px;">🔑 ' +
+          escHtml(String(x.product)).slice(0, 45) + '<br><b>' + tag + '</b> ' +
+          '<button onclick="copyTxt(\'' + String(x.akun_id).replace(/\\/g, "\\\\").replace(/\'/g, "\\'") + " / " + String(x.akun_pw).replace(/\\/g, "\\\\").replace(/\'/g, "\\'") + '\',this)" style="width:auto;margin:4px 0 0;padding:6px 12px;font-size:12px;">📋 Copy</button></div>';
+      }).join("");
+    }).catch(function(){});
+  });
 }
 </script>
 </body>

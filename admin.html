@@ -88,6 +88,22 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; box-shadow:
     <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
   </div>
 
+  <h2 class="sect" id="sectAkun" style="display:none;">🔐 DATA AKUN — id/pw per akun (pengunjung tidak bisa intip)</h2>
+
+  <div class="card" id="akunDataCard" style="display:none;">
+    <label>Produk akun</label>
+    <select id="akunProdSel" onchange="loadAkunData()"><option>Memuat...</option></select>
+    <div id="akunCount" style="font-size:13px;color:var(--mut);margin-top:8px;"></div>
+    <label>ID akun baru</label>
+    <input type="text" id="akunIdInput" placeholder="id- ..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Password baru</label>
+    <input type="text" id="akunPwInput" placeholder="pw- ..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <button id="akunAddBtn" onclick="addAkunData()">➕ Tambah Data Akun</button>
+    <div id="statusAkun"></div>
+    <div id="akunDataList" style="margin-top:12px;"></div>
+    <p class="hint" style="margin-top:10px;">Stok produk = jumlah READY otomatis. Lunas di analisis mengambilkan 1 READY tertua.</p>
+  </div>
+
   <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
 
   <div class="card" id="mainCard" style="display:none;">
@@ -267,12 +283,96 @@ function show_(id){
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","sheetCard","teksCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","sheetCard","teksCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     loadTeks();
     loadItems();
+    loadAkunProds();
   } else {
     alert("PIN salah.");
   }
+}
+
+/* ===== brankas data akun (PIN-gated, pengunjung tidak bisa baca) ===== */
+let AKUN_ROWS = [];
+function pinH(extra){
+  const h = sbH(extra);
+  h["x-admin-pin"] = document.getElementById("pinInput").value || "";
+  return h;
+}
+function loadAkunProds(){
+  sbList("Akun").then(function(arr){
+    try {
+      const sel = document.getElementById("akunProdSel");
+      sel.innerHTML = "";
+      (arr || []).forEach(function(o){
+        const nm = String(o.name || "").trim();
+        if(!nm || nm.indexOf("CAT:") === 0) return;
+        const op = document.createElement("option");
+        op.value = nm; op.textContent = nm.slice(0, 70);
+        sel.appendChild(op);
+      });
+      loadAkunData();
+    } catch(e) {}
+  });
+}
+function loadAkunData(){
+  const prod = document.getElementById("akunProdSel").value;
+  const box = document.getElementById("akunDataList");
+  const cnt = document.getElementById("akunCount");
+  if(!prod){ box.innerHTML = ""; cnt.textContent = ""; return; }
+  box.innerHTML = '<p class="hint">Memuat...</p>';
+  fetch(SB_URL + "/rest/v1/akun_data?select=*&product=eq." + encodeURIComponent(prod) + "&order=id", { headers: pinH() })
+  .then(r => r.json()).then(function(arr){
+    try {
+      AKUN_ROWS = Array.isArray(arr) ? arr : [];
+      const ready = AKUN_ROWS.filter(o => String(o.status) === "ready").length;
+      const sold = AKUN_ROWS.filter(o => String(o.status) === "sold").length;
+      cnt.innerHTML = "READY: <b style='color:var(--green);'>" + ready + "</b> • SOLD: <b>" + sold + "</b> (stok produk ikut angka READY)";
+      if(!AKUN_ROWS.length){ box.innerHTML = '<p class="hint">Belum ada data. Tambahkan di atas.</p>'; return; }
+      box.innerHTML = AKUN_ROWS.map(function(o){
+        const st = String(o.status);
+        const col = st === "ready" ? "var(--green)" : "var(--mut)";
+        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:13px;">' +
+          '<div style="flex:1;min-width:0;"><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escAkun(st.toUpperCase()) + '</span><br>' +
+          '<span>ID: ' + escAkun(o.akun_id) + '</span><br>' +
+          '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span></div>' +
+          '<button onclick="delAkunData(' + o.id + ')" style="width:auto;margin:0;padding:8px 12px;font-size:12px;background:var(--red);">Hapus</button></div>';
+      }).join("");
+    } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan.</span>'; }
+  }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil (cek PIN/koneksi).</span>'; });
+}
+function escAkun(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+function togglePw(id){
+  const o = AKUN_ROWS.find(x => x.id === id);
+  const el = document.getElementById("pw-" + id);
+  if(!o || !el) return;
+  el.textContent = (el.textContent === "•••") ? String(o.akun_pw) : "•••";
+}
+function addAkunData(){
+  const prod = document.getElementById("akunProdSel").value;
+  const aid = document.getElementById("akunIdInput").value.trim();
+  const apw = document.getElementById("akunPwInput").value.trim();
+  const st = document.getElementById("statusAkun");
+  if(!prod){ st.innerHTML = '<span class="err">Pilih produk dulu.</span>'; return; }
+  if(!aid || !apw){ st.innerHTML = '<span class="err">Isi ID + password.</span>'; return; }
+  st.textContent = "Menyimpan...";
+  fetch(SB_URL + "/rest/v1/akun_data", {
+    method: "POST", headers: pinH({ Prefer: "return=representation" }),
+    body: JSON.stringify({ product: prod, akun_id: aid, akun_pw: apw, status: "ready" })
+  }).then(r => r.json()).then(function(a){
+    if(Array.isArray(a) && a.length){
+      st.innerHTML = '<span class="ok">✅ Tersimpan! Stok produk +1 otomatis.</span>';
+      document.getElementById("akunIdInput").value = "";
+      document.getElementById("akunPwInput").value = "";
+      loadAkunData();
+    } else st.innerHTML = '<span class="err">Gagal simpan.</span>';
+  }).catch(function(){ st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
+}
+function delAkunData(id){
+  if(!confirm("Hapus data #" + id + "?")) return;
+  fetch(SB_URL + "/rest/v1/akun_data?id=eq." + id, { method: "DELETE", headers: pinH() })
+  .then(function(){ loadAkunData(); })
+  .catch(function(){ alert("Gagal hapus."); });
 }
 
 let ALL_ITEMS = [];
