@@ -1524,7 +1524,7 @@ function renderDetail(){
     ).join("") + `</div>` : ``}
     <h2 style="margin:14px 0 0;">${item.name}</h2>
     <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
-    ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : ``}
+    ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : `<p class="detaildesc">${category.name} • ${item.stock === 0 ? tr("habis_txt") : tr("stock") + " " + (item.stock || "-")}${item.sold ? " • 🔥 " + item.sold + " " + tr("sold_w") : ""} • ${tr("kilat")}</p>`}
     <div class="detailmeta">
       <span>👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")} ${tr("dilihat_w")}</span>
       ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
