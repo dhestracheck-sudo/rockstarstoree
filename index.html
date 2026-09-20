@@ -1132,7 +1132,6 @@ function flashHTML(){
         ${stockBarHTML(it)}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-        <div class="payicons"><span>💳 QRIS</span><span>💙 DANA</span><span>💜 OVO</span><span>💚 GoPay</span><span>🏦 BCA</span><span>🏧 BRI</span><span>₿ Crypto</span><span>🟡 Binance</span><span>🌐 All payments</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
     </div>`;
@@ -1446,7 +1445,6 @@ function itemCard(categories, i, j){
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-      <div class="payicons"><span>💳 QRIS</span><span>💙 DANA</span><span>💜 OVO</span><span>💚 GoPay</span><span>🏦 BCA</span><span>🏧 BRI</span><span>₿ Crypto</span><span>🟡 Binance</span><span>🌐 All payments</span></div>
       <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>
   </div>`;
@@ -1534,7 +1532,6 @@ function renderDetail(){
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
     </div>
     <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-    <div class="payicons"><span>💳 QRIS</span><span>💙 DANA</span><span>💜 OVO</span><span>💚 GoPay</span><span>🏦 BCA</span><span>🏧 BRI</span><span>₿ Crypto</span><span>🟡 Binance</span><span>🌐 All payments</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">${tr("hemat")} -${off}%</span></div>` : ``}
     <div class="mactions">
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
