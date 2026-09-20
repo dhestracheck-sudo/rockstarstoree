@@ -1433,7 +1433,6 @@ function itemCard(categories, i, j){
     ${thumb}
     <div class="ibody">
       <h3>${item.name}</h3>
-      ${item.deskripsi ? `<p class="desc">${item.deskripsi}</p>` : ``}
       <div class="stars">${starsOf(item)}</div>
       <div class="meta">
         <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
