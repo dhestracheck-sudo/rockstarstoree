@@ -1091,11 +1091,19 @@ function stageFiles(){
 function renderStage(){
   const box = document.getElementById("stageList");
   if(!stageQueue.length){ box.innerHTML = ""; return; }
-  box.innerHTML = '<p class="hint">Antrean upload (sesuai urutan pilih):</p>' + stageQueue.map((f, i) =>
+  box.innerHTML = '<p class="hint">Antrean upload (sesuai urutan pilih/klik):</p>' + stageQueue.map((f, i) =>
     '<div style="display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-top:6px;font-size:12.5px;">' +
     '<b style="color:var(--blue2);">#' + (i + 1) + '</b><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + String(f.name).replace(/</g, "&lt;").slice(0, 40) + '</span>' +
+    '<button onclick="stageMove(' + i + ',-1)" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">⬆️</button>' +
+    '<button onclick="stageMove(' + i + ',1)" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">⬇️</button>' +
     '<button onclick="stageDrop(' + i + ')" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">✖</button></div>'
   ).join("");
+}
+function stageMove(i, d){
+  const j = i + d;
+  if(j < 0 || j >= stageQueue.length) return;
+  const t = stageQueue[i]; stageQueue[i] = stageQueue[j]; stageQueue[j] = t;
+  renderStage();
 }
 function stageDrop(i){
   stageQueue.splice(i, 1);
