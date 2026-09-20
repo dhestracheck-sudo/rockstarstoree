@@ -2041,10 +2041,16 @@ function rebuildFromSheet(arr, targetCats){
             if (Number(o.coret) > it.price) it.originalPrice = Number(o.coret);
     if (files.length > 1) it.images = files;
     const g = groups[kat];
+    it._ord = g.items.length;
     g.items.push(it);
     if (!g.img && files[0]) g.img = files[0];
   });
   Object.keys(catImgSheet).forEach(k => { if (groups[k]) groups[k].img = catImgSheet[k]; });
+  // Stok tersedia selalu di atas, habis tenggelam (urutan asli terjaga di dalamnya)
+  Object.keys(groups).forEach(k => {
+    groups[k].items.sort((a, b) => (((b.stock || 0) > 0) - ((a.stock || 0) > 0)) || (a._ord - b._ord));
+    groups[k].items.forEach(it => { delete it._ord; });
+  });
   targetCats.length = 0;
   order.forEach(k => targetCats.push(groups[k]));
 }
