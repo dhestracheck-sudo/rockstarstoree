@@ -1134,17 +1134,20 @@ function flashHTML(){
   if(!items.length) return "";
   const cards = items.map(r => {
     const it = r.item;
+    const simpleF = (r.page !== "brainrot");
     return `
     <div class="item" data-viewname="${it.name}" data-page="${r.page}" onclick="openDetail('${r.page}',${r.i},${r.j})">
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
-        <span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>
+        ${simpleF ? `<span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
         <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
       </div>
       <div class="ibody">
         <h3>${it.name}</h3>
         <div class="stars">${starsOf(it)}</div>
-        <div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>
+        ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
+        <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
+        ${stockBarHTML(it)}`}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
@@ -1424,11 +1427,12 @@ function itemCard(categories, i, j){
   const hasCarousel = item.images && item.images.length > 1;
   const itemImg = item.img || (item.images && item.images[0]) || category.img;
   const off = discountOf(item);
+  const simpleCard = (page !== "brainrot");
   const thumb = hasCarousel ? `
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
-      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
+      ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
@@ -1440,7 +1444,7 @@ function itemCard(categories, i, j){
       <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
-      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
+      ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
@@ -1450,7 +1454,13 @@ function itemCard(categories, i, j){
     <div class="ibody">
       <h3>${item.name}</h3>
       <div class="stars">${starsOf(item)}</div>
-      <div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>
+      ${simpleCard ? `<div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
+      <div class="meta">
+        <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
+        ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
+        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">${tr("habis_txt")}</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">${tr("stock")} ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">${tr("stock_na")}</span>`)}
+      </div>
+      ${stockBarHTML(item)}`}
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
