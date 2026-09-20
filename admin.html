@@ -984,6 +984,8 @@ function renderSlides(){
     '<img src="' + u.replace(/"/g, "&quot;") + '" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\'">' +
     '<div style="flex:1;font-size:12px;word-break:break-all;">Slide ' + (i+1) + (i===0 ? ' (utama)' : '') + '<br><span style="color:var(--mut);">' + u.slice(0, 60) + (u.length > 60 ? '...' : '') + '</span></div>' +
     '<div style="display:flex;flex-direction:column;gap:6px;">' +
+    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMove(' + i + ',-1)">⬆️</button>' +
+    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMove(' + i + ',1)">⬇️</button>' +
     (i===0 ? '' : '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMain(' + i + ')">⭐ Utama</button>') +
     '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideReplace(' + i + ')">🔄 Ganti</button>' +
     '<button style="margin:0;padding:7px 10px;font-size:12px;background:#5a2330;" onclick="slideDelete(' + i + ')">🗑️</button>' +
@@ -1049,6 +1051,14 @@ function slideDelete(i){
   if(!confirm("Hapus slide " + (i+1) + " ?")) return;
   arr.splice(i, 1);
   saveSlides(arr, '✅ Slide dihapus!');
+}
+
+function slideMove(i, d){
+  const arr = curSlides();
+  const j = i + d;
+  if(j < 0 || j >= arr.length) return;
+  const t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  saveSlides(arr, '✅ Urutan dipindah!');
 }
 
 function slideMain(i){
