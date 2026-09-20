@@ -94,6 +94,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <input type="text" id="akunIdInput" placeholder="id- ..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <label>Password baru</label>
     <input type="text" id="akunPwInput" placeholder="pw- ..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+    <label>Modal beli (Rp, opsional — biar ingat harga kulak)</label>
+    <input type="number" id="akunModalInput" placeholder="misal 80000" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
     <button id="akunAddBtn" onclick="addAkunData()">➕ Tambah Data Akun</button>
     <div id="statusAkun"></div>
     <div id="akunDataList" style="margin-top:12px;"></div>
@@ -322,19 +324,37 @@ function loadAkunData(){
   .then(r => r.json()).then(function(arr){
     try {
       AKUN_ROWS = Array.isArray(arr) ? arr : [];
-      const ready = AKUN_ROWS.filter(o => String(o.status) === "ready").length;
-      const sold = AKUN_ROWS.filter(o => String(o.status) === "sold").length;
-      cnt.innerHTML = "READY: <b style='color:var(--green);'>" + ready + "</b> • SOLD: <b>" + sold + "</b> (stok produk ikut angka READY)";
-      if(!AKUN_ROWS.length){ box.innerHTML = '<p class="hint">Belum ada data. Tambahkan di atas.</p>'; return; }
-      box.innerHTML = AKUN_ROWS.map(function(o){
+      const readyRows = AKUN_ROWS.filter(o => String(o.status) === "ready");
+      const soldRows = AKUN_ROWS.filter(o => String(o.status) === "sold");
+      const trashRows = AKUN_ROWS.filter(o => String(o.status) === "hapus");
+      const modalReady = readyRows.reduce((s, o) => s + (Number(o.modal) || 0), 0);
+      cnt.innerHTML = "READY: <b style='color:var(--green);'>" + readyRows.length + "</b> • SOLD: <b>" + soldRows.length + "</b> • 💰 modal tertanam: <b>Rp " + modalReady.toLocaleString("id-ID") + "</b> (stok produk ikut angka READY)";
+      const live = readyRows.concat(soldRows);
+      let h = "";
+      if(!live.length) h += '<p class="hint">Belum ada data aktif. Tambahkan di atas.</p>';
+      h += live.map(function(o){
         const st = String(o.status);
         const col = st === "ready" ? "var(--green)" : "var(--mut)";
         return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:13px;">' +
           '<div style="flex:1;min-width:0;"><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escAkun(st.toUpperCase()) + '</span><br>' +
           '<span>ID: ' + escAkun(o.akun_id) + '</span><br>' +
-          '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span></div>' +
+          '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span><br>' +
+          '<span style="color:var(--mut);">Modal: Rp ' + (Number(o.modal) || 0).toLocaleString("id-ID") + '</span></div>' +
           '<button onclick="delAkunData(' + o.id + ')" style="width:auto;margin:0;padding:8px 12px;font-size:12px;background:var(--red);">Hapus</button></div>';
       }).join("");
+      h += '<button onclick="document.getElementById(\'akunTrash\').style.display=(document.getElementById(\'akunTrash\').style.display===\'none\'?\'block\':\'none\')" style="background:#232c44;margin-top:10px;">🗑️ Sampah (' + trashRows.length + ')</button>';
+      h += '<div id="akunTrash" style="display:none;">';
+      if(!trashRows.length) h += '<p class="hint">Sampah kosong.</p>';
+      h += trashRows.map(function(o){
+        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:13px;opacity:.85;">' +
+          '<div style="flex:1;min-width:0;"><b>#' + o.id + '</b> <span style="color:var(--red);font-weight:700;">HAPUS</span><br>' +
+          '<span>ID: ' + escAkun(o.akun_id) + '</span><br>' +
+          '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span><br>' +
+          '<span style="color:var(--mut);">Modal: Rp ' + (Number(o.modal) || 0).toLocaleString("id-ID") + '</span></div>' +
+          '<div style="display:flex;flex-direction:column;gap:6px;"><button onclick="restoreAkunData(' + o.id + ')" style="width:auto;margin:0;padding:7px 10px;font-size:12px;background:var(--green);">↩️ Balikin</button>' +
+          '<button onclick="purgeAkunData(' + o.id + ')" style="width:auto;margin:0;padding:7px 10px;font-size:12px;background:#5a2330;">🔥 Hapus permanen</button></div></div>';
+      }).join("") + '</div>';
+      box.innerHTML = h;
     } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan.</span>'; }
   }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil (cek PIN/koneksi).</span>'; });
 }
@@ -342,21 +362,24 @@ function escAkun(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").re
 function loadAkunRekap(){
   const box = document.getElementById("akunRekap");
   box.innerHTML = '<p class="hint">Memuat...</p>';
-  fetch(SB_URL + "/rest/v1/akun_data?select=product,status", { headers: pinH() })
+  fetch(SB_URL + "/rest/v1/akun_data?select=product,status,modal", { headers: pinH() })
   .then(r => r.json()).then(function(arr){
     try {
       const m = {};
       (arr || []).forEach(function(o){
         const p = String(o.product || "").trim() || "-";
-        if(!m[p]) m[p] = { ready: 0, sold: 0 };
-        if(String(o.status) === "ready") m[p].ready++;
-        else m[p].sold++;
+        if(!m[p]) m[p] = { ready: 0, sold: 0, hapus: 0, modal: 0 };
+        const st = String(o.status);
+        if(st === "ready"){ m[p].ready++; m[p].modal += Number(o.modal) || 0; }
+        else if(st === "sold") m[p].sold++;
+        else m[p].hapus++;
       });
       const keys = Object.keys(m).sort();
       if(!keys.length){ box.innerHTML = '<p class="hint">Brankas kosong.</p>'; return; }
       box.innerHTML = keys.map(function(p){
         return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:6px;">' +
-          '<div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escAkun(p).slice(0, 50) + '</div>' +
+          '<div style="flex:1;min-width:0;"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escAkun(p).slice(0, 50) + '</div>' +
+          '<div style="color:var(--mut);font-size:12px;">💰 modal tertanam: Rp ' + m[p].modal.toLocaleString("id-ID") + (m[p].hapus ? ' • 🗑️ ' + m[p].hapus : '') + '</div></div>' +
           '<span style="color:var(--green);font-weight:700;white-space:nowrap;">READY ' + m[p].ready + '</span>' +
           '<span style="color:var(--mut);white-space:nowrap;">SOLD ' + m[p].sold + '</span>' +
           '<button onclick="akunRekapPilih(\'' + p.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\')" style="width:auto;margin:0;padding:7px 12px;font-size:12px;">Buka</button></div>';
@@ -379,25 +402,43 @@ function addAkunData(){
   const prod = document.getElementById("akunProdSel").value;
   const aid = document.getElementById("akunIdInput").value.trim();
   const apw = document.getElementById("akunPwInput").value.trim();
+  const amodal = Number(document.getElementById("akunModalInput").value) || 0;
   const st = document.getElementById("statusAkun");
   if(!prod){ st.innerHTML = '<span class="err">Pilih produk dulu.</span>'; return; }
   if(!aid || !apw){ st.innerHTML = '<span class="err">Isi ID + password.</span>'; return; }
   st.textContent = "Menyimpan...";
   fetch(SB_URL + "/rest/v1/akun_data", {
     method: "POST", headers: pinH({ Prefer: "return=representation" }),
-    body: JSON.stringify({ product: prod, akun_id: aid, akun_pw: apw, status: "ready" })
+    body: JSON.stringify({ product: prod, akun_id: aid, akun_pw: apw, modal: amodal, status: "ready" })
   }).then(r => r.json()).then(function(a){
     if(Array.isArray(a) && a.length){
       st.innerHTML = '<span class="ok">✅ Tersimpan! Stok produk +1 otomatis.</span>';
       document.getElementById("akunIdInput").value = "";
       document.getElementById("akunPwInput").value = "";
+      document.getElementById("akunModalInput").value = "";
       loadAkunData();
       loadAkunRekap();
     } else st.innerHTML = '<span class="err">Gagal simpan.</span>';
   }).catch(function(){ st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; });
 }
 function delAkunData(id){
-  if(!confirm("Hapus data #" + id + "?")) return;
+  if(!confirm("Pindahkan data #" + id + " ke sampah? (bisa dibalikin)")) return;
+  fetch(SB_URL + "/rest/v1/akun_data?id=eq." + id, {
+    method: "PATCH", headers: pinH(), body: JSON.stringify({ status: "hapus" })
+  })
+  .then(function(){ loadAkunData(); loadAkunRekap(); })
+  .catch(function(){ alert("Gagal hapus."); });
+}
+function restoreAkunData(id){
+  fetch(SB_URL + "/rest/v1/akun_data?id=eq." + id, {
+    method: "PATCH", headers: pinH(), body: JSON.stringify({ status: "ready", order_id: null })
+  })
+  .then(function(){ loadAkunData(); loadAkunRekap(); })
+  .catch(function(){ alert("Gagal kembalikan."); });
+}
+function purgeAkunData(id){
+  if(!confirm("HAPUS PERMANEN data #" + id + "? ID/PW hilang selamanya!")) return;
+  if(!confirm("Yakin? Tidak bisa dibatalkan.")) return;
   fetch(SB_URL + "/rest/v1/akun_data?id=eq." + id, { method: "DELETE", headers: pinH() })
   .then(function(){ loadAkunData(); loadAkunRekap(); })
   .catch(function(){ alert("Gagal hapus."); });
