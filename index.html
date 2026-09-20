@@ -759,6 +759,9 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   .item .price .was { font-size: 11px; }
   .item .btn { font-size: 13.5px; padding: 12px; }
   .item .kilat > span { font-size: 11px; padding: 5px 9px; }
+  .item .kilat { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .item .kilat::-webkit-scrollbar { display: none; }
+  .item .kilat > span { flex-shrink: 0; }
   .item .kilat .vbadge i { width: 15px; height: 15px; font-size: 10px; }
   .modal { width: 94vw; padding: 18px 16px; border-radius: 16px; }
   .modal h2 { font-size: 20px; }
