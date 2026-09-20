@@ -1118,6 +1118,9 @@ function slideAddFile(){
   if(!todo.length){ st.innerHTML = '<span class="err">Pilih foto dulu (bisa berkali-kali, masuk antrean).</span>'; return; }
   const room = 20 - arr.length;
   if(todo.length > room){ st.innerHTML = '<span class="err">Maksimal 20 slide (sisa ' + room + ').</span>'; return; }
+  const btn = document.getElementById("slideAddBtn");
+  if(btn.disabled) return;
+  btn.disabled = true;
   let done = 0;
   st.textContent = "Mengupload 0/" + todo.length + " (paralel)...";
   const ups = todo.map(f => prepImage(f).then(p => {
@@ -1142,10 +1145,12 @@ function slideAddFile(){
       syncAfterProduct(name);
       stageQueue = [];
       renderStage();
+      document.getElementById("slideAddBtn").disabled = false;
       st.innerHTML = '<span class="ok">✅ ' + urls.length + ' slide ditambah berurutan!</span>';
     });
   }).catch(err => {
     syncAfterProduct(name);
+    document.getElementById("slideAddBtn").disabled = false;
     st.innerHTML = '<span class="err">Gagal: ' + (err.message || "?") + ' — terupload ' + done + '/' + todo.length + '.</span>';
   });
 }
