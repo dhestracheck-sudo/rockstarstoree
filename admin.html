@@ -130,8 +130,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <label>Foto barang (maks 20 slide) — ganti / tambah / hapus di sini</label>
     <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
     <div id="slideList"></div>
-    <label>Tambah dari file (kamera / galeri)</label>
-    <input type="file" id="slideFileInput" accept="image/*">
+    <label>Tambah dari file (kamera / galeri — bisa pilih banyak sekaligus)</label>
+    <input type="file" id="slideFileInput" accept="image/*" multiple>
     <button id="slideAddBtn" onclick="slideAddFile()">➕ Tambah Foto Ini</button>
     <label>Tambah dari link (URL Drive / gambar)</label>
     <input type="text" id="slideUrlInput" placeholder="https://..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
@@ -1060,24 +1060,39 @@ function slideMain(i){
 
 function slideAddFile(){
   const arr = curSlides();
-  if(arr.length >= 20){ document.getElementById("statusSlide").innerHTML = '<span class="err">Maksimal 20 slide.</span>'; return; }
-  const f = document.getElementById("slideFileInput").files[0];
-  if(!f){ document.getElementById("statusSlide").innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
-  if(f.size > 8 * 1024 * 1024){ document.getElementById("statusSlide").innerHTML = '<span class="err">Foto maksimal 8 MB.</span>'; return; }
-  document.getElementById("statusSlide").textContent = "Memeriksa & mengupload...";
+  const files = Array.from(document.getElementById("slideFileInput").files || []);
+  const st = document.getElementById("statusSlide");
   const name = document.getElementById("itemSel").value;
-  sendUpload(f, { action: "upload", append: 1, item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
-    if(d.result === "success" && (d.full || d.url)){
-      const full = d.full || d.url;
-      updItem(name, { image: full });
-      syncAfterProduct(name);
-      document.getElementById("statusSlide").innerHTML = '<span class="ok">✅ Slide ditambah!</span>';
-      document.getElementById("slideFileInput").value = "";
-    } else if(String(d.result || "").indexOf("file rusak") !== -1){
-      document.getElementById("statusSlide").innerHTML = '<span class="err">File rusak / bukan gambar (pakai JPG/PNG). Ganti file.</span>';
-    } else {
-      document.getElementById("statusSlide").innerHTML = '<span class="err">Gagal upload: ' + (d.result || "?") + '</span>';
-    }
+  if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  if(!files.length){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  const room = 20 - arr.length;
+  if(room <= 0){ st.innerHTML = '<span class="err">Maksimal 20 slide.</span>'; return; }
+  const todo = files.slice(0, room);
+  const bad = todo.find(f => f.size > 8 * 1024 * 1024);
+  if(bad){ st.innerHTML = '<span class="err">Ada file >8 MB (' + bad.name.slice(0, 30) + '). Kecilkan dulu.</span>'; return; }
+  let done = 0;
+  st.textContent = "Mengupload 0/" + todo.length + "...";
+  const chain = todo.reduce((p, f) => p.then(() => {
+    return sendUpload(f, { action: "upload", append: 1, item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
+      if(d.result === "success" && (d.full || d.url)){
+        const parts = String(d.full || d.url).split("|").map(s => s.trim()).filter(Boolean).slice(0, 20);
+        arr.length = 0;
+        parts.forEach(x => arr.push(x));
+        updItem(name, { image: arr.join("|") });
+        done++;
+        st.textContent = "Mengupload " + done + "/" + todo.length + "...";
+      } else {
+        throw new Error("gagal");
+      }
+    });
+  }), Promise.resolve(true));
+  chain.then(() => {
+    syncAfterProduct(name);
+    document.getElementById("slideFileInput").value = "";
+    st.innerHTML = '<span class="ok">✅ ' + done + ' slide ditambah!</span>';
+  }).catch(() => {
+    syncAfterProduct(name);
+    st.innerHTML = '<span class="err">Terupload ' + done + '/' + todo.length + ' — sisanya gagal, coba lagi.</span>';
   });
 }
 
