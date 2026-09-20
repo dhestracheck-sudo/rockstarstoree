@@ -131,7 +131,8 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
     <div id="slideList"></div>
     <label>Tambah dari file (kamera / galeri — bisa pilih banyak sekaligus)</label>
-    <input type="file" id="slideFileInput" accept="image/*" multiple>
+    <input type="file" id="slideFileInput" accept="image/*" multiple onchange="stageFiles()">
+    <div id="stageList" style="margin-top:8px;"></div>
     <button id="slideAddBtn" onclick="slideAddFile()">➕ Tambah Foto Ini</button>
     <label>Tambah dari link (URL Drive / gambar)</label>
     <input type="text" id="slideUrlInput" placeholder="https://..." style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
@@ -1068,18 +1069,47 @@ function slideMain(i){
   saveSlides(arr, '✅ Slide ' + (i+1) + ' jadi foto utama!');
 }
 
+let stageQueue = [];
+function stageFiles(){
+  const inp = document.getElementById("slideFileInput");
+  const files = Array.from(inp.files || []);
+  const st = document.getElementById("statusSlide");
+  const room = 20 - curSlides().length - stageQueue.length;
+  if(files.length > room){
+    st.innerHTML = '<span class="err">Antrean penuh (sisa ' + Math.max(room, 0) + '). Upload dulu yang ada.</span>';
+    inp.value = "";
+    return;
+  }
+  files.forEach(f => {
+    if(f.size > 8 * 1024 * 1024){ return; }
+    stageQueue.push(f);
+  });
+  inp.value = "";
+  renderStage();
+  if(files.length) st.textContent = stageQueue.length + " foto di antrean — klik Tambah Foto Ini untuk upload berurutan.";
+}
+function renderStage(){
+  const box = document.getElementById("stageList");
+  if(!stageQueue.length){ box.innerHTML = ""; return; }
+  box.innerHTML = '<p class="hint">Antrean upload (sesuai urutan pilih):</p>' + stageQueue.map((f, i) =>
+    '<div style="display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-top:6px;font-size:12.5px;">' +
+    '<b style="color:var(--blue2);">#' + (i + 1) + '</b><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + String(f.name).replace(/</g, "&lt;").slice(0, 40) + '</span>' +
+    '<button onclick="stageDrop(' + i + ')" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">✖</button></div>'
+  ).join("");
+}
+function stageDrop(i){
+  stageQueue.splice(i, 1);
+  renderStage();
+}
 function slideAddFile(){
   const arr = curSlides();
-  const files = Array.from(document.getElementById("slideFileInput").files || []);
   const st = document.getElementById("statusSlide");
   const name = document.getElementById("itemSel").value;
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
-  if(!files.length){ st.innerHTML = '<span class="err">Pilih foto dulu.</span>'; return; }
+  const todo = stageQueue.slice();
+  if(!todo.length){ st.innerHTML = '<span class="err">Pilih foto dulu (bisa berkali-kali, masuk antrean).</span>'; return; }
   const room = 20 - arr.length;
-  if(room <= 0){ st.innerHTML = '<span class="err">Maksimal 20 slide.</span>'; return; }
-  const todo = files.slice(0, room);
-  const bad = todo.find(f => f.size > 8 * 1024 * 1024);
-  if(bad){ st.innerHTML = '<span class="err">Ada file >8 MB (' + bad.name.slice(0, 30) + '). Kecilkan dulu.</span>'; return; }
+  if(todo.length > room){ st.innerHTML = '<span class="err">Maksimal 20 slide (sisa ' + room + ').</span>'; return; }
   let done = 0;
   st.textContent = "Mengupload 0/" + todo.length + "...";
   const chain = todo.reduce((p, f) => p.then(() => {
@@ -1098,7 +1128,8 @@ function slideAddFile(){
   }), Promise.resolve(true));
   chain.then(() => {
     syncAfterProduct(name);
-    document.getElementById("slideFileInput").value = "";
+    stageQueue = [];
+    renderStage();
     st.innerHTML = '<span class="ok">✅ ' + done + ' slide ditambah!</span>';
   }).catch(() => {
     syncAfterProduct(name);
