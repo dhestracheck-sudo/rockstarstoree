@@ -1119,29 +1119,34 @@ function slideAddFile(){
   const room = 20 - arr.length;
   if(todo.length > room){ st.innerHTML = '<span class="err">Maksimal 20 slide (sisa ' + room + ').</span>'; return; }
   let done = 0;
-  st.textContent = "Mengupload 0/" + todo.length + "...";
-  const chain = todo.reduce((p, f) => p.then(() => {
-    return sendUpload(f, { action: "upload", append: 1, item_name: name, filename: f.name, mime: f.type || "image/jpeg", sheet: CURSHEET() }, arr.join("|")).then(d => {
-      if(d.result === "success" && (d.full || d.url)){
-        const parts = String(d.full || d.url).split("|").map(s => s.trim()).filter(Boolean).slice(0, 20);
-        arr.length = 0;
-        parts.forEach(x => arr.push(x));
-        updItem(name, { image: arr.join("|") });
-        done++;
-        st.textContent = "Mengupload " + done + "/" + todo.length + "...";
-      } else {
-        throw new Error("gagal");
-      }
+  st.textContent = "Mengupload 0/" + todo.length + " (paralel)...";
+  const ups = todo.map(f => prepImage(f).then(p => {
+    if(!p.ok) throw new Error("file rusak: " + f.name);
+    const path = Date.now() + "_" + Math.floor(Math.random() * 1e6) + "_" + safeName(p.name);
+    return fetch(SB_URL + "/storage/v1/object/foto/" + path, {
+      method: "PUT",
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": p.mime, "x-upsert": "true" },
+      body: b64ToBlob(p.base64, p.mime)
+    }).then(r => {
+      if(!r.ok) throw new Error("upload gagal: " + f.name);
+      done++;
+      st.textContent = "Mengupload " + done + "/" + todo.length + " (paralel)...";
+      return SB_URL + "/storage/v1/object/public/foto/" + path;
     });
-  }), Promise.resolve(true));
-  chain.then(() => {
+  }));
+  Promise.all(ups).then(urls => {
+    const full = arr.concat(urls).join("|").split("|").map(s => s.trim()).filter(Boolean).slice(0, 20).join("|");
+    return postOne({ action: "set", item_name: name, col: "image", value: full, sheet: CURSHEET() }).then(d => {
+      if(d.result !== "success") throw new Error(d.result || "gagal simpan");
+      updItem(name, { image: full });
+      syncAfterProduct(name);
+      stageQueue = [];
+      renderStage();
+      st.innerHTML = '<span class="ok">✅ ' + urls.length + ' slide ditambah berurutan!</span>';
+    });
+  }).catch(err => {
     syncAfterProduct(name);
-    stageQueue = [];
-    renderStage();
-    st.innerHTML = '<span class="ok">✅ ' + done + ' slide ditambah!</span>';
-  }).catch(() => {
-    syncAfterProduct(name);
-    st.innerHTML = '<span class="err">Terupload ' + done + '/' + todo.length + ' — sisanya gagal, coba lagi.</span>';
+    st.innerHTML = '<span class="err">Gagal: ' + (err.message || "?") + ' — terupload ' + done + '/' + todo.length + '.</span>';
   });
 }
 
