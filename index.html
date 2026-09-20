@@ -469,6 +469,11 @@ header {
 /* ===== wishlist ===== */
 .wishbtn { position:absolute; bottom:10px; right:10px; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:19px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
 .wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
+.viewpill { position:absolute; top:10px; right:10px; z-index:3; background:rgba(0,0,0,.65); color:#fff; font-size:11px; font-weight:700; border-radius:999px; padding:4px 10px; }
+.statrow { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12px; color:var(--mut); }
+.statrow b.st-ok { color:var(--green); }
+.statrow b.st-no { color:var(--red); }
+/* ===== wishlist ===== */
 .payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
 /* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
@@ -1133,14 +1138,13 @@ function flashHTML(){
     <div class="item" data-viewname="${it.name}" data-page="${r.page}" onclick="openDetail('${r.page}',${r.i},${r.j})">
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
+        <span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>
         <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
       </div>
       <div class="ibody">
         <h3>${it.name}</h3>
-        ${it.deskripsi ? `<p class="desc">${it.deskripsi}</p>` : ``}
         <div class="stars">${starsOf(it)}</div>
-        <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
-        ${stockBarHTML(it)}
+        <div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
@@ -1202,7 +1206,7 @@ kosong: "Keranjang kosong!", habis_alert: "Maaf, item ini sudah habis!",
 cancel_q: "Yakin ingin membatalkan checkout? Semua item akan dihapus.",
 dilihat_w: "dilihat", wish_title: "❤️ Wishlist Saya", hapus: "Hapus",
 sold_done: "Sudah laku", rest_stock: "Sisa stok", avail_stock: "Stok tersedia",
-low_a: "Sisa", low_b: "lagi, buruan sebelum habis!",
+low_a: "Sisa", low_b: "lagi, buruan sebelum habis!", avail: "TERSEDIA",
 server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni",
 b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Roblox",
@@ -1234,7 +1238,7 @@ kosong: "Cart is empty!", habis_alert: "Sorry, this item is sold out!",
 cancel_q: "Cancel checkout? All items will be removed.",
 dilihat_w: "views", wish_title: "❤️ My Wishlist", hapus: "Remove",
 sold_done: "Sold", rest_stock: "Stock left", avail_stock: "Available stock",
-low_a: "Only", low_b: "left, hurry before it's gone!",
+low_a: "Only", low_b: "left, hurry before it's gone!", avail: "AVAILABLE",
 server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
 wa_t: "Need help?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
 b_brain_t: "🧠 Brainrot Catalog", b_top_t: "💰 Top Up", b_akun_t: "👤 Roblox Accounts",
@@ -1424,6 +1428,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
+      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
@@ -1435,6 +1440,7 @@ function itemCard(categories, i, j){
       <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
+      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
     </div>`;
@@ -1444,12 +1450,7 @@ function itemCard(categories, i, j){
     <div class="ibody">
       <h3>${item.name}</h3>
       <div class="stars">${starsOf(item)}</div>
-      <div class="meta">
-        <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
-        ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
-        ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">${tr("habis_txt")}</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">${tr("stock")} ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">${tr("stock_na")}</span>`)}
-      </div>
-      ${stockBarHTML(item)}
+      <div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
@@ -1671,7 +1672,7 @@ function watchViews(){
         const nm = el.dataset.viewname, pg = el.dataset.page;
         if(!nm || pg === "topup") return;
         (function(nm, pg, el){
-          const tbl = pg === "akun" ? "akun" : "brainrot";
+          const tbl = sbTableOf(pg);
           const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
           fetch(SB_URL + "/rest/v1/" + tbl + "?select=dilihat&name=eq." + encodeURIComponent(nm), { headers: H })
             .then(r => r.json()).then(a => {
@@ -1682,13 +1683,15 @@ function watchViews(){
                 const v = (u && u[0] && u[0].dilihat !== undefined) ? u[0].dilihat : cur + 1;
                 const c = el.querySelector(".viewcount");
                 if(c) c.textContent = "👁 " + Number(v).toLocaleString("id-ID");
+                const vp = el.querySelector(".viewpill");
+                if(vp) vp.textContent = "👁 " + Number(v).toLocaleString("id-ID");
               });
             }).catch(() => {});
         })(nm, pg, el);
       });
     }, { threshold: 0.3 });
     document.querySelectorAll('.item[data-viewname]').forEach(el => {
-      if(el.dataset.page !== "topup") viewObs.observe(el);
+      viewObs.observe(el);
     });
   } catch(e) {}
 }
