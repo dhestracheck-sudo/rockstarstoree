@@ -1463,7 +1463,7 @@ function showItems(i){
     gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
   }
   shownCat = i;
-  shownN = PAGE_N;
+  shownN = 12;
   paintItems();
 }
 function paintItems(){
