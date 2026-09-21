@@ -516,9 +516,10 @@ header {
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(0,0,0,0.55);
+  z-index: 3;
 }
 .mnav.l { left: 10px; } .mnav.r { right: 10px; }
-.mdots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+.mdots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 3; }
 .mdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; }
 .mdots i.on { background: #fff; }
 
