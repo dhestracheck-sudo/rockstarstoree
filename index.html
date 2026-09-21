@@ -1607,24 +1607,6 @@ function carouselGoto(i, j, index){
   carouselState[`${i}-${j}`] = index;
   updateCarousel(i, j, index);
 }
-/* Slide foto jalan otomatis tiap 4 detik (yang terlihat saja, hemat baterai) */
-setInterval(function(){
-  try {
-    if(document.hidden) return;
-    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const categories = getCurrentCategories();
-    document.querySelectorAll(".mthumb img[id^='carousel-']").forEach(function(imgEl){
-      const r = imgEl.getBoundingClientRect();
-      if(r.bottom < 0 || r.top > window.innerHeight) return;
-      const m = imgEl.id.match(/^carousel-(\d+)-(\d+)$/);
-      if(!m) return;
-      const i = +m[1], j = +m[2];
-      const item = categories[i] && categories[i].items[j];
-      if(!item || !item.images || item.images.length < 2) return;
-      carouselNext(i, j);
-    });
-  } catch(e) {}
-}, 4000);
 function updateCarousel(i, j, index){
   const categories = getCurrentCategories();
   const item = categories[i].items[j];
