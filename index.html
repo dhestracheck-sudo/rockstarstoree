@@ -403,6 +403,15 @@ header {
   cursor: pointer;
   content-visibility: auto;
   contain-intrinsic-size: 400px 560px;
+  position: relative;
+}
+.item::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--blue2), transparent);
+  opacity: 0.7;
+  z-index: 3;
 }
 .item:hover { transform: translateY(-5px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.5); }
 .item .thumb { position: relative; cursor: zoom-in; }
@@ -431,7 +440,7 @@ header {
   border: 1px solid var(--red);
 }
 .item .ibody { padding: 16px 18px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.item h3 { font-size: 16px; margin: 0; font-weight: 600; line-height: 1.45; }
+.item h3 { font-size: 16px; margin: 0; font-weight: 600; line-height: 1.45; letter-spacing: 0.2px; }
 .item .desc { font-size: 12.5px; color: var(--mut); margin: 0; line-height: 1.6; }
 .verified {
   display: inline-flex; align-items: center; justify-content: center;
@@ -446,7 +455,7 @@ header {
 .item .price .was { font-size: 13px; color: var(--mut); text-decoration: line-through; margin-left: 8px; }
 .item .btn {
   margin-top: 10px;
-  background: var(--blue);
+  background: linear-gradient(135deg, var(--blue), #5a78ff);
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -456,6 +465,7 @@ header {
   font-size: 16px;
   cursor: pointer;
   transition: filter 0.15s ease;
+  box-shadow: 0 8px 22px rgba(43,78,255,0.35);
 }
 .item .btn:hover:not(:disabled) { filter: brightness(1.12); }
 .item .btn:disabled { background: #232c44; color: var(--mut); cursor: not-allowed; }
@@ -484,7 +494,7 @@ header {
 .item .thumb { overflow: hidden; }
 .item .thumb img { transition: transform 0.5s ease; }
 .item:hover .thumb img { transform: scale(1.06); }
-.item .price .now { color: #f3d27a; }
+.item .price .now { color: #f3d27a; text-shadow: 0 0 18px rgba(243,210,122,0.35); }
 .badge-off { background: var(--red); }
 .catcard { border: 1px solid rgba(66,105,255,0.18); }
 .catcard:hover { border-color: rgba(111,139,255,0.6); box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 24px rgba(66,105,255,0.12); }
