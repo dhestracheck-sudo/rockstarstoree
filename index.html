@@ -201,11 +201,12 @@ header {
   font-weight: 700;
   letter-spacing: 1.5px;
   color: var(--blue2);
-  border: 1px solid var(--line);
-  background: rgba(43,78,255,0.1);
+  border: 1px solid rgba(111,139,255,.45);
+  background: rgba(43,78,255,0.12);
   padding: 6px 14px;
   border-radius: 999px;
   margin-bottom: 16px;
+  box-shadow: 0 0 24px rgba(43,78,255,.25), inset 0 0 12px rgba(43,78,255,.08);
 }
 .hero h1 {
   font-family: 'Baloo 2', sans-serif;
@@ -214,7 +215,7 @@ header {
   margin: 0 0 14px;
   letter-spacing: 0.5px;
 }
-.hero h1 span { color: var(--blue2); }
+.hero h1 span { background: linear-gradient(135deg, var(--blue2), #cdd9ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero p { color: var(--mut); font-size: 16px; line-height: 1.7; margin: 0 0 26px; max-width: 520px; }
 .channel-link { display: inline-block; color: var(--wa); font-size: 14px; font-weight: 700; margin: -10px 0 24px; text-decoration: none; }
 .channel-link:hover { text-decoration: underline; }
@@ -228,10 +229,10 @@ header {
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.btn-primary { background: var(--blue); color: #fff; border: none; box-shadow: 0 10px 28px rgba(43,78,255,0.45); }
-.btn-primary:hover { transform: translateY(-2px); }
-.btn-ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
-.btn-ghost:hover { border-color: var(--blue); }
+.btn-primary { background: linear-gradient(135deg, var(--blue), #5a78ff); color: #fff; border: none; box-shadow: 0 10px 28px rgba(43,78,255,0.45); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(43,78,255,0.55); filter:brightness(1.08); }
+.btn-ghost { background: rgba(43,78,255,0.06); color: var(--txt); border: 1px solid var(--line); }
+.btn-ghost:hover { border-color: var(--blue); background: rgba(43,78,255,0.14); }
 .hero-visual { flex: 0.8; display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .hero-visual a { cursor: pointer; }
 .ava-caption {
@@ -312,7 +313,7 @@ header {
 
 /* ===== section titles ===== */
 .section { max-width: 1200px; margin: 0 auto; padding: 44px 28px 8px; }
-.section h2 { font-family: 'Baloo 2', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; }
+.section h2 { font-family: 'Baloo 2', sans-serif; font-size: 30px; margin: 0 0 4px; letter-spacing: 0.4px; border-left: 5px solid var(--blue); padding-left: 14px; }
 .section > p { color: var(--mut); margin: 0 0 20px; font-size: 14px; }
 
 /* ===== flash sale ===== */
@@ -347,7 +348,7 @@ header {
   justify-content: flex-end;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
-.banner:hover { transform: translateY(-4px); border-color: var(--blue); }
+.banner:hover { transform: translateY(-4px); border-color: var(--blue); box-shadow: 0 18px 44px rgba(0,0,0,0.55), 0 0 28px rgba(43,78,255,0.22); }
 .banner::after {
   content: "→";
   position: absolute;
