@@ -1525,34 +1525,10 @@ function openDetail(page, i, j){
     document.getElementById("detailBox").innerHTML = `<h2>😢 Gagal buka produk</h2><p style="color:var(--mut);">Coba tutup lalu buka lagi, atau muat ulang halaman.</p><div class="mactions"><button class="ghost" onclick="closeDetail()">${tr("tutup")}</button></div>`;
   }
   document.getElementById("detailModal").style.display = "block";
-  detailAutoStart();
 }
 function closeDetail(){
-  detailAutoStop();
   document.getElementById("detailModal").style.display = "none";
   detailCur = null;
-}
-let detailAuto = null;
-function detailAutoStop(){ if(detailAuto){ clearInterval(detailAuto); detailAuto = null; } }
-function detailAutoStart(){
-  detailAutoStop();
-  try {
-    if(!detailCur) return;
-    const cats = catsOf(detailCur.page);
-    const item = cats[detailCur.i].items[detailCur.j];
-    const files = (item.images && item.images.length) ? item.images : [(item.img || cats[detailCur.i].img)];
-    if(files.length < 2) return;
-    if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    detailAuto = setInterval(function(){
-      if(!detailCur || document.hidden) return;
-      try {
-        const c2 = catsOf(detailCur.page);
-        const it2 = c2[detailCur.i].items[detailCur.j];
-        const fl = (it2.images && it2.images.length) ? it2.images : [(it2.img || c2[detailCur.i].img)];
-        if(fl.length > 1) detailGoto((detailCur.k + 1) % fl.length);
-      } catch(e) {}
-    }, 3000);
-  } catch(e) {}
 }
 function renderDetail(){
   if(!detailCur) return;
