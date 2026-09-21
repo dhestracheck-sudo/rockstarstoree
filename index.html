@@ -1474,7 +1474,7 @@ function itemCard(categories, i, j){
           : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
-      <button class="btn" onclick="event.stopPropagation();addItem(${i},${j})" ${item.stock === 0 ? 'disabled' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
+      <button class="btn" ${item.stock === 0 ? 'style="background:#232c44;color:var(--mut);cursor:not-allowed;"' : ''} onclick="event.stopPropagation();${item.stock === 0 ? `alert(tr('habis_alert'))` : `addItem(${i},${j})`}">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>
   </div>`;
 }
@@ -1521,7 +1521,9 @@ let detailCur = null;
 function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
   try { var _c = catsOf(page), _it = _c[i].items[j]; logAksi("klik", _it.name, _c[i].name, _it.price, page); } catch(e) {}
-  renderDetail();
+  try { renderDetail(); } catch(e) {
+    document.getElementById("detailBox").innerHTML = `<h2>😢 Gagal buka produk</h2><p style="color:var(--mut);">Coba tutup lalu buka lagi, atau muat ulang halaman.</p><div class="mactions"><button class="ghost" onclick="closeDetail()">${tr("tutup")}</button></div>`;
+  }
   document.getElementById("detailModal").style.display = "block";
   detailAutoStart();
 }
@@ -1589,7 +1591,7 @@ function renderDetail(){
     <div class="mactions">
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
       <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
-      <button class="go" onclick="detailAdd()" ${item.stock === 0 ? 'disabled style="opacity:.5;"' : ''}>${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
+      <button class="go" ${item.stock === 0 ? 'style="opacity:.5;"' : ''} onclick="detailAdd()">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
     </div>`;
 }
 function detailGoto(k){
