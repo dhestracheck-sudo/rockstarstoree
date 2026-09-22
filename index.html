@@ -1058,6 +1058,27 @@ let carouselState = {};
 const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.webp";
 function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
+/* Thumbnail hemat: sisipkan thumb_ untuk file Storage (fallback ke full bila belum ada) */
+function thumbOf(u){
+  u = String(u || "");
+  if(!u || u.indexOf("/thumb_") !== -1) return u;
+  if(u.indexOf("/storage/v1/object/") === -1) return u;
+  const i = u.lastIndexOf("/");
+  return u.slice(0, i + 1) + "thumb_" + u.slice(i + 1);
+}
+function thumbTag(full, attrs){
+  full = fixImg(full);
+  const t = thumbOf(full);
+  if(t === full) return `<img src="${full}" ${attrs} onerror="imgErr(this)">`;
+  return `<img src="${t}" data-full="${full}" ${attrs} onerror="thumbErr(this)">`;
+}
+function thumbErr(el){
+  try {
+    const full = el.getAttribute("data-full");
+    if(full && el.src !== full){ el.setAttribute("data-full", ""); el.src = full; return; }
+  } catch(e) {}
+  imgErr(el);
+}
 /* Emoji cadangan tiap kategori (tampil di atas background biru bila foto kosong/gagal) */
 function catEmoji(nm){
   const n = String(nm || "").toLowerCase();
