@@ -1196,12 +1196,22 @@ function slideAddFile(){
   const ups = todo.map(f => prepImage(f).then(p => {
     if(!p.ok) throw new Error("file rusak: " + f.name);
     const path = Date.now() + "_" + Math.floor(Math.random() * 1e6) + "_" + safeName(p.name);
-    return fetch(SB_URL + "/storage/v1/object/foto/" + path, {
+    const blob = b64ToBlob(p.base64, p.mime);
+    const putFull = fetch(SB_URL + "/storage/v1/object/foto/" + path, {
       method: "PUT",
       headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": p.mime, "x-upsert": "true" },
-      body: b64ToBlob(p.base64, p.mime)
-    }).then(r => {
-      if(!r.ok) throw new Error("upload gagal: " + f.name);
+      body: blob
+    });
+    const putThumb = makeThumb(blob).then(tblob => {
+      if(!tblob) return;
+      return fetch(SB_URL + "/storage/v1/object/foto/thumb_" + path, {
+        method: "PUT",
+        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "x-upsert": "true" },
+        body: tblob
+      }).catch(function(){});
+    });
+    return Promise.all([putFull, putThumb]).then(rs => {
+      if(!rs[0].ok) throw new Error("upload gagal: " + f.name);
       done++;
       st.textContent = "Mengupload " + done + "/" + todo.length + " (paralel)...";
       return SB_URL + "/storage/v1/object/public/foto/" + path;
