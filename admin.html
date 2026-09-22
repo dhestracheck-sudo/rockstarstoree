@@ -288,6 +288,27 @@ function b64ToBlob(b64, mime){
   return new Blob([u8], { type: mime || "image/jpeg" });
 }
 function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
+function makeThumb(blob){
+  return new Promise(resolve => {
+    try {
+      const url = URL.createObjectURL(blob);
+      const im = new Image();
+      im.onload = () => {
+        try {
+          URL.revokeObjectURL(url);
+          const sc = Math.min(1, 480 / Math.max(im.naturalWidth, im.naturalHeight));
+          const cv = document.createElement("canvas");
+          cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
+          cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
+          cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+          cv.toBlob(b => resolve(b || null), "image/webp", 0.7);
+        } catch(e){ resolve(null); }
+      };
+      im.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+      im.src = url;
+    } catch(e){ resolve(null); }
+  });
+}
 const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
 const ADMIN_V = "12r-tanpa-pengumuman";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
@@ -1457,6 +1478,18 @@ async function sbAction(action, tbl, body, signal){
       body: blob, signal: signal
     });
     if(!up.ok) return { result: "error: upload foto gagal (" + up.status + ")" };
+    // thumb hemat untuk katalog (best-effort: gagal = abaikan, full tetap jalan)
+    try {
+      const tblob = await makeThumb(blob);
+      if(tblob){
+        await fetch(SB_URL + "/storage/v1/object/foto/thumb_" + path, {
+          method: "PUT",
+          headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
+            "Content-Type": "image/webp", "x-upsert": "true" },
+          body: tblob, signal: signal
+        });
+      }
+    } catch(e) {}
     var url = SB_URL + "/storage/v1/object/public/foto/" + path;
     var cur = null;
     try {
