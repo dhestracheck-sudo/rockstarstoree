@@ -118,6 +118,17 @@ header {
 }
 .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: 0.4px; white-space: nowrap; }
 .brand img { height: 40px; border-radius: 9px; }
+@media (prefers-reduced-motion: no-preference) {
+  .brand img { animation: logoFloat 3s ease-in-out infinite; }
+  @keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .brandshine {
+    background: linear-gradient(110deg, #fff 35%, var(--blue2) 50%, #fff 65%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shineMove 3.5s linear infinite;
+  }
+  @keyframes shineMove { to { background-position: -200% center; } }
+}
 .searchwrap { flex: 1; display: flex; justify-content: center; }
 #searchInput {
   width: min(420px, 100%);
@@ -798,7 +809,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
-  <div class="brand"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> ROCKSTAR.STORE</div>
+  <div class="brand"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></div>
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
   <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
   <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
