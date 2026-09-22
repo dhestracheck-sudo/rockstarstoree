@@ -48,6 +48,15 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 
   <a id="analTopBtn" href="analisis.html" style="display:none;text-align:center;background:#1a2440;color:var(--txt);font-weight:700;font-size:14px;border-radius:10px;padding:12px;text-decoration:none;margin-top:4px;border:1px solid var(--line);">📊 Buka Panel Analisis →</a>
 
+  <div id="featMenu" style="display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;">
+    <a href="#teksCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">📢</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Teks Berjalan</div></a>
+    <a href="#akunDataCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">🔐</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Data Akun</div></a>
+    <a href="#mainCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">📦</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Produk</div></a>
+    <a href="#slideCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">🖼️</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Foto</div></a>
+    <a href="#catCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">🗂️</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Kategori</div></a>
+    <a href="#addCard" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;text-decoration:none;color:var(--txt);text-align:center;"><div style="font-size:26px;">➕</div><div style="font-weight:700;font-size:13.5px;margin-top:4px;">Tambah Baru</div></a>
+  </div>
+
   <nav class="minibar" id="miniNav">
     <a href="#teksCard">Teks</a><a href="#akunDataCard">Data Akun</a><a href="#mainCard">Produk</a><a href="#slideCard">Foto</a><a href="#catCard">Kategori</a><a href="#addCard">Tambah</a>
   </nav>
@@ -283,6 +292,7 @@ function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
     ["analTopBtn","miniNav","sheetCard","teksCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    document.getElementById("featMenu").style.display = "grid";
     loadTeks();
     loadItems();
     loadAkunProds();
