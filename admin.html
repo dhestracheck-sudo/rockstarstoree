@@ -40,6 +40,14 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
 #status { margin-top:12px; font-size:13px; line-height:1.6; }
 .ok { color:var(--green); } .err { color:#ff8080; }
 .hint { font-size:12px; color:var(--mut); line-height:1.6; }
+/* Layar lebar: 2 kolom biar tidak scroll panjang */
+@media (min-width: 1000px){
+  .wrap { max-width: 1060px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; align-items: start; }
+  .wrap > h1, .wrap > #analTopBtn, .wrap > #pinCard, .wrap > #featMenu, .wrap > #miniNav,
+  .wrap > #sheetCard, .wrap > h2.sect { grid-column: 1 / -1; }
+  #featMenu { grid-template-columns: repeat(3, 1fr) !important; }
+  .wrap > .card { margin-top: 0; margin-bottom: 18px; }
+}
 </style>
 </head>
 <body>
