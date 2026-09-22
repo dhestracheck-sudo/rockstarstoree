@@ -492,7 +492,8 @@ header {
 /* ===== terakhir dilihat + dibeli bersama ===== */
 .recentrow { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scrollbar-width:none; }
 .recentrow::-webkit-scrollbar { display:none; }
-.recentcard { min-width:150px; max-width:150px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; }
+.recentcard { min-width:150px; max-width:150px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; position:relative; }
+.recentcard .soldstamp b { font-size:18px; letter-spacing:3px; padding:4px 12px 4px 15px; }
 .recentcard img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#05080f; }
 .recentcard .rb { padding:8px 10px 10px; }
 .recentcard .rn { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -1988,6 +1989,7 @@ function paintHot(){
       wrap.style.display = "";
       document.getElementById("hotRow").innerHTML = top.map(o =>
         `<div class="recentcard" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
+        (o.r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
         thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy"`) +
         `<div class="rb"><div class="rn">${escWish(o.r.item.name)}</div>` +
         `<div class="rp">🔥 ${o.v}x ${tr("clicked")} · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`
