@@ -128,7 +128,10 @@ header {
     animation: shineMove 3.5s linear infinite;
   }
   @keyframes shineMove { to { background-position: -200% center; } }
+  .brl { display: inline-block; opacity: 0; animation: letterIn 0.45s ease forwards; }
+  @keyframes letterIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
+.brl { display: inline-block; }
 .searchwrap { flex: 1; display: flex; justify-content: center; }
 #searchInput {
   width: min(420px, 100%);
@@ -921,6 +924,22 @@ function pwaInstall(){
     pwaEvt.userChoice.then(function(){ pwaEvt = null; hidePwaBar(); }).catch(function(){});
   }
 }
+function brandLetters(){
+  try {
+    const el = document.querySelector(".brandshine");
+    if(!el) return;
+    const txt = el.textContent;
+    el.innerHTML = "";
+    [...txt].forEach((ch, i) => {
+      const s = document.createElement("span");
+      s.className = "brl";
+      s.style.animationDelay = (i * 0.09) + "s";
+      s.textContent = (ch === " ") ? " " : ch;
+      el.appendChild(s);
+    });
+  } catch(e) {}
+}
+try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 (function pwaInit(){
   try {
     const h = localStorage.getItem("rs_pwa_hide");
