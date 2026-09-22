@@ -1738,22 +1738,7 @@ function syncHeroCta(){
     if(b) b.className = (currentPage === k) ? "btn-primary" : "btn-ghost";
   });
 }
-/* Header hemat layar: pengumuman melipat halus saat scroll bawah (hysteresis anti-kedip) */
-try {
-  let ticking = false;
-  window.addEventListener("scroll", function(){
-    if(ticking) return;
-    ticking = true;
-    requestAnimationFrame(function(){
-      ticking = false;
-      const y = window.scrollY || 0;
-      const t = document.querySelector(".topwrap");
-      if(!t) return;
-      if(y > 170) t.classList.add("slim");
-      else if(y < 90) t.classList.remove("slim");
-    });
-  }, { passive: true });
-} catch(e) {}
+/* Pengumuman selalu tampil (lipat otomatis dimatikan) */
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
