@@ -427,6 +427,7 @@ header {
 .item .thumb img, .item .mthumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .badge-off, .badge-out { z-index: 2; }
 .item .thumb::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(6,9,19,.68)); pointer-events:none; }
+.item .thumb .catemoji { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:64px; }
 .item .thumb img { width:100%; aspect-ratio: 1/1; object-fit:cover; display:block; background:#05080f; filter:saturate(1.12) contrast(1.08); }
 /* Halaman akun: screenshot sering portrait — tampilkan utuh, jangan dipotong */
 .itemgrid.akun .thumb img, .itemgrid.akun .mthumb img { aspect-ratio: auto; max-height: 440px; object-fit: contain; }
@@ -1211,6 +1212,7 @@ function flashHTML(){
     <div class="item" data-viewname="${it.name}" data-page="${r.page}" onclick="openDetail('${r.page}',${r.i},${r.j})">
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
+        <span class="catemoji">${catEmoji(it.name)}</span>
         ${simpleF ? `<span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
         ${thumbTag(it.img || (it.images && it.images[0]), `alt="${it.name}" loading="lazy"`)}
       </div>
@@ -1512,6 +1514,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
+      <span class="catemoji">${catEmoji(category.name)}</span>
       ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       ${thumbTag(item.images[0], `id="carousel-${i}-${j}" alt="${item.name}" loading="lazy"`)}
@@ -1524,6 +1527,7 @@ function itemCard(categories, i, j){
       <div class="thumb">
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
+      <span class="catemoji">${catEmoji(category.name)}</span>
       ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       ${thumbTag(itemImg, `alt="${item.name}" loading="lazy"`)}
