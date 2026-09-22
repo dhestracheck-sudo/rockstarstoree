@@ -1395,6 +1395,7 @@ function render(){
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
     paintRecent();
+    paintHot();
     watchViews();
     return;
   }
@@ -1965,6 +1966,34 @@ function syncWishCount(){
   const n = wishList().length;
   const a = document.getElementById("wishCount");
   if(a) a.textContent = n;
+}
+function paintHot(){
+  const wrap = document.getElementById("hotSec");
+  if(!wrap) return;
+  const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+  fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(rows => {
+    try {
+      const freq = {};
+      (Array.isArray(rows) ? rows : []).forEach(o => {
+        const nm = String(o.name || "").slice(0, 80);
+        if(nm) freq[nm] = (freq[nm] || 0) + 1;
+      });
+      const top = Object.keys(freq).map(k => ({ k: k, v: freq[k] }))
+        .sort((a, b) => b.v - a.v).slice(0, 8)
+        .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
+        .filter(o => o.r);
+      if(!top.length || !document.getElementById("hotRow")) return;
+      wrap.style.display = "";
+      document.getElementById("hotRow").innerHTML = top.map(o =>
+        `<div class="recentcard" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
+        thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy"`) +
+        `<div class="rb"><div class="rn">${escWish(o.r.item.name)}</div>` +
+        `<div class="rp">🔥 ${o.v}x ${tr("clicked")} · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`
+      ).join("");
+    } catch(e) {}
+  }).catch(() => {});
 }
 function syncWishBtns(nm){
   const on = isWished(nm);
