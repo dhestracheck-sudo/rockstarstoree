@@ -97,6 +97,12 @@ button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
     </div>
     <div id="statusTeks"></div>
     <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
+    <label>💱 Kurs Ringgit (Rp per RM 1 — web convert otomatis)</label>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="kursInput" placeholder="misal 3600" style="flex:1;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
+      <button id="kursBtn" onclick="saveKurs()" style="flex:1;">💱 Simpan Kurs</button>
+    </div>
+    <div id="statusKurs"></div>
   </div>
 
   <h2 class="sect" id="sectAkun" style="display:none;">🔐 DATA AKUN — id/pw per akun (pengunjung tidak bisa intip)</h2>
@@ -868,6 +874,8 @@ function loadTeks(){
     try {
       var o = (arr || []).find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
+      var k = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_KURS"; });
+      if(k && Number(k.deskripsi)) document.getElementById("kursInput").value = Number(k.deskripsi);
     } catch(e) {}
   });
 }
@@ -904,6 +912,29 @@ function defaultTeks(){
     btn.disabled = false;
     if(d.result === "success"){ document.getElementById("teksInput").value = ""; st.innerHTML = '<span class="ok">✅ Kembali default!</span>'; }
     else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
+  });
+}
+
+function saveKurs(){
+  const raw = String(document.getElementById("kursInput").value || "").replace(/[^0-9.]/g, "");
+  const v = Number(raw);
+  const st = document.getElementById("statusKurs");
+  const btn = document.getElementById("kursBtn");
+  if(!(v > 0)){ st.innerHTML = '<span class="err">Isi kurs dulu (misal 3600).</span>'; return; }
+  btn.disabled = true;
+  st.textContent = "Menyimpan kurs...";
+  postRetry({ action: "set", item_name: "INFO_KURS", col: "deskripsi", value: String(v), sheet: TEKS_SHEET }, 2).then(function(d){
+    if(d.result === "success"){ st.innerHTML = '<span class="ok">✅ Kurs tersimpan! Web convert otomatis.</span>'; btn.disabled = false; return; }
+    if(String(d.result || "").indexOf("tidak ketemu") !== -1){
+      postRetry({ action: "add", item_name: "INFO_KURS", kategori: "INFO", deskripsi: String(v), sheet: TEKS_SHEET }, 2).then(function(d2){
+        btn.disabled = false;
+        if(d2.result === "success") st.innerHTML = '<span class="ok">✅ Kurs tersimpan! Web convert otomatis.</span>';
+        else st.innerHTML = '<span class="err">Gagal: ' + (d2.result || "?") + '</span>';
+      });
+      return;
+    }
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
   });
 }
 

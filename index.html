@@ -487,6 +487,7 @@ header {
 /* ===== wishlist ===== */
 .payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
+.rm { font-size: 12px; color: var(--mut); margin-top: 2px; }
 /* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
 .itemgrid { background: transparent; border: none; box-shadow: none; padding: 0; }
 .item { border: 1px solid rgba(66,105,255,0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
@@ -1156,7 +1157,7 @@ function flashHTML(){
         ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
         <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
         ${stockBarHTML(it)}`}
-        <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span></div>
+        <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
@@ -1472,7 +1473,7 @@ function itemCard(categories, i, j){
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
-          : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}`}
+          : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}${rmFmt(item.price) ? `<div class="rm">${rmFmt(item.price)}</div>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
       <button class="btn" ${item.stock === 0 ? 'style="background:#232c44;color:var(--mut);cursor:not-allowed;"' : ''} onclick="event.stopPropagation();${item.stock === 0 ? `alert(tr('habis_alert'))` : `addItem(${i},${j})`}">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
@@ -1562,6 +1563,7 @@ function renderDetail(){
     ${stockBarHTML(item)}
     <div class="detailprice">
       <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
+      ${rmFmt(item.price) ? `<div class="rm" style="font-size:14px;">${rmFmt(item.price)}</div>` : ``}
     </div>
     <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">${tr("hemat")} -${off}%</span></div>` : ``}
@@ -1993,6 +1995,12 @@ function hasKatArr(arr){
 }
 
 let infoTeksValue = "";
+let kursRM = 3600;
+function rmFmt(rp){
+  rp = Number(rp) || 0;
+  if(rp <= 0 || !(kursRM > 0)) return "";
+  return "≈ RM " + (rp / kursRM).toFixed(2);
+}
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
   const hd = document.querySelector("header");
@@ -2018,7 +2026,8 @@ function applySnap(b, t, a, info){
   if (Array.isArray(info)) {
     for (var i = 0; i < info.length; i++) {
       var io = info[i];
-      if (String(io.name || "").trim() === "INFO_TEKS") { infoTeksValue = String(io.deskripsi || "").trim(); break; }
+      if (String(io.name || "").trim() === "INFO_TEKS") { infoTeksValue = String(io.deskripsi || "").trim(); }
+      if (String(io.name || "").trim() === "INFO_KURS") { const k = Number(String(io.deskripsi || "").replace(/[^0-9.]/g, "")); if(k > 0) kursRM = k; }
     }
     // Kalau tab Info belum punya baris INFO_TEKS, biarkan fallback dari Brainrot (masa migrasi).
   }
