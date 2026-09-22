@@ -1595,7 +1595,7 @@ function renderDetail(){
       <button class="mnav r" onclick="detailGoto(${(k + 1) % files.length})">❯</button>` : ``}
     </div>
     ${files.length > 1 ? `<div class="dthumbs">` + files.map((f, idx) =>
-      `<img src="${fixImg(f)}" class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy" onerror="this.style.display='none'">`
+      thumbTag(f, `class="${idx === k ? 'on' : ''}" onclick="detailGoto(${idx})" loading="lazy"`)
     ).join("") + `</div>` : ``}
     <h2 style="margin:14px 0 0;">${item.name}</h2>
     <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
@@ -1664,8 +1664,10 @@ function updateCarousel(i, j, index){
   const dotsContainer = document.getElementById(`dots-${i}-${j}`);
   if(imgEl){
     delete imgEl.dataset.retry;
-    imgEl.onerror = function(){ imgErr(imgEl); };
-    imgEl.src = fixImg(item.images[index]);
+    const full0 = fixImg(item.images[index]);
+    const t0 = thumbOf(full0);
+    if(t0 === full0){ imgEl.onerror = function(){ imgErr(imgEl); }; imgEl.src = full0; }
+    else { imgEl.setAttribute("data-full", full0); imgEl.onerror = function(){ thumbErr(imgEl); }; imgEl.src = t0; }
     // preload slide tetangga biar pindah slide instan
     [index + 1, index - 1].forEach(k => {
       const n = (k + item.images.length) % item.images.length;
