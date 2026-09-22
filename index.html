@@ -798,7 +798,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   .brand { font-size: 15px; }
   .brand img { height: 32px; }
   .cartbtn { padding: 8px 14px; font-size: 13px; }
-  .topwrap.slim .announce { display: none; }
+  .topwrap.slim .announce { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
+  .topwrap .announce { max-height: 120px; overflow: hidden; transition: max-height .25s ease, padding .25s ease, opacity .2s ease; }
   .item .ibody { padding: 12px 12px 14px; gap: 6px; }
   .item h3 { font-size: 13.5px; }
   .item .meta { font-size: 11.5px; }
@@ -1737,14 +1738,20 @@ function syncHeroCta(){
     if(b) b.className = (currentPage === k) ? "btn-primary" : "btn-ghost";
   });
 }
-/* Header hemat layar: pengumuman sembunyi saat scroll bawah */
+/* Header hemat layar: pengumuman melipat halus saat scroll bawah (hysteresis anti-kedip) */
 try {
-  let lastY = 0;
+  let ticking = false;
   window.addEventListener("scroll", function(){
-    const y = window.scrollY || 0;
-    const t = document.querySelector(".topwrap");
-    if(t) t.classList.toggle("slim", y > 140 && y > lastY);
-    lastY = y;
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      ticking = false;
+      const y = window.scrollY || 0;
+      const t = document.querySelector(".topwrap");
+      if(!t) return;
+      if(y > 170) t.classList.add("slim");
+      else if(y < 90) t.classList.remove("slim");
+    });
   }, { passive: true });
 } catch(e) {}
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
