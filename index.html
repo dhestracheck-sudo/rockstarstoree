@@ -489,6 +489,14 @@ header {
 .wishbtn { position:absolute; bottom:10px; right:10px; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:15px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
 .wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
 .viewpill { position:absolute; top:10px; right:10px; z-index:3; background:rgba(0,0,0,.65); color:#fff; font-size:10px; font-weight:700; border-radius:999px; padding:3px 8px; }
+/* ===== terakhir dilihat + dibeli bersama ===== */
+.recentrow { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scrollbar-width:none; }
+.recentrow::-webkit-scrollbar { display:none; }
+.recentcard { min-width:150px; max-width:150px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; }
+.recentcard img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#05080f; }
+.recentcard .rb { padding:8px 10px 10px; }
+.recentcard .rn { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.recentcard .rp { font-size:13px; color:#f3d27a; font-weight:700; }
 .statrow { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12px; color:var(--mut); }
 .statrow b.st-ok { color:var(--green); }
 .statrow b.st-no { color:var(--red); }
@@ -1262,6 +1270,7 @@ lanjut: "Lanjut Belanja", preview: "📸 Preview Pesanan", kirim: "✓ Kirim ke 
 kosong: "Keranjang kosong!", habis_alert: "Maaf, item ini sudah habis!",
 cancel_q: "Yakin ingin membatalkan checkout? Semua item akan dihapus.",
 dilihat_w: "dilihat", wish_title: "❤️ Wishlist Saya", hapus: "Hapus",
+recent_t: "🕘 Terakhir dilihat", together: "🎞️ Sering dibeli bersama", bought_with: "dibeli bersama",
 sold_done: "Sudah laku", rest_stock: "Sisa stok", avail_stock: "Stok tersedia",
 low_a: "Sisa", low_b: "lagi, buruan sebelum habis!", avail: "TERSEDIA",
 server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
@@ -1294,6 +1303,7 @@ lanjut: "Continue Shopping", preview: "📸 Order Preview", kirim: "✓ Send to 
 kosong: "Cart is empty!", habis_alert: "Sorry, this item is sold out!",
 cancel_q: "Cancel checkout? All items will be removed.",
 dilihat_w: "views", wish_title: "❤️ My Wishlist", hapus: "Remove",
+recent_t: "🕘 Recently viewed", together: "🎞️ Frequently bought together", bought_with: "bought together",
 sold_done: "Sold", rest_stock: "Stock left", avail_stock: "Available stock",
 low_a: "Only", low_b: "left, hurry before it's gone!", avail: "AVAILABLE",
 server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
@@ -1377,9 +1387,11 @@ function render(){
           <p>${tr("b_akun_d")}</p>
         </div>
       </div>
+      <div id="recentSec" style="display:none;margin-top:26px;"><h2 data-i18n="recent_t">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></div>
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
+    paintRecent();
     watchViews();
     return;
   }
@@ -1568,6 +1580,12 @@ let detailCur = null;
 function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
   try { var _c = catsOf(page), _it = _c[i].items[j]; logAksi("klik", _it.name, _c[i].name, _it.price, page); } catch(e) {}
+  try {
+    let rc = JSON.parse(localStorage.getItem("rs_recent") || "[]");
+    if(!Array.isArray(rc)) rc = [];
+    rc = [_it.name].concat(rc.filter(x => x !== _it.name)).slice(0, 12);
+    localStorage.setItem("rs_recent", JSON.stringify(rc));
+  } catch(e) {}
   try { renderDetail(); } catch(e) {
     document.getElementById("detailBox").innerHTML = `<h2>😢 Gagal buka produk</h2><p style="color:var(--mut);">Coba tutup lalu buka lagi, atau muat ulang halaman.</p><div class="mactions"><button class="ghost" onclick="closeDetail()">${tr("tutup")}</button></div>`;
   }
