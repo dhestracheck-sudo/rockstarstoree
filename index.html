@@ -1634,7 +1634,9 @@ function renderDetail(){
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
       <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
       <button class="go" ${item.stock === 0 ? 'style="opacity:.5;"' : ''} onclick="detailAdd()">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
-    </div>`;
+    </div>
+    <div id="togetherBox" style="margin-top:12px;"></div>`;
+  paintTogether();
 }
 function detailGoto(k){
   if(!detailCur) return;
@@ -2007,6 +2009,80 @@ function openWishModal(){
 }
 function escWish(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 function closeWishModal(){ document.getElementById("wishModal").style.display = "none"; }
+function paintRecent(){
+  const wrap = document.getElementById("recentSec");
+  if(!wrap) return;
+  let rc = [];
+  try { rc = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(rc)) rc = []; } catch(e) {}
+  const cards = [];
+  rc.forEach(nm => { const r = resolveWish(nm); if(r) cards.push(r); });
+  if(!cards.length){ wrap.style.display = "none"; return; }
+  wrap.style.display = "";
+  document.getElementById("recentRow").innerHTML = cards.slice(0, 12).map(r => {
+    const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
+    return `<div class="recentcard" onclick="openDetail('${r.page}',${r.i},${r.j})">` +
+      thumbTag(im, `alt="" loading="lazy"`) +
+      `<div class="rb"><div class="rn">${escWish(r.item.name)}</div><div class="rp">Rp ${Number(r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`;
+  }).join("");
+}
+let orderCache = null;
+function getOrdersOnce(){
+  if(orderCache) return Promise.resolve(orderCache);
+  return fetch(SB_URL + "/rest/v1/orders?select=items&order=waktu.desc&limit=500", {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => {
+    orderCache = Array.isArray(a) ? a : [];
+    return orderCache;
+  }).catch(() => []);
+}
+function paintTogether(){
+  const box = document.getElementById("togetherBox");
+  if(!box || !detailCur) return;
+  const cats = catsOf(detailCur.page);
+  const cur = cats[detailCur.i].items[detailCur.j];
+  getOrdersOnce().then(orders => {
+    if(!detailCur || !document.getElementById("togetherBox")) return;
+    try {
+      const freq = {};
+      orders.forEach(o => {
+        let det = [];
+        try { det = JSON.parse(o.items) || []; } catch(e) {}
+        if(!Array.isArray(det)) return;
+        const names = det.map(d => String(d.n || ""));
+        if(names.indexOf(cur.name) === -1) return;
+        names.forEach(nm => { if(nm && nm !== cur.name) freq[nm] = (freq[nm] || 0) + 1; });
+      });
+      const top = Object.keys(freq).map(k => ({ k: k, v: freq[k] }))
+        .sort((a, b) => b.v - a.v).slice(0, 3)
+        .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
+        .filter(o => o.r);
+      if(!top.length){ box.style.display = "none"; return; }
+      box.style.display = "";
+      box.innerHTML = `<b>${tr("together")}</b>` + top.map(o =>
+        `<div class="mrow"><div class="grow"><strong>${escWish(o.k).slice(0, 50)}</strong><br>` +
+        `<span style="color:var(--blue2);font-weight:600;">Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</span> ` +
+        `<span style="color:var(--mut);font-size:12px;">• ${o.v}x ${tr("bought_with")}</span></div>` +
+        `<button class="del" style="background:var(--blue);" onclick="togetherAdd('${o.r.page}',${o.r.i},${o.r.j})">🛒</button></div>`
+      ).join("");
+    } catch(e) {}
+  });
+}
+function togetherAdd(page, i, j){
+  try {
+    const cats = catsOf(page);
+    const item = cats[i].items[j];
+    if(item.stock === 0){ alert(tr("habis_alert")); return; }
+    cart.push({...item, categoryImg: cats[i].img, category: cats[i].name, page: page});
+    logAksi("keranjang", item.name, cats[i].name, item.price, page);
+    trackClick("tambah_keranjang", item.name, cats[i].name);
+    if(typeof gtag === "function"){
+      gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
+    }
+    syncCart();
+    closeDetail();
+    openCartModal();
+  } catch(e) {}
+}
 function wishRemove(nm){
   saveWish(wishList().filter(x => x !== nm));
   syncWishCount();
