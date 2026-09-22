@@ -1447,7 +1447,7 @@ function searchCatalog(){
   title.innerHTML = `<button class="backbtn" onclick="render()">${tr("back")}</button>
     <h2>${tr("hasil")}</h2><p>${out.length} ${tr("cocok_a")} "${q}"</p>`;
   searchOut = out;
-  searchN = 24;
+  searchN = 10;
   paintSearch();
 }
 
@@ -1456,7 +1456,7 @@ function paintSearch(){
   const y = window.scrollY;
   const el = document.getElementById("products");
   el.innerHTML = `<div class="itemgrid">` + searchOut.slice(0, searchN).map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>` +
-    (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=12;paintSearch();">${tr("more_a")} (${searchOut.length - searchN} ${tr("more_b")})</button></div>` : ``);
+    (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=10;paintSearch();">${tr("more_a")} (${searchOut.length - searchN} ${tr("more_b")})</button></div>` : ``);
   window.scrollTo(0, y);
   watchViews();
 }
@@ -1553,7 +1553,7 @@ function showItems(i){
     gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
   }
   shownCat = i;
-  shownN = 12;
+  shownN = 10;
   paintItems();
 }
 function paintItems(){
@@ -1572,7 +1572,7 @@ function paintItems(){
   watchViews();
 }
 function moreItems(){
-  shownN += PAGE_N;
+  shownN += 10;
   paintItems();
 }
 
