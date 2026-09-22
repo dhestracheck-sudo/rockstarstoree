@@ -2055,6 +2055,7 @@ function paintRecent(){
   document.getElementById("recentRow").innerHTML = cards.slice(0, 12).map(r => {
     const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
     return `<div class="recentcard" onclick="openDetail('${r.page}',${r.i},${r.j})">` +
+      (r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
       thumbTag(im, `alt="" loading="lazy"`) +
       `<div class="rb"><div class="rn">${escWish(r.item.name)}</div><div class="rp">Rp ${Number(r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`;
   }).join("");
