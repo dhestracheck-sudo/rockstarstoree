@@ -1194,7 +1194,7 @@ function flashHTML(){
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
         ${simpleF ? `<span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
-        <img src="${fixImg(it.img || (it.images && it.images[0]))}" alt="${it.name}" loading="lazy" onerror="imgErr(this)">
+        ${thumbTag(it.img || (it.images && it.images[0]), `alt="${it.name}" loading="lazy"`)}
       </div>
       <div class="ibody">
         <h3>${it.name}</h3>
@@ -1398,7 +1398,7 @@ function render(){
     <p>${categories.length} ${tr("cat_sub")}</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
-      <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span><img src="${fixImg(c.img)}" alt="${c.name}" loading="lazy" onerror="imgErr(this)"></div>
+      <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span>${thumbTag(c.img, `alt="${c.name}" loading="lazy"`)}</div>
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
   watchViews();
@@ -1455,7 +1455,7 @@ function sugShow(q, rows){
     const pr = (r.item.stock === 0) ? tr("habis") : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
     const nm = String(r.item.name || "").replace(/</g, "&lt;");
     return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
-      `<img src="${fixImg(im)}" alt="" loading="lazy" onerror="this.style.display='none'">` +
+      thumbTag(im, `alt="" loading="lazy" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#05080f;"`) +
       `<div><b>${nm}</b><span>${String(r.cname || "").replace(/</g, "&lt;")}</span></div>` +
       `<div class="pr">${pr}</div></div>`;
   }).join("");
@@ -1488,7 +1488,7 @@ function itemCard(categories, i, j){
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
-      <img src="${fixImg(item.images[0])}" id="carousel-${i}-${j}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
+      ${thumbTag(item.images[0], `id="carousel-${i}-${j}" alt="${item.name}" loading="lazy"`)}
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
       <button class="mnav r" onclick="event.stopPropagation();carouselNext(${i},${j})">❯</button>
       <div class="mdots" id="dots-${i}-${j}">
@@ -1500,7 +1500,7 @@ function itemCard(categories, i, j){
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
-      <img src="${fixImg(itemImg)}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
+      ${thumbTag(itemImg, `alt="${item.name}" loading="lazy"`)}
     </div>`;
   return `
   <div class="item" data-viewname="${item.name}" data-page="${page}" onclick="openDetail('${page}',${i},${j})">
