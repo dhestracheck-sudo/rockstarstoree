@@ -1271,6 +1271,7 @@ kosong: "Keranjang kosong!", habis_alert: "Maaf, item ini sudah habis!",
 cancel_q: "Yakin ingin membatalkan checkout? Semua item akan dihapus.",
 dilihat_w: "dilihat", wish_title: "❤️ Wishlist Saya", hapus: "Hapus",
 recent_t: "🕘 Terakhir dilihat", together: "🎞️ Sering dibeli bersama", bought_with: "dibeli bersama",
+hot_t: "🔥 Paling Banyak Diklik", clicked: "diklik",
 sold_done: "Sudah laku", rest_stock: "Sisa stok", avail_stock: "Stok tersedia",
 low_a: "Sisa", low_b: "lagi, buruan sebelum habis!", avail: "TERSEDIA",
 server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
@@ -1304,6 +1305,7 @@ kosong: "Cart is empty!", habis_alert: "Sorry, this item is sold out!",
 cancel_q: "Cancel checkout? All items will be removed.",
 dilihat_w: "views", wish_title: "❤️ My Wishlist", hapus: "Remove",
 recent_t: "🕘 Recently viewed", together: "🎞️ Frequently bought together", bought_with: "bought together",
+hot_t: "🔥 Most Clicked", clicked: "clicks",
 sold_done: "Sold", rest_stock: "Stock left", avail_stock: "Available stock",
 low_a: "Only", low_b: "left, hurry before it's gone!", avail: "AVAILABLE",
 server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
@@ -1370,6 +1372,7 @@ function render(){
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
+      <div id="hotSec" style="display:none;margin-bottom:26px;"><h2 data-i18n="hot_t">🔥 Paling Banyak Diklik</h2><div class="recentrow" id="hotRow"></div></div>
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
