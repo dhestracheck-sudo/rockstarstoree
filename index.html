@@ -688,6 +688,23 @@ header {
 .wabtn.testibtn .tring text { fill: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; font-family: 'Poppins', sans-serif; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .wabtn.testibtn img { width: 36px; height: 36px; border-radius: 50%; }
+/* ===== widget chat WA ala support ===== */
+.wapop.wachat { width: 300px; max-width: calc(100vw - 110px); padding: 0; overflow: hidden; }
+.wachead { display: flex; align-items: center; gap: 10px; background: #075e54; padding: 12px 14px; color: #fff; }
+.walogo { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.wachead b { display: block; font-size: 14.5px; }
+.waonline { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #b8f0c9; }
+.waonline i { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; display: inline-block; }
+.wax { margin-left: auto; background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; }
+.wabody { display: flex; flex-direction: column; gap: 8px; padding: 12px; min-height: 120px; max-height: 260px; overflow-y: auto; background: var(--bg); }
+.wabody .bm { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.wabody .bm.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
+.wabody .bm.me { align-self: flex-end; background: var(--blue); color: #fff; }
+.wachips { display: flex; gap: 6px; padding: 0 12px 8px; flex-wrap: wrap; background: var(--bg); }
+.wachips button { border: 1px solid var(--blue); background: transparent; color: var(--blue2); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
+.wainput { display: flex; gap: 8px; padding: 10px 12px 12px; background: var(--bg); }
+.wainput input { flex: 1; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); color: var(--txt); padding: 10px 14px; font-family: 'Poppins', sans-serif; font-size: 13.5px; outline: none; min-width: 0; }
+.wainput button { width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%; border: none; background: var(--wa); color: #062b16; font-size: 17px; cursor: pointer; }
 .wapop {
   background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
   padding: 14px; width: 230px; box-shadow: 0 18px 44px rgba(0,0,0,0.5);
@@ -1006,10 +1023,22 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     <img src="ROCKSTARLOGO.webp" alt="Rockstar">
   </button>
   </div>
-  <div class="wapop" id="waPop" style="display:none;">
-    <img src="logo wa.jpg" alt="WhatsApp Admin" onerror="this.style.display='none'">
-    <div class="watext"><b data-i18n="wa_t">Butuh bantuan?</b><span data-i18n="wa_x">Klik tombol di bawah langsung ke WA admin ROCKSTAR</span></div>
-    <a href="https://wa.me/6289664299571?text=Halo%20admin%20Rockstar.Store!" target="_blank" rel="noopener" data-i18n="wa_btn">Chat WhatsApp</a>
+  <div class="wapop wachat" id="waPop" style="display:none;">
+    <div class="wachead">
+      <span class="walogo">R</span>
+      <div><b>Rockstar Support</b><span class="waonline"><i></i><span data-i18n="wa_online">Online</span></span></div>
+      <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
+    </div>
+    <div class="wabody" id="waBody"></div>
+    <div class="wachips">
+      <button onclick="waQuick('Mau tanya harga dong')">💰 Cek harga</button>
+      <button onclick="waQuick('Stok ini ready?')">📦 Stok ready?</button>
+      <button onclick="waQuick('Admin online jam berapa?')">🕐 Jam online?</button>
+    </div>
+    <div class="wainput">
+      <input type="text" id="waChatInput" data-i18n-ph="wa_ph" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')waSend()">
+      <button onclick="waSend()" aria-label="Kirim">➤</button>
+    </div>
   </div>
 </div>
 
@@ -1292,6 +1321,8 @@ b_brain_d: "Solusi sepuh roblox kamu — puluhan kategori item.", b_top_d: "Top 
 lihat: "Lihat", server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 cart_title: "📋 Keranjang Saya", lanjut: "Lanjut Belanja", wish_title: "❤️ Wishlist Saya",
 testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni", wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp",
+wa_online: "Online", wa_ph: "Ketik pesan...",
+wa_greet: "Halo! 👋 Ada yang bisa dibantu? Ketik di bawah, langsung tersambung ke WA admin.",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan! Keburu habis:",
 },
 en: {
@@ -1320,7 +1351,8 @@ hot_t: "🔥 Most Clicked", clicked: "clicks",
 sold_done: "Sold", rest_stock: "Stock left", avail_stock: "Available stock",
 low_a: "Only", low_b: "left, hurry before it's gone!", avail: "AVAILABLE",
 server_t: "🔗 Rock Star Server Links", server_sub: "Click a server to join straight from Roblox",
-wa_t: "Need help?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
+wa_t: "Need help?", wa_btn: "Chat WhatsApp", wa_online: "Online", wa_ph: "Type a message...",
+wa_greet: "Hi! 👋 Need anything? Type below, straight to admin WA.", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
 b_brain_t: "🧠 Brainrot Catalog", b_top_t: "💰 Top Up", b_akun_t: "👤 Roblox Accounts",
 b_brain_d: "Your roblox upgrade solution — dozens of item categories.", b_top_d: "Top up Robux & gamepasses at the best price.", b_akun_d: "Pro-level accounts, fresh data, many maps — ready to use.",
 lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
@@ -1721,7 +1753,31 @@ function goHome(){ currentPage = 'home'; render(); }
 
 function toggleWaPop(){
   const p = document.getElementById("waPop");
-  p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
+  const open = (p.style.display === "none" || !p.style.display);
+  p.style.display = open ? "flex" : "none";
+  if(open && !document.getElementById("waBody").children.length) waBot();
+}
+function waBot(){
+  appendWaMsg(tr("wa_greet"), false);
+}
+function appendWaMsg(t, me){
+  const box = document.getElementById("waBody");
+  const d = document.createElement("div");
+  d.className = "bm " + (me ? "me" : "bot");
+  d.textContent = t;
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+function waQuick(t){
+  document.getElementById("waChatInput").value = t;
+  waSend();
+}
+function waSend(){
+  const inp = document.getElementById("waChatInput");
+  const v = (inp.value || "").trim() || "Halo admin Rockstar.Store!";
+  appendWaMsg(v, true);
+  inp.value = "";
+  setTimeout(function(){ window.open("https://wa.me/6289664299571?text=" + encodeURIComponent(v), "_blank"); }, 450);
 }
 
 function toggleTestiPop(){
