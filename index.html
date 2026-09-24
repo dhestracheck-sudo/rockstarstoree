@@ -1751,6 +1751,10 @@ function toggleWaPop(){
   const open = (p.style.display === "none" || !p.style.display);
   p.style.display = open ? "flex" : "none";
   if(open && !document.getElementById("waBody").children.length) waBot();
+  if(open){
+    const inp = document.getElementById("waChatInput");
+    if(inp && !inp.value) inp.value = "Halo admin rockstar";
+  }
 }
 function waBot(){
   appendWaMsg(tr("wa_greet"), false);
