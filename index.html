@@ -1030,11 +1030,6 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
       <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
     </div>
     <div class="wabody" id="waBody"></div>
-    <div class="wachips">
-      <button onclick="waQuick('Mau tanya harga dong')">💰 Cek harga</button>
-      <button onclick="waQuick('Stok ini ready?')">📦 Stok ready?</button>
-      <button onclick="waQuick('Admin online jam berapa?')">🕐 Jam online?</button>
-    </div>
     <div class="wainput">
       <input type="text" id="waChatInput" data-i18n-ph="wa_ph" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')waSend()">
       <button onclick="waSend()" aria-label="Kirim">➤</button>
