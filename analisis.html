@@ -93,10 +93,10 @@ function loadAnalisis(){
   const btn = document.getElementById("analBtn");
   btn.disabled = true;
   box.textContent = "Menghitung...";
-  Promise.all([sbList("Brainrot"), sbList("Akun"), sbList("Topup")]).then(function(rs){
+  Promise.all([sbList("Brainrot"), sbList("Akun"), sbList("Topup"), sbList("Joki")]).then(function(rs){
     btn.disabled = false;
     try {
-      const tabs = ["Brainrot", "Akun", "Topup"];
+      const tabs = ["Brainrot", "Akun", "Topup", "Joki"];
       const all = [];
       rs.forEach(function(arr, ti){
         (arr || []).forEach(function(o){

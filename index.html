@@ -859,6 +859,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <button id="ctaBrainrot" class="btn-primary" onclick="goToBrainrot()" data-i18n="cta_brainrot">Katalog Brainrot 🧠</button>
       <button id="ctaTopup" class="btn-ghost" onclick="goToTopUp()" data-i18n="cta_topup">Top Up Robux 💰</button>
       <button id="ctaAkun" class="btn-ghost" onclick="goToAkun()" data-i18n="cta_akun">Katalog Akun 👤</button>
+      <button id="ctaJoki" class="btn-ghost" onclick="goToJoki()" data-i18n="cta_joki">Joki 🎮</button>
     </div>
   </div>
   <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" width="500" height="500" fetchpriority="high" decoding="async"></div>
@@ -1128,6 +1129,7 @@ function catEmoji(nm){
   if(n.includes("bundle")) return "🎁";
   if(n.includes("gamepass") || n.includes("game pass")) return "🎫";
   if(n.includes("akun")) return "👤";
+  if(n.includes("joki")) return "🎮";
   if(n.includes("telur") || n.includes("egg")) return "🥚";
   if(n.includes("garden") || n.includes("tanam") || n.includes("seed")) return "🌱";
   if(n.includes("fish") || n.includes("pancing") || n.includes("dadu")) return "🎣";
@@ -1158,7 +1160,9 @@ const topupCategories = []; // data dari Google Sheet (lihat loadLiveStock);
 
 const akunCategories = []; // data dari Google Sheet (lihat loadLiveStock)
 
-const PAGES = { brainrot: () => brainrotCategories, topup: () => topupCategories, akun: () => akunCategories };
+const jokiCategories = [];
+
+const PAGES = { brainrot: () => brainrotCategories, topup: () => topupCategories, akun: () => akunCategories, joki: () => jokiCategories };
 
 function catsOf(page){ return (PAGES[page] || (() => []))(); }
 
@@ -1186,7 +1190,7 @@ function stockBarHTML(item){
 /* ===== flash sale (diskon dari kolom coret) ===== */
 function flashItems(){
   const out = [];
-  ['brainrot', 'topup', 'akun'].forEach(page => {
+  ['brainrot', 'topup', 'akun', 'joki'].forEach(page => {
     catsOf(page).forEach((c, i) => {
       c.items.forEach((item, j) => {
         if(item.originalPrice && item.originalPrice > item.price && item.stock !== 0){
@@ -1287,12 +1291,12 @@ const I18N = {
 id: {
 search_ph: "Cari item, misal: moon bloom, robux...", cart: "🛒 Keranjang",
 kicker: "#1 STORE BRAINROT TERLENGKAP DI INDONESIA DAN MALAYSIA",
-channel: "📢 Join Saluran WhatsApp", cta_brainrot: "Katalog Brainrot 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Katalog Akun 👤",
+channel: "📢 Join Saluran WhatsApp", cta_brainrot: "Katalog Brainrot 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Katalog Akun 👤", cta_joki: "Joki 🎮",
 st1: "Testimoni amanah", st2: "Proses hitungan menit", st3: "Semua payment", st4: "Ribuan item & pet",
 cb_title: "Cara Beli 🎮", cb_sub: "5 langkah gampang, ikuti gambarnya ya!",
 s1t: "Pilih mainanmu", s2t: "Cek keranjang", s3t: "Chat admin", s4t: "Bayar", s5t: "Item datang!",
 foot_wa: "No WA Admin:", back: "← Kembali", back_home: "← Beranda",
-cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up",
+cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "kategori — klik untuk lihat item", cat_empty: "Katalog kosong", cat_empty_x: "Data belum termuat (koneksi lambat).",
 cat_empty_msg: "😢 Katalog belum tampil. Biasanya karena sinyal.", reload: "🔄 Muat Ulang",
 mulai: "Mulai Belanja", pilih_sub: "Pilih kategori di bawah ini",
@@ -1313,6 +1317,7 @@ server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join lang
 wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni",
 b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Roblox",
 b_brain_d: "Solusi sepuh roblox kamu — puluhan kategori item.", b_top_d: "Top up Robux & gamepass harga terbaik.", b_akun_d: "Akun sepuh, data polos, berbagai map — siap pakai.",
+b_joki_t: "🎮 Joki", b_joki_d: "Jasa joki leveling & push rank terpercaya.",
 lihat: "Lihat", server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 cart_title: "📋 Keranjang Saya", lanjut: "Lanjut Belanja", wish_title: "❤️ Wishlist Saya",
 testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni", wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp",
@@ -1323,12 +1328,12 @@ flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat bara
 en: {
 search_ph: "Search items, e.g.: moon bloom, robux...", cart: "🛒 Cart",
 kicker: "#1 MOST COMPLETE BRAINROT STORE IN INDONESIA AND MALAYSIA",
-channel: "📢 Join WhatsApp Channel", cta_brainrot: "Brainrot Catalog 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Account Catalog 👤",
+channel: "📢 Join WhatsApp Channel", cta_brainrot: "Brainrot Catalog 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Account Catalog 👤", cta_joki: "Joki 🎮",
 st1: "Trusted reviews", st2: "Minutes-fast process", st3: "All payments", st4: "Thousands of items & pets",
 cb_title: "How to Buy 🎮", cb_sub: "5 easy steps, follow the pictures!",
 s1t: "Pick your item", s2t: "Check cart", s3t: "Chat admin", s4t: "Pay", s5t: "Item arrives!",
 foot_wa: "Admin WA:", back: "← Back", back_home: "← Home",
-cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up",
+cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "categories — click to view items", cat_empty: "Empty catalog", cat_empty_x: "Data not loaded (slow connection).",
 cat_empty_msg: "😢 Catalog not showing. Usually the signal.", reload: "🔄 Reload",
 mulai: "Start Shopping", pilih_sub: "Choose a category below",
@@ -1350,6 +1355,7 @@ wa_t: "Need help?", wa_btn: "Chat WhatsApp", wa_online: "Online", wa_ph: "Type a
 wa_greet: "Hi! 👋 Need anything? Type below, straight to admin WA.", testi_t: "⭐ Customer Reviews", testi_btn: "See Reviews",
 b_brain_t: "🧠 Brainrot Catalog", b_top_t: "💰 Top Up", b_akun_t: "👤 Roblox Accounts",
 b_brain_d: "Your roblox upgrade solution — dozens of item categories.", b_top_d: "Top up Robux & gamepasses at the best price.", b_akun_d: "Pro-level accounts, fresh data, many maps — ready to use.",
+b_joki_t: "🎮 Joki", b_joki_d: "Trusted leveling & rank-push service.",
 lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry! Selling out:",
 }};
@@ -1427,6 +1433,11 @@ function render(){
           <h3>${tr("b_akun_t")}</h3>
           <p>${tr("b_akun_d")}</p>
         </div>
+        <div class="banner" onclick="goToJoki()">
+          <small>JOKI • LEVELING</small>
+          <h3>${tr("b_joki_t")}</h3>
+          <p>${tr("b_joki_d")}</p>
+        </div>
       </div>
       <div id="recentSec" style="display:none;margin-top:26px;"><h2 data-i18n="recent_t">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></div>
       <div id="flashwrap"></div>`;
@@ -1448,7 +1459,7 @@ function render(){
     return;
   }
   title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>
-    <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : tr("cat_topup"))}</h2>
+    <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
     <p>${categories.length} ${tr("cat_sub")}</p>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
@@ -1465,7 +1476,7 @@ function searchCatalog(){
   if(q === ""){ render(); sugHide(); return; }
   trackSearch(q);
   const out = [];
-  ['brainrot', 'topup', 'akun'].forEach(page => {
+  ['brainrot', 'topup', 'akun', 'joki'].forEach(page => {
     const cats = catsOf(page);
     cats.forEach((c, i) => {
       c.items.forEach((item, j) => {
@@ -1785,7 +1796,7 @@ function toggleTestiPop(){
 }
 /* Biru mengikuti katalog yang dibuka */
 function syncHeroCta(){
-  var m = { brainrot: "ctaBrainrot", topup: "ctaTopup", akun: "ctaAkun" };
+  var m = { brainrot: "ctaBrainrot", topup: "ctaTopup", akun: "ctaAkun", joki: "ctaJoki" };
   Object.keys(m).forEach(function(k){
     var b = document.getElementById(m[k]);
     if(b) b.className = (currentPage === k) ? "btn-primary" : "btn-ghost";
@@ -1795,6 +1806,7 @@ function syncHeroCta(){
 function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToJoki(){ currentPage = 'joki'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
 
 function syncCart(){
   document.getElementById("cartCount").innerText = cart.length;
@@ -1994,6 +2006,7 @@ function sbTableOf(sheet){
   if(sheet === "akun") return "akun";
   if(sheet === "info") return "info";
   if(sheet === "topup") return "topup";
+  if(sheet === "joki") return "joki";
   return "brainrot";
 }
 function sbGet(path){
@@ -2259,13 +2272,14 @@ function applyInfoTeks(){
   }
 }
 
-function applySnap(b, t, a, info){
+function applySnap(b, t, a, j, info){
   infoTeksValue = "";
   if (hasKatArr(b)) rebuildFromSheet(b, brainrotCategories);
   else if (b.length) mergeFromSheet(b);
   if (Array.isArray(t) && t.length) rebuildFromSheet(t, topupCategories);
   if (hasKatArr(a)) rebuildFromSheet(a, akunCategories);
   else if (a.length) mergeFromSheet(a);
+  if (Array.isArray(j) && j.length) rebuildFromSheet(j, jokiCategories);
   // Prioritas: sheet Info baru (tab "Info", baris INFO_TEKS). Kalau ada, timpa fallback Brainrot.
   if (Array.isArray(info)) {
     for (var i = 0; i < info.length; i++) {
@@ -2280,7 +2294,7 @@ function applySnap(b, t, a, info){
 
 function buildCodeImg(){
   const codeImg = {};
-  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+  [brainrotCategories, topupCategories, akunCategories, jokiCategories].forEach(cats =>
     cats.forEach(c => {
       const ck = "CAT:" + String(c.name).trim();
       if (c.img && !codeImg[ck]) codeImg[ck] = c.img;
@@ -2345,7 +2359,7 @@ function rebuildFromSheet(arr, targetCats){
 function mergeFromSheet(arr){
   const map = {};
         arr.forEach(o => { map[String(o.name).trim()] = { stock: Number(o.stock), price: Number(o.price), coret: Number(o.coret) || 0, deskripsi: String(o.deskripsi || ""), dilihat: Number(o.dilihat) || 0, soldout: String(o.soldout || "").trim().toUpperCase(), image: String(o.image || "").trim(), sold: Number(o.sold) }; });
-  [brainrotCategories, topupCategories, akunCategories].forEach(cats =>
+  [brainrotCategories, topupCategories, akunCategories, jokiCategories].forEach(cats =>
     cats.forEach(c => {
       const catKey = "CAT:" + String(c.name).trim();
       if (catKey in map && map[catKey].image) {
@@ -2379,21 +2393,22 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 
 function loadLiveStock(){
   try {
-    applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Info"));
+    applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
     render();
     hideLoader();
   } catch(e) {}
-  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Info", "__infoCb")]);
+  const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
     if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
     return res;
   }).then(res => {
-    const b = res[0] || [], t = res[1] || [], a = res[2] || [], info = res[3] || [];
+    const b = res[0] || [], t = res[1] || [], a = res[2] || [], jk = res[3] || [], info = res[4] || [];
     try {
-      applySnap(b, t, a, info);
+      applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
       if (t.length) saveCached("Topup", t);
       if (a.length) saveCached("Akun", a);
+      if (jk.length) saveCached("Joki", jk);
       if (info.length) saveCached("Info", info);
     } catch(e) {}
   });
