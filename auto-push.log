@@ -27301,3 +27301,15 @@ At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
  
 
 [2026-10-02 04:26:38] perubahan terdeteksi, push...
+[2026-10-02 04:26:39] push GAGAL: git : fatal: unable to access 'https://github.com/dhestracheck-sudo/rockstarstoree.git/': Could not resolve host: 
+github.com
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: unable t...ost: github.com:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[2026-10-02 04:27:54] watcher hidup
+[2026-10-02 05:27:54] watcher hidup
+[2026-10-02 05:51:39] perubahan terdeteksi, push...
