@@ -350,15 +350,32 @@ function loadAkunProds(){
     try {
       const sel = document.getElementById("akunProdSel");
       sel.innerHTML = "";
+      const have = {};
       (arr || []).forEach(function(o){
         const nm = String(o.name || "").trim();
         if(!nm || nm.indexOf("CAT:") === 0) return;
+        have[nm] = true;
         const op = document.createElement("option");
         op.value = nm; op.textContent = nm.slice(0, 70);
         sel.appendChild(op);
       });
-      loadAkunData();
-      loadAkunRekap();
+      // Brankas bisa berisi nama produk lama (habis rename) — tetap tampilkan biar sandi tidak "hilang"
+      fetch(SB_URL + "/rest/v1/akun_data?select=product", { headers: pinH() })
+        .then(r => r.json()).then(function(br){
+          try {
+            const seen = {};
+            (br || []).forEach(function(o){
+              const nm = String(o.product || "").trim();
+              if(!nm || have[nm] || seen[nm]) return;
+              seen[nm] = true; have[nm] = true;
+              const op = document.createElement("option");
+              op.value = nm; op.textContent = nm.slice(0, 60) + " ⚠️";
+              sel.appendChild(op);
+            });
+          } catch(e) {}
+          loadAkunData();
+          loadAkunRekap();
+        }).catch(function(){ loadAkunData(); loadAkunRekap(); });
     } catch(e) {}
   });
 }
@@ -437,6 +454,11 @@ function loadAkunRekap(){
 }
 function akunRekapPilih(p){
   const sel = document.getElementById("akunProdSel");
+  if(!Array.from(sel.options).some(function(o){ return o.value === p; })){
+    const op = document.createElement("option");
+    op.value = p; op.textContent = String(p).slice(0, 60) + " ⚠️";
+    sel.appendChild(op);
+  }
   sel.value = p;
   loadAkunData();
 }
