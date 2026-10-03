@@ -1575,7 +1575,7 @@ function itemCard(categories, i, j){
     <div class="ibody">
       <h3>${item.name}</h3>
       <div class="stars">${starsOf(item)}</div>
-      ${simpleCard ? `<div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
+      ${simpleCard ? `<div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>${(page === 'joki' && item.sold) ? `<div class="statrow">TERJUAL&nbsp;<b>🔥 ${item.sold} ${tr("sold_w")}</b></div>` : ``}` : `
       <div class="meta">
         <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
