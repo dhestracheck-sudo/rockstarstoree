@@ -1540,7 +1540,7 @@ document.addEventListener("keydown", e => { if(e.key === "Escape") sugHide(); })
 function itemCard(categories, i, j){
   const item = categories[i].items[j];
   const category = categories[i];
-  const page = (categories === brainrotCategories) ? 'brainrot' : ((categories === akunCategories) ? 'akun' : 'topup');
+  const page = (categories === brainrotCategories) ? 'brainrot' : ((categories === akunCategories) ? 'akun' : ((categories === jokiCategories) ? 'joki' : 'topup'));
   const uid = `${page}-${i}-${j}`;
   const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
   const hasCarousel = item.images && item.images.length > 1;
