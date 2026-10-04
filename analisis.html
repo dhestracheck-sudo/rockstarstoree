@@ -229,22 +229,30 @@ function orderWaktu(s){
 }
 function loadOrders(first){
   const box = document.getElementById("orderBox");
+  // hitung SEMUA (tanpa limit) biar angka benar, daftar tetap 30 terbaru
+  fetch(SB_URL + "/rest/v1/orders?select=status", { headers: sbH() })
+  .then(r => r.json()).then(function(all){
+    try {
+      const nBaruAll = (Array.isArray(all) ? all : []).filter(o => String(o.status) === "baru").length;
+      if(!first && lastBaru >= 0 && nBaruAll > lastBaru){
+        orderBeep();
+        try {
+          if(window.Notification && Notification.permission === "granted")
+            new Notification("Order baru!", { body: nBaruAll + " menunggu diproses" });
+        } catch(e) {}
+      }
+      lastBaru = nBaruAll;
+      document.title = (nBaruAll ? "(" + nBaruAll + ") " : "") + "Analisis — Rockstar.Store";
+      const hb = document.getElementById("baruCount");
+      if(hb) hb.textContent = nBaruAll;
+    } catch(e) {}
+  }).catch(function(){});
   fetch(SB_URL + "/rest/v1/orders?select=*&order=waktu.desc&limit=30", { headers: sbH() })
   .then(r => r.json()).then(function(rows){
     try {
       rows = Array.isArray(rows) ? rows : [];
       const nBatal = rows.filter(o => String(o.status) === "batal").length;
       rows = rows.filter(o => String(o.status) !== "batal");
-      const baru = rows.filter(o => String(o.status) === "baru");
-      if(!first && lastBaru >= 0 && baru.length > lastBaru){
-        orderBeep();
-        try {
-          if(window.Notification && Notification.permission === "granted")
-            new Notification("Order baru!", { body: baru.length + " menunggu diproses" });
-        } catch(e) {}
-      }
-      lastBaru = baru.length;
-      document.title = (baru.length ? "(" + baru.length + ") " : "") + "Analisis — Rockstar.Store";
       const today = new Date().toDateString();
       let rekapN = 0, rekapRp = 0;
       rows.forEach(function(o){
