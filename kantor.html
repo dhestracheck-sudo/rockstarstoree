@@ -131,55 +131,39 @@ function unlock(){
   }
 }
 
-/* kru mondar-mandir ala game: titik acak + jeda acak + aksi iseng */
-const CREW = {
-  cs: { el: null, pts: [[12, 52], [22, 62], [30, 70], [18, 78], [28, 82]], i: 0, busy: false },
-  gudang: { el: null, pts: [[45, 52], [56, 62], [64, 70], [50, 78], [60, 82]], i: 0, busy: false },
-  bos: { el: null, pts: [[76, 52], [86, 62], [90, 72], [80, 80], [88, 82]], i: 0, busy: false }
-};
-const ACTS = ["⌨️", "☕", "📞", "📋", "💤"];
-function startWalk(){
-  Object.keys(CREW).forEach(k => {
-    CREW[k].el = document.getElementById("crew-" + k);
-    if(CREW[k].el){
-      CREW[k].el.style.left = CREW[k].pts[0][0] + "%";
-      CREW[k].el.style.top = CREW[k].pts[0][1] + "%";
-    }
-    scheduleStep(k, 1500 + Math.random() * 2000);
+/* kru pixel duduk mengetik di mejanya masing-masing */
+function pxPerson(el, shirt, hair){
+  if(!el) return;
+  const P = { H: hair, S: "#f0c297", E: "#20202a", C: shirt, A: "#f0c297" };
+  const rows = [
+    "....HHHHHH..",
+    "...HHHHHHHH.",
+    "...HHHHHHHH.",
+    "...SSSSSSSS.",
+    "...SESSES...",
+    "....SSSSSS..",
+    "..CCCCCCCC..",
+    ".ACCCCCCCCA.",
+    ".ACCCCCCCCA.",
+    "..CCCCCCCC..",
+    "..CCCCCCCC.."
+  ];
+  const sh = [];
+  rows.forEach((row, y) => {
+    [...row].forEach((ch, x) => {
+      if(ch !== "." && P[ch]) sh.push(x + "px " + y + "px 0 " + P[ch]);
+    });
   });
-  setInterval(ambientAct, 9000);
+  el.innerHTML = "";
+  const d = document.createElement("div");
+  d.className = "px";
+  d.style.boxShadow = sh.join(",");
+  el.appendChild(d);
 }
-function scheduleStep(k, ms){
-  setTimeout(function(){
-    stepCrew(k);
-    scheduleStep(k, 2500 + Math.random() * 3500);
-  }, ms);
-}
-function stepCrew(k){
-  const c = CREW[k];
-  if(!c.el || c.busy) { return; }
-  let n = Math.floor(Math.random() * c.pts.length);
-  if(n === c.i) n = (n + 1) % c.pts.length;
-  c.i = n;
-  const nx = c.pts[n][0];
-  const cur = parseFloat(c.el.style.left) || c.pts[0][0];
-  c.el.classList.toggle("left", nx < cur);
-  c.el.classList.add("walk");
-  c.busy = true;
-  c.el.style.left = nx + "%";
-  c.el.style.top = c.pts[n][1] + "%";
-  setTimeout(function(){ c.el.classList.remove("walk"); c.busy = false; }, 2900);
-}
-function ambientAct(){
-  try {
-    const ids = ["bub-cs", "bub-gudang", "bub-bos"];
-    const id = ids[Math.floor(Math.random() * ids.length)];
-    const el = document.getElementById(id);
-    if(!el || document.hidden) return;
-    const keep = el.textContent;
-    el.textContent = ACTS[Math.floor(Math.random() * ACTS.length)];
-    setTimeout(function(){ if(el.textContent.length <= 3) el.textContent = keep; }, 3000);
-  } catch(e) {}
+function seatCrew(){
+  pxPerson(document.querySelector("#crew-cs .ava"), "#2b4eff", "#23232e");
+  pxPerson(document.querySelector("#crew-gudang .ava"), "#e07b2b", "#4a3220");
+  pxPerson(document.querySelector("#crew-bos .ava"), "#2ecc71", "#141414");
 }
 
 /* ucapan dari data asli */
