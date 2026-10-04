@@ -48,6 +48,7 @@ a { color:var(--blue2); }
       <button id="analBtn" onclick="loadAnalisis()" style="flex:1;">🔄 Muat Ulang</button>
       <a href="admin.html" style="flex:1;text-decoration:none;"><button type="button" style="background:#232c44;">← Admin</button></a>
     </div>
+    <div id="asistenBox" style="margin-top:16px;"></div>
     <div id="orderBox" style="margin-top:16px;"></div>
     <div id="rekapBox" style="margin-top:16px;"></div>
     <div id="analBox"></div>
@@ -81,6 +82,7 @@ function unlock(){
     loadAnalisis();
     loadOrders(true);
     loadRekap();
+    loadAsisten();
     if(window.__orderTimer) clearInterval(window.__orderTimer);
     window.__orderTimer = setInterval(function(){ loadOrders(false); }, 20000);
   } else {
