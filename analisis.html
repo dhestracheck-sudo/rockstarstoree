@@ -243,8 +243,6 @@ function loadOrders(first){
       }
       lastBaru = nBaruAll;
       document.title = (nBaruAll ? "(" + nBaruAll + ") " : "") + "Analisis — Rockstar.Store";
-      const hb = document.getElementById("baruCount");
-      if(hb) hb.textContent = nBaruAll;
     } catch(e) {}
   }).catch(function(){});
   fetch(SB_URL + "/rest/v1/orders?select=*&order=waktu.desc&limit=30", { headers: sbH() })
@@ -265,10 +263,10 @@ function loadOrders(first){
       const stBadge = { baru: "var(--blue2)", lunas: "var(--green)", batal: "var(--mut)" };
       stkJobs = [];
       let h = '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
-        '<b style="font-size:16px;">📦 Order masuk' + (baru.length ? ' (' + baru.length + ' baru)' : '') + '</b>' +
+        '<b style="font-size:16px;">📦 Order masuk' + (lastBaru > 0 ? ' (' + lastBaru + ' baru)' : '') + '</b>' +
         '<button onclick="notifOn()" style="width:auto;margin:0;padding:8px 14px;font-size:13px;">🔔 Notif</button>' +
         '<button onclick="loadOrders(false)" style="width:auto;margin:0;padding:8px 14px;font-size:13px;background:#232c44;">🔄</button></div>';
-      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + baru.length + ' menunggu</p>';
+      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + lastBaru + ' menunggu</p>';
       if(!rows.length) h += '<p class="hint">Belum ada order.</p>';
       if(nBatal) h += '<p class="hint">' + nBatal + ' order batal disembunyikan.</p>';
       rows.slice(0, 20).forEach(function(o){
