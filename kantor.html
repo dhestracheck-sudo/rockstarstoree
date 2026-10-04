@@ -53,6 +53,7 @@ a { color:var(--blue2); }
 .plant { position: absolute; font-size: 34px; }
 .crew { position: absolute; transform: translate(-50%, -100%); transition: left 2.8s linear, top 2.8s linear; text-align: center; cursor: pointer; z-index: 5; }
 .crew .ava { font-size: 44px; display: inline-block; transition: transform .3s; }
+.crew.left .ava { transform: scaleX(-1); }
 @media (prefers-reduced-motion: no-preference) {
   .crew.walk .ava { animation: bob .45s ease-in-out infinite; }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
