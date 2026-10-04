@@ -177,8 +177,8 @@ function say(id, t){
   if(el) el.textContent = t;
 }
 function refreshTalk(){
-  sbGet("orders?select=status&order=waktu.desc&limit=100").then(rows => {
-    const baru = rows.filter(o => String(o.status) === "baru").length;
+  sbGet("orders?select=id&status=eq.baru").then(rows => {
+    const baru = rows.length;
     say("bub-cs", baru ? "📦 " + baru + " order menunggu!" : "✅ Order aman!");
   });
   Promise.all([

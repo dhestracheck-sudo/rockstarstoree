@@ -266,7 +266,7 @@ function loadOrders(first){
         '<b style="font-size:16px;">📦 Order masuk' + (lastBaru > 0 ? ' (' + lastBaru + ' baru)' : '') + '</b>' +
         '<button onclick="notifOn()" style="width:auto;margin:0;padding:8px 14px;font-size:13px;">🔔 Notif</button>' +
         '<button onclick="loadOrders(false)" style="width:auto;margin:0;padding:8px 14px;font-size:13px;background:#232c44;">🔄</button></div>';
-      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + lastBaru + ' menunggu</p>';
+      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + (lastBaru < 0 ? "…" : lastBaru) + ' menunggu</p>';
       if(!rows.length) h += '<p class="hint">Belum ada order.</p>';
       if(nBatal) h += '<p class="hint">' + nBatal + ' order batal disembunyikan.</p>';
       rows.slice(0, 20).forEach(function(o){
