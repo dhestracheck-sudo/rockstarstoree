@@ -51,15 +51,15 @@ a { color:var(--blue2); }
 .desk { position: absolute; background: #5a4632; border-radius: 6px; box-shadow: 0 6px 0 rgba(0,0,0,.35); }
 .desk::after { content: "🖥️"; position: absolute; left: 50%; top: -26px; transform: translateX(-50%); font-size: 24px; }
 .plant { position: absolute; font-size: 34px; }
-.crew { position: absolute; transform: translate(-50%, -100%); transition: left 2.8s linear, top 2.8s linear; text-align: center; cursor: pointer; z-index: 5; }
-.crew .ava { font-size: 52px; display: inline-block; transition: transform .3s; line-height: 1; }
-.crew.left .ava { transform: scaleX(-1); }
+.crew { position: absolute; transform: translate(-50%, -100%); text-align: center; cursor: pointer; z-index: 5; }
+.crew .ava { width: 48px; height: 46px; margin: 0 auto; position: relative; }
+.crew .px { width: 1px; height: 1px; transform: scale(4); transform-origin: top left; }
 @media (prefers-reduced-motion: no-preference) {
-  .crew.walk .ava { animation: bob .45s ease-in-out infinite; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-  .crew.left.walk .ava { transform: scaleX(-1); animation: bobFlip .45s ease-in-out infinite; }
-  @keyframes bobFlip { 0%,100% { transform: scaleX(-1) translateY(0); } 50% { transform: scaleX(-1) translateY(-5px); } }
+  .crew .ava { animation: seatBob 1.1s ease-in-out infinite; }
+  @keyframes seatBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 }
+.clock { position: absolute; top: 4%; left: 44%; width: 46px; height: 46px; border-radius: 50%; background: #f2f5ff; border: 4px solid #5a4632; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+.poster { position: absolute; top: 8%; left: 56%; background: #12225e; border: 3px solid #6f8bff; color: #fff; border-radius: 8px; padding: 6px 12px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 1px; transform: rotate(2deg); }
 .crew .tag { display: inline-block; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.65); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; margin-top: 2px; white-space: nowrap; }
 .bubble {
   position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
@@ -92,6 +92,8 @@ a { color:var(--blue2); }
     <div class="office" id="office">
       <div class="win" style="left:4%;"></div>
       <div class="win" style="left:30%;"></div>
+      <div class="clock">🕐</div>
+      <div class="poster">★ SEPUH ★</div>
       <div class="board">📌 TODO<br>• proses order<br>• restock<br>• rekap</div>
       <div class="rug"></div>
       <div class="desk" style="left:8%;bottom:22%;width:24%;height:7%;"></div>
@@ -99,9 +101,9 @@ a { color:var(--blue2); }
       <div class="desk" style="right:5%;bottom:22%;width:20%;height:7%;"></div>
       <div class="plant" style="left:2%;bottom:10%;">🪴</div>
       <div class="plant" style="right:2%;bottom:40%;">🪴</div>
-      <div class="crew" id="crew-cs"><div class="bubble" id="bub-cs">...</div><div class="ava">🕺</div><br><span class="tag">CS 📞</span></div>
-      <div class="crew" id="crew-gudang"><div class="bubble" id="bub-gudang">...</div><div class="ava">🏃‍♂️</div><br><span class="tag">Gudang</span></div>
-      <div class="crew" id="crew-bos"><div class="bubble" id="bub-bos">...</div><div class="ava">🧍‍♂️</div><br><span class="tag">Bos 💰</span></div>
+      <div class="crew" id="crew-cs" style="left:20%;top:72%;"><div class="bubble" id="bub-cs">...</div><div class="ava"></div><br><span class="tag">CS 📞</span></div>
+      <div class="crew" id="crew-gudang" style="left:52%;top:72%;"><div class="bubble" id="bub-gudang">...</div><div class="ava"></div><br><span class="tag">Gudang</span></div>
+      <div class="crew" id="crew-bos" style="left:82%;top:72%;"><div class="bubble" id="bub-bos">...</div><div class="ava"></div><br><span class="tag">Bos 💰</span></div>
     </div>
     <div class="crewlink">
       <a href="analisis.html">📦 Order (CS) →</a>
@@ -121,7 +123,7 @@ function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
     document.getElementById("officeWrap").style.display = "block";
-    startWalk();
+    seatCrew();
     refreshTalk();
     setInterval(refreshTalk, 30000);
   } else {
