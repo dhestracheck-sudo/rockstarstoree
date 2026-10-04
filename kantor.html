@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kantor — Rockstar.Store</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Kantor virtual Rockstar.Store (privat).">
+<link rel="icon" type="image/png" href="ROCKSTARLOGO.png">
+<link rel="apple-touch-icon" href="ROCKSTARLOGO.png">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
+.wrap { max-width: 960px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
+label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
+input[type=password] { width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px; }
+button { width:100%; margin-top:16px; padding:13px; border:none; border-radius:12px; background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+a { color:var(--blue2); }
+/* ===== ruangan pixel ===== */
+.office {
+  position: relative; width: 100%; aspect-ratio: 16 / 10; border-radius: 18px; overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(20,32,70,.9) 0%, rgba(20,32,70,.9) 32%, transparent 32%),
+    repeating-linear-gradient(90deg, #8a5a33 0 46px, #7c4f2c 46px 92px),
+    #8a5a33;
+}
+.office::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 32%;
+  background:
+    linear-gradient(180deg, #0e1a3d 0 55%, #23356b 55% 62%, #0a0f22 62% 100%);
+}
+.win {
+  position: absolute; top: 5%; width: 22%; height: 22%; border-radius: 8px;
+  background: linear-gradient(180deg, #27408b, #3f6fe0 60%, #9db8ff);
+  border: 4px solid #5a4632;
+  box-shadow: inset 0 0 0 2px #2c2318;
+}
+.win::after { content: "🌃"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+.board {
+  position: absolute; top: 6%; right: 4%; width: 20%; height: 20%; background: #f2f5ff; border-radius: 6px;
+  border: 5px solid #5a4632; color: #333; font-size: 10px; font-weight: 700; padding: 4px; overflow: hidden;
+}
+.rug { position: absolute; left: 30%; right: 30%; bottom: 8%; height: 16%; background: rgba(180,60,60,.55); border-radius: 50%; }
+.desk { position: absolute; background: #5a4632; border-radius: 6px; box-shadow: 0 6px 0 rgba(0,0,0,.35); }
+.desk::after { content: "🖥️"; position: absolute; left: 50%; top: -26px; transform: translateX(-50%); font-size: 24px; }
+.plant { position: absolute; font-size: 34px; }
+.crew { position: absolute; transform: translate(-50%, -100%); transition: left 3s linear, top 3s linear; text-align: center; cursor: pointer; z-index: 5; }
+.crew .ava { font-size: 44px; display: inline-block; transition: transform .3s; }
+.crew.left .ava { transform: scaleX(-1); }
+.crew .tag { display: inline-block; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.65); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; margin-top: 2px; white-space: nowrap; }
+.bubble {
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: #fff; color: #111; font-size: 12px; font-weight: 600; border-radius: 12px;
+  padding: 7px 11px; white-space: nowrap; box-shadow: 0 6px 18px rgba(0,0,0,.5);
+}
+.bubble::after { content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #fff; }
+.crewlink { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.crewlink a { flex:1; min-width:150px; text-align:center; background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:12px; text-decoration:none; color:var(--txt); font-weight:700; font-size:14px; }
+@media (max-width: 640px) {
+  .office { aspect-ratio: 4 / 5; }
+  .crew .ava { font-size: 36px; }
+  .bubble { font-size: 11px; max-width: 150px; white-space: normal; }
+  .board { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🏢 Kantor Rockstar.Store</h1>
+
+  <div class="card" id="pinCard">
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
+    <button onclick="unlock()">Masuk Kantor</button>
+    <p class="hint" style="margin-top:12px;"><a href="admin.html">← Kembali ke Admin</a></p>
+  </div>
+
+  <div id="officeWrap" style="display:none;">
+    <div class="office" id="office">
+      <div class="win" style="left:4%;"></div>
+      <div class="win" style="left:30%;"></div>
+      <div class="board">📌 TODO<br>• proses order<br>• restock<br>• rekap</div>
+      <div class="rug"></div>
+      <div class="desk" style="left:8%;bottom:22%;width:24%;height:7%;"></div>
+      <div class="desk" style="left:40%;bottom:22%;width:24%;height:7%;"></div>
+      <div class="desk" style="right:5%;bottom:22%;width:20%;height:7%;"></div>
+      <div class="plant" style="left:2%;bottom:10%;">🪴</div>
+      <div class="plant" style="right:2%;bottom:40%;">🪴</div>
+      <div class="crew" id="crew-cs"><div class="bubble" id="bub-cs">...</div><div class="ava">🧑‍💼</div><br><span class="tag">CS 📞</span></div>
+      <div class="crew" id="crew-gudang"><div class="bubble" id="bub-gudang">...</div><div class="ava">📦</div><br><span class="tag">Gudang</span></div>
+      <div class="crew" id="crew-bos"><div class="bubble" id="bub-bos">...</div><div class="ava">🧑‍💻</div><br><span class="tag">Bos 💰</span></div>
+    </div>
+    <div class="crewlink">
+      <a href="analisis.html">📦 Order (CS) →</a>
+      <a href="admin.html">📦 Stok (Gudang) →</a>
+      <a href="analisis.html">💰 Omzet (Bos) →</a>
+    </div>
+    <p class="hint" style="margin-top:10px;">Klik kru untuk ke meja kerjanya. Ucapan mereka live dari data tokomu.</p>
+  </div>
+</div>
+
+<script>
+const ADMIN_PIN = "112233";
+const SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
+const SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
+
+function unlock(){
+  if(document.getElementById("pinInput").value === ADMIN_PIN){
+    document.getElementById("pinCard").style.display = "none";
+    document.getElementById("officeWrap").style.display = "block";
+    startWalk();
+    refreshTalk();
+    setInterval(refreshTalk, 30000);
+  } else {
+    alert("PIN salah.");
+  }
+}
+
+/* kru mondar-mandir */
+const CREW = {
+  cs: { el: null, pts: [[15, 55], [30, 70], [20, 80]], i: 0 },
+  gudang: { el: null, pts: [[50, 55], [62, 72], [48, 80]], i: 0 },
+  bos: { el: null, pts: [[80, 55], [88, 70], [76, 80]], i: 0 }
+};
+function startWalk(){
+  Object.keys(CREW).forEach(k => { CREW[k].el = document.getElementById("crew-" + k); });
+  stepWalk();
+  setInterval(stepWalk, 4500);
+}
+function stepWalk(){
+  Object.keys(CREW).forEach(k => {
+    const c = CREW[k];
+    if(!c.el) return;
+    c.i = (c.i + 1) % c.pts.length;
+    const nx = c.pts[c.i][0];
+    const cur = parseFloat(c.el.style.left) || c.pts[0][0];
+    c.el.classList.toggle("left", nx < cur);
+    c.el.style.left = nx + "%";
+    c.el.style.top = c.pts[c.i][1] + "%";
+  });
+}
+
+/* ucapan dari data asli */
+function sbGet(path){
+  return fetch(SB_URL + "/rest/v1/" + path, {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+}
+function say(id, t){
+  const el = document.getElementById(id);
+  if(el) el.textContent = t;
+}
+function refreshTalk(){
+  sbGet("orders?select=status&order=waktu.desc&limit=100").then(rows => {
+    const baru = rows.filter(o => String(o.status) === "baru").length;
+    say("bub-cs", baru ? "📦 " + baru + " order menunggu!" : "✅ Order aman!");
+  });
+  Promise.all([
+    sbGet("brainrot?select=stock"), sbGet("akun?select=stock"),
+    sbGet("topup?select=stock"), sbGet("joki?select=stock")
+  ]).then(rs => {
+    let habis = 0;
+    rs.forEach(arr => arr.forEach(o => { if(Number(o.stock) === 0) habis++; }));
+    say("bub-gudang", habis ? "⚠️ " + habis + " produk habis!" : "✅ Stok aman!");
+  });
+  const since = new Date(); since.setHours(0, 0, 0, 0);
+  sbGet("orders?select=total,waktu&order=waktu.desc&limit=500").then(rows => {
+    let n = 0, rp = 0;
+    rows.forEach(o => {
+      try {
+        if(new Date(o.waktu).getTime() >= since.getTime()){ n++; rp += Number(o.total) || 0; }
+      } catch(e) {}
+    });
+    say("bub-bos", "💰 Hari ini " + n + " order!");
+  });
+}
+document.getElementById("crew-cs").addEventListener("click", () => location.href = "analisis.html");
+document.getElementById("crew-gudang").addEventListener("click", () => location.href = "admin.html");
+document.getElementById("crew-bos").addEventListener("click", () => location.href = "analisis.html");
+</script>
+</body>
+</html>
