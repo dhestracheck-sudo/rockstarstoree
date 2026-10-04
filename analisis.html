@@ -233,6 +233,8 @@ function loadOrders(first){
   .then(r => r.json()).then(function(rows){
     try {
       rows = Array.isArray(rows) ? rows : [];
+      const nBatal = rows.filter(o => String(o.status) === "batal").length;
+      rows = rows.filter(o => String(o.status) !== "batal");
       const baru = rows.filter(o => String(o.status) === "baru");
       if(!first && lastBaru >= 0 && baru.length > lastBaru){
         orderBeep();
@@ -260,6 +262,7 @@ function loadOrders(first){
         '<button onclick="loadOrders(false)" style="width:auto;margin:0;padding:8px 14px;font-size:13px;background:#232c44;">🔄</button></div>';
       h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + baru.length + ' menunggu</p>';
       if(!rows.length) h += '<p class="hint">Belum ada order.</p>';
+      if(nBatal) h += '<p class="hint">' + nBatal + ' order batal disembunyikan.</p>';
       rows.slice(0, 20).forEach(function(o){
         const st = String(o.status || "baru");
         const col = stBadge[st] || "var(--mut)";
