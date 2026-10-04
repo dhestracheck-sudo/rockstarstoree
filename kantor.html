@@ -51,9 +51,14 @@ a { color:var(--blue2); }
 .desk { position: absolute; background: #5a4632; border-radius: 6px; box-shadow: 0 6px 0 rgba(0,0,0,.35); }
 .desk::after { content: "🖥️"; position: absolute; left: 50%; top: -26px; transform: translateX(-50%); font-size: 24px; }
 .plant { position: absolute; font-size: 34px; }
-.crew { position: absolute; transform: translate(-50%, -100%); transition: left 3s linear, top 3s linear; text-align: center; cursor: pointer; z-index: 5; }
+.crew { position: absolute; transform: translate(-50%, -100%); transition: left 2.8s linear, top 2.8s linear; text-align: center; cursor: pointer; z-index: 5; }
 .crew .ava { font-size: 44px; display: inline-block; transition: transform .3s; }
-.crew.left .ava { transform: scaleX(-1); }
+@media (prefers-reduced-motion: no-preference) {
+  .crew.walk .ava { animation: bob .45s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  .crew.left.walk .ava { transform: scaleX(-1); animation: bobFlip .45s ease-in-out infinite; }
+  @keyframes bobFlip { 0%,100% { transform: scaleX(-1) translateY(0); } 50% { transform: scaleX(-1) translateY(-5px); } }
+}
 .crew .tag { display: inline-block; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.65); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; margin-top: 2px; white-space: nowrap; }
 .bubble {
   position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
@@ -123,28 +128,55 @@ function unlock(){
   }
 }
 
-/* kru mondar-mandir */
+/* kru mondar-mandir ala game: titik acak + jeda acak + aksi iseng */
 const CREW = {
-  cs: { el: null, pts: [[15, 55], [30, 70], [20, 80]], i: 0 },
-  gudang: { el: null, pts: [[50, 55], [62, 72], [48, 80]], i: 0 },
-  bos: { el: null, pts: [[80, 55], [88, 70], [76, 80]], i: 0 }
+  cs: { el: null, pts: [[12, 52], [22, 62], [30, 70], [18, 78], [28, 82]], i: 0, busy: false },
+  gudang: { el: null, pts: [[45, 52], [56, 62], [64, 70], [50, 78], [60, 82]], i: 0, busy: false },
+  bos: { el: null, pts: [[76, 52], [86, 62], [90, 72], [80, 80], [88, 82]], i: 0, busy: false }
 };
+const ACTS = ["⌨️", "☕", "📞", "📋", "💤"];
 function startWalk(){
-  Object.keys(CREW).forEach(k => { CREW[k].el = document.getElementById("crew-" + k); });
-  stepWalk();
-  setInterval(stepWalk, 4500);
-}
-function stepWalk(){
   Object.keys(CREW).forEach(k => {
-    const c = CREW[k];
-    if(!c.el) return;
-    c.i = (c.i + 1) % c.pts.length;
-    const nx = c.pts[c.i][0];
-    const cur = parseFloat(c.el.style.left) || c.pts[0][0];
-    c.el.classList.toggle("left", nx < cur);
-    c.el.style.left = nx + "%";
-    c.el.style.top = c.pts[c.i][1] + "%";
+    CREW[k].el = document.getElementById("crew-" + k);
+    if(CREW[k].el){
+      CREW[k].el.style.left = CREW[k].pts[0][0] + "%";
+      CREW[k].el.style.top = CREW[k].pts[0][1] + "%";
+    }
+    scheduleStep(k, 1500 + Math.random() * 2000);
   });
+  setInterval(ambientAct, 9000);
+}
+function scheduleStep(k, ms){
+  setTimeout(function(){
+    stepCrew(k);
+    scheduleStep(k, 2500 + Math.random() * 3500);
+  }, ms);
+}
+function stepCrew(k){
+  const c = CREW[k];
+  if(!c.el || c.busy) { return; }
+  let n = Math.floor(Math.random() * c.pts.length);
+  if(n === c.i) n = (n + 1) % c.pts.length;
+  c.i = n;
+  const nx = c.pts[n][0];
+  const cur = parseFloat(c.el.style.left) || c.pts[0][0];
+  c.el.classList.toggle("left", nx < cur);
+  c.el.classList.add("walk");
+  c.busy = true;
+  c.el.style.left = nx + "%";
+  c.el.style.top = c.pts[n][1] + "%";
+  setTimeout(function(){ c.el.classList.remove("walk"); c.busy = false; }, 2900);
+}
+function ambientAct(){
+  try {
+    const ids = ["bub-cs", "bub-gudang", "bub-bos"];
+    const id = ids[Math.floor(Math.random() * ids.length)];
+    const el = document.getElementById(id);
+    if(!el || document.hidden) return;
+    const keep = el.textContent;
+    el.textContent = ACTS[Math.floor(Math.random() * ACTS.length)];
+    setTimeout(function(){ if(el.textContent.length <= 3) el.textContent = keep; }, 3000);
+  } catch(e) {}
 }
 
 /* ucapan dari data asli */
