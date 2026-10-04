@@ -327,6 +327,65 @@ function loadRekap(){
     } catch(e){ box.innerHTML = '<span class="err">Gagal hitung rekap.</span>'; }
   }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil rekap.</span>'; });
 }
+
+/* ===== asisten admin: briefing + pengingat + aksi ===== */
+function loadAsisten(){
+  const box = document.getElementById("asistenBox");
+  box.innerHTML = '<p class="hint">Asisten memeriksa...</p>';
+  const H = sbH();
+  const qOrders = fetch(SB_URL + "/rest/v1/orders?select=status,total,waktu&order=waktu.desc&limit=200", { headers: H })
+    .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+  const qProds = Promise.all(["Brainrot", "Akun", "Topup", "Joki"].map(s =>
+    fetch(SB_URL + "/rest/v1/" + sbTable(s) + "?select=name,kategori,stock,dilihat,sold", { headers: H })
+    .then(r => r.json()).then(a => ({ tab: s, rows: Array.isArray(a) ? a : [] })).catch(() => ({ tab: s, rows: [] }))
+  ));
+  Promise.all([qOrders, qProds]).then(function(res){
+    try {
+      const orders = res[0], tabs = res[1];
+      const now = Date.now();
+      const baru = orders.filter(o => String(o.status) === "baru");
+      const tua = baru.filter(o => { try { return now - new Date(o.waktu).getTime() > 24 * 3600 * 1000; } catch(e){ return false; } });
+      const all = [];
+      tabs.forEach(t => (t.rows || []).forEach(o => {
+        const nm = String(o.name || "").trim();
+        if(!nm || nm.indexOf("CAT:") === 0) return;
+        all.push({ tab: t.tab, name: nm, stok: Number(o.stock), lihat: Number(o.dilihat) || 0, laku: Number(o.sold) || 0 });
+      }));
+      const habisLaris = all.filter(o => o.stok === 0).sort((a, b) => b.lihat - a.lihat).slice(0, 5);
+      const tipis = all.filter(o => o.stok > 0 && o.stok <= 3).sort((a, b) => a.stok - b.stok).slice(0, 5);
+      const startDay = new Date(); startDay.setHours(0, 0, 0, 0);
+      let omzet = 0, nLunas = 0;
+      orders.forEach(o => {
+        try {
+          if(String(o.status) === "lunas" && new Date(o.waktu).getTime() >= startDay.getTime()){
+            nLunas++; omzet += Number(o.total) || 0;
+          }
+        } catch(e) {}
+      });
+      let h = '<div style="background:linear-gradient(135deg,rgba(43,78,255,.22),rgba(43,78,255,.06));border:1px solid rgba(111,139,255,.4);border-radius:14px;padding:14px 16px;">' +
+        '<b style="font-size:15px;">🤖 Asisten Hari Ini</b>';
+      const tasks = [];
+      if(baru.length) tasks.push({ hot: true, t: "📦 " + baru.length + " order menunggu diproses" + (tua.length ? " (" + tua.length + " sudah >24 jam — tagih!" : "") + (tua.length ? ")" : ""), a: "scrollOrder" });
+      if(habisLaris.length) tasks.push({ hot: true, t: "🔥 Restock prioritas: " + habisLaris.slice(0, 3).map(o => o.name.slice(0, 30)).join(", "), a: "" });
+      else if(tipis.length) tasks.push({ hot: false, t: "⚠️ " + tipis.length + " produk stok ≤3", a: "" });
+      tasks.push({ hot: false, t: "💰 Hari ini: " + nLunas + " lunas • Rp " + omzet.toLocaleString("id-ID"), a: "" });
+      if(!tasks.length || (tasks.length === 1 && !baru.length && !habisLaris.length && !tipis.length))
+        h += '<p style="margin:8px 0 0;">✅ Semua beres! Tidak ada order menunggu, stok aman.</p>';
+      else
+        h += '<div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">' + tasks.map(t =>
+          '<div style="display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;font-size:13px;">' +
+          '<span style="flex:1;">' + t.t + '</span>' +
+          (t.a ? '<button onclick="' + t.a + '()" style="width:auto;margin:0;padding:7px 12px;font-size:12px;">Lihat →</button>' : '') + '</div>'
+        ).join("") + '</div>';
+      h += '</div>';
+      box.innerHTML = h;
+    } catch(e){ box.innerHTML = ""; }
+  }).catch(function(){ box.innerHTML = ""; });
+}
+function scrollOrder(){
+  const el = document.getElementById("orderBox");
+  if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 function orderSet(id, st){
   const box = document.getElementById("orderBox");
   if(st === "batal" && !confirm("Batalkan order #" + id + "? Data akun kembali READY.")) return;
