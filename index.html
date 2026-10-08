@@ -260,6 +260,15 @@ header {
 /* slide 6: karakter napak ke bawah banner */
 .s6 .mega-in { align-items: flex-end; }
 .s6 .mega-char img { max-height: 340px; }
+/* slide 7 tiktok */
+.s7 .mega-title-w { font-size: clamp(26px, 4.4vw, 48px); }
+.s7 .mega-title-g { font-size: clamp(28px, 4.8vw, 56px); }
+.s7 .mega-phone { flex: 0.7; display: flex; justify-content: center; }
+.s7 .mega-phone img { max-height: 330px; max-width: 100%; object-fit: contain; border-radius: 22px;
+  border: 2px solid rgba(255,255,255,.4); box-shadow: 0 0 34px rgba(255,0,90,.4), 0 0 34px rgba(0,220,255,.3); animation: floaty 4s ease-in-out infinite; }
+@media (max-width: 760px) {
+  .s7 .mega-phone img { max-height: 220px; }
+}
 @media (max-width: 760px) {
   .s6 .mega-char img { max-height: 230px; }
   .s6 .mega-char { margin-bottom: -38px; }
@@ -1045,6 +1054,20 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
           </div>
         </div>
         <div class="mega-char"><img src="figur-kiri.png" alt="Mimin Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      </div>
+    </div>
+    <div class="mega-slide s7">
+      <div class="mega-in mega-flex">
+        <div class="mega-titlebox">
+          <div class="mega-brand">★ TIKTOK RESMI ★</div>
+          <p class="mega-title-w">TIKTOK ROCKSTAR</p>
+          <p class="mega-title-g">FOLLOW DULU YA LEK!</p>
+          <div class="mega-badges" style="justify-content:flex-start;">
+            <a class="mega-badge join" style="font-size:15px;padding:12px 30px;background:linear-gradient(180deg,#ffe45c,#f5a623);color:#1a1000;border:none;text-decoration:none;" href="https://www.tiktok.com/@rockstarstpree" target="_blank" rel="noopener"><span class="ck">✓</span>@ROCKSTARSTFREE</a>
+          </div>
+          <p class="mega-tag" style="font-size:clamp(12px,2vw,17px);">WASPADA AKUN CLONE — YANG ASLI CUMA <b>@ROCKSTARSTFREE</b></p>
+        </div>
+        <div class="mega-phone"><img src="Screenshot%202026-10-08%20135021.png" alt="TikTok Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       </div>
     </div>
     <button class="mega-nav l" onclick="megaGo(megaIdx-1,true)" aria-label="prev">❮</button>
