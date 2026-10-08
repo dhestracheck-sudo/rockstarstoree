@@ -250,6 +250,10 @@ header {
 .s5 .mega-badges { margin: 10px 0 2px; }
 .s5 .mega-cta { margin-top: 10px; }
 .s5 .mega-char.wide img { border-radius: 16px; border: 1px solid rgba(140,170,255,.55); object-fit: cover; box-shadow: 0 0 30px rgba(43,120,255,.45); }
+/* slide 5 joki: foto full jadi background */
+.s5 { background: linear-gradient(90deg, rgba(3,6,20,.94) 0%, rgba(3,6,20,.78) 38%, rgba(3,6,20,.25) 62%, rgba(3,6,20,0) 80%), url('jokiroblox.webp') center right / cover no-repeat; }
+.s5 .mega-char { display: none; }
+.s5 .mega-titlebox { text-shadow: 0 2px 12px rgba(0,0,0,.8); }
 .mega-steps { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .mega-step { background: linear-gradient(135deg, rgba(2,6,20,.88), rgba(10,25,70,.88)); border: 1px solid rgba(140,170,255,.5);
   border-radius: 12px; padding: 12px 16px; font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: #fff;
@@ -1006,7 +1010,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
           </div>
           <div class="mega-cta" style="justify-content:flex-start;"><button class="btn-primary" style="background:linear-gradient(180deg,#ffe45c,#f5a623);color:#1a1000;" onclick="goToJoki()">KLIK DISINI 👆</button></div>
         </div>
-        <div class="mega-char wide"><img src="jokiroblox.webp" alt="Joki Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       </div>
     </div>
     <button class="mega-nav l" onclick="megaGo(megaIdx-1,true)" aria-label="prev">❮</button>
