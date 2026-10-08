@@ -207,8 +207,12 @@ header {
   animation: streak 14s linear infinite; }
 @keyframes streak { to { transform: translateX(190px); } }
 .mega-in { position: relative; z-index: 2; width: 100%; }
-.mega-brand { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #9fb4ff; margin-bottom: 6px; }
-.mega-brand img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,.5); box-shadow: 0 0 12px rgba(43,120,255,.6); }
+.mega-brand { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #9fb4ff; margin-bottom: 6px; }
+.mega-logo { position: absolute; top: 12px; left: 14px; z-index: 3; display: flex; align-items: center; gap: 8px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; color: #fff;
+  background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.28); border-radius: 99px; padding: 5px 14px 5px 5px;
+  text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+.mega-logo img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; }
 .mega-title-w { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 54px); line-height: 1; color: #fff; margin: 0;
   text-shadow: 0 2px 0 #8ea6ff, 0 4px 0 #5570f0, 0 6px 0 #2b4eff, 0 10px 22px rgba(0,0,0,.65); }
 .mega-title-g { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(42px, 8.5vw, 92px); line-height: 1.02; margin: 0 0 8px;
@@ -967,7 +971,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <div class="mega-fig left"><img src="figur-kiri.png" alt="Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-fig right"><img src="figur-kanan1.png" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
-        <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE</div>
+        <div class="mega-brand">★ ROCKSTARSTORE ★</div>
         <p class="mega-title-w">WELCOME TO</p>
         <p class="mega-title-g">ROCKSTARSTORE</p>
         <p class="mega-sub">TOKO ROBLOX TERBESAR DI DUNIA</p>
@@ -983,7 +987,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <div class="mega-fig left"><img src="figur-3.png" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-fig right"><img src="figur-2.png" alt="Robux" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
-        <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • TOP UP ROBUX</div>
+        <div class="mega-brand">★ TOP UP ROBUX ★</div>
         <p class="mega-title-w">ROBUX INSTAN</p>
         <p class="mega-title-g">PALING MURAH</p>
         <p class="mega-sub">VIA ID • GAMEPASS • GIFT CARD</p>
@@ -999,7 +1003,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
       <div class="mega-fig left"><img src="figur-kiri.png" alt="Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-fig right"><img src="figur-kanan.png" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
-        <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • BRAINROT & AKUN</div>
+        <div class="mega-brand">★ BRAINROT & AKUN ★</div>
         <p class="mega-title-w">JADI SEPUH</p>
         <p class="mega-title-g">NAIK KELAS</p>
         <p class="mega-sub">STOK SECRET • OG • MUTASI LANGKA</p>
@@ -1014,7 +1018,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="mega-slide s4">
       <div class="mega-in mega-flex">
         <div class="mega-titlebox">
-          <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • JASA CARI AKUN</div>
+          <div class="mega-brand">★ JASA CARI AKUN ★</div>
           <p class="mega-title-w">MAU BELI</p>
           <p class="mega-title-g">AKUN GAME?</p>
           <span class="mega-ribbon">TENANG, MIMIN ROCKSTAR BANTUIN</span>
@@ -1031,7 +1035,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="mega-slide s5">
       <div class="mega-in mega-flex">
         <div class="mega-titlebox">
-          <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • JOKI SEPUH</div>
+          <div class="mega-brand">★ JOKI SEPUH ★</div>
           <p class="mega-title-w">JOKI SEPUH ROBLOX</p>
           <p class="mega-title-g">SECEPAT KILAT</p>
           <div class="mega-badges" style="justify-content:flex-start;">
@@ -1046,7 +1050,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="mega-slide s6">
       <div class="mega-in mega-flex">
         <div class="mega-titlebox">
-          <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • SALURAN RESMI</div>
+          <div class="mega-brand">★ SALURAN RESMI ★</div>
           <p class="mega-title-w">JOIN <span class="mega-gold">SALURAN</span></p>
           <p class="mega-title-g" style="font-size:clamp(28px,4.6vw,54px);">RESMI ROCKSTAR</p>
           <p class="mega-sub">ORDER LEBIH CEPAT, ADMIN LEBIH AKTIF,<br>DAN INFORMASI LEBIH LENGKAP.</p>
@@ -1060,7 +1064,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
     <div class="mega-slide s7">
       <div class="mega-in mega-flex">
         <div class="mega-titlebox">
-          <div class="mega-brand"><img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" loading="lazy">ROCKSTARSTORE • TIKTOK RESMI</div>
+          <div class="mega-brand">★ TIKTOK RESMI ★</div>
           <p class="mega-title-w">TIKTOK ROCKSTAR</p>
           <p class="mega-title-g">FOLLOW DULU YA DUL!</p>
           <div class="mega-badges" style="justify-content:flex-start;">
@@ -1079,7 +1083,16 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
 <script>
 var megaIdx = 0, megaTimer = null;
 (function megaInit(){
-  const n = document.querySelectorAll("#megaTrack .mega-slide").length;
+  const slides = document.querySelectorAll("#megaTrack .mega-slide");
+  slides.forEach(function(s){
+    if(!s.querySelector(".mega-logo")){
+      const l = document.createElement("div");
+      l.className = "mega-logo";
+      l.innerHTML = '<img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store">rockstar.store';
+      s.insertBefore(l, s.firstChild);
+    }
+  });
+  const n = slides.length;
   const box = document.getElementById("megaDots");
   for(let i = 0; i < n; i++){
     const d = document.createElement("i");
