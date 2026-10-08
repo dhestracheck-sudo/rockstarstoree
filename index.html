@@ -251,6 +251,13 @@ header {
 .s4 .mega-step { font-size: 13px; padding: 10px 14px; }
 .s4 .mega-cta { margin-top: 10px; }
 .s4 .mega-char img { max-height: 310px; }
+/* slide 6 saluran: judul panjang dikecilin */
+.mega-gold { background: linear-gradient(180deg, #fffbe0 0%, #ffe45c 22%, #ffb400 48%, #ffe45c 72%, #c07a00 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.s6 .mega-title-w { font-size: clamp(26px, 4.2vw, 46px); }
+.s6 .mega-title-g { font-size: clamp(30px, 5.4vw, 62px); }
+.s6 .mega-sub { font-size: clamp(12px, 1.9vw, 16px); letter-spacing: 1px; }
+.s6 .mega-badge.join { font-size: 15px; padding: 12px 30px; background: linear-gradient(180deg, #ffe45c, #f5a623); color: #1a1000; border: none; text-decoration: none; }
 /* slide 5 joki: teks muat + foto asli berbingkai */
 .s5 .mega-title-w { font-size: clamp(22px, 3.4vw, 38px); }
 .s5 .mega-title-g { font-size: clamp(32px, 5.2vw, 60px); }
@@ -1018,6 +1025,20 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
           </div>
           <div class="mega-cta" style="justify-content:flex-start;"><button class="btn-primary" style="background:linear-gradient(180deg,#ffe45c,#f5a623);color:#1a1000;" onclick="goToJoki()">KLIK DISINI 👆</button></div>
         </div>
+      </div>
+    </div>
+    <div class="mega-slide s6">
+      <div class="mega-in mega-flex">
+        <div class="mega-titlebox">
+          <div class="mega-brand">★ SALURAN RESMI ★</div>
+          <p class="mega-title-w">JOIN <span class="mega-gold">SALURAN</span></p>
+          <p class="mega-title-g" style="font-size:clamp(28px,4.6vw,54px);">RESMI ROCKSTAR</p>
+          <p class="mega-sub">ORDER LEBIH CEPAT, ADMIN LEBIH AKTIF,<br>DAN INFORMASI LEBIH LENGKAP.</p>
+          <div class="mega-badges" style="justify-content:flex-start;">
+            <a class="mega-badge join" href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener"><span class="ck">✓</span>JOIN SEKARANG</a>
+          </div>
+        </div>
+        <div class="mega-char"><img src="figur-kiri.png" alt="Mimin Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       </div>
     </div>
     <button class="mega-nav l" onclick="megaGo(megaIdx-1,true)" aria-label="prev">❮</button>
