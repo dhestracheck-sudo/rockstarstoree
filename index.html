@@ -193,6 +193,55 @@ header {
   padding: 0 5px;
 }
 
+/* ===== mega banner slider (EXSTORE style) ===== */
+.mega { position: relative; max-width: 1200px; margin: 18px auto 0; padding: 0 28px; }
+.mega-track { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid rgba(111,139,255,.35); box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 40px rgba(43,78,255,.22); }
+.mega-slide { display: none; position: relative; min-height: 320px; padding: 46px 30px 56px; text-align: center; overflow: hidden;
+  background: radial-gradient(700px 320px at 70% 10%, rgba(43,120,255,.35), transparent 60%), radial-gradient(500px 300px at 15% 90%, rgba(0,220,255,.18), transparent 60%), linear-gradient(115deg, #05091a 0%, #0a1440 45%, #0b2f7a 70%, #05091a 100%); }
+.mega-slide.s2 { background: radial-gradient(700px 320px at 70% 10%, rgba(150,80,255,.35), transparent 60%), radial-gradient(500px 300px at 15% 90%, rgba(255,80,200,.15), transparent 60%), linear-gradient(115deg, #0d0618 0%, #1c0f45 45%, #3b1470 70%, #0d0618 100%); }
+.mega-slide.s3 { background: radial-gradient(700px 320px at 70% 10%, rgba(0,220,160,.3), transparent 60%), radial-gradient(500px 300px at 15% 90%, rgba(255,200,40,.18), transparent 60%), linear-gradient(115deg, #04120d 0%, #06301f 45%, #0a4d33 70%, #04120d 100%); }
+.mega-slide.on { display: block; animation: megaIn .5s ease; }
+@keyframes megaIn { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
+.mega-slide::before { content: ""; position: absolute; inset: -40%; pointer-events: none;
+  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(120,170,255,.08) 60px 92px, transparent 92px 190px);
+  animation: streak 14s linear infinite; }
+@keyframes streak { to { transform: translateX(190px); } }
+.mega-in { position: relative; z-index: 2; }
+.mega-brand { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 3px; color: #9fb4ff; margin-bottom: 6px; }
+.mega-title-w { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(28px, 5vw, 54px); line-height: 1; color: #fff; margin: 0;
+  text-shadow: 0 2px 0 #8ea6ff, 0 4px 0 #5570f0, 0 6px 0 #2b4eff, 0 10px 22px rgba(0,0,0,.65); }
+.mega-title-g { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(42px, 8.5vw, 92px); line-height: 1.02; margin: 0 0 8px;
+  background: linear-gradient(180deg, #fffbe0 0%, #ffe45c 22%, #ffb400 48%, #ffe45c 72%, #c07a00 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 3px 0 #7a4a00) drop-shadow(0 6px 0 #3d2400) drop-shadow(0 12px 24px rgba(0,0,0,.6)); }
+.mega-sub { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: clamp(13px, 2.2vw, 19px); letter-spacing: 2px; color: #fff; margin: 6px 0 0; text-shadow: 0 2px 8px rgba(0,0,0,.7); }
+.mega-badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 16px 0 6px; }
+.mega-badge { display: inline-flex; align-items: center; gap: 8px; font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: #fff;
+  background: rgba(0,0,0,.45); border: 1px solid rgba(255,215,80,.55); border-radius: 10px; padding: 8px 16px; box-shadow: 0 4px 14px rgba(0,0,0,.5); }
+.mega-badge .ck { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffe98a, #f5a623 70%); color: #4a2d00; font-size: 13px; font-weight: 900; }
+.mega-tag { font-family: 'Baloo 2', sans-serif; font-size: clamp(14px, 2.6vw, 22px); font-weight: 700; letter-spacing: 1px; color: #fff; margin: 10px 0 0; text-shadow: 0 2px 10px rgba(0,0,0,.8); }
+.mega-tag b { color: #ffd94d; }
+.mega-cta { margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.mega-fig { position: absolute; bottom: 0; top: 0; width: 30%; z-index: 1; display: flex; align-items: flex-end; justify-content: center; pointer-events: none;
+  -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%); }
+.mega-fig.left { left: 0; } .mega-fig.right { right: 0; }
+.mega-fig img { max-height: 100%; max-width: 100%; object-fit: contain;
+  filter: drop-shadow(0 0 22px rgba(80,140,255,.55)); animation: floaty 4s ease-in-out infinite; }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.mega-dots { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; gap: 7px; justify-content: center; z-index: 3; }
+.mega-dots i { width: 9px; height: 9px; border-radius: 99px; background: rgba(255,255,255,.35); cursor: pointer; transition: all .25s; }
+.mega-dots i.on { width: 26px; background: #5a78ff; box-shadow: 0 0 12px #5a78ff; }
+.mega-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,.45); border: 1px solid rgba(255,255,255,.3); color: #fff; font-size: 16px; cursor: pointer; }
+.mega-nav.l { left: 10px; } .mega-nav.r { right: 10px; }
+@media (max-width: 760px) {
+  .mega { padding: 0 12px; }
+  .mega-slide { min-height: 280px; padding: 36px 14px 52px; }
+  .mega-fig { width: 34%; opacity: .4; }
+  .mega-nav { display: none; }
+}
+
 /* ===== hero split ===== */
 .hero {
   display: flex;
@@ -848,6 +897,86 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
 </header>
 </div>
+
+<div class="mega">
+  <div class="mega-track" id="megaTrack">
+    <div class="mega-slide on">
+      <div class="mega-fig left"><img src="ROCKSTAR%20AVATAR.webp" alt="Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-fig right"><img src="ROBUX.webp" alt="Robux" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-in">
+        <div class="mega-brand">★ ROCKSTAR.STORE ★</div>
+        <p class="mega-title-w">WELCOME TO</p>
+        <p class="mega-title-g">ROCKSTARSTORE</p>
+        <p class="mega-sub">TOKO ROBLOX TERBESAR DI DUNIA</p>
+        <div class="mega-badges">
+          <span class="mega-badge"><span class="ck">✓</span>Harga Termurah</span>
+          <span class="mega-badge"><span class="ck">✓</span>Proses Tercepat</span>
+          <span class="mega-badge"><span class="ck">✓</span>Aman 100%</span>
+        </div>
+        <p class="mega-tag">PROSES SEMUA <b>KILAT</b> DAN DIPASTIKAN <b>TERMURAH</b></p>
+      </div>
+    </div>
+    <div class="mega-slide s2">
+      <div class="mega-fig right"><img src="ROBUX.webp" alt="Robux" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-in">
+        <div class="mega-brand">★ TOP UP ROBUX ★</div>
+        <p class="mega-title-w">ROBUX INSTAN</p>
+        <p class="mega-title-g">PALING MURAH</p>
+        <p class="mega-sub">VIA ID • GAMEPASS • GIFT CARD</p>
+        <div class="mega-badges">
+          <span class="mega-badge"><span class="ck">✓</span>Proses Kilat</span>
+          <span class="mega-badge"><span class="ck">✓</span>Payment Lengkap</span>
+          <span class="mega-badge"><span class="ck">✓</span>Garansi 100%</span>
+        </div>
+        <div class="mega-cta"><button class="btn-primary" onclick="goToTopUp()">Top Up Sekarang 💰</button></div>
+      </div>
+    </div>
+    <div class="mega-slide s3">
+      <div class="mega-fig left"><img src="ROCKSTAR%20AVATAR.webp" alt="Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-in">
+        <div class="mega-brand">★ BRAINROT & AKUN PREMIUM ★</div>
+        <p class="mega-title-w">JADI SEPUH</p>
+        <p class="mega-title-g">NAIK KELAS</p>
+        <p class="mega-sub">STOK SECRET • OG • MUTASI LANGKA</p>
+        <div class="mega-badges">
+          <span class="mega-badge"><span class="ck">✓</span>Stok Terbanyak</span>
+          <span class="mega-badge"><span class="ck">✓</span>Full Garansi</span>
+          <span class="mega-badge"><span class="ck">✓</span>CS Fast Respon</span>
+        </div>
+        <div class="mega-cta"><button class="btn-primary" onclick="goToBrainrot()">Lihat Katalog 🧠</button></div>
+      </div>
+    </div>
+    <button class="mega-nav l" onclick="megaGo(megaIdx-1,true)" aria-label="prev">❮</button>
+    <button class="mega-nav r" onclick="megaGo(megaIdx+1,true)" aria-label="next">❯</button>
+    <div class="mega-dots" id="megaDots"></div>
+  </div>
+</div>
+<script>
+var megaIdx = 0, megaTimer = null;
+(function megaInit(){
+  const n = document.querySelectorAll("#megaTrack .mega-slide").length;
+  const box = document.getElementById("megaDots");
+  for(let i = 0; i < n; i++){
+    const d = document.createElement("i");
+    d.onclick = function(){ megaGo(i, true); };
+    box.appendChild(d);
+  }
+  megaPaint(); megaAuto();
+  document.getElementById("megaTrack").addEventListener("pointerdown", function(){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }, { passive: true });
+})();
+function megaPaint(){
+  const slides = document.querySelectorAll("#megaTrack .mega-slide");
+  slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
+  document.querySelectorAll("#megaDots i").forEach((d, i) => d.classList.toggle("on", i === megaIdx));
+}
+function megaGo(i, manual){
+  const n = document.querySelectorAll("#megaTrack .mega-slide").length;
+  megaIdx = ((i % n) + n) % n;
+  megaPaint();
+  if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
+}
+function megaAuto(){ megaTimer = setInterval(function(){ megaGo(megaIdx + 1); }, 5000); }
+</script>
 
 <section class="hero">
   <div class="hero-text">
