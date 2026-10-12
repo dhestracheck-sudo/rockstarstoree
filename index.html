@@ -1124,13 +1124,6 @@ var megaIdx = 0, megaTimer = null;
     }
   });
   const n = slides.length;
-  /* hemat: gambar slide non-aktif baru dimuat saat slide dibuka */
-  slides.forEach(function(s, i){
-    if(i !== 0) s.querySelectorAll("img").forEach(function(im){
-      const src = im.getAttribute("src");
-      if(src){ im.setAttribute("data-src", src); im.removeAttribute("src"); }
-    });
-  });
   const box = document.getElementById("megaDots");
   for(let i = 0; i < n; i++){
     const d = document.createElement("i");
@@ -1151,11 +1144,7 @@ var megaIdx = 0, megaTimer = null;
 })();
 function megaPaint(){
   const slides = document.querySelectorAll("#megaTrack .mega-slide");
-  slides.forEach((s, i) => {
-    s.classList.toggle("on", i === megaIdx);
-    if(i === megaIdx || i === (megaIdx + 1) % slides.length)
-      s.querySelectorAll("img[data-src]").forEach(function(im){ im.setAttribute("src", im.getAttribute("data-src")); im.removeAttribute("data-src"); });
-  });
+  slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
   document.querySelectorAll("#megaDots i").forEach((d, i) => d.classList.toggle("on", i === megaIdx));
 }
 function megaGo(i, manual){
