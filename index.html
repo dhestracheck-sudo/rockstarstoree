@@ -1089,7 +1089,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
           </div>
         </div>
         <div class="mega-char"><img src="figur-8064.webp" alt="Mimin Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
-        <div class="mega-phone"><img src="Screenshot%202026-10-08%20151006.png" alt="Saluran Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+        <div class="mega-phone"><img src="Screenshot%202026-10-08%20151006.webp" alt="Saluran Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       </div>
     </div>
     <div class="mega-slide s7">
@@ -1103,7 +1103,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
           </div>
           <p class="mega-tag" style="font-size:clamp(12px,2vw,17px);">JANGAN LUPA FOLLOW DUL! WASPADA CLONE — ASLI CUMA <b>@ROCKSTARSTOREE</b></p>
         </div>
-        <div class="mega-phone"><img src="Screenshot%202026-10-08%20135021.png" alt="TikTok Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+        <div class="mega-phone"><img src="Screenshot%202026-10-08%20135021.webp" alt="TikTok Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       </div>
     </div>
     <button class="mega-nav l" onclick="megaGo(megaIdx-1,true)" aria-label="prev">❮</button>
@@ -1124,6 +1124,13 @@ var megaIdx = 0, megaTimer = null;
     }
   });
   const n = slides.length;
+  /* hemat: gambar slide non-aktif baru dimuat saat slide dibuka */
+  slides.forEach(function(s, i){
+    if(i !== 0) s.querySelectorAll("img").forEach(function(im){
+      const src = im.getAttribute("src");
+      if(src){ im.setAttribute("data-src", src); im.removeAttribute("src"); }
+    });
+  });
   const box = document.getElementById("megaDots");
   for(let i = 0; i < n; i++){
     const d = document.createElement("i");
@@ -1144,7 +1151,11 @@ var megaIdx = 0, megaTimer = null;
 })();
 function megaPaint(){
   const slides = document.querySelectorAll("#megaTrack .mega-slide");
-  slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
+  slides.forEach((s, i) => {
+    s.classList.toggle("on", i === megaIdx);
+    if(i === megaIdx || i === (megaIdx + 1) % slides.length)
+      s.querySelectorAll("img[data-src]").forEach(function(im){ im.setAttribute("src", im.getAttribute("data-src")); im.removeAttribute("data-src"); });
+  });
   document.querySelectorAll("#megaDots i").forEach((d, i) => d.classList.toggle("on", i === megaIdx));
 }
 function megaGo(i, manual){
