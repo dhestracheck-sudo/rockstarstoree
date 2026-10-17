@@ -29,6 +29,45 @@
 <link rel="icon" type="image/png" href="ROCKSTARLOGO.png">
 <link rel="apple-touch-icon" href="ROCKSTARLOGO.png">
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://rockstarstore.id/#website",
+      "url": "https://rockstarstore.id/",
+      "name": "Rockstar.Store",
+      "publisher": { "@id": "https://rockstarstore.id/#store" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://rockstarstore.id/?q={search_term_string}" },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "OnlineStore",
+      "@id": "https://rockstarstore.id/#store",
+      "name": "Rockstar.Store",
+      "url": "https://rockstarstore.id/",
+      "logo": "https://rockstarstore.id/ROCKSTARLOGO.png",
+      "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+      "description": "Top up Robux, item Brainrot & akun Roblox premium. Proses kilat, SAFE 100%.",
+      "sameAs": [
+        "https://www.tiktok.com/@rockstarstoree",
+        "https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+62-896-6429-9571",
+        "contactType": "customer service",
+        "availableLanguage": ["Indonesian", "English"]
+      }
+    }
+  ]
+}
+</script>
+
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
 <script>
@@ -1329,6 +1368,18 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 <main class="section">
   <div id="pageTitle"></div>
   <div id="products"></div>
+  <noscript>
+    <div style="padding:16px;color:#8b96b3;line-height:1.8;">
+      <p><b style="color:#fff;">Rockstar.Store</b> — top up Robux, item Brainrot &amp; akun Roblox premium. Proses kilat, aman 100%.</p>
+      <p>Aktifkan JavaScript untuk belanja, atau buka katalog langsung:</p>
+      <ul>
+        <li><a href="/?tab=brainrot" style="color:#6f8bff;">Katalog Brainrot</a> — KOTAK GULUNG UNTUK BRAINROT, Grow A Garden 2, drill, LEMPAR KOIN, DADU ANIME, NAIK DAN JATUHKAN BLOCK KEBERUNTUNGAN, dll.</li>
+        <li><a href="/?tab=topup" style="color:#6f8bff;">Top Up Robux</a> — 160/240/320/500+ Robux via login.</li>
+        <li><a href="/?tab=akun" style="color:#6f8bff;">Katalog Akun</a> — akun sepuh siap pakai.</li>
+        <li><a href="/?tab=joki" style="color:#6f8bff;">Joki</a> — jasa leveling &amp; login.</li>
+      </ul>
+    </div>
+  </noscript>
 </main>
 
 <div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;" onclick="pwaInstall()">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
@@ -1941,6 +1992,7 @@ function showItems(i){
   shownCat = i;
   shownN = 10;
   paintItems();
+  updateUrl();
 }
 function paintItems(){
   const categories = getCurrentCategories();
@@ -2091,7 +2143,7 @@ function updateCarousel(i, j, index){
   }
 }
 
-function goHome(){ currentPage = 'home'; render(); }
+function goHome(){ currentPage = 'home'; shownCat = -1; render(); updateUrl(); }
 
 function toggleWaPop(){
   const p = document.getElementById("waPop");
@@ -2139,10 +2191,56 @@ function syncHeroCta(){
   });
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
-function goToBrainrot(){ currentPage = 'brainrot'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
-function goToTopUp(){ currentPage = 'topup'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
-function goToAkun(){ currentPage = 'akun'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
-function goToJoki(){ currentPage = 'joki'; render(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); window.scrollTo({top: document.querySelector('.section').offsetTop - 70, behavior: 'smooth'}); }
+
+/* ===== deep link + judul tab dinamis (SEO) =====
+   URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
+const TAB_TITLES = { brainrot: "Katalog Brainrot", topup: "Top Up Robux", akun: "Katalog Akun", joki: "Joki" };
+function updateUrl(){
+  try {
+    const p = new URLSearchParams();
+    if(currentPage !== "home") p.set("tab", currentPage);
+    if(currentPage !== "home" && shownCat >= 0){
+      const c = getCurrentCategories()[shownCat];
+      if(c) p.set("cat", c.name);
+    }
+    const qs = p.toString();
+    history.replaceState({ rs: 1 }, "", location.pathname + (qs ? "?" + qs : ""));
+    const cat = (currentPage !== "home" && shownCat >= 0) ? getCurrentCategories()[shownCat] : null;
+    document.title = (currentPage === "home")
+      ? "Rockstar.Store — Solusi Sepuh Roblox Kamu"
+      : ((cat ? cat.name : (TAB_TITLES[currentPage] || currentPage)) + " — Rockstar.Store");
+  } catch(e){}
+}
+function applyDeepLink(){
+  try {
+    const p = new URLSearchParams(location.search);
+    const q = (p.get("q") || "").trim();
+    if(q){
+      const inp = document.getElementById("searchInput");
+      if(inp){ inp.value = q; searchCatalog(); }
+      return true;
+    }
+    const tab = (p.get("tab") || "").toLowerCase();
+    const cat = (p.get("cat") || "").trim();
+    if(tab && catsOf(tab).length){
+      currentPage = tab;
+      render();
+      if(cat){
+        const cats = getCurrentCategories();
+        const idx = cats.findIndex(c => c.name.toLowerCase() === cat.toLowerCase());
+        if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(); }
+      }
+      try { const s = document.querySelector('.section'); if(s) window.scrollTo(0, s.offsetTop - 70); } catch(e){}
+      updateUrl();
+      return true;
+    }
+  } catch(e){}
+  return false;
+}
 
 function syncCart(){
   document.getElementById("cartCount").innerText = cart.length;
@@ -2757,6 +2855,7 @@ setTimeout(function(){ hideLoader(); }, 6000);
 loadLiveStock().then(() => {
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
+  try { if(!applyDeepLink()) updateUrl(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
   try { let searchTimer = null;
