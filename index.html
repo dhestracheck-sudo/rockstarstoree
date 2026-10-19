@@ -703,17 +703,19 @@ header {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 44px; height: 44px;
+  width: 28px; height: 28px;
   border-radius: 50%;
   border: 2px solid #fff;
   background: #fff;
   color: var(--blue);
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(0,0,0,0.55);
   z-index: 3;
 }
+/* Area sentuh diperbesar (±46px) tanpa mengubah ukuran tampilan panah */
+.mnav::before { content: ""; position: absolute; inset: -9px; }
 .mnav.l { left: 10px; } .mnav.r { right: 10px; }
 .mdots { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 3; }
 .mdots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; }
