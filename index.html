@@ -120,6 +120,9 @@ body {
 .stockbar i { display: block; height: 100%; background: linear-gradient(90deg, var(--green), #7CFC00); border-radius: 99px; }
 .stocktxt { font-size: 14px; color: var(--txt); font-weight: 600; margin-top: 4px; }
 .stocklow { font-size: 14px; color: #ff8080; font-weight: 700; margin-top: 4px; }
+/* Produk tampil seperti halaman Akun: garis bar hijau, bintang & teks ✅/📦 disembunyikan.
+   Info stok/terjual tetap ada di baris meta + modal detail. */
+.stars, .stockbar, .stocktxt { display: none; }
 
 /* ===== announcement bar + header menempel (tanpa renggang) ===== */
 .topwrap {
@@ -980,9 +983,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .topwrap.slim .announce { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
   .topwrap .announce { max-height: 120px; overflow: hidden; transition: max-height .25s ease, padding .25s ease, opacity .2s ease; }
   .item .ibody { padding: 10px 10px 12px; gap: 5px; }
-  /* Kartu dirampingkan di HP: buang info dobel (stok/terjual sudah ada di .meta + bar stok)
-     dan bintang statis yang selalu ★★★★★ untuk semua produk. Info lengkap tetap ada di modal detail. */
-  .item .stars, .item .stocktxt, .item .stocklow { display: none; }
+  /* Kartu HP dirampingkan: peringatan stok menipis (⚠️) juga disembunyikan di layar kecil */
+  .item .stocklow { display: none; }
   .item h3 { font-size: 15px; }
   .item .meta { font-size: 11.5px; }
   .item .price .now { font-size: 20px; }
@@ -1932,7 +1934,7 @@ function itemCard(categories, i, j){
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       <span class="catemoji">${catEmoji(category.name)}</span>
-      ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
+      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       ${thumbTag(item.images[0], `id="carousel-${i}-${j}" alt="${item.name}" loading="lazy"`)}
       <button class="mnav l" onclick="event.stopPropagation();carouselPrev(${i},${j})">❮</button>
@@ -1945,7 +1947,7 @@ function itemCard(categories, i, j){
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       <span class="catemoji">${catEmoji(category.name)}</span>
-      ${simpleCard ? `<span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
+      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       <button class="wishbtn${isWished(item.name) ? " on" : ""}" data-wish="${encodeURIComponent(item.name)}" onclick="event.stopPropagation();toggleWish('${page}',${i},${j})">${isWished(item.name) ? "❤️" : "🤍"}</button>
       ${thumbTag(itemImg, `alt="${item.name}" loading="lazy"`)}
     </div>`;
