@@ -139,7 +139,7 @@ body {
   text-align: center;
   text-overflow: ellipsis;
 }
-.announce a { color: #fff; font-weight: 700; text-decoration: underline; }
+.announce a { color: #fff; font-weight: 700; text-decoration: underline; display: inline-block; padding: 12px 4px; margin: -12px 0; }
 .announce .run { display: inline-block; padding-left: 100%; animation: run 18s linear infinite; }
 .announce .customrun { display: block; white-space: nowrap; overflow: hidden; color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
 .announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
@@ -398,7 +398,7 @@ header {
 }
 .hero h1 span { background: linear-gradient(135deg, var(--blue2), #cdd9ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero p { color: var(--mut); font-size: 16px; line-height: 1.7; margin: 0 0 26px; max-width: 520px; }
-.channel-link { display: inline-block; color: var(--wa); font-size: 14px; font-weight: 700; margin: -10px 0 24px; text-decoration: none; }
+.channel-link { display: inline-block; color: var(--wa); font-size: 14px; font-weight: 700; margin: -22px 0 12px; padding: 12px 6px; text-decoration: none; }
 .channel-link:hover { text-decoration: underline; }
 .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-primary, .btn-ghost {
@@ -666,7 +666,9 @@ header {
 .wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
 .viewpill { position:absolute; top:10px; right:10px; z-index:3; background:rgba(0,0,0,.65); color:#fff; font-size:10px; font-weight:700; border-radius:999px; padding:3px 8px; }
 /* ===== terakhir dilihat + dibeli bersama ===== */
-.recentrow { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scrollbar-width:none; }
+.recentrow { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scrollbar-width:none;
+  -webkit-mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%); }
 .recentrow::-webkit-scrollbar { display:none; }
 .recentcard { min-width:150px; max-width:150px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; position:relative; }
 .recentcard .soldstamp b { font-size:18px; letter-spacing:3px; padding:4px 12px 4px 15px; }
@@ -951,7 +953,7 @@ footer {
   color: var(--mut);
   font-size: 13px;
 }
-footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
+footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: inline-block; padding: 12px 4px; margin: -12px 0; }
 
 @media (max-width: 760px) {
   body { background-attachment: scroll; }
@@ -962,7 +964,9 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   .hero p { margin-left: auto; margin-right: auto; }
   .hero-cta { justify-content: center; }
   .banners { grid-template-columns: 1fr; }
-  .steps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 10px; }
+  .steps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 10px;
+    -webkit-mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%); }
   .step { min-width: 235px; scroll-snap-align: start; }
   .section { padding: 32px 16px 6px; }
   .stats { padding: 0 16px; }
@@ -980,7 +984,9 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; }
   .item .price .was { font-size: 11px; display: block; margin-left: 0; }
   .item .btn { font-size: 12px; padding: 12px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .item .kilat > span { font-size: 10px; padding: 4px 6px; }
-  .item .kilat { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px; }
+  .item .kilat { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 4px;
+    -webkit-mask-image: linear-gradient(to right, #000 86%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right, #000 86%, rgba(0,0,0,0) 100%); }
   .item .kilat::-webkit-scrollbar { display: none; }
   .item .kilat > span { flex-shrink: 0; }
   .item .kilat .vbadge i { width: 15px; height: 15px; font-size: 10px; }
