@@ -1622,7 +1622,7 @@ function flashHTML(){
       <div class="thumb">
         <span class="badge-off">-${r.off}%</span>
         <span class="catemoji">${catEmoji(it.name)}</span>
-        ${simpleF ? `<span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>` : ``}
+        <span class="viewpill">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span>
         ${thumbTag(it.img || (it.images && it.images[0]), `alt="${it.name}" loading="lazy"`)}
       </div>
       <div class="ibody">
@@ -1959,7 +1959,6 @@ function itemCard(categories, i, j){
       <div class="stars">${starsOf(item)}</div>
       ${simpleCard ? `<div class="statrow">STATUS&nbsp;<b class="${item.stock === 0 ? "st-no" : "st-ok"}">${item.stock === 0 ? tr("habis") : tr("avail")}</b></div>${(page === 'joki' && item.sold) ? `<div class="statrow">TERJUAL&nbsp;<b>🔥 ${item.sold} ${tr("sold_w")}</b></div>` : ``}` : `
       <div class="meta">
-        <span class="viewcount">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
         ${item.sold ? `<span class="sold">🔥 ${item.sold} ${tr("sold_w")}</span>` : ``}
         ${item.stock === 0 ? `<span id="stock-${uid}" style="color:var(--red);font-weight:600;">${tr("habis_txt")}</span>` : (item.stock ? `<span class="stock" id="stock-${uid}">${tr("stock")} ${item.stock}</span>` : `<span class="stock" id="stock-${uid}">${tr("stock_na")}</span>`)}
       </div>
