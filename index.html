@@ -1629,7 +1629,6 @@ function flashHTML(){
         <h3>${it.name}</h3>
         <div class="stars">${starsOf(it)}</div>
         ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
-        <div class="meta"><span class="viewcount">👁 ${Number(it.dilihat || 0).toLocaleString("id-ID")}</span></div>
         ${stockBarHTML(it)}`}
         <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
