@@ -665,7 +665,9 @@ header {
 .soldstamp { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:2; }
 .soldstamp b { font-family:'Baloo 2',sans-serif; font-size:34px; letter-spacing:5px; color:#fff; border:3px solid #ff5d5d; border-radius:12px; padding:6px 20px 6px 25px; transform:rotate(-12deg); background:rgba(255,93,93,.15); box-shadow:0 6px 24px rgba(0,0,0,.5); }
 /* ===== wishlist ===== */
-.wishbtn { position:absolute; bottom:10px; right:10px; width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:18px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
+.wishbtn { position:absolute; bottom:10px; right:10px; width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:rgba(0,0,0,.65); font-size:15px; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; }
+/* Area sentuh diperbesar (±46px) tanpa membesarkan tampilan tombolnya */
+.wishbtn::before { content: ""; position: absolute; inset: -6px; }
 .wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
 .viewpill { position:absolute; top:10px; right:10px; z-index:3; background:rgba(0,0,0,.65); color:#fff; font-size:10px; font-weight:700; border-radius:999px; padding:3px 8px; }
 /* ===== terakhir dilihat + dibeli bersama ===== */
