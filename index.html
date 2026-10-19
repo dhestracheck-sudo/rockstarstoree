@@ -2043,6 +2043,7 @@ function renderDetail(){
   document.getElementById("detailBox").innerHTML = `
     <div style="position:relative;">
       <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
+      <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       ${files.length > 1 ? `
       <button class="mnav l" onclick="detailGoto(${(k - 1 + files.length) % files.length})">❮</button>
