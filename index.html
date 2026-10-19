@@ -2840,6 +2840,24 @@ function loadLiveStock(){
 window.addEventListener("error", function(){ hideLoader(); });
 setTimeout(function(){ hideLoader(); }, 6000);
 
+/* Header ramping saat scroll — marquee atas ditutup otomatis (khusus HP, lihat CSS .topwrap.slim)
+   supaya area konten tidak tertutup baris pengumuman sepanjang 61px. */
+(function(){
+  try {
+    const tw = document.querySelector(".topwrap");
+    if(!tw) return;
+    let ticking = false;
+    window.addEventListener("scroll", function(){
+      if(ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){
+        tw.classList.toggle("slim", window.scrollY > 120);
+        ticking = false;
+      });
+    }, { passive: true });
+  } catch(e) {}
+})();
+
 loadLiveStock().then(() => {
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
