@@ -1201,6 +1201,33 @@ function megaGo(i, manual){
   if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
 }
 function megaAuto(){ megaTimer = setInterval(function(){ megaGo(megaIdx + 1); }, 5000); }
+/* Semua slide dikasih tinggi SAMA PERSIS supaya banner auto-slide tidak loncat ukurannya tiap ganti (HP & PC) */
+function fitMega(){
+  try{
+    const track = document.getElementById("megaTrack");
+    if(!track) return;
+    const slides = Array.prototype.slice.call(track.querySelectorAll(".mega-slide"));
+    if(!slides.length) return;
+    let max = 0;
+    slides.forEach(function(s){
+      const d = s.style.display;
+      s.style.display = "flex"; s.style.height = "auto"; s.style.minHeight = "0";
+      const h = s.scrollHeight;
+      s.style.display = d; s.style.height = ""; s.style.minHeight = "";
+      if(h > max) max = h;
+    });
+    if(!max) return;
+    const H = Math.max(max, window.innerWidth <= 760 ? 340 : 380);
+    slides.forEach(function(s){ s.style.height = H + "px"; });
+  }catch(e){}
+}
+fitMega();
+let megaFitT;
+window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT = setTimeout(fitMega, 150); });
+window.addEventListener("load", function(){ fitMega(); setTimeout(fitMega, 1200); setTimeout(fitMega, 3200); });
+if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ fitMega(); });
+const megaTrackEl = document.getElementById("megaTrack");
+if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ fitMega(); }, true);
 </script>
 <script>
 /* tombol kembali HP = kembali di web: tutup popup dulu, bukan close web */
