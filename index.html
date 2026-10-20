@@ -943,7 +943,8 @@ header {
 /* ===== widget chat WA ala support ===== */
 .wapop.wachat { width: 300px; max-width: calc(100vw - 110px); padding: 0; overflow: hidden; }
 .wachead { display: flex; align-items: center; gap: 10px; background: #075e54; padding: 12px 14px; color: #fff; }
-.walogo { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.walogo { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px #25d366, 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; }
+.walogo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .wachead b { display: block; font-size: 14.5px; }
 .waonline { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #b8f0c9; }
 .waonline i { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; display: inline-block; }
@@ -1607,7 +1608,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
-      <span class="walogo">R</span>
+      <span class="walogo"><img src="figur-8064.webp" alt="Min Rock" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;">R</span></span>
       <div><b>Rockstar Support</b><span class="waonline"><i></i><span data-i18n="wa_online">Online</span></span></div>
       <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
     </div>
