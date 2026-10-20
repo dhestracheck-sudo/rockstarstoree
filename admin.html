@@ -30,6 +30,7 @@ h1 img { height:40px; border-radius:11px; box-shadow:0 4px 14px rgba(0,0,0,.4); 
 #adminV { font-size:11px; color:var(--mut); font-family:'Poppins',sans-serif; font-weight:600; background:#131c36; border:1px solid var(--line); border-radius:999px; padding:3px 9px; }
 
 /* ===== tombol lebar (panel analisis) ===== */
+#analTopBtn { display:none; }
 .widebtn { display:block; text-align:center; background:linear-gradient(135deg,#1a2440,#141d36); color:var(--txt); font-weight:700; font-size:14px; border-radius:13px; padding:13px; text-decoration:none; margin-top:10px; border:1px solid var(--line); transition:.15s; }
 .widebtn:hover { border-color:var(--blue); transform:translateY(-1px); }
 
@@ -122,6 +123,11 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 .arow .ainfo { flex:1; min-width:0; }
 .arow .abtn { display:flex; flex-direction:column; gap:6px; }
 .arow button { width:auto; margin:0; padding:8px 12px; font-size:12.5px; border-radius:9px; box-shadow:none; }
+
+/* ===== baris antrean upload ===== */
+.qrow { display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:11px; padding:7px 10px; margin-top:6px; font-size:12.5px; }
+.qrow button { width:auto; margin:0; padding:6px 10px; font-size:12px; border-radius:8px; background:#161f3d; color:var(--mut); border:1px solid var(--line); box-shadow:none; }
+.qrow button:hover { color:#fff; border-color:var(--blue); filter:none; }
 
 /* layar lebar: 2 kolom biar tidak scroll panjang */
 @media (min-width: 1000px){
@@ -1271,11 +1277,11 @@ function renderStage(){
   const box = document.getElementById("stageList");
   if(!stageQueue.length){ box.innerHTML = ""; return; }
   box.innerHTML = '<p class="hint">Antrean upload (sesuai urutan pilih/klik):</p>' + stageQueue.map((f, i) =>
-    '<div style="display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin-top:6px;font-size:12.5px;">' +
+    '<div class="qrow">' +
     '<b style="color:var(--blue2);">#' + (i + 1) + '</b><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + String(f.name).replace(/</g, "&lt;").slice(0, 40) + '</span>' +
-    '<button onclick="stageMove(' + i + ',-1)" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">⬆️</button>' +
-    '<button onclick="stageMove(' + i + ',1)" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">⬇️</button>' +
-    '<button onclick="stageDrop(' + i + ')" style="width:auto;margin:0;padding:6px 10px;font-size:12px;">✖</button></div>'
+    '<button onclick="stageMove(' + i + ',-1)">⬆️</button>' +
+    '<button onclick="stageMove(' + i + ',1)">⬇️</button>' +
+    '<button onclick="stageDrop(' + i + ')">✖</button></div>'
   ).join("");
 }
 function stageMove(i, d){
