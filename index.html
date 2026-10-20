@@ -285,7 +285,18 @@ header {
 #mnavSearchSlot { display: flex; }
 #mnavSearchSlot .searchwrap { display: flex; width: 100%; position: relative; }
 #mnavSearchSlot #searchInput { width: 100%; }
-.mpanel .mnote { font-size: 12.5px; color: var(--mut); text-align: center; margin-top: 4px; }
+.mpanel .mnote {
+  display: block; width: 100%;
+  font-family: 'Poppins', sans-serif; font-weight: 600;
+  font-size: 13.5px; color: var(--txt); text-align: center;
+  margin-top: 12px; padding: 12px 10px;
+  background: rgba(43,78,255,0.16);
+  border: 1px solid rgba(66,105,255,0.5);
+  border-radius: 14px; cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.mpanel .mnote:hover, .mpanel .mnote:focus-visible { background: rgba(43,78,255,0.3); box-shadow: 0 0 18px rgba(43,78,255,0.4); outline: none; }
+.mpanel .mnote:active { transform: scale(0.96); }
 .mpanel .mnote b { color: #4ade80; }
 @media (min-width: 901px) { .mpanel { display: none !important; } }
 
@@ -1164,7 +1175,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
   </div>
   <button class="cartbtn" id="mnavLang" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇬🇧 EN</button>
-  <div class="mnote" data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</div>
+  <button type="button" class="mnote" data-i18n-html="rc_bub" onclick="closeMnav();openWaChat();">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</button>
 </div>
 
 <div class="mega">
