@@ -261,15 +261,15 @@ header {
 }
 
 /* ===== panel menu HP (geser saat tombol ☰ diklik — gaya exstore) ===== */
-.mnav {
+.mpanel {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99;
   display: none; flex-direction: column; gap: 9px;
   padding: 104px 14px calc(110px + env(safe-area-inset-bottom));
   background: rgba(4,7,20,0.97); backdrop-filter: blur(18px);
   overflow-y: auto; -webkit-overflow-scrolling: touch;
 }
-.mnav.open { display: flex; }
-.mnav .mlink {
+.mpanel.open { display: flex; }
+.mpanel .mlink {
   display: flex; align-items: center; gap: 12px; width: 100%;
   padding: 14px 16px; border-radius: 14px;
   background: rgba(255,255,255,0.05); border: 1px solid var(--line);
@@ -277,16 +277,16 @@ header {
   font-weight: 600; font-size: 14.5px; text-align: left; cursor: pointer;
   box-shadow: none; transition: background .15s, transform .1s;
 }
-.mnav .mlink:active { transform: scale(0.98); background: rgba(43,78,255,0.18); }
-.mnav .mlink .lico { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
-.mnav .mrow { display: flex; gap: 9px; }
-.mnav .mrow .cartbtn { flex: 1; justify-content: center; }
+.mpanel .mlink:active { transform: scale(0.98); background: rgba(43,78,255,0.18); }
+.mpanel .mlink .lico { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
+.mpanel .mnrow { display: flex; gap: 9px; }
+.mpanel .mnrow .cartbtn { flex: 1; justify-content: center; }
 #mnavSearchSlot { display: flex; }
 #mnavSearchSlot .searchwrap { display: flex; width: 100%; position: relative; }
 #mnavSearchSlot #searchInput { width: 100%; }
-.mnav .mnote { font-size: 12.5px; color: var(--mut); text-align: center; margin-top: 4px; }
-.mnav .mnote b { color: #4ade80; }
-@media (min-width: 901px) { .mnav { display: none !important; } }
+.mpanel .mnote { font-size: 12.5px; color: var(--mut); text-align: center; margin-top: 4px; }
+.mpanel .mnote b { color: #4ade80; }
+@media (min-width: 901px) { .mpanel { display: none !important; } }
 
 /* ===== mega banner slider (EXSTORE style) ===== */
 .mega { position: relative; max-width: 1200px; margin: 18px auto 0; padding: 0 28px; }
@@ -1138,7 +1138,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="burger" id="burgerBtn" onclick="toggleMnav()" aria-label="Buka menu">☰</button>
   </div>
 </header>
-<div class="mnav" id="mnav">
+</div>
+<div class="mpanel" id="mnav">
   <div id="mnavSearchSlot"></div>
   <button class="mlink" onclick="mnavGo(goHome)"><span class="lico">🏠</span><span data-i18n="nav_home">Beranda</span></button>
   <button class="mlink" onclick="mnavGo(goToAkun)"><span class="lico">👤</span><span data-i18n="nav_akun">Akun Sepuh</span></button>
@@ -1146,13 +1147,12 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   <button class="mlink" onclick="mnavGo(goToJoki)"><span class="lico">🏆</span><span data-i18n="nav_joki">Joki Sepuh</span></button>
   <button class="mlink" onclick="mnavGo(goFlash)"><span class="lico">⚡</span><span data-i18n="flash_btn">Flash Sale</span></button>
   <button class="mlink" onclick="mnavGo(toggleTestiPop)"><span class="lico">⭐</span><span data-i18n="nav_testi">Testimoni</span></button>
-  <div class="mrow">
+  <div class="mnrow">
     <button class="cartbtn" onclick="mnavGo(openCartModal)"><span data-i18n="cart">🛒 Keranjang</span> <small id="mnavCartCount">0</small></button>
     <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
   </div>
   <button class="cartbtn" id="mnavLang" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇬🇧 EN</button>
   <div class="mnote" data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</div>
-</div>
 </div>
 
 <div class="mega">
