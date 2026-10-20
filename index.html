@@ -997,6 +997,25 @@ header {
   border: 2.5px solid #0a1024; box-shadow: 0 0 0 1px rgba(37,211,102,0.6);
 }
 .rc-ring { display: none; }
+/* Foto Min Rock versi BESAR (buka dari tombol foto) */
+.photo-big { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.photo-big > img {
+  max-width: 92vw; max-height: 76vh; width: auto; height: auto;
+  border-radius: 18px; cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(37,211,102,0.75), 0 24px 60px rgba(0,0,0,0.7);
+  animation: rcPop .35s ease both;
+}
+.photo-x {
+  position: absolute; top: -14px; right: -14px; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; border: none;
+  background: var(--wa); color: #062b16; font-size: 20px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+.photo-wa {
+  border: none; border-radius: 999px; background: var(--wa); color: #062b16;
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
+  padding: 13px 26px; cursor: pointer; box-shadow: 0 10px 26px rgba(37,211,102,0.45);
+}
 .rc-ring.rc-d2 { animation-delay: 1s; }
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
@@ -1615,9 +1634,16 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <div class="rc-wrap">
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
-    <button class="rc-btn" id="waBtn" onclick="openWaChat()" aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
+    <button class="rc-btn" id="waBtn" onclick="openPhoto()" aria-label="Foto Min Rock" title="Lihat foto Min Rock">
       <img src="figur-8064.webp" alt="Min Rock">
     </button>
+  </div>
+  <div class="wapop" id="photoPop" style="display:none;background:none;border:none;box-shadow:none;padding:0;width:auto;">
+    <div class="photo-big">
+      <button class="photo-x" onclick="closePhoto()" aria-label="Tutup">✕</button>
+      <img src="figur-8064.webp" alt="Min Rock" onclick="closePhoto()">
+      <button class="photo-wa" id="photoWaBtn" onclick="closePhoto();openWaChat()">💬 Chat Min Rock di WhatsApp</button>
+    </div>
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
@@ -2460,7 +2486,19 @@ function waSend(){
   setTimeout(function(){ window.open("https://wa.me/6289664299571?text=" + encodeURIComponent(v), "_blank"); }, 450);
 }
 
-/* Chat WA Min Rock — dipakai dari bubble & tombol di menu garis tiga */
+/* Chat WA Min Rock — dipakai dari bubble, popup, dan tombol besar */
+function openPhoto(){
+  const p = document.getElementById("photoPop");
+  if(!p) return;
+  p.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+function closePhoto(){
+  const p = document.getElementById("photoPop");
+  if(!p) return;
+  p.style.display = "none";
+  document.body.style.overflow = "";
+}
 function openWaChat(msg){
   const t = msg || "Halo Min Rock, saya butuh bantuan 🙏";
   try { window.open("https://wa.me/6289664299571?text=" + encodeURIComponent(t), "_blank"); } catch(e) {}
