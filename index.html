@@ -995,7 +995,10 @@ header {
   font-size: 12.5px; line-height: 1.5; color: var(--txt);
   box-shadow: 0 14px 34px rgba(0,0,0,0.5);
   animation: rcPop .5s ease both, rcWiggle 6s ease-in-out 1.2s infinite;
+  cursor: pointer; transition: filter .15s ease, border-color .15s ease;
 }
+.rc-bubble:hover { border-color: var(--blue); filter: brightness(1.2); }
+.rc-bubble:active { filter: brightness(1.5); }
 .rc-bubble b { color: #4ade80; }
 .rc-bx {
   position: absolute; top: 3px; right: 3px; width: 22px; height: 22px;
@@ -1589,7 +1592,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 </div>
 
 <div class="rockchat" id="rockchat">
-  <div class="rc-bubble" id="rcBubble"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="rcBubbleHide()" aria-label="Tutup">✕</button></div>
+  <div class="rc-bubble" id="rcBubble" onclick="rcBubbleHide();openWaChat();" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="event.stopPropagation();rcBubbleHide()" aria-label="Tutup">✕</button></div>
   <div class="rc-wrap">
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
@@ -2445,6 +2448,11 @@ function waSend(){
   setTimeout(function(){ window.open("https://wa.me/6289664299571?text=" + encodeURIComponent(v), "_blank"); }, 450);
 }
 
+/* Chat WA Min Rock — dipakai dari bubble & tombol di menu garis tiga */
+function openWaChat(msg){
+  const t = msg || "Halo Min Rock, saya butuh bantuan 🙏";
+  try { window.open("https://wa.me/6289664299571?text=" + encodeURIComponent(t), "_blank"); } catch(e) {}
+}
 function toggleTestiPop(){
   const p = document.getElementById("testiPop");
   p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
