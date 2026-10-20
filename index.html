@@ -107,6 +107,7 @@ body {
     var(--bg);
   color: var(--txt);
   min-height: 100vh;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
 }
 
 /* ===== loading screen ===== */
@@ -867,6 +868,19 @@ header {
 .wabtn.testibtn .tring svg { width: 100%; height: 100%; }
 .wabtn.testibtn .tring text { fill: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; font-family: 'Poppins', sans-serif; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ===== bottom nav (menu bawah beremoji) ===== */
+.botnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 95; display: flex; background: rgba(6,9,19,.95); backdrop-filter: blur(14px); border-top: 1px solid var(--line); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
+.bnitem { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 54px; padding: 6px 2px; border: none; background: none; border-radius: 14px; color: var(--mut); font-family: 'Poppins', sans-serif; cursor: pointer; transition: color .15s, background .15s, transform .12s; }
+.bnitem .bnico { font-size: 21px; line-height: 1; }
+.bnitem .bnlbl { font-size: 9.5px; font-weight: 600; line-height: 1.15; text-align: center; letter-spacing: .02em; }
+.bnitem.active { color: var(--blue2); background: rgba(43,78,255,.16); }
+.bnitem:active { transform: scale(.93); }
+.fab, .wafab { bottom: calc(84px + env(safe-area-inset-bottom)); }
+@media (min-width: 761px) {
+  .botnav { left: 50%; right: auto; transform: translateX(-50%); bottom: 18px; width: min(500px, calc(100% - 48px)); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 20px 50px rgba(0,0,0,.55); padding: 6px; }
+  .fab, .wafab { bottom: 22px; }
+}
 .wabtn.testibtn img { width: 36px; height: 36px; border-radius: 50%; }
 /* ===== widget chat WA ala support ===== */
 .wapop.wachat { width: 300px; max-width: calc(100vw - 110px); padding: 0; overflow: hidden; }
@@ -1430,6 +1444,13 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 </main>
 
 <div id="pwaBar"><span id="pwaTxt"></span><button class="go" id="pwaBtn" style="display:none;" onclick="pwaInstall()">Install 📲</button><button class="x" onclick="hidePwaBar()">✕</button></div>
+<nav class="botnav" id="botnav">
+  <button class="bnitem" data-page="home" onclick="bnGo('home')" title="Beranda"><span class="bnico">🏠</span><span class="bnlbl" data-i18n="nav_home">Beranda</span></button>
+  <button class="bnitem" data-page="akun" onclick="bnGo('akun')" title="Beli Akun Sepuh Roblox"><span class="bnico">👤</span><span class="bnlbl" data-i18n="nav_akun">Akun Sepuh</span></button>
+  <button class="bnitem" data-page="topup" onclick="bnGo('topup')" title="Top Up Robux"><span class="bnico">💎</span><span class="bnlbl" data-i18n="nav_topup">Top Up Robux</span></button>
+  <button class="bnitem" data-page="joki" onclick="bnGo('joki')" title="Joki Sepuh Roblox"><span class="bnico">🏆</span><span class="bnlbl" data-i18n="nav_joki">Joki Sepuh</span></button>
+</nav>
+
 <div class="fab">
   <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
 </div>
@@ -1728,6 +1749,19 @@ function syncCta(){
   if(cta) cta.style.display = (currentPage === 'home') ? "" : "none";
 }
 
+/* ===== bottom nav (menu bawah) ===== */
+function bnGo(page){
+  if(page === 'home') goHome();
+  else if(page === 'akun') goToAkun();
+  else if(page === 'topup') goToTopUp();
+  else if(page === 'joki') goToJoki();
+}
+function bnSync(){
+  document.querySelectorAll('#botnav .bnitem').forEach(function(b){
+    b.classList.toggle('active', b.getAttribute('data-page') === currentPage);
+  });
+}
+
 /* ===== bahasa ID/EN ===== */
 const I18N = {
 id: {
@@ -1738,6 +1772,7 @@ st1: "Testimoni amanah", st2: "Proses hitungan menit", st3: "Semua payment", st4
 cb_title: "Cara Beli 🎮", cb_sub: "5 langkah gampang, ikuti gambarnya ya!",
 s1t: "Pilih mainanmu", s2t: "Cek keranjang", s3t: "Chat admin", s4t: "Bayar", s5t: "Item datang!",
 foot_wa: "No WA Admin:", back: "← Kembali", back_home: "← Beranda",
+nav_home: "Beranda", nav_akun: "Akun Sepuh", nav_topup: "Top Up Robux", nav_joki: "Joki Sepuh",
 cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "kategori — klik untuk lihat item", cat_empty: "Katalog kosong", cat_empty_x: "Data belum termuat (koneksi lambat).",
 cat_empty_msg: "😢 Katalog belum tampil. Biasanya karena sinyal.", reload: "🔄 Muat Ulang",
@@ -1775,6 +1810,7 @@ st1: "Trusted reviews", st2: "Minutes-fast process", st3: "All payments", st4: "
 cb_title: "How to Buy 🎮", cb_sub: "5 easy steps, follow the pictures!",
 s1t: "Pick your item", s2t: "Check cart", s3t: "Chat admin", s4t: "Pay", s5t: "Item arrives!",
 foot_wa: "Admin WA:", back: "← Back", back_home: "← Home",
+nav_home: "Home", nav_akun: "Pro Account", nav_topup: "Robux Top Up", nav_joki: "Boosting",
 cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "categories — click to view items", cat_empty: "Empty catalog", cat_empty_x: "Data not loaded (slow connection).",
 cat_empty_msg: "😢 Catalog not showing. Usually the signal.", reload: "🔄 Reload",
@@ -1855,6 +1891,7 @@ function render(){
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
   syncCta();
+  try { bnSync(); } catch(e) {}
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
