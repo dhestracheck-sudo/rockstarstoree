@@ -2033,6 +2033,8 @@ function applyLang(){
   });
   const b = document.getElementById("langBtn");
   if(b) b.textContent = (L === "id") ? "🇬🇧 EN" : "🇮🇩 ID";
+  const b2 = document.getElementById("mnavLang");
+  if(b2) b2.textContent = b ? b.textContent : ((L === "id") ? "🇬🇧 EN" : "🇮🇩 ID");
 }
 function toggleLang(){
   try { localStorage.setItem("rs_lang", lang() === "id" ? "en" : "id"); } catch(e) {}
@@ -2161,6 +2163,7 @@ function sugShow(q, rows){
 }
 function sugPick(page, i, j){
   sugHide();
+  try { closeMnav(); } catch(e) {}
   try { document.getElementById("searchInput").blur(); } catch(e) {}
   openDetail(page, i, j);
 }
@@ -2394,6 +2397,8 @@ function toggleWaPop(){
   const p = document.getElementById("waPop");
   const open = (p.style.display === "none" || !p.style.display);
   p.style.display = open ? "flex" : "none";
+  const rb = document.getElementById("rcBubble");
+  if(rb && rb.style.display !== "none") rb.style.visibility = open ? "hidden" : "";
   if(open && !document.getElementById("waBody").children.length) waBot();
   if(open){
     const inp = document.getElementById("waChatInput");
@@ -2426,6 +2431,8 @@ function waSend(){
 function toggleTestiPop(){
   const p = document.getElementById("testiPop");
   p.style.display = (p.style.display === "none" || !p.style.display) ? "flex" : "none";
+  const rc = document.getElementById("rockchat");
+  if(rc) rc.style.visibility = (p.style.display === "flex") ? "hidden" : "";
 }
 /* Biru mengikuti katalog yang dibuka */
 function syncHeroCta(){
@@ -2490,6 +2497,8 @@ function applyDeepLink(){
 function syncCart(){
   document.getElementById("cartCount").innerText = cart.length;
   document.getElementById("total").innerText = cart.length;
+  const mc = document.getElementById("mnavCartCount");
+  if(mc) mc.innerText = cart.length;
 }
 
 function addItem(i,j){
@@ -2727,6 +2736,8 @@ function syncWishCount(){
   const n = wishList().length;
   const a = document.getElementById("wishCount");
   if(a) a.textContent = n;
+  const a2 = document.getElementById("mnavWishCount");
+  if(a2) a2.textContent = n;
 }
 function paintHot(){
   const wrap = document.getElementById("hotSec");
