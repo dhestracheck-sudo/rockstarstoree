@@ -1212,7 +1212,7 @@ function fitMega(){
     slides.forEach(function(s){
       const d = s.style.display;
       s.style.display = "flex"; s.style.height = "auto"; s.style.minHeight = "0";
-      const h = s.scrollHeight;
+      const h = Math.ceil(s.getBoundingClientRect().height); /* tinggi kotak asli; scrollHeight kepalsuan gara-gara ::before */
       s.style.display = d; s.style.height = ""; s.style.minHeight = "";
       if(h > max) max = h;
     });
