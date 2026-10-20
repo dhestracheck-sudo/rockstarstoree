@@ -976,12 +976,11 @@ header {
   position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom));
   z-index: 93; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
 }
-.rc-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+.rc-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; animation: rcPulse 3s ease-in-out infinite; }
 .rc-btn {
   position: absolute; inset: 0; width: 60px; height: 60px; padding: 0;
-  border: none; border-radius: 50%; overflow: hidden; cursor: pointer;
-  background: var(--wa); box-shadow: 0 12px 30px rgba(37,211,102,0.5);
-  animation: rcPulse 3s ease-in-out infinite;
+  border: none; border-radius: 14px; overflow: hidden; cursor: pointer;
+  background: var(--wa); box-shadow: 0 12px 30px rgba(37,211,102,0.45);
 }
 .rc-btn:active { transform: scale(0.93); }
 .rc-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -990,7 +989,7 @@ header {
   width: 15px; height: 15px; border-radius: 50%; background: #25d366;
   border: 2.5px solid #0a1024; box-shadow: 0 0 0 1px rgba(37,211,102,0.5);
 }
-.rc-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(37,211,102,0.55); animation: rcRipple 2s linear infinite; pointer-events: none; }
+.rc-ring { display: none; }
 .rc-ring.rc-d2 { animation-delay: 1s; }
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
@@ -1603,7 +1602,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 </div>
 
 <div class="rockchat" id="rockchat">
-  <div class="rc-bubble" id="rcBubble" onclick="rcBubbleHide();openWaChat();" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="event.stopPropagation();rcBubbleHide()" aria-label="Tutup">✕</button></div>
+  <div class="rc-bubble" id="rcBubble" onclick="openWaChat()" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="event.stopPropagation();rcBubbleHide()" aria-label="Tutup">✕</button></div>
   <div class="rc-wrap">
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
