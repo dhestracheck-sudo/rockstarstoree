@@ -187,7 +187,7 @@ header {
   .headicons .cartbtn { display: flex; }
   .burger { display: none; }
 }
-.searchwrap { display: flex; width: 100%; order: 3; position: relative; }
+.searchwrap { display: flex; flex: 1; min-width: 0; justify-content: center; position: relative; }
 #searchInput {
   width: min(420px, 100%);
   padding: 10px 18px 10px 40px;
@@ -204,7 +204,7 @@ header {
 .searchwrap { position: relative; }
 #searchSug {
   position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-  width: min(420px, 100%); background: var(--bg2); border: 1px solid var(--blue);
+  width: min(420px, calc(100vw - 28px)); background: var(--bg2); border: 1px solid var(--blue);
   border-radius: 14px; overflow: hidden; z-index: 150; box-shadow: 0 18px 44px rgba(0,0,0,0.6);
   max-height: 60vh; overflow-y: auto;
 }
@@ -1076,7 +1076,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 @media (max-width: 760px) {
   body { background-attachment: scroll; }
   .brandshine { display: none; }
-  #searchInput { width: 100%; }
+  #searchInput { width: 100%; padding: 8px 14px 8px 34px; font-size: 14px; }
   .hero { flex-direction: column; padding: 40px 18px 10px; text-align: center; }
   .hero h1 { font-size: 40px; }
   .hero p { margin-left: auto; margin-right: auto; }
