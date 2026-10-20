@@ -85,6 +85,9 @@ button.danger { background:linear-gradient(135deg, #ff5d5d, #dd343c); box-shadow
 button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0 8px 20px rgba(46,204,113,.22); }
 
 #preview { width:100%; border-radius:12px; margin-top:12px; display:none; border:1px solid var(--line); }
+#prevImg { width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid var(--line); background:var(--bg2); flex-shrink:0; }
+#catOld { width:100%; max-height:220px; object-fit:cover; border-radius:12px; border:1px solid var(--line); background:var(--bg2); }
+#catPreview { width:100%; border-radius:12px; margin-top:14px; display:none; border:1px solid var(--line); }
 #status { margin-top:12px; font-size:13px; line-height:1.6; }
 .ok { color:var(--green); } .err { color:#ff8080; }
 .hint { font-size:12px; color:var(--mut); line-height:1.65; }
@@ -151,13 +154,14 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
   </nav>
 
   <div class="card" id="pinCard">
+    <div class="lockico">🔐</div>
+    <div class="pinttl">Masuk Panel Admin</div>
     <label>PIN Admin</label>
     <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
     <button onclick="unlock()">Buka Panel</button>
   </div>
 
   <div class="card" id="sheetCard" style="display:none;">
-    <a href="analisis.html" style="display:block;text-align:center;background:#232c44;color:var(--txt);font-weight:700;font-size:14px;border-radius:10px;padding:12px;text-decoration:none;margin-bottom:6px;">📊 Buka Panel Analisis</a>
     <label>Tab Sheet yang dikelola</label>
     <select id="sheetSel" onchange="loadItems()">
       <option value="Brainrot">Brainrot</option>
@@ -175,7 +179,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <textarea id="teksInput" rows="2" placeholder="tulis pengumuman..."></textarea>
     <div style="display:flex;gap:8px;">
       <button id="teksBtn" onclick="saveTeks()" style="flex:1;">💾 Simpan Teks</button>
-      <button id="teksDefBtn" onclick="defaultTeks()" style="flex:1;background:#232c44;">↩️ Balikin Default</button>
+      <button id="teksDefBtn" onclick="defaultTeks()" class="ghost" style="flex:1;">↩️ Balikin Default</button>
     </div>
     <div id="statusTeks"></div>
     <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
@@ -217,7 +221,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 
   <div class="card" id="prevCard" style="display:none;">
     <div style="display:flex;gap:14px;align-items:center;">
-      <img id="prevImg" alt="foto produk" style="width:96px;height:96px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);flex-shrink:0;">
+      <img id="prevImg" alt="foto produk">
       <div style="flex:1;min-width:0;">
         <div id="prevName" style="font-weight:700;">-</div>
         <div id="prevMeta" style="font-size:12.5px;color:var(--mut);margin-top:4px;">-</div>
@@ -253,12 +257,12 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <input type="text" id="catSearch" placeholder="🔍 Cari kategori..." oninput="fillCatOptions(this.value.toLowerCase())" style="margin-bottom:8px;">
     <select id="catSel"><option>Memuat kategori...</option></select>
     <label>Foto display lama</label>
-    <img id="catOld" alt="foto display lama" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;border:1px solid var(--line);background:var(--bg2);">
+    <img id="catOld" alt="foto display lama">
     <div id="catOldCap" style="font-size:12px;color:var(--mut);margin-top:6px;word-break:break-all;">-</div>
 
     <label>Foto kategori baru (kamera / galeri)</label>
     <input type="file" id="catFileInput" accept="image/*">
-    <img id="catPreview" alt="preview" style="width:100%;border-radius:12px;margin-top:14px;display:none;border:1px solid var(--line);">
+    <img id="catPreview" alt="preview">
 
     <button id="catUpBtn" onclick="uploadCat()">🖼️ Upload & Pasang Foto Kategori</button>
     <div id="statusCat"></div>
@@ -314,14 +318,14 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <button id="addCatBtn" onclick="addCategory()">➕ Tambah Kategori</button>
     <div id="statusAddCat"></div>
     <label style="margin-top:18px;">Tambah produk baru</label>
-    <input type="text" id="addName" placeholder="nama lengkap produk" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;margin-bottom:8px;">
+    <input type="text" id="addName" placeholder="nama lengkap produk">
     <select id="addCatSel"><option>Memuat kategori...</option></select>
     <div style="display:flex;gap:8px;margin-top:8px;">
       <input type="number" id="addPrice" placeholder="harga" style="flex:1">
       <input type="number" id="addStock" placeholder="stok" style="flex:1">
     </div>
-    <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;">
-    <textarea id="addDesc" rows="2" placeholder="deskripsi produk (opsional)" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);font-family:'Poppins',sans-serif;font-size:14px;"></textarea>
+    <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="margin-top:8px;">
+    <textarea id="addDesc" rows="2" placeholder="deskripsi produk (opsional)" style="margin-top:8px;"></textarea>
     <label>Foto produk (opsional, bisa tambah lagi maks 20 via panel slide)</label>
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
@@ -481,24 +485,24 @@ function loadAkunData(){
       h += live.map(function(o){
         const st = String(o.status);
         const col = st === "ready" ? "var(--green)" : "var(--mut)";
-        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:13px;">' +
-          '<div style="flex:1;min-width:0;"><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escAkun(st.toUpperCase()) + '</span><br>' +
+        return '<div class="arow">' +
+          '<div class="ainfo"><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escAkun(st.toUpperCase()) + '</span><br>' +
           '<span>ID: ' + escAkun(o.akun_id) + '</span><br>' +
           '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span><br>' +
           '<span style="color:var(--mut);">Modal: Rp ' + (Number(o.modal) || 0).toLocaleString("id-ID") + '</span></div>' +
-          '<button onclick="delAkunData(' + o.id + ')" style="width:auto;margin:0;padding:8px 12px;font-size:12px;background:var(--red);">Hapus</button></div>';
+          '<button onclick="delAkunData(' + o.id + ')" class="danger">Hapus</button></div>';
       }).join("");
-      h += '<button onclick="document.getElementById(\'akunTrash\').style.display=(document.getElementById(\'akunTrash\').style.display===\'none\'?\'block\':\'none\')" style="background:#232c44;margin-top:10px;">🗑️ Sampah (' + trashRows.length + ')</button>';
+      h += '<button onclick="document.getElementById(\'akunTrash\').style.display=(document.getElementById(\'akunTrash\').style.display===\'none\'?\'block\':\'none\')" class="ghost">🗑️ Sampah (' + trashRows.length + ')</button>';
       h += '<div id="akunTrash" style="display:none;">';
       if(!trashRows.length) h += '<p class="hint">Sampah kosong.</p>';
       h += trashRows.map(function(o){
-        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:8px;font-size:13px;opacity:.85;">' +
-          '<div style="flex:1;min-width:0;"><b>#' + o.id + '</b> <span style="color:var(--red);font-weight:700;">HAPUS</span><br>' +
+        return '<div class="arow" style="opacity:.85;">' +
+          '<div class="ainfo"><b>#' + o.id + '</b> <span style="color:var(--red);font-weight:700;">HAPUS</span><br>' +
           '<span>ID: ' + escAkun(o.akun_id) + '</span><br>' +
           '<span>PW: <span id="pw-' + o.id + '">•••</span> <a href="javascript:void(0)" onclick="togglePw(' + o.id + ')" style="color:var(--blue2);">👁</a></span><br>' +
           '<span style="color:var(--mut);">Modal: Rp ' + (Number(o.modal) || 0).toLocaleString("id-ID") + '</span></div>' +
-          '<div style="display:flex;flex-direction:column;gap:6px;"><button onclick="restoreAkunData(' + o.id + ')" style="width:auto;margin:0;padding:7px 10px;font-size:12px;background:var(--green);">↩️ Balikin</button>' +
-          '<button onclick="purgeAkunData(' + o.id + ')" style="width:auto;margin:0;padding:7px 10px;font-size:12px;background:#5a2330;">🔥 Hapus permanen</button></div></div>';
+          '<div class="abtn"><button onclick="restoreAkunData(' + o.id + ')" class="succ">↩️ Balikin</button>' +
+          '<button onclick="purgeAkunData(' + o.id + ')" class="danger">🔥 Hapus permanen</button></div></div>';
       }).join("") + '</div>';
       box.innerHTML = h;
     } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan.</span>'; }
@@ -523,12 +527,12 @@ function loadAkunRekap(){
       const keys = Object.keys(m).sort();
       if(!keys.length){ box.innerHTML = '<p class="hint">Brankas kosong.</p>'; return; }
       box.innerHTML = keys.map(function(p){
-        return '<div style="display:flex;gap:8px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:6px;">' +
-          '<div style="flex:1;min-width:0;"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escAkun(p).slice(0, 50) + '</div>' +
+        return '<div class="arow">' +
+          '<div class="ainfo"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escAkun(p).slice(0, 50) + '</div>' +
           '<div style="color:var(--mut);font-size:12px;">💰 modal tertanam: Rp ' + m[p].modal.toLocaleString("id-ID") + (m[p].hapus ? ' • 🗑️ ' + m[p].hapus : '') + '</div></div>' +
           '<span style="color:var(--green);font-weight:700;white-space:nowrap;">READY ' + m[p].ready + '</span>' +
           '<span style="color:var(--mut);white-space:nowrap;">SOLD ' + m[p].sold + '</span>' +
-          '<button onclick="akunRekapPilih(\'' + p.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\')" style="width:auto;margin:0;padding:7px 12px;font-size:12px;">Buka</button></div>';
+          '<button onclick="akunRekapPilih(\'' + p.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + '\')">Buka</button></div>';
       }).join("");
     } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
   }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil.</span>'; });
@@ -1156,15 +1160,15 @@ function renderSlides(){
   const arr = src.v.split("|").map(s => s.trim()).filter(Boolean).slice(0, 20);
   if(!arr.length){ box.innerHTML = '<p class="hint">Belum ada foto. Tambahkan di bawah (maks 20).</p>'; return; }
   box.innerHTML = (src.fb ? '<p class="hint">Foto bawaan kode (Sheet masih kosong) — ubah/tambah untuk menulis ke Sheet.</p>' : '') + arr.map((u, i) =>
-    '<div style="display:flex;gap:10px;align-items:center;margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:12px;">' +
-    '<img src="' + u.replace(/"/g, "&quot;") + '" style="width:64px;height:64px;object-fit:cover;border-radius:8px;" onerror="this.style.display=\'none\'">' +
-    '<div style="flex:1;font-size:12px;word-break:break-all;">Slide ' + (i+1) + (i===0 ? ' (utama)' : '') + '<br><span style="color:var(--mut);">' + u.slice(0, 60) + (u.length > 60 ? '...' : '') + '</span></div>' +
-    '<div style="display:flex;flex-direction:column;gap:6px;">' +
-    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMove(' + i + ',-1)">⬆️</button>' +
-    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMove(' + i + ',1)">⬇️</button>' +
-    (i===0 ? '' : '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideMain(' + i + ')">⭐ Utama</button>') +
-    '<button style="margin:0;padding:7px 10px;font-size:12px;" onclick="slideReplace(' + i + ')">🔄 Ganti</button>' +
-    '<button style="margin:0;padding:7px 10px;font-size:12px;background:#5a2330;" onclick="slideDelete(' + i + ')">🗑️</button>' +
+    '<div class="srow">' +
+    '<img class="sthumb" src="' + u.replace(/"/g, "&quot;") + '" onerror="this.style.display=\'none\'">' +
+    '<div class="sinfo"><b>Slide ' + (i+1) + (i===0 ? ' (utama)' : '') + '</b><br><span>' + u.slice(0, 60) + (u.length > 60 ? '...' : '') + '</span></div>' +
+    '<div class="sacts">' +
+    '<button onclick="slideMove(' + i + ',-1)">⬆️</button>' +
+    '<button onclick="slideMove(' + i + ',1)">⬇️</button>' +
+    (i===0 ? '' : '<button onclick="slideMain(' + i + ')">⭐ Utama</button>') +
+    '<button onclick="slideReplace(' + i + ')">🔄 Ganti</button>' +
+    '<button class="del" onclick="slideDelete(' + i + ')">🗑️</button>' +
     '</div></div>'
   ).join("") + '<input type="file" id="slideReplaceInput" accept="image/*" style="display:none;">';
   document.getElementById("slideReplaceInput").addEventListener("change", e => {
