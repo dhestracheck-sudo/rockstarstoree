@@ -346,32 +346,27 @@ header {
 .mega-ribbon { display: inline-block; margin-top: 12px; font-family: 'Baloo 2', sans-serif; font-weight: 800;
   font-size: clamp(15px, 2.4vw, 22px); color: #1a1000; background: linear-gradient(180deg, #ffe45c, #f5a623);
   padding: 8px 22px; border-radius: 8px; box-shadow: 0 6px 18px rgba(245,166,35,.45); transform: skewX(-6deg); }
-/* HP: semua kesamping (tidak ke bawah) */
+/* HP: semua kesamping (tidak ke bawah), banner pendek */
 @media (max-width: 760px) {
   .mega-fig { width: 30%; opacity: .95; }
   .mega-fig img { max-height: 240px; }
   .mega-flex { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; text-align: left; }
-  .mega-titlebox { flex: 1 1 55%; min-width: 0; }
-  .mega-flex .mega-char { flex: 0 0 auto; margin-bottom: 0; }
-  .mega-flex .mega-char img { max-height: 120px; }
-  .s6 .mega-titlebox { flex: 1 1 50%; }
-  .s6 .mega-char img { max-height: 110px; }
-  .s6 .mega-phone img { max-height: 120px; }
-  .s7 .mega-phone img { max-height: 190px; }
-  .s6 .mega-flex, .s7 .mega-flex { flex-wrap: nowrap; }
-  .s6 .mega-phone, .s7 .mega-phone { flex: 0 0 auto; }
-  .s6 .mega-phone img { max-height: 150px; }
-  .s7 .mega-phone img { max-height: 160px; }
-  .mega-steps { flex: 1 1 100%; gap: 6px; }
-  .s4 .mega-step { font-size: 11px; padding: 8px 10px; }
-  .mega-cta { justify-content: flex-start !important; }
+  .mega-titlebox { flex: 1 1 100%; min-width: 0; }
+  .mega-flex .mega-char, .mega-flex .mega-phone { display: none; } /* gambar samping off di HP → teks lebar penuh, banner tidak memanjang ke bawah */
+  .mega-steps { flex: 1 1 100%; gap: 6px; flex-direction: row; flex-wrap: wrap; }
+  .mega-step { flex: 1 1 calc(33.33% - 4px); font-size: 11px; padding: 8px 10px; min-width: 0; }
+  .mega-cta { justify-content: flex-start !important; flex-wrap: nowrap; }
+  .mega-cta .btn-primary { padding: 9px 12px; font-size: 13px; white-space: nowrap; }
+  .mega-badges { margin: 8px 0 4px; gap: 6px; }
+  .mega-badge { font-size: 11.5px; padding: 5px 10px; gap: 5px; }
+  .mega-badge .ck { width: 17px; height: 17px; font-size: 11px; }
   .s4 .mega-title-g { font-size: clamp(26px, 7vw, 34px); }
   .s6 .mega-title-g { font-size: clamp(24px, 6.5vw, 32px); }
   .s7 .mega-title-g { font-size: clamp(22px, 6vw, 30px); }
 }
 @media (max-width: 760px) {
   .mega { padding: 0 12px; }
-  .mega-slide { height: auto; min-height: 340px; padding: 36px 14px 52px; }
+  .mega-slide { height: auto; min-height: 340px; padding: 18px 14px 46px; }
   .mega-fig { width: 34%; opacity: .4; }
   .mega-nav { display: none; }
 }
@@ -1171,6 +1166,10 @@ var megaIdx = 0, megaTimer = null;
     }
   });
   const n = slides.length;
+  /* gambar banner dipaksa eager (memang di atas layar) supaya tinggi seragam sudah tepat sejak awal */
+  slides.forEach(function(s){
+    s.querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
+  });
   const box = document.getElementById("megaDots");
   for(let i = 0; i < n; i++){
     const d = document.createElement("i");
