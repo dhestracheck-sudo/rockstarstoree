@@ -1554,30 +1554,25 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <button class="bnitem" data-page="akun" onclick="bnGo('akun')" title="Beli Akun Sepuh Roblox"><span class="bnico">👤</span><span class="bnlbl" data-i18n="nav_akun">Akun Sepuh</span></button>
   <button class="bnitem" data-page="topup" onclick="bnGo('topup')" title="Top Up Robux"><span class="bnico">💎</span><span class="bnlbl" data-i18n="nav_topup">Top Up Robux</span></button>
   <button class="bnitem" data-page="joki" onclick="bnGo('joki')" title="Joki Sepuh Roblox"><span class="bnico">🏆</span><span class="bnlbl" data-i18n="nav_joki">Joki Sepuh</span></button>
+  <button class="bnitem" data-page="testi" onclick="toggleTestiPop()" title="Testimoni Amanah"><span class="bnico">⭐</span><span class="bnlbl" data-i18n="nav_testi">Testimoni</span></button>
+  <div class="wapop" id="testiPop" style="display:none;">
+    <div class="watext"><b data-i18n="testi_t">⭐ Testimoni Customer</b><span data-i18n="testi_x">100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
+    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener" data-i18n="testi_btn">Lihat Testimoni</a>
+  </div>
 </nav>
 
 <div class="fab">
   <button class="fab-main" onclick="openCartModal()">🛒<b id="total">0</b></button>
 </div>
 
-<div class="wafab">
-  <div class="wapop" id="testiPop" style="display:none;">
-    <div class="watext"><b data-i18n="testi_t">⭐ Testimoni Customer</b><span data-i18n="testi_x">100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
-    <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener" data-i18n="testi_btn">Lihat Testimoni</a>
-  </div>
-  <div class="wabtnrow">
-  <button class="wabtn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat WhatsApp">
-    <img src="logo wa.jpg" alt="WA">
-  </button>
-  <button class="wabtn testibtn" onclick="toggleTestiPop()" aria-label="Testimoni">
-    <span class="tring">
-      <svg viewBox="0 0 100 100">
-        <defs><path id="tcirc" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0"/></defs>
-        <text><textPath href="#tcirc">KLIK INI LIHAT TESTI • KLIK INI LIHAT TESTI •</textPath></text>
-      </svg>
-    </span>
-    <img src="ROCKSTARLOGO.webp" alt="Rockstar">
-  </button>
+<div class="rockchat" id="rockchat">
+  <div class="rc-bubble" id="rcBubble"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="rcBubbleHide()" aria-label="Tutup">✕</button></div>
+  <div class="rc-wrap">
+    <span class="rc-ring"></span>
+    <span class="rc-ring rc-d2"></span>
+    <button class="rc-btn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat Min Rock">
+      <img src="logo wa.jpg" alt="WA">
+    </button>
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
@@ -1867,6 +1862,58 @@ function bnSync(){
   });
 }
 
+/* ===== panel menu atas (gaya exstore: ☰ buka/tutup, pindah pencarian ke menu di HP) ===== */
+function toggleMnav(){
+  const m = document.getElementById("mnav");
+  if(!m) return;
+  const open = !m.classList.contains("open");
+  m.classList.toggle("open", open);
+  document.body.style.overflow = open ? "hidden" : "";
+  const b = document.getElementById("burgerBtn");
+  if(b) b.textContent = open ? "✕" : "☰";
+  placeSearch();
+  if(!open){ try { document.getElementById("searchSug").style.display = "none"; } catch(e) {} }
+}
+function closeMnav(){
+  const m = document.getElementById("mnav");
+  if(m && m.classList.contains("open")) toggleMnav();
+}
+function mnavGo(fn){
+  closeMnav();
+  setTimeout(function(){ try { fn(); } catch(e) {} }, 60);
+}
+function placeSearch(){
+  try {
+    const sw = document.querySelector(".searchwrap");
+    const slot = document.getElementById("mnavSearchSlot");
+    const hd = document.querySelector("header");
+    if(!sw || !slot || !hd) return;
+    if(window.innerWidth <= 760){
+      if(sw.parentNode !== slot) slot.appendChild(sw);
+    } else {
+      const hi = hd.querySelector(".headicons");
+      if(sw.parentNode !== hd) hd.insertBefore(sw, hi || null);
+    }
+  } catch(e) {}
+}
+try { placeSearch(); } catch(e) {}
+window.addEventListener("resize", function(){
+  clearTimeout(window.__psT);
+  window.__psT = setTimeout(placeSearch, 150);
+});
+/* bubble "Chat Min Rock" — sekali per sesi, bisa ditutup */
+function rcBubbleHide(){
+  const b = document.getElementById("rcBubble");
+  if(b) b.style.display = "none";
+  try { sessionStorage.setItem("rcBub", "0"); } catch(e) {}
+}
+try {
+  if(sessionStorage.getItem("rcBub") === "0"){
+    const rb = document.getElementById("rcBubble");
+    if(rb) rb.style.display = "none";
+  }
+} catch(e) {}
+
 /* ===== bahasa ID/EN ===== */
 const I18N = {
 id: {
@@ -1906,6 +1953,7 @@ testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni", wa_t: "Butuh ba
 wa_online: "Online", wa_ph: "Ketik pesan...",
 wa_greet: "Halo! 👋 Ada yang bisa dibantu? Ketik di bawah, langsung tersambung ke WA admin.",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan! Keburu habis:", flash_btn: "⚡ Flash Sale",
+nav_testi: "Testimoni", rc_bub: "Butuh bantuan? Chat <b>Min Rock</b> aja 💬",
 },
 en: {
 search_ph: "Search items, e.g.: moon bloom, robux...", cart: "🛒 Cart",
@@ -1941,6 +1989,7 @@ b_brain_d: "Your roblox upgrade solution — dozens of item categories.", b_top_
 b_joki_t: "🎮 Joki", b_joki_d: "Roblox joki service to go pro.",
 lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry! Selling out:", flash_btn: "⚡ Flash Sale",
+nav_testi: "Reviews", rc_bub: "Need help? Just chat <b>Min Rock</b> 💬",
 }};
 I18N.id.hero_h1 = 'SOLUSI SEPUH <span>ROBLOX</span> KAMU 🇮🇩🇲🇾';
 I18N.en.hero_h1 = 'YOUR <span>ROBLOX</span> UPGRADE SOLUTION 🇮🇩🇲🇾';
