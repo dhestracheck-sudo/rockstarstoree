@@ -977,10 +977,10 @@ header {
   position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom));
   z-index: 93; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
 }
-.rc-wrap { position: relative; width: 66px; height: 66px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
+.rc-wrap { position: relative; width: 198px; height: 198px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
 /* Foto Min Rock tampil UTUH (tanpa lingkaran, tanpa kotak) — fotonya dipertegas */
 .rc-btn {
-  position: absolute; inset: 0; width: 66px; height: 66px; padding: 0;
+  position: absolute; inset: 0; width: 198px; height: 198px; padding: 0;
   border: none; border-radius: 0; background: none; box-shadow: none;
   cursor: pointer; display: block; overflow: visible;
 }
@@ -992,9 +992,9 @@ header {
           drop-shadow(0 0 10px rgba(37,211,102,0.35));
 }
 .rc-btn::after {
-  content: ""; position: absolute; right: 3px; bottom: 3px;
-  width: 17px; height: 17px; border-radius: 50%; background: #25d366;
-  border: 2.5px solid #0a1024; box-shadow: 0 0 0 1px rgba(37,211,102,0.6);
+  content: ""; position: absolute; right: 8px; bottom: 8px;
+  width: 34px; height: 34px; border-radius: 50%; background: #25d366;
+  border: 4px solid #0a1024; box-shadow: 0 0 0 1.5px rgba(37,211,102,0.6);
 }
 .rc-ring { display: none; }
 /* Foto Min Rock versi BESAR (buka dari tombol foto) */
@@ -1020,10 +1020,10 @@ header {
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 .rc-bubble {
-  position: relative; max-width: 232px;
+  position: relative; max-width: 310px;
   background: var(--bg2); border: 1px solid var(--line);
-  border-radius: 14px 14px 4px 14px; padding: 10px 32px 10px 14px;
-  font-size: 13px; line-height: 1.5; color: var(--txt);
+  border-radius: 16px 16px 4px 16px; padding: 13px 40px 13px 17px;
+  font-size: 17px; line-height: 1.5; color: var(--txt);
   box-shadow: 0 14px 34px rgba(0,0,0,0.5);
   animation: rcPop .5s ease both, rcWiggle 6s ease-in-out 1.2s infinite;
   cursor: pointer; transition: filter .15s ease, border-color .15s ease;
@@ -1034,7 +1034,7 @@ header {
 .rc-bubble:active { filter: brightness(1.5); }
 .rc-bubble b { color: #4ade80; }
 .rc-bx {
-  position: absolute; top: 3px; right: 3px; width: 22px; height: 22px;
+  position: absolute; top: 4px; right: 4px; width: 32px; height: 32px;
   padding: 0; margin: 0; border: none; background: none;
   color: var(--mut); font-size: 11px; cursor: pointer; box-shadow: none;
 }
