@@ -1142,7 +1142,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 </header>
 </div>
 <div class="mpanel" id="mnav">
-  <div id="mnavSearchSlot"></div>
   <button class="mlink" onclick="mnavGo(goHome)"><span class="lico">🏠</span><span data-i18n="nav_home">Beranda</span></button>
   <button class="mlink" onclick="mnavGo(goToAkun)"><span class="lico">👤</span><span data-i18n="nav_akun">Akun Sepuh</span></button>
   <button class="mlink" onclick="mnavGo(goToTopUp)"><span class="lico">💎</span><span data-i18n="nav_topup">Top Up Robux</span></button>
@@ -1873,6 +1872,12 @@ function toggleMnav(){
   document.body.style.overflow = open ? "hidden" : "";
   const b = document.getElementById("burgerBtn");
   if(b) b.textContent = open ? "✕" : "☰";
+  if(open){
+    try {
+      const hd = document.querySelector("header");
+      if(hd) m.style.paddingTop = (Math.round(hd.getBoundingClientRect().bottom) + 10) + "px";
+    } catch(e) {}
+  }
   placeSearch();
   if(!open){ try { document.getElementById("searchSug").style.display = "none"; } catch(e) {} }
 }
@@ -1884,20 +1889,8 @@ function mnavGo(fn){
   closeMnav();
   setTimeout(function(){ try { fn(); } catch(e) {} }, 60);
 }
-function placeSearch(){
-  try {
-    const sw = document.querySelector(".searchwrap");
-    const slot = document.getElementById("mnavSearchSlot");
-    const hd = document.querySelector("header");
-    if(!sw || !slot || !hd) return;
-    if(window.innerWidth <= 760){
-      if(sw.parentNode !== slot) slot.appendChild(sw);
-    } else {
-      const hi = hd.querySelector(".headicons");
-      if(sw.parentNode !== hd) hd.insertBefore(sw, hi || null);
-    }
-  } catch(e) {}
-}
+/* Pencarian selalu tampil di baris kedua header (HP) — tidak dipindah ke menu lagi */
+function placeSearch(){}
 try { placeSearch(); } catch(e) {}
 window.addEventListener("resize", function(){
   clearTimeout(window.__psT);
