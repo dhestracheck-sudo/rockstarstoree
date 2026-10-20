@@ -1081,7 +1081,12 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .hero h1 { font-size: 40px; }
   .hero p { margin-left: auto; margin-right: auto; }
   .hero-cta { justify-content: center; }
-  .banners { grid-template-columns: 1fr; }
+  .banners { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .banner { padding: 18px 14px; min-height: 150px; }
+  .banner::after { display: none; }
+  .banner small { font-size: 10px; letter-spacing: 1px; }
+  .banner h3 { font-size: 19px; }
+  .banner p { display: none; }
   .steps { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; padding-bottom: 10px;
     -webkit-mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%);
     mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%); }
@@ -1089,6 +1094,12 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .section { padding: 32px 16px 6px; }
   .stats { padding: 0 16px; }
   .itemgrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .flashgrid, .catgrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .catcard .catimgwrap { height: 110px; }
+  .catcard .catimgwrap .catemoji { font-size: 44px; }
+  .catcard .catbody { padding: 10px 12px 12px; }
+  .catcard h3 { font-size: 14px; }
+  .catcard .go { width: 28px; height: 28px; font-size: 14px; }
   .brand { font-size: 15px; }
   .brand img { height: 32px; }
   .cartbtn { padding: 8px 14px; font-size: 13px; }
