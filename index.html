@@ -149,18 +149,19 @@ body {
 .announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
 @keyframes run { to { transform: translateX(-100%); } }
 
-/* ===== header ===== */
+/* ===== header (gaya exstore: HP = logo + ☰, desktop = nav + cari + ikon) ===== */
 header {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 12px 28px;
-  background: rgba(6,9,19,0.88);
+  gap: 10px;
+  height: 59px;
+  padding: 0 14px;
+  background: rgba(0,4,40,0.8);
   backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255,255,255,0.09);
 }
-.brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: 0.4px; white-space: nowrap; }
-.brand img { height: 40px; border-radius: 9px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; letter-spacing: 0.4px; white-space: nowrap; cursor: pointer; }
+.brand img { height: 34px; border-radius: 9px; }
 @media (prefers-reduced-motion: no-preference) {
   .brand img { animation: logoFloat 3s ease-in-out infinite; }
   @keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
@@ -169,7 +170,23 @@ header {
   @keyframes letterIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
 .brl { display: inline-block; }
-.searchwrap { flex: 1; display: flex; justify-content: center; }
+.headnav { display: none; align-items: center; gap: 2px; min-width: 0; }
+.headnav a { display: inline-flex; align-items: center; gap: 6px; color: var(--mut); font-size: 13.5px; font-weight: 600; padding: 9px 11px; border-radius: 10px; cursor: pointer; text-decoration: none; white-space: nowrap; transition: color .15s, background .15s; }
+.headnav a:hover { color: var(--txt); background: rgba(255,255,255,0.07); }
+.headicons { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.headicons .cartbtn { display: none; }
+.burger { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex-shrink: 0; border-radius: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.14); color: #fff; font-size: 16px; cursor: pointer; box-shadow: none; }
+.burger:active { transform: scale(0.94); }
+@media (min-width: 761px) {
+  header { gap: 14px; padding: 0 24px; }
+  header .searchwrap { display: flex; flex: 1; justify-content: center; }
+}
+@media (min-width: 901px) {
+  .headnav { display: flex; }
+  .headicons .cartbtn { display: flex; }
+  .burger { display: none; }
+}
+.searchwrap { display: none; }
 #searchInput {
   width: min(420px, 100%);
   padding: 10px 18px 10px 40px;
@@ -242,6 +259,34 @@ header {
   font-size: 12px;
   padding: 0 5px;
 }
+
+/* ===== panel menu HP (geser saat tombol ☰ diklik — gaya exstore) ===== */
+.mnav {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99;
+  display: none; flex-direction: column; gap: 9px;
+  padding: 104px 14px calc(110px + env(safe-area-inset-bottom));
+  background: rgba(4,7,20,0.97); backdrop-filter: blur(18px);
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.mnav.open { display: flex; }
+.mnav .mlink {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 14px 16px; border-radius: 14px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+  color: var(--txt); font-family: 'Poppins', sans-serif;
+  font-weight: 600; font-size: 14.5px; text-align: left; cursor: pointer;
+  box-shadow: none; transition: background .15s, transform .1s;
+}
+.mnav .mlink:active { transform: scale(0.98); background: rgba(43,78,255,0.18); }
+.mnav .mlink .lico { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
+.mnav .mrow { display: flex; gap: 9px; }
+.mnav .mrow .cartbtn { flex: 1; justify-content: center; }
+#mnavSearchSlot { display: flex; }
+#mnavSearchSlot .searchwrap { display: flex; width: 100%; position: relative; }
+#mnavSearchSlot #searchInput { width: 100%; }
+.mnav .mnote { font-size: 12.5px; color: var(--mut); text-align: center; margin-top: 4px; }
+.mnav .mnote b { color: #4ade80; }
+@media (min-width: 901px) { .mnav { display: none !important; } }
 
 /* ===== mega banner slider (EXSTORE style) ===== */
 .mega { position: relative; max-width: 1200px; margin: 18px auto 0; padding: 0 28px; }
@@ -855,7 +900,7 @@ header {
 /* ===== tombol WA mengambang + popup ===== */
 .wafab { position: fixed; left: 22px; bottom: 22px; z-index: 90; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
 .wafab .wabtnrow { display: flex; gap: 10px; align-items: center; }
-#testiPop { position: absolute; left: calc(100% + 12px); bottom: 0; width: 230px; min-height: 280px; justify-content: center; }
+#testiPop { position: absolute; right: 8px; bottom: calc(100% + 12px); width: 230px; min-height: 260px; justify-content: center; z-index: 3; }
 .wabtn {
   width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
   background: var(--wa); display: flex; align-items: center; justify-content: center;
@@ -877,6 +922,7 @@ header {
 .bnitem.active { color: var(--blue2); background: rgba(43,78,255,.16); }
 .bnitem:active { transform: scale(.93); }
 .fab, .wafab { bottom: calc(84px + env(safe-area-inset-bottom)); }
+.fab { left: 22px; right: auto; align-items: flex-start; }
 @media (min-width: 761px) {
   .botnav { left: 50%; right: auto; transform: translateX(-50%); bottom: 18px; width: min(500px, calc(100% - 48px)); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 20px 50px rgba(0,0,0,.55); padding: 6px; }
   .fab, .wafab { bottom: 22px; }
@@ -911,6 +957,43 @@ header {
   background: var(--wa); color: #062b16; font-weight: 700; font-size: 14px;
   border-radius: 10px; padding: 12px; text-decoration: none; font-family: 'Poppins', sans-serif;
 }
+
+/* ===== chat Min Rock — tombol mengambang kanan-bawah (animasi gelombang ala exstore) ===== */
+.rockchat {
+  position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom));
+  z-index: 93; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+}
+.rc-wrap { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+.rc-btn {
+  position: absolute; inset: 0; width: 60px; height: 60px; padding: 0;
+  border: none; border-radius: 50%; overflow: hidden; cursor: pointer;
+  background: var(--wa); box-shadow: 0 12px 30px rgba(37,211,102,0.5);
+  animation: rcPulse 3s ease-in-out infinite;
+}
+.rc-btn:active { transform: scale(0.93); }
+.rc-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rc-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(37,211,102,0.55); animation: rcRipple 2s linear infinite; pointer-events: none; }
+.rc-ring.rc-d2 { animation-delay: 1s; }
+@keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
+@keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.rc-bubble {
+  position: relative; max-width: 215px;
+  background: var(--bg2); border: 1px solid var(--line);
+  border-radius: 14px 14px 4px 14px; padding: 10px 32px 10px 14px;
+  font-size: 12.5px; line-height: 1.5; color: var(--txt);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.5);
+  animation: rcPop .5s ease both, rcWiggle 6s ease-in-out 1.2s infinite;
+}
+.rc-bubble b { color: #4ade80; }
+.rc-bx {
+  position: absolute; top: 3px; right: 3px; width: 22px; height: 22px;
+  padding: 0; margin: 0; border: none; background: none;
+  color: var(--mut); font-size: 11px; cursor: pointer; box-shadow: none;
+}
+.rc-bx:hover { color: #fff; }
+@keyframes rcPop { from { opacity: 0; transform: translateY(10px) scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes rcWiggle { 0%,86%,100% { transform: translateY(0) rotate(0); } 90% { transform: translateY(-5px) rotate(-1.5deg); } 94% { transform: translateY(-2px) rotate(1.5deg); } }
+@media (min-width: 761px) { .rockchat { right: 22px; bottom: 22px; } }
 
 /* ===== modal ===== */
 .overlay {
@@ -991,8 +1074,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 
 @media (max-width: 760px) {
   body { background-attachment: scroll; }
-  header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
-  .searchwrap { order: 3; flex-basis: 100%; }
+  .brandshine { display: none; }
   .hero { flex-direction: column; padding: 40px 18px 10px; text-align: center; }
   .hero h1 { font-size: 40px; }
   .hero p { margin-left: auto; margin-right: auto; }
@@ -1005,7 +1087,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .section { padding: 32px 16px 6px; }
   .stats { padding: 0 16px; }
   .itemgrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  header { padding: 8px 14px; gap: 8px; }
   .brand { font-size: 15px; }
   .brand img { height: 32px; }
   .cartbtn { padding: 8px 14px; font-size: 13px; }
@@ -1041,13 +1122,37 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 <div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
 
 <header>
-  <div class="brand"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></div>
-  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autocomplete="off"><div id="searchSug" style="display:none;"></div></div>
-  <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
-  <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
-  <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
-  <button class="cartbtn flashbtn" onclick="goFlash()"><span data-i18n="flash_btn">⚡ Flash Sale</span></button>
+  <div class="brand" onclick="goHome()" title="Rockstar.Store"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></div>
+  <nav class="headnav">
+    <a onclick="goHome()">🏠 <span data-i18n="nav_home">Beranda</span></a>
+    <a onclick="goToAkun()">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
+    <a onclick="goToTopUp()">💎 <span data-i18n="nav_topup">Top Up Robux</span></a>
+    <a onclick="goToJoki()">🏆 <span data-i18n="nav_joki">Joki Sepuh</span></a>
+  </nav>
+  <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autocomplete="off" onkeydown="if(event.key==='Enter')closeMnav()"><div id="searchSug" style="display:none;"></div></div>
+  <div class="headicons">
+    <button class="cartbtn flashbtn" onclick="goFlash()"><span data-i18n="flash_btn">⚡ Flash Sale</span></button>
+    <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
+    <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
+    <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
+    <button class="burger" id="burgerBtn" onclick="toggleMnav()" aria-label="Buka menu">☰</button>
+  </div>
 </header>
+<div class="mnav" id="mnav">
+  <div id="mnavSearchSlot"></div>
+  <button class="mlink" onclick="mnavGo(goHome)"><span class="lico">🏠</span><span data-i18n="nav_home">Beranda</span></button>
+  <button class="mlink" onclick="mnavGo(goToAkun)"><span class="lico">👤</span><span data-i18n="nav_akun">Akun Sepuh</span></button>
+  <button class="mlink" onclick="mnavGo(goToTopUp)"><span class="lico">💎</span><span data-i18n="nav_topup">Top Up Robux</span></button>
+  <button class="mlink" onclick="mnavGo(goToJoki)"><span class="lico">🏆</span><span data-i18n="nav_joki">Joki Sepuh</span></button>
+  <button class="mlink" onclick="mnavGo(goFlash)"><span class="lico">⚡</span><span data-i18n="flash_btn">Flash Sale</span></button>
+  <button class="mlink" onclick="mnavGo(toggleTestiPop)"><span class="lico">⭐</span><span data-i18n="nav_testi">Testimoni</span></button>
+  <div class="mrow">
+    <button class="cartbtn" onclick="mnavGo(openCartModal)"><span data-i18n="cart">🛒 Keranjang</span> <small id="mnavCartCount">0</small></button>
+    <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
+  </div>
+  <button class="cartbtn" id="mnavLang" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇬🇧 EN</button>
+  <div class="mnote" data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</div>
+</div>
 </div>
 
 <div class="mega">
