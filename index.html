@@ -1117,8 +1117,9 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .brand { font-size: 15px; }
   .brand img { height: 32px; }
   .cartbtn { padding: 8px 14px; font-size: 13px; }
-  .topwrap.slim .announce { max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; }
-  .topwrap .announce { max-height: 120px; overflow: hidden; transition: max-height .25s ease, padding .25s ease, opacity .2s ease; }
+  /* Tulisan berjalan TETAP ikut saat scroll (permintaan owner) — bar atas lengket
+     penuh (marquee + header), tidak ada lagi auto-collapse .slim */
+  .topwrap .announce { max-height: 120px; overflow: hidden; }
   /* Tulisan berjalan dirapatkan di HP: font & padding kecil agar bar atas tidak tebal */
   .announce { font-size: 11.5px; padding: 6px 10px; letter-spacing: 0; }
   .announce a { padding: 7px 3px; margin: -7px 0; }
@@ -3137,23 +3138,8 @@ function loadLiveStock(){
 window.addEventListener("error", function(){ hideLoader(); });
 setTimeout(function(){ hideLoader(); }, 6000);
 
-/* Header ramping saat scroll — marquee atas ditutup otomatis (khusus HP, lihat CSS .topwrap.slim)
-   supaya area konten tidak tertutup baris pengumuman sepanjang 61px. */
-(function(){
-  try {
-    const tw = document.querySelector(".topwrap");
-    if(!tw) return;
-    let ticking = false;
-    window.addEventListener("scroll", function(){
-      if(ticking) return;
-      ticking = true;
-      requestAnimationFrame(function(){
-        tw.classList.toggle("slim", window.scrollY > 120);
-        ticking = false;
-      });
-    }, { passive: true });
-  } catch(e) {}
-})();
+/* Tulisan berjalan TETAP ikut saat scroll (permintaan owner): seluruh bar atas
+   (marquee + header) selalu menempel (sticky) dan tidak pernah disembunyikan. */
 
 loadLiveStock().then(() => {
   try { applyLang(); } catch(e) {}
