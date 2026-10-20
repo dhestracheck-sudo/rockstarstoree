@@ -985,6 +985,11 @@ header {
 }
 .rc-btn:active { transform: scale(0.93); }
 .rc-btn img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rc-btn::after {
+  content: ""; position: absolute; right: 2px; bottom: 2px;
+  width: 15px; height: 15px; border-radius: 50%; background: #25d366;
+  border: 2.5px solid #0a1024; box-shadow: 0 0 0 1px rgba(37,211,102,0.5);
+}
 .rc-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(37,211,102,0.55); animation: rcRipple 2s linear infinite; pointer-events: none; }
 .rc-ring.rc-d2 { animation-delay: 1s; }
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
@@ -1602,13 +1607,13 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <div class="rc-wrap">
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
-    <button class="rc-btn" id="waBtn" onclick="toggleWaPop()" aria-label="Chat Min Rock">
-      <img src="logo wa.jpg" alt="WA">
+    <button class="rc-btn" id="waBtn" onclick="openWaChat()" aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
+      <img src="figur-8064.webp" alt="Min Rock">
     </button>
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
-      <span class="walogo"><img src="figur-8064.webp" alt="Min Rock" onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"><span style="display:none;">R</span></span>
+      <span class="walogo">R</span>
       <div><b>Rockstar Support</b><span class="waonline"><i></i><span data-i18n="wa_online">Online</span></span></div>
       <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
     </div>
