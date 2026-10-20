@@ -150,6 +150,16 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 <div class="wrap">
   <h1><img src="ROCKSTARLOGO.png" alt="Rockstar">🔧 Admin Rockstar.Store <span id="adminV"></span></h1>
 
+  <div class="sheetbar" id="sheetBar">
+    <span class="sbtag">📑 Tab Sheet</span>
+    <select id="sheetSel" onchange="loadItems()" title="Tab Sheet yang dikelola">
+      <option value="Brainrot">Brainrot</option>
+      <option value="Akun">Akun</option>
+      <option value="Topup">Topup</option>
+      <option value="Joki">Joki</option>
+    </select>
+  </div>
+
   <a id="analTopBtn" href="analisis.html" class="widebtn">📊 Buka Panel Analisis →</a>
 
   <div id="featMenu">
@@ -174,14 +184,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
   </div>
 
   <div class="card" id="sheetCard" style="display:none;">
-    <label>Tab Sheet yang dikelola</label>
-    <select id="sheetSel" onchange="loadItems()">
-      <option value="Brainrot">Brainrot</option>
-      <option value="Akun">Akun</option>
-      <option value="Topup">Topup</option>
-      <option value="Joki">Joki</option>
-    </select>
-    <p class="hint" style="margin-top:10px;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti tab ini. Sistem Akun & Topup sama persis dengan Brainrot.</p>
+    <p class="hint" style="margin-top:0;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti <b>Tab Sheet</b> yang dipilih di bar atas (ikut digeser saat scroll). Sistem Akun &amp; Topup sama persis dengan Brainrot.</p>
     <button id="reloadBtn" onclick="muatUlang()" class="ghost">🔄 Muat ulang daftar (jika baru edit dari Sheet langsung)</button>
     <div id="statusReload" style="font-size:12.5px;color:var(--mut);margin-top:6px;"></div>
   </div>
