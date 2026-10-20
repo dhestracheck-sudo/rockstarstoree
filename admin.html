@@ -41,21 +41,27 @@ h1 img { height:40px; border-radius:11px; box-shadow:0 4px 14px rgba(0,0,0,.4); 
 .tile .ico { width:44px; height:44px; margin:0 auto 7px; display:grid; place-items:center; font-size:21px; border-radius:13px; background:radial-gradient(circle at 30% 25%, rgba(90,120,255,.4), rgba(43,78,255,.12)); border:1px solid rgba(111,139,255,.25); }
 .tile .lbl { font-weight:700; font-size:12.5px; letter-spacing:.02em; }
 
+/* ===== bar Tab Sheet (nempel di bawah header, ikut scroll) ===== */
+.sheetbar { display:none; position:sticky; top:0; z-index:60; height:54px; box-sizing:border-box; align-items:center; gap:10px; padding:7px 10px; margin-top:10px;
+  background:rgba(6,9,19,.94); backdrop-filter:blur(10px); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 28px rgba(0,0,0,.35); }
+.sbtag { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--blue2); white-space:nowrap; }
+.sheetbar select { flex:1; min-width:0; height:40px; margin:0; padding:9px 34px 9px 12px; border-radius:10px; font-size:13.5px; }
+
 /* ===== nav lengket ===== */
-.minibar { display:none; position:sticky; top:0; z-index:50; background:rgba(6,9,19,.92); backdrop-filter:blur(10px); padding:10px 0; margin-top:12px; border-bottom:1px solid var(--line); }
+.minibar { display:none; position:sticky; top:var(--barh, 0px); z-index:50; background:rgba(6,9,19,.92); backdrop-filter:blur(10px); padding:10px 0; margin-top:12px; border-bottom:1px solid var(--line); }
 .minibar.show { display:block; }
 .minibar a { display:inline-block; font-size:12.5px; font-weight:600; color:var(--mut); text-decoration:none; background:#111a32; border:1px solid var(--line); border-radius:999px; padding:8px 14px; margin:0 6px 6px 0; transition:.15s; }
 .minibar a:hover { color:#fff; border-color:var(--blue); background:#182450; }
 
 /* ===== judul bagian ===== */
-h2.sect { font-family:'Poppins',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.1em; font-size:11.5px; margin:30px 0 0; color:var(--blue2); display:flex; align-items:center; gap:10px; scroll-margin-top:64px; }
+h2.sect { font-family:'Poppins',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.1em; font-size:11.5px; margin:30px 0 0; color:var(--blue2); display:flex; align-items:center; gap:10px; scroll-margin-top:calc(var(--stickh, 170px) + 10px); }
 h2.sect::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, rgba(111,139,255,.45), transparent); }
 
 .curprod { font-size:12.5px; color:var(--mut); margin:0 0 2px; background:#0e1730; border:1px dashed var(--line); border-radius:10px; padding:8px 11px; }
 .curprod b { color:var(--blue2); }
 
 /* ===== kartu ===== */
-.card { background:linear-gradient(180deg, #0e1730 0%, #0b1223 100%); border:1px solid var(--line); border-radius:16px; padding:17px 16px 19px; margin-top:14px; box-shadow:0 12px 30px rgba(0,0,0,.3); scroll-margin-top:64px; }
+.card { background:linear-gradient(180deg, #0e1730 0%, #0b1223 100%); border:1px solid var(--line); border-radius:16px; padding:17px 16px 19px; margin-top:14px; box-shadow:0 12px 30px rgba(0,0,0,.3); scroll-margin-top:calc(var(--stickh, 170px) + 10px); }
 
 /* ===== form ===== */
 label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--mut); margin:16px 0 7px; }
@@ -133,7 +139,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 @media (min-width: 1000px){
   .wrap { max-width: 1080px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; align-items: start; }
   .wrap > h1, .wrap > #analTopBtn, .wrap > #pinCard, .wrap > #featMenu, .wrap > #miniNav,
-  .wrap > #sheetCard, .wrap > h2.sect { grid-column: 1 / -1; }
+  .wrap > #sheetCard, .wrap > h2.sect, .wrap > .sheetbar { grid-column: 1 / -1; }
   #featMenu { grid-template-columns: repeat(6, 1fr); }
   .wrap > .card { margin-top: 0; }
   .wrap > h2.sect { margin-top: 12px; }
