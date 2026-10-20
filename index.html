@@ -941,23 +941,23 @@ header {
 }
 .wabtn.testibtn img { width: 36px; height: 36px; border-radius: 50%; }
 /* ===== widget chat WA ala support ===== */
-.wapop.wachat { width: 300px; max-width: calc(100vw - 110px); padding: 0; overflow: hidden; }
-.wachead { display: flex; align-items: center; gap: 10px; background: #075e54; padding: 12px 14px; color: #fff; }
-.walogo { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px #25d366, 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; }
+.wapop.wachat { width: 92vw; max-width: 400px; padding: 0; overflow: hidden; border-radius: 18px; }
+.wachead { display: flex; align-items: center; gap: 11px; background: #075e54; padding: 14px 16px; color: #fff; }
+.walogo { width: 46px; height: 46px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 2px #25d366, 0 4px 10px rgba(0,0,0,0.3); overflow: hidden; }
 .walogo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.wachead b { display: block; font-size: 14.5px; }
-.waonline { display: flex; align-items: center; gap: 5px; font-size: 12px; color: #b8f0c9; }
+.wachead b { display: block; font-size: 16.5px; }
+.waonline { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #b8f0c9; }
 .waonline i { width: 8px; height: 8px; border-radius: 50%; background: #2ecc71; display: inline-block; }
 .wax { margin-left: auto; background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; }
-.wabody { display: flex; flex-direction: column; gap: 8px; padding: 12px; min-height: 120px; max-height: 260px; overflow-y: auto; background: var(--bg); }
-.wabody .bm { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.wabody { display: flex; flex-direction: column; gap: 9px; padding: 14px; min-height: 220px; max-height: 52vh; overflow-y: auto; background: var(--bg); }
+.wabody .bm { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; }
 .wabody .bm.bot { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
 .wabody .bm.me { align-self: flex-end; background: var(--blue); color: #fff; }
 .wachips { display: flex; gap: 6px; padding: 0 12px 8px; flex-wrap: wrap; background: var(--bg); }
 .wachips button { border: 1px solid var(--blue); background: transparent; color: var(--blue2); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; }
-.wainput { display: flex; gap: 8px; padding: 10px 12px 12px; background: var(--bg); }
-.wainput input { flex: 1; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); color: var(--txt); padding: 10px 14px; font-family: 'Poppins', sans-serif; font-size: 13.5px; outline: none; min-width: 0; }
-.wainput button { width: 42px; height: 42px; flex-shrink: 0; border-radius: 50%; border: none; background: var(--wa); color: #062b16; font-size: 17px; cursor: pointer; }
+.wainput { display: flex; gap: 8px; padding: 12px 14px 14px; background: var(--bg); }
+.wainput input { flex: 1; border-radius: 999px; border: 1px solid var(--line); background: var(--bg2); color: var(--txt); padding: 12px 16px; font-family: 'Poppins', sans-serif; font-size: 14.5px; outline: none; min-width: 0; }
+.wainput button { width: 46px; height: 46px; flex-shrink: 0; border-radius: 50%; border: none; background: var(--wa); color: #062b16; font-size: 18px; cursor: pointer; }
 .wapop {
   background: var(--bg2); border: 1px solid var(--line); border-radius: 16px;
   padding: 14px; width: 230px; box-shadow: 0 18px 44px rgba(0,0,0,0.5);
@@ -998,14 +998,16 @@ header {
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 .rc-bubble {
-  position: relative; max-width: 215px;
+  position: relative; max-width: 232px;
   background: var(--bg2); border: 1px solid var(--line);
   border-radius: 14px 14px 4px 14px; padding: 10px 32px 10px 14px;
-  font-size: 12.5px; line-height: 1.5; color: var(--txt);
+  font-size: 13px; line-height: 1.5; color: var(--txt);
   box-shadow: 0 14px 34px rgba(0,0,0,0.5);
   animation: rcPop .5s ease both, rcWiggle 6s ease-in-out 1.2s infinite;
   cursor: pointer; transition: filter .15s ease, border-color .15s ease;
 }
+/* Tulisan "Butuh bantuan?" selalu di ATAS foto Min Rock */
+#rcBubbleWrap { order: -1; }
 .rc-bubble:hover { border-color: var(--blue); filter: brightness(1.2); }
 .rc-bubble:active { filter: brightness(1.5); }
 .rc-bubble b { color: #4ade80; }
@@ -1606,7 +1608,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 </div>
 
 <div class="rockchat" id="rockchat">
-  <div class="rc-bubble" id="rcBubble" onclick="openWaChat()" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="event.stopPropagation();rcBubbleHide()" aria-label="Tutup">✕</button></div>
+  <div id="rcBubbleWrap"><div class="rc-bubble" id="rcBubble" onclick="openWaChat()" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span><button class="rc-bx" onclick="event.stopPropagation();rcBubbleHide()" aria-label="Tutup">✕</button></div></div>
   <div class="rc-wrap">
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
@@ -1935,18 +1937,11 @@ window.addEventListener("resize", function(){
   clearTimeout(window.__psT);
   window.__psT = setTimeout(placeSearch, 150);
 });
-/* bubble "Chat Min Rock" — sekali per sesi, bisa ditutup */
+/* bubble "Chat Min Rock" — selalu tampil di atas foto, bisa ditutup manual */
 function rcBubbleHide(){
   const b = document.getElementById("rcBubble");
   if(b) b.style.display = "none";
-  try { sessionStorage.setItem("rcBub", "0"); } catch(e) {}
 }
-try {
-  if(sessionStorage.getItem("rcBub") === "0"){
-    const rb = document.getElementById("rcBubble");
-    if(rb) rb.style.display = "none";
-  }
-} catch(e) {}
 
 /* ===== bahasa ID/EN ===== */
 const I18N = {
