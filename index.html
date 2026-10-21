@@ -979,10 +979,7 @@ header {
   justify-content: flex-end; width: 140px;
 }
 /* Tulisan "Butuh bantuan?" di PERUT foto Min Rock (menumpuk di tengah foto) */
-#rcBubbleWrap {
-  position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%);
-  z-index: 4; width: 100%; display: flex; justify-content: center; pointer-events: none;
-}
+#rcBubbleWrap { display: none !important; }
 .rc-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
 /* Foto Min Rock tampil UTUH (tanpa lingkaran, tanpa kotak) — fotonya dipertegas */
 .rc-btn {
@@ -1001,20 +998,7 @@ header {
 .rc-ring.rc-d2 { animation-delay: 1s; }
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-.rc-bubble {
-  position: relative; max-width: 130px;
-  background: var(--bg2); border: 1px solid var(--line);
-  border-radius: 12px; padding: 7px 10px;
-  font-size: 11px; line-height: 1.35; color: var(--txt);
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-  animation: rcPop .5s ease both;
-  cursor: pointer; pointer-events: auto;
-  transition: filter .15s ease, border-color .15s ease;
-}
-.rc-bubble:hover { border-color: var(--blue); filter: brightness(1.2); }
-.rc-bubble:active { filter: brightness(1.5); }
-.rc-bubble b { color: #6f8bff; }
+.rc-bubble { display: none !important; }
 .rc-bx { display: none !important; }
 @keyframes rcPop { from { opacity: 0; transform: translateY(10px) scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes rcWiggle { 0%,86%,100% { transform: translateY(0) rotate(0); } 90% { transform: translateY(-5px) rotate(-1.5deg); } 94% { transform: translateY(-2px) rotate(1.5deg); } }
@@ -1938,8 +1922,7 @@ window.addEventListener("resize", function(){
   clearTimeout(window.__psT);
   window.__psT = setTimeout(placeSearch, 150);
 });
-/* bubble "Chat Min Rock" — selalu tampil di perut foto, TIDAK bisa ditutup */
-function rcBubbleHide(){}
+/* bubble "Chat Min Rock" — dihapus */
 
 /* ===== bahasa ID/EN ===== */
 const I18N = {
