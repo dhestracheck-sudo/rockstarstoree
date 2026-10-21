@@ -1416,6 +1416,17 @@ function akunHeroHTML(){
     </div>
   </div>`;
 }
+/* potongan HTML hero BRAINROT SEPUH PREMIUM untuk halaman katalog brainrot (gaya sama) */
+function brainrotHeroHTML(){
+  return `<div class="joki-hero">
+    <div class="joki-stars"></div>
+    <div class="joki-head">
+      <div class="mega-brand">★ BRAINROT SEPUH ★</div>
+      <p class="joki-title"><span class="jasa">BRAINROT</span><span class="jokiw">SEPUH PREMIUM</span></p>
+      <p class="joki-sub">Brainrot <b>sepuh</b> kualitas <b>premium</b> berbagai map Roblox yang bikin kalian <b>sepuh</b> dengan <b>cepat</b> dan <b>mendominasi</b> permainan di map favorit kalian.</p>
+    </div>
+  </div>`;
+}
 function megaPaint(){
   const slides = document.querySelectorAll("#megaTrack .mega-slide");
   slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
@@ -2177,7 +2188,9 @@ function render(){
   }
   const isJoki = currentPage === 'joki';
   const isAkun = currentPage === 'akun';
-  const catHeroHTML = (isJoki && typeof jokiHeroHTML === "function") ? jokiHeroHTML() : ((isAkun && typeof akunHeroHTML === "function") ? akunHeroHTML() : ``);
+  const isBrainrot = currentPage === 'brainrot';
+  const heroFn = isJoki ? jokiHeroHTML : (isAkun ? akunHeroHTML : (isBrainrot ? brainrotHeroHTML : null));
+  const catHeroHTML = (typeof heroFn === "function") ? heroFn() : ``;
   title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + catHeroHTML + `
     <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
     <p>${categories.length} ${tr("cat_sub")}</p>`;
@@ -2186,7 +2199,7 @@ function render(){
       <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span>${thumbTag(c.img, `alt="${c.name}" loading="lazy"`)}</div>
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
-  if ((isJoki || isAkun) && typeof jokiStarsFill === "function") jokiStarsFill();
+  if (typeof heroFn === "function" && typeof jokiStarsFill === "function") jokiStarsFill();
   watchViews();
 }
 
@@ -2337,13 +2350,14 @@ function paintItems(){
   syncCta();
   const isJokiCat = (categories === jokiCategories);
   const isAkunCat = (categories === akunCategories);
-  const catHero = (isJokiCat && typeof jokiHeroHTML === "function") ? jokiHeroHTML() : ((isAkunCat && typeof akunHeroHTML === "function") ? akunHeroHTML() : ``);
+  const isBrainrotCat = (categories === brainrotCategories);
+  const catHero = isJokiCat ? (typeof jokiHeroHTML === "function" ? jokiHeroHTML() : ``) : (isAkunCat ? (typeof akunHeroHTML === "function" ? akunHeroHTML() : ``) : (isBrainrotCat && typeof brainrotHeroHTML === "function" ? brainrotHeroHTML() : ``));
   document.getElementById("pageTitle").innerHTML = `<button class="backbtn" onclick="render()">${tr("back")}</button>` + catHero + `
     <h2>${category.name}</h2><p>${category.items.length} item</p>`;
   document.getElementById("products").innerHTML =
     `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => j < shownN ? itemCard(categories, shownCat, j) : "").join("") + `</div>` +
     (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">${tr("more_a")} (${category.items.length - shownN} ${tr("more_b")})</button></div>` : ``);
-  if ((isJokiCat || isAkunCat) && typeof jokiStarsFill === "function") jokiStarsFill();
+  if ((isJokiCat || isAkunCat || isBrainrotCat) && typeof jokiStarsFill === "function") jokiStarsFill();
   window.scrollTo(0, y);
   watchViews();
 }
