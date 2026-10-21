@@ -399,6 +399,9 @@ header {
   linear-gradient(160deg, #070b28 0%, #0a1038 55%, #060a22 100%); }
 .joki-hero { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid rgba(111,139,255,.35); padding: 26px 16px 24px;
   text-align: center; margin-bottom: 24px; box-shadow: 0 18px 46px rgba(0,0,0,.5), 0 0 34px rgba(43,78,255,.2); }
+/* banner s5: header tampil Persis sama seperti hero katalog — nempel atas, padding-top 26px */
+.mega-slide.s5.on { align-items: flex-start; }
+.s5 { padding-top: 26px; }
 .joki-stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .joki-stars i { position: absolute; border-radius: 50%; background: #cfe0ff; opacity: .5;
   animation: jokiTwinkle 3s ease-in-out infinite; }
@@ -1305,22 +1308,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
           <div class="mega-brand">★ JOKI SEPUH ★</div>
           <p class="joki-title"><span class="jasa">JASA</span><span class="jokiw">JOKI</span></p>
           <p class="joki-sub">Layanan joki profesional, cepat, dan aman untuk menjadi <b>sepuh</b> game favoritmu dan mendominasi permainan.</p>
-        </div>
-        <div class="joki-cards">
-          <a class="joki-card" onclick="goToJoki()" title="Lihat katalog joki">
-            <span class="jbox" style="background:radial-gradient(120% 90% at 50% 22%, #14422a, #081a10 78%)">
-              <span class="jart">🎙️</span>
-              <span class="joki-name">UNLOCK CHAT &amp; VOICE ACCOUNT</span>
-              <span class="joki-badge">Tersedia Layanan</span>
-            </span>
-          </a>
-          <a class="joki-card" onclick="goToJoki()" title="Lihat katalog joki">
-            <span class="jbox">
-              <img class="jimg" src="jokiroblox.webp" alt="Joki Sepuh Roblox" loading="lazy" onerror="this.remove()">
-              <span class="joki-name">MOBILE LEGENDS</span>
-              <span class="joki-badge">Tersedia Layanan</span>
-            </span>
-          </a>
         </div>
       </div>
     </div>
