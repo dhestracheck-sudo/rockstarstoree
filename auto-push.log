@@ -62982,3 +62982,15 @@ Everything up-to-date
 [2026-10-21 19:25:30] perubahan terdeteksi, push...
 [2026-10-21 19:25:35] push OK 2026-10-21 19-25
 [2026-10-21 19:26:05] perubahan terdeteksi, push...
+[2026-10-21 19:26:30] push GAGAL: git : bash: line 1: /dev/tty: No such device or address
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (bash: line 1: /...vice or address:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-21 19:26:45] watcher hidup
+[2026-10-21 19:27:00] perubahan terdeteksi, push...
