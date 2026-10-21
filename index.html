@@ -2472,10 +2472,10 @@ function syncHeroCta(){
   });
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
-function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); try { var el = document.querySelector('.section'); if(el){ window.scrollTo({top: el.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'}); } } catch(e){ window.scrollTo({top: document.querySelector('.section').offsetTop - 120, behavior: 'smooth'}); } }
-function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); try { var el = document.querySelector('.section'); if(el){ window.scrollTo({top: el.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'}); } } catch(e){ window.scrollTo({top: document.querySelector('.section').offsetTop - 120, behavior: 'smooth'}); } }
-function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); try { var el = document.querySelector('.section'); if(el){ window.scrollTo({top: el.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'}); } } catch(e){ window.scrollTo({top: document.querySelector('.section').offsetTop - 120, behavior: 'smooth'}); } }
-function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); try { var el = document.querySelector('.section'); if(el){ window.scrollTo({top: el.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'}); } } catch(e){ window.scrollTo({top: document.querySelector('.section').offsetTop - 120, behavior: 'smooth'}); } }
+function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { var el = document.querySelector('.section'); if(el){ var top = el.getBoundingClientRect().top + window.pageYOffset - 160; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); } else { window.scrollTo(0, 0); } } catch(e){ try{ window.scrollTo(0,0); }catch(ex){} } }, 80); }
+function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { var el = document.querySelector('.section'); if(el){ var top = el.getBoundingClientRect().top + window.pageYOffset - 160; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); } else { window.scrollTo(0, 0); } } catch(e){ try{ window.scrollTo(0,0); }catch(ex){} } }, 80); }
+function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { var el = document.querySelector('.section'); if(el){ var top = el.getBoundingClientRect().top + window.pageYOffset - 160; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); } else { window.scrollTo(0, 0); } } catch(e){ try{ window.scrollTo(0,0); }catch(ex){} } }, 80); }
+function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { var el = document.querySelector('.section'); if(el){ var top = el.getBoundingClientRect().top + window.pageYOffset - 160; window.scrollTo({top: Math.max(0, top), behavior: 'smooth'}); } else { window.scrollTo(0, 0); } } catch(e){ try{ window.scrollTo(0,0); }catch(ex){} } }, 80); }
 
 /* ===== deep link + judul tab dinamis (SEO) =====
    URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
@@ -2515,7 +2515,7 @@ function applyDeepLink(){
         const idx = cats.findIndex(c => c.name.toLowerCase() === cat.toLowerCase());
         if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(); }
       }
-      try { const s = document.querySelector('.section'); if(s){ window.scrollTo({top: s.getBoundingClientRect().top + window.pageYOffset - 120, behavior: 'smooth'}); } } catch(e){}
+      try { const s = document.querySelector('.section'); if(s){ var top = s.getBoundingClientRect().top + window.pageYOffset - 160; window.scrollTo({top: Math.max(0, top), behavior: 'auto'}); } } catch(e){}
       updateUrl();
       return true;
     }
