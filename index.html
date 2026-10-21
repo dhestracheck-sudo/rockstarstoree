@@ -392,11 +392,13 @@ header {
 .s5 .mega-char.wide img { border-radius: 16px; border: 1px solid rgba(140,170,255,.55); object-fit: cover; box-shadow: 0 0 30px rgba(43,120,255,.45); }
 /* slide 5 joki: header JASA JOKI desain baru — langit bintang + kartu emas */
 .s5::before { content: none; }
-.s5 { background:
+.s5, .joki-hero { background:
   radial-gradient(700px 300px at 50% -20%, rgba(40,70,170,.35), transparent 65%),
   radial-gradient(420px 220px at 88% 100%, rgba(64,36,132,.35), transparent 70%),
   radial-gradient(420px 220px at 6% 88%, rgba(24,44,120,.4), transparent 70%),
   linear-gradient(160deg, #070b28 0%, #0a1038 55%, #060a22 100%); }
+.joki-hero { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid rgba(111,139,255,.35); padding: 26px 16px 24px;
+  text-align: center; margin-bottom: 24px; box-shadow: 0 18px 46px rgba(0,0,0,.5), 0 0 34px rgba(43,78,255,.2); }
 .joki-stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .joki-stars i { position: absolute; border-radius: 50%; background: #cfe0ff; opacity: .5;
   animation: jokiTwinkle 3s ease-in-out infinite; }
@@ -1414,6 +1416,32 @@ var megaIdx = 0, megaTimer = null;
     if(Math.abs(dx) > 40) megaGo(megaIdx + (dx < 0 ? 1 : -1), true);
   }, { passive: true });
 })();
+/* isi bintang kelap-kelip untuk semua container .joki-stars (banner slide s5 + hero katalog joki) */
+function jokiStarsFill(){
+  document.querySelectorAll(".joki-stars").forEach(function(host){
+    if (host.dataset.filled) return;
+    host.dataset.filled = "1";
+    let h = "";
+    for (let i = 0; i < 46; i++) {
+      const g = Math.random() < 0.18 ? (Math.random() < 0.6 ? " g1" : " g2") : "";
+      const s = g ? (2.5 + Math.random() * 3.5) : (1 + Math.random() * 1.8);
+      h += '<i' + g + ' style="width:' + s.toFixed(1) + 'px;height:' + s.toFixed(1) + 'px;left:' + (Math.random() * 100).toFixed(2) + '%;top:' + (Math.random() * 100).toFixed(2) + '%;animation-delay:' + (Math.random() * 3).toFixed(2) + 's;animation-duration:' + (2.2 + Math.random() * 2.6).toFixed(2) + 's;"></i>';
+    }
+    host.innerHTML = h;
+  });
+}
+jokiStarsFill();
+/* potongan HTML hero JASA JOKI untuk halaman katalog joki */
+function jokiHeroHTML(){
+  return `<div class="joki-hero">
+    <div class="joki-stars"></div>
+    <div class="joki-head">
+      <div class="mega-brand">★ JOKI SEPUH ★</div>
+      <p class="joki-title"><span class="jasa">JASA</span><span class="jokiw">JOKI</span></p>
+      <p class="joki-sub">Layanan joki profesional, cepat, dan aman untuk menjadi <b>sepuh</b> game favoritmu dan mendominasi permainan.</p>
+    </div>
+  </div>`;
+}
 function megaPaint(){
   const slides = document.querySelectorAll("#megaTrack .mega-slide");
   slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
@@ -2173,10 +2201,12 @@ function render(){
     </div>`;
     return;
   }
-  title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>
+  const isJoki = currentPage === 'joki';
+  title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + (isJoki ? `` : `
     <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
-    <p>${categories.length} ${tr("cat_sub")}</p>`;
-  el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
+    <p>${categories.length} ${tr("cat_sub")}</p>`);
+  if (isJoki && typeof jokiHeroHTML === "function") { el.innerHTML = jokiHeroHTML(); jokiStarsFill(); }
+  el.innerHTML += `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
       <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span>${thumbTag(c.img, `alt="${c.name}" loading="lazy"`)}</div>
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
