@@ -975,11 +975,13 @@ header {
 /* ===== chat Min Rock — tombol mengambang kanan-bawah (animasi gelombang ala exstore) ===== */
 .rockchat {
   position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom));
-  z-index: 93; display: flex; flex-direction: column; align-items: center;
-  justify-content: flex-end; width: 140px;
+  z-index: 93; display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
 }
 /* Tulisan "Butuh bantuan?" di PERUT foto Min Rock (menumpuk di tengah foto) */
-#rcBubbleWrap { display: none !important; }
+#rcBubbleWrap {
+  position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom) + 140px + 8px);
+  z-index: 94; pointer-events: none;
+}
 .rc-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
 /* Foto Min Rock tampil UTUH (tanpa lingkaran, tanpa kotak) — fotonya dipertegas */
 .rc-btn {
@@ -998,7 +1000,19 @@ header {
 .rc-ring.rc-d2 { animation-delay: 1s; }
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-.rc-bubble { display: none !important; }
+.rc-bubble {
+  position: relative;
+  max-width: 260px;
+  background: var(--bg2); border: 1px solid var(--line);
+  border-radius: 16px 16px 4px 16px;
+  padding: 11px 16px;
+  font-size: 14px; line-height: 1.5;
+  color: var(--txt);
+  box-shadow: 0 14px 34px rgba(0,0,0,0.6);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.rc-bubble b { color: #6f8bff; }
 .rc-bx { display: none !important; }
 @keyframes rcPop { from { opacity: 0; transform: translateY(10px) scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes rcWiggle { 0%,86%,100% { transform: translateY(0) rotate(0); } 90% { transform: translateY(-5px) rotate(-1.5deg); } 94% { transform: translateY(-2px) rotate(1.5deg); } }
@@ -1594,7 +1608,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 
 <div class="rockchat" id="rockchat">
 
-  <div class="rc-wrap">
+  <div id="rcBubbleWrap"><div class="rc-bubble" id="rcBubble" onclick="openWaChat()" title="Chat WhatsApp Min Rock"><span data-i18n-html="rc_bub">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</span></div></div>
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
     <button class="rc-btn" id="waBtn" onclick="openWaChat()" aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
@@ -1929,7 +1943,7 @@ const I18N = {
 id: {
 search_ph: "Cari item, misal: moon bloom, robux...", cart: "🛒 Keranjang",
 kicker: "#1 STORE BRAINROT TERLENGKAP DI INDONESIA DAN MALAYSIA",
-channel: "📢 Join Saluran WhatsApp", cta_brainrot: "Katalog Brainrot 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Katalog Akun 👤", cta_joki: "Joki 🎮",
+channel: "📢 Join Saluran WhatsApp", cta_brainrot: "Katalog Brainrot 🧠", cta_topup: "Top Up Robux 💰", cta_akun: "Akun Sepuh Roblox Berbagai Map 👤", cta_joki: "Joki Sepuh Roblox 🎮",
 st1: "Testimoni amanah", st2: "Proses hitungan menit", st3: "Semua payment", st4: "Ribuan item & pet",
 cb_title: "Cara Beli 🎮", cb_sub: "5 langkah gampang, ikuti gambarnya ya!",
 s1t: "Pilih mainanmu", s2t: "Cek keranjang", s3t: "Chat admin", s4t: "Bayar", s5t: "Item datang!",
@@ -1954,8 +1968,8 @@ sold_done: "Sudah laku", rest_stock: "Sisa stok", avail_stock: "Stok tersedia",
 low_a: "Sisa", low_b: "lagi, buruan sebelum habis!", avail: "TERSEDIA",
 server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 wa_t: "Butuh bantuan?", wa_btn: "Chat WhatsApp", testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni",
-b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Roblox",
-b_brain_d: "Solusi sepuh roblox kamu — puluhan kategori item.", b_top_d: "Top up Robux & gamepass harga terbaik.", b_akun_d: "Akun sepuh, data polos, berbagai map — siap pakai.",
+b_brain_t: "🧠 Katalog Brainrot", b_top_t: "💰 Top Up", b_akun_t: "👤 Akun Sepuh Roblox Berbagai Map",
+b_brain_d: "Solusi sepuh roblox kamu — puluhan kategori item.", b_top_d: "Top up Robux & gamepass harga terbaik.", b_akun_d: "Akun sepuh Roblox berbagai map, data polos — siap pakai.",
 b_joki_t: "🎮 Joki", b_joki_d: "Jasa joki Roblox menjadi sepuh.",
 lihat: "Lihat", server_t: "🔗 Link Server Rock Star", server_sub: "Klik server untuk join langsung dari Roblox",
 cart_title: "📋 Keranjang Saya", lanjut: "Lanjut Belanja", wish_title: "❤️ Wishlist Saya",
