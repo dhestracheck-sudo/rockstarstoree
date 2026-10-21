@@ -980,8 +980,8 @@ header {
 }
 /* Tulisan "Butuh bantuan?" di PERUT foto Min Rock (menumpuk di tengah foto) */
 #rcBubbleWrap {
-  position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%);
-  z-index: 4; width: 100%; display: flex; justify-content: center;
+  position: absolute; left: 50%; bottom: 6px; transform: translateX(-50%);
+  z-index: 4; width: 100%; display: flex; justify-content: center; pointer-events: none;
 }
 .rc-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
 /* Foto Min Rock tampil UTUH (tanpa lingkaran, tanpa kotak) — fotonya dipertegas */
@@ -1002,19 +1002,20 @@ header {
 @keyframes rcRipple { 0% { transform: scale(1); opacity: 0.85; } 100% { transform: scale(1.75); opacity: 0; } }
 @keyframes rcPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 .rc-bubble {
-  position: relative; max-width: 138px;
+  position: relative; max-width: 130px;
   background: var(--bg2); border: 1px solid var(--line);
-  border-radius: 14px; padding: 9px 12px;
-  font-size: 12px; line-height: 1.4; color: var(--txt);
+  border-radius: 12px; padding: 7px 10px;
+  font-size: 11px; line-height: 1.35; color: var(--txt);
   text-align: center;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.6);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   animation: rcPop .5s ease both;
-  cursor: pointer; transition: filter .15s ease, border-color .15s ease;
+  cursor: pointer; pointer-events: auto;
+  transition: filter .15s ease, border-color .15s ease;
 }
 .rc-bubble:hover { border-color: var(--blue); filter: brightness(1.2); }
 .rc-bubble:active { filter: brightness(1.5); }
 .rc-bubble b { color: #6f8bff; }
-.rc-bx { display: none; }
+.rc-bx { display: none !important; }
 @keyframes rcPop { from { opacity: 0; transform: translateY(10px) scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes rcWiggle { 0%,86%,100% { transform: translateY(0) rotate(0); } 90% { transform: translateY(-5px) rotate(-1.5deg); } 94% { transform: translateY(-2px) rotate(1.5deg); } }
 @media (min-width: 761px) { .rockchat { right: 22px; bottom: 22px; } }
@@ -1130,7 +1131,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
      penuh (marquee + header), tidak ada lagi auto-collapse .slim */
   /* Foto Min Rock khusus HP: dikecilkan 1× lagi (140px → 110px) */
   .rc-wrap, .rc-btn { width: 110px; height: 110px; }
-  .rc-bubble { max-width: 250px; font-size: 15px; padding: 11px 34px 11px 15px; }
+  .rc-bubble { max-width: 118px; font-size: 10px; padding: 6px 8px; }
   /* Tulisan berjalan dirapatkan di HP: font & padding kecil agar bar atas tidak tebal */
   .announce { font-size: 11.5px; padding: 6px 10px; letter-spacing: 0; }
   .announce a { padding: 7px 3px; margin: -7px 0; }
