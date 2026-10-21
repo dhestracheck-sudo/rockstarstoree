@@ -2202,15 +2202,15 @@ function render(){
     return;
   }
   const isJoki = currentPage === 'joki';
-  title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + (isJoki ? `` : `
+  title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + (isJoki && typeof jokiHeroHTML === "function" ? jokiHeroHTML() : ``) + `
     <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
-    <p>${categories.length} ${tr("cat_sub")}</p>`);
-  if (isJoki && typeof jokiHeroHTML === "function") { el.innerHTML = jokiHeroHTML(); jokiStarsFill(); }
-  el.innerHTML += `<div class="catgrid">` + categories.map((c,i)=>`
+    <p>${categories.length} ${tr("cat_sub")}</p>`;
+  el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
       <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span>${thumbTag(c.img, `alt="${c.name}" loading="lazy"`)}</div>
       <div class="catbody"><h3>${c.name}</h3><span class="go">→</span></div>
     </div>`).join("") + `</div>`;
+  if (isJoki && typeof jokiStarsFill === "function") jokiStarsFill();
   watchViews();
 }
 
