@@ -407,40 +407,17 @@ header {
 @keyframes jokiTwinkle { 0%,100% { opacity: .25; transform: scale(.75); } 50% { opacity: 1; transform: scale(1.2); } }
 .joki-head { text-align: center; }
 .joki-title { font-family: 'Baloo 2', sans-serif; font-weight: 800; font-size: clamp(26px, 4.6vw, 44px); line-height: 1;
-  margin: 6px auto 0; display: inline-flex; gap: 10px; align-items: baseline; padding: 7px 26px 11px; border-radius: 18px;
-  background: radial-gradient(130% 170% at 50% 0%, rgba(8,12,36,.95), rgba(5,8,26,.88));
-  border: 1px solid rgba(90,115,210,.35);
-  box-shadow: 0 6px 20px rgba(0,0,0,.45), inset 0 0 26px rgba(35,55,140,.3); }
-.joki-title .jasa { background: linear-gradient(180deg, #ffe066, #f5a623); -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
-.joki-title .jokiw { color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.6); }
+  margin: 6px auto 0; display: inline-flex; gap: 10px; align-items: baseline; letter-spacing: .5px; }
+.joki-title .jasa { background: linear-gradient(180deg, #cfe2ff 0%, #6ea8ff 45%, #2f6dff 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.75)); }
+.joki-title .jokiw { color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.8); }
 .joki-sub { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: clamp(11px, 1.7vw, 14px); color: #dfe6ff;
-  margin: 10px auto 0; display: block; max-width: 620px; background: rgba(9,14,40,.6);
-  border: 1px solid rgba(90,115,210,.22); border-radius: 12px; padding: 8px 16px; line-height: 1.5; }
-.joki-sub b { color: #ffd43b; text-shadow: 0 0 10px rgba(255,212,59,.4); }
-.joki-cards { display: flex; gap: 12px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
-.joki-card { position: relative; flex: 1 1 140px; max-width: 195px; min-width: 118px; border-radius: 16px; padding: 2.5px;
-  text-decoration: none; color: #fff; cursor: pointer; display: block;
-  background: linear-gradient(150deg, #f9dc7f, #b4762d 32%, #f3d27a 50%, #8a5a2b 72%, #f9dc7f 92%);
-  box-shadow: 0 10px 24px rgba(0,0,0,.55), 0 0 0 1px rgba(246,196,83,.25);
-  transition: transform .18s ease, box-shadow .18s ease; }
-.joki-card:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,.6), 0 0 14px rgba(246,196,83,.45); }
-.joki-card .jbox { position: relative; overflow: hidden; border-radius: 14px; height: 142px; background: radial-gradient(120% 90% at 50% 18%, #14215e, #070b26 78%);
-  display: flex; flex-direction: column; justify-content: flex-end; align-items: center; text-align: center; }
-.joki-card .jart { position: absolute; top: 22px; left: 0; right: 0; display: flex; align-items: center; justify-content: center;
-  font-size: 38px; filter: drop-shadow(0 0 14px rgba(255,255,255,.25)); }
-.joki-card img.jimg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 28% center; }
-.joki-card .jbox::after { content: ""; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(4,7,22,0) 30%, rgba(4,7,22,.85) 74%); }
-.joki-name { position: relative; z-index: 2; font-family: 'Baloo 2', sans-serif; font-weight: 800; text-transform: uppercase;
-  font-size: clamp(11px, 1.8vw, 15px); line-height: 1.2; letter-spacing: .5px; padding: 0 8px; text-shadow: 0 2px 5px rgba(0,0,0,.85); }
-.joki-badge { position: relative; z-index: 2; margin: 8px 0 10px; font-family: 'Poppins', sans-serif; font-size: 10.5px; font-weight: 700;
-  color: #fff; background: rgba(4,9,26,.55); border: 1.5px solid rgba(255,255,255,.35); border-radius: 999px; padding: 4px 12px; }
+  margin: 12px auto 0; display: block; max-width: 620px; line-height: 1.55;
+  text-shadow: 0 2px 6px rgba(0,0,0,.9); }
+.joki-sub b { color: #6fb1ff; font-weight: 700; text-shadow: 0 0 14px rgba(77,171,247,.6); }
 @media (max-width: 560px) {
-  .joki-title { padding: 6px 18px 9px; gap: 8px; border-radius: 15px; }
-  .joki-cards { gap: 10px; }
-  .joki-card .jbox { height: 124px; }
-  .joki-card .jart { font-size: 30px; top: 14px; }
+  .joki-title { gap: 8px; }
 }
 .mega-steps { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .mega-step { background: linear-gradient(135deg, rgba(2,6,20,.88), rgba(10,25,70,.88)); border: 1px solid rgba(140,170,255,.5);
