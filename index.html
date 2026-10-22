@@ -393,17 +393,13 @@ header {
 .s5 .mega-badges { margin: 10px 0 2px; }
 .s5 .mega-cta { margin-top: 10px; }
 .s5 .mega-char.wide img { border-radius: 16px; border: 1px solid rgba(140,170,255,.55); object-fit: cover; box-shadow: 0 0 30px rgba(43,120,255,.45); }
-/* slide 5 joki: header JASA JOKI desain baru — langit bintang + kartu emas */
-.s5::before { content: none; }
-.s5 { background:
-  radial-gradient(700px 300px at 50% -20%, rgba(40,70,170,.35), transparent 65%),
-  radial-gradient(420px 220px at 88% 100%, rgba(64,36,132,.35), transparent 70%),
-  radial-gradient(420px 220px at 6% 88%, rgba(24,44,120,.4), transparent 70%),
-  linear-gradient(160deg, #070b28 0%, #0a1038 55%, #060a22 100%); }
+/* slide 5 Joki: kembali ke banner foto dan CTA sebelumnya */
+.s5 { background: linear-gradient(90deg, rgba(3,6,20,.94) 0%, rgba(3,6,20,.78) 38%, rgba(3,6,20,.25) 62%, rgba(3,6,20,0) 80%), url('jokiroblox.webp') center right / cover no-repeat; }
+.s5 .mega-char { display: none; }
+.s5 .mega-titlebox { text-shadow: 0 2px 12px rgba(0,0,0,.85); }
 .joki-hero { position: relative; overflow: hidden; padding: 6px 8px 2px; text-align: center; margin-bottom: 10px; }
-/* banner s5: header tampil Persis sama seperti hero katalog — nempel atas, padding-top 26px */
-.mega-slide.s5.on { align-items: flex-start; }
-.s5 { padding-top: 26px; }
+.s5 .mega-title-g { background: linear-gradient(180deg, #ffffff 0%, #c9dcff 25%, #4d86ff 50%, #c9dcff 75%, #1a4fc4 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
 .joki-stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .joki-stars i { position: absolute; border-radius: 50%; background: #cfe0ff; opacity: .5;
   animation: jokiTwinkle 3s ease-in-out infinite; }
@@ -1307,12 +1303,18 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
       </div>
     </div>
     <div class="mega-slide s5">
-      <div class="joki-stars"></div>
-      <div class="mega-in">
-        <div class="joki-head">
+      <div class="mega-in mega-flex">
+        <div class="mega-titlebox" style="text-align:center;align-items:center;margin-left:auto;margin-right:auto;">
           <div class="mega-brand">★ JOKI SEPUH ★</div>
-          <p class="joki-title"><span class="jasa">JASA</span><span class="jokiw">JOKI</span></p>
-          <p class="joki-sub">Layanan joki profesional, cepat, dan aman untuk menjadi <b>sepuh</b> game favoritmu dan mendominasi permainan.</p>
+          <p class="mega-title-w" style="text-align:center;">JASA JOKI</p>
+          <p class="mega-title-g" style="text-align:center;font-size:clamp(36px,6vw,64px);">JOKI SEPUH BERBAGAI MAP</p>
+          <p class="mega-sub" style="text-align:center;max-width:680px;margin:0 auto;">Layanan joki profesional, cepat, dan aman 100% untuk menjadi sepuh di game favoritmu dan mendominasi.</p>
+          <div class="mega-badges" style="justify-content:center;">
+            <span class="mega-badge">⚡ PROSES CEPAT</span>
+            <span class="mega-badge">🔒 AMAN &amp; TERPERCAYA</span>
+            <span class="mega-badge">🌐 ROCKSTARSTORE.ID</span>
+          </div>
+          <div class="mega-cta" style="justify-content:center;"><button class="btn-primary" style="background:linear-gradient(180deg,#ffe45c,#f5a623);color:#1a1000;" onclick="goToJoki()">KLIK DISINI 👆</button></div>
         </div>
       </div>
     </div>
