@@ -65742,3 +65742,14 @@ fatal: could not read Username for 'https://github.com': No such file or directo
 [2026-10-22 14:50:01] perubahan terdeteksi, push...
 [2026-10-22 14:52:02] push OK 2026-10-22 14-50
 [2026-10-22 14:54:17] perubahan terdeteksi, push...
+[2026-10-22 14:54:36] push GAGAL: git : bash: line 1: /dev/tty: No such device or address
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (bash: line 1: /...vice or address:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 14:55:36] perubahan terdeteksi, push...
