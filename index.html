@@ -1582,7 +1582,11 @@ try { tutShow(0); tutRestart(); } catch(e) {}
 <script>
 /* ===== PWA: install ke HP ===== */
 if("serviceWorker" in navigator){
-  window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
+      .then(function(reg){ return reg.update(); })
+      .catch(function(){});
+  });
 }
 let pwaEvt = null;
 function showPwaBar(txt, withBtn){
