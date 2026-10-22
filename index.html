@@ -2556,10 +2556,10 @@ function syncHeroCta(){
   });
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
-function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); setTimeout(function(){ window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); }, 200); } catch(e){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(ex){} } }, 200); }
-function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); setTimeout(function(){ window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); }, 200); } catch(e){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(ex){} } }, 200); }
-function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); setTimeout(function(){ window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); }, 200); } catch(e){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(ex){} } }, 200); }
-function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); setTimeout(function(){ try { window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); setTimeout(function(){ window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'auto'}); }, 200); } catch(e){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(ex){} } }, 200); }
+function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); }
+function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); }
+function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); }
+function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); }
 
 /* ===== deep link + judul tab dinamis (SEO) =====
    URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
