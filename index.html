@@ -95,7 +95,7 @@
   --r: 18px;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: auto; }
+html { scroll-behavior: auto; overflow-anchor: none; }
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -3224,7 +3224,9 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
+    applyLang();
     render();
+    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
     hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
@@ -3234,7 +3236,7 @@ function loadLiveStock(){
   }).then(res => {
     const b = res[0] || [], t = res[1] || [], a = res[2] || [], jk = res[3] || [], info = res[4] || [];
     try {
-      applySnap(b, t, a, jk, info);
+      if(!userMoved) applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
       if (t.length) saveCached("Topup", t);
       if (a.length) saveCached("Akun", a);
@@ -3254,18 +3256,21 @@ try {
   ["touchmove", "wheel", "pointerdown", "keydown"].forEach(function(ev){
     window.addEventListener(ev, function(){ userMoved = true; }, { passive: true });
   });
-  if ("scrollRestoration" in history) history.scrollRestoration = "auto";
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 } catch(e) {}
 
 /* Tulisan berjalan TETAP ikut saat scroll (permintaan owner): seluruh bar atas
    (marquee + header) selalu menempel (sticky) dan tidak pernah disembunyikan. */
 
 loadLiveStock().then(() => {
-  try { applyLang(); } catch(e) {}
-  try { render(); } catch(e) {}
-  /* Jika pengguna sudah menyentuh atau menggeser halaman ketika stok dimuat,
-     pulihkan tautan kategori tanpa menarik scroll kembali ke katalog. */
-  try { if(!applyDeepLink(userMoved)) updateUrl(); } catch(e) {}
+  /* Deep link sudah diterapkan bersama cache sebelum permintaan jaringan berjalan.
+     Setelah ada interaksi, jangan render ulang seluruh halaman: perubahan tinggi konten
+     dapat membuat browser mengunci posisi scroll ke footer. */
+  if(!userMoved){
+    try { applyLang(); } catch(e) {}
+    try { render(); } catch(e) {}
+    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+  }
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
   try { let searchTimer = null;
