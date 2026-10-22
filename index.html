@@ -2244,7 +2244,7 @@ function paintSearch(){
   const el = document.getElementById("products");
   el.innerHTML = `<div class="itemgrid">` + searchOut.slice(0, searchN).map(r => itemCard(catsOf(r.page), r.i, r.j)).join("") + `</div>` +
     (searchOut.length > searchN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="searchN+=10;paintSearch();">${tr("more_a")} (${searchOut.length - searchN} ${tr("more_b")})</button></div>` : ``);
-  window.scrollTo(0, y);
+  scrollToPositionInstant(y);
   watchViews();
 }
 
@@ -2346,7 +2346,7 @@ function showItems(i){
   paintItems();
   updateUrl();
 }
-function paintItems(){
+function paintItems(preserveScrollPosition){
   const categories = getCurrentCategories();
   const category = categories[shownCat];
   if(!category) return;
@@ -2363,12 +2363,13 @@ function paintItems(){
     `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => j < shownN ? itemCard(categories, shownCat, j) : "").join("") + `</div>` +
     (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">${tr("more_a")} (${category.items.length - shownN} ${tr("more_b")})</button></div>` : ``);
   if ((isJokiCat || isAkunCat || isBrainrotCat) && typeof jokiStarsFill === "function") jokiStarsFill();
-  window.scrollTo(0, y);
+  if(preserveScrollPosition) scrollToPositionInstant(y);
+  else scrollToCatalog("instant");
   watchViews();
 }
 function moreItems(){
   shownN += 10;
-  paintItems();
+  paintItems(true);
 }
 
 function chatAdmin(){
@@ -2556,7 +2557,16 @@ function syncHeroCta(){
   });
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
-function scrollToCatalog(){
+function scrollToPositionInstant(top){
+  const root = document.documentElement;
+  const previousBehavior = root.style.scrollBehavior;
+  try {
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(window.scrollX || 0, Math.max(0, Number(top) || 0));
+  } catch(e) {}
+  finally { root.style.scrollBehavior = previousBehavior; }
+}
+function scrollToCatalog(behavior){
   try {
     requestAnimationFrame(function(){
       const section = document.querySelector("main.section");
@@ -2564,7 +2574,8 @@ function scrollToCatalog(){
       const sticky = document.querySelector(".topwrap");
       const offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
       const top = section.getBoundingClientRect().top + window.pageYOffset - offset - 10;
-      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+      if(behavior === "instant") scrollToPositionInstant(top);
+      else window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
     });
   } catch(e) {}
 }
@@ -2573,7 +2584,7 @@ function goToCatalogPage(page){
   shownCat = -1;
   render();
   updateUrl();
-  scrollToCatalog();
+  scrollToCatalog("instant");
 }
 function goToBrainrot(){ goToCatalogPage('brainrot'); }
 function goToTopUp(){ goToCatalogPage('topup'); }
