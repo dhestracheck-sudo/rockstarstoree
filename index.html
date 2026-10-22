@@ -2559,7 +2559,7 @@ function syncHeroCta(){
 function scrollToCatalog(){
   try {
     requestAnimationFrame(function(){
-      const section = document.querySelector(".section");
+      const section = document.querySelector("main.section");
       if(!section) return;
       const sticky = document.querySelector(".topwrap");
       const offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
