@@ -9,10 +9,10 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2">
 <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co">
-<title>Rockstar.Store — Solusi Sepuh Roblox Kamu</title>
-<meta name="description" content="Rockstar Store: top up Robux, item Brainrot, dan akun Roblox premium termurah se-Indonesia & Malaysia. Proses kilat, aman 100%, testimoni 100.000+.">
+<title>Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox</title>
+<meta name="description" content="Top up Robux, akun Roblox, item Brainrot, dan jasa joki tersedia di Rockstar.Store. Lihat pilihan produk, harga, dan cara pemesanan.">
 <meta name="keywords" content="rockstarstore, rockstar store roblox, top up robux murah, steal a brainrot, grow a garden, beli akun roblox">
-<link rel="canonical" href="https://rockstarstore.id/">
+<meta name="robots" content="index,follow">
 <meta name="theme-color" content="#060913">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,11 +21,13 @@
 <link rel="manifest" href="manifest.json">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Rockstar.Store">
-<meta property="og:title" content="Rockstar.Store — Solusi Sepuh Roblox Kamu">
-<meta property="og:description" content="Top up Robux, item Brainrot & akun Roblox premium. Proses kilat, SAFE 100%.">
+<meta property="og:title" content="Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox">
+<meta property="og:description" content="Top up Robux, akun Roblox, item Brainrot, dan jasa joki. Lihat pilihan produk, harga, dan cara pesan.">
 <meta property="og:url" content="https://rockstarstore.id/">
 <meta property="og:image" content="https://rockstarstore.id/ROCKSTARLOGO.png">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox">
+<meta name="twitter:description" content="Top up Robux, akun Roblox, item Brainrot, dan jasa joki. Lihat pilihan produk, harga, dan cara pesan.">
 <link rel="icon" type="image/png" href="ROCKSTARLOGO.png">
 <link rel="apple-touch-icon" href="ROCKSTARLOGO.png">
 
@@ -2596,9 +2598,55 @@ function goToTopUp(){ goToCatalogPage('topup'); }
 function goToAkun(){ goToCatalogPage('akun'); }
 function goToJoki(){ goToCatalogPage('joki'); }
 
-/* ===== deep link + judul tab dinamis (SEO) =====
+/* ===== deep links + page-specific SEO metadata =====
    URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
-const TAB_TITLES = { brainrot: "Katalog Brainrot", topup: "Top Up Robux", akun: "Katalog Akun", joki: "Joki" };
+const SEO_PAGES = {
+  home: { title: "Rockstar.Store | Top Up Robux, Akun & Brainrot Roblox", description: "Top up Robux, akun Roblox, item Brainrot, dan jasa joki tersedia di Rockstar.Store. Lihat pilihan produk, harga, dan cara pemesanan." },
+  brainrot: { title: "Item Brainrot Roblox | Rockstar.Store", description: "Jelajahi item Brainrot Roblox dari berbagai map. Lihat kategori, detail produk, dan harga di katalog Rockstar.Store." },
+  topup: { title: "Top Up Robux Roblox | Rockstar.Store", description: "Pilih paket top up Robux Roblox di Rockstar.Store. Cek pilihan nominal, metode pembayaran, dan cara pemesanan." },
+  akun: { title: "Akun Roblox Sepuh | Rockstar.Store", description: "Cari akun Roblox sepuh untuk berbagai map di Rockstar.Store. Lihat detail akun, harga, dan ketersediaannya sebelum memesan." },
+  joki: { title: "Jasa Joki Roblox Aman & Cepat | Rockstar.Store", description: "Cari jasa joki Roblox untuk map favoritmu. Lihat pilihan layanan, harga, dan cara pemesanan di Rockstar.Store." }
+};
+function setMetaName(name, content){
+  let tag = document.head.querySelector('meta[name="' + name + '"]');
+  if(!tag){ tag = document.createElement("meta"); tag.setAttribute("name", name); document.head.appendChild(tag); }
+  tag.setAttribute("content", content);
+}
+function setMetaProperty(property, content){
+  let tag = document.head.querySelector('meta[property="' + property + '"]');
+  if(!tag){ tag = document.createElement("meta"); tag.setAttribute("property", property); document.head.appendChild(tag); }
+  tag.setAttribute("content", content);
+}
+function syncSeoMetadata(){
+  try {
+    const page = SEO_PAGES[currentPage] || SEO_PAGES.home;
+    const cat = (currentPage !== "home" && shownCat >= 0) ? getCurrentCategories()[shownCat] : null;
+    const params = new URLSearchParams(location.search);
+    const isSearchPage = !!(params.get("q") || "").trim();
+    const title = cat ? (cat.name + " | Rockstar.Store") : page.title;
+    const description = cat
+      ? ("Jelajahi " + cat.name + " di Rockstar.Store. Periksa detail produk, harga, dan ketersediaan sebelum memesan.")
+      : page.description;
+    const canonicalParams = new URLSearchParams();
+    if(!isSearchPage && currentPage !== "home"){
+      canonicalParams.set("tab", currentPage);
+      if(cat) canonicalParams.set("cat", cat.name);
+    }
+    const canonicalUrl = new URL(location.pathname, location.origin);
+    canonicalUrl.search = canonicalParams.toString();
+    let canonical = document.head.querySelector('link[rel="canonical"]');
+    if(!canonical){ canonical = document.createElement("link"); canonical.setAttribute("rel", "canonical"); document.head.appendChild(canonical); }
+    canonical.setAttribute("href", canonicalUrl.href);
+    document.title = title;
+    setMetaName("description", description);
+    setMetaName("robots", isSearchPage ? "noindex,follow" : "index,follow");
+    setMetaProperty("og:title", title);
+    setMetaProperty("og:description", description);
+    setMetaProperty("og:url", canonicalUrl.href);
+    setMetaName("twitter:title", title);
+    setMetaName("twitter:description", description);
+  } catch(e){}
+}
 function updateUrl(){
   try {
     const p = new URLSearchParams();
@@ -2609,17 +2657,15 @@ function updateUrl(){
     }
     const qs = p.toString();
     history.replaceState({ rs: 1 }, "", location.pathname + (qs ? "?" + qs : ""));
-    const cat = (currentPage !== "home" && shownCat >= 0) ? getCurrentCategories()[shownCat] : null;
-    document.title = (currentPage === "home")
-      ? "Rockstar.Store — Solusi Sepuh Roblox Kamu"
-      : ((cat ? cat.name : (TAB_TITLES[currentPage] || currentPage)) + " — Rockstar.Store");
   } catch(e){}
+  syncSeoMetadata();
 }
 function applyDeepLink(preserveScrollPosition){
   try {
     const p = new URLSearchParams(location.search);
     const q = (p.get("q") || "").trim();
     if(q){
+      syncSeoMetadata();
       const inp = document.getElementById("searchInput");
       if(inp){ inp.value = q; searchCatalog(); }
       return true;
