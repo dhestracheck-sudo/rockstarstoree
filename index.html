@@ -95,7 +95,7 @@
   --r: 18px;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -2558,13 +2558,7 @@ function syncHeroCta(){
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
 function scrollToPositionInstant(top){
-  const root = document.documentElement;
-  const previousBehavior = root.style.scrollBehavior;
-  try {
-    root.style.scrollBehavior = "auto";
-    window.scrollTo(window.scrollX || 0, Math.max(0, Number(top) || 0));
-  } catch(e) {}
-  finally { root.style.scrollBehavior = previousBehavior; }
+  try { window.scrollTo(window.scrollX || 0, Math.max(0, Number(top) || 0)); } catch(e) {}
 }
 function scrollToCatalog(behavior){
   try {
