@@ -1,8 +1,8 @@
 /* Service worker Rockstar.Store: halaman network-dulu, gambar stale-while-revalidate
    - Gambar: tampilkan cache instan + refresh di belakang -> foto baru dari admin
      tampil pada kunjungan berikutnya (tidak pernah jadi basi selamanya).
-   - Naikkan CACHE (v1 -> v2) sekali untuk membuang semua cache lama yang basi. */
-const CACHE = "rockstar-v2";
+   - Naikkan CACHE setiap rilis agar HP membuang file lama yang tersimpan. */
+const CACHE = "rockstar-v3";
 const CORE = ["./", "index.html", "manifest.json", "ROCKSTARLOGO.png"];
 const IMG_MAX = 400; // batasi jumlah gambar cache biar storage HP tidak bengkak
 

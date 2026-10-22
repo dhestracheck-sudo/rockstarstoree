@@ -2599,7 +2599,6 @@ function applyDeepLink(){
         const idx = cats.findIndex(c => c.name.toLowerCase() === cat.toLowerCase());
         if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(); }
       }
-      try { if (typeof userMoved === "undefined" || !userMoved) { const s = document.querySelector('.section'); if(s){ var hdr = document.querySelector('header'); var hh = hdr ? Math.ceil(hdr.getBoundingClientRect().height) : 60; var top = s.getBoundingClientRect().top + window.pageYOffset - (hh + 10); window.scrollTo({top: Math.max(0, top), behavior: 'auto'}); } } } catch(e){}
       updateUrl();
       return true;
     }
@@ -3221,28 +3220,22 @@ function loadLiveStock(){
 window.addEventListener("error", function(){ hideLoader(); });
 setTimeout(function(){ hideLoader(); }, 6000);
 
-/* ANTI-LONCAT SCROLL (HP): tandai segera saat pengguna mulai meng geser/hindang.
-   Setelah itu TIDAK BOLEH ada auto-scroll lagi (deep link, dsb) —
-   jadi halaman tidak "tiba-tiba melompat" saat sedang dibaca. */
+/* Hindari memaksa pemulihan posisi setelah katalog selesai dirender ulang. */
 var userMoved = false;
 try {
   ["touchmove", "wheel", "pointerdown", "keydown"].forEach(function(ev){
     window.addEventListener(ev, function(){ userMoved = true; }, { passive: true });
   });
-  /* Browser tidak lagi "memulihkan" posisi scroll lama sendiri (sumber loncat lain) */
-  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  if ("scrollRestoration" in history) history.scrollRestoration = "auto";
 } catch(e) {}
 
 /* Tulisan berjalan TETAP ikut saat scroll (permintaan owner): seluruh bar atas
    (marquee + header) selalu menempel (sticky) dan tidak pernah disembunyikan. */
 
 loadLiveStock().then(() => {
-  var yKeep = 0; try { yKeep = window.scrollY || window.pageYOffset || 0; } catch(e) {}
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { if(!applyDeepLink()) updateUrl(); } catch(e) {}
-  /* Render ulang setelah data live masuk: pulihkan posisi baca pengguna supaya halaman tidak "tiba-tiba" melompat */
-  try { if (yKeep > 2) { requestAnimationFrame(function(){ try { window.scrollTo(0, yKeep); } catch(e2){} }); } } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
   try { let searchTimer = null;
