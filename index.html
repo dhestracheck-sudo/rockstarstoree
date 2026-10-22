@@ -2604,7 +2604,7 @@ function updateUrl(){
       : ((cat ? cat.name : (TAB_TITLES[currentPage] || currentPage)) + " — Rockstar.Store");
   } catch(e){}
 }
-function applyDeepLink(){
+function applyDeepLink(preserveScrollPosition){
   try {
     const p = new URLSearchParams(location.search);
     const q = (p.get("q") || "").trim();
@@ -2621,7 +2621,7 @@ function applyDeepLink(){
       if(cat){
         const cats = getCurrentCategories();
         const idx = cats.findIndex(c => c.name.toLowerCase() === cat.toLowerCase());
-        if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(); }
+        if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(!!preserveScrollPosition); }
       }
       updateUrl();
       return true;
@@ -3259,7 +3259,9 @@ try {
 loadLiveStock().then(() => {
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
-  try { if(!applyDeepLink()) updateUrl(); } catch(e) {}
+  /* Jika pengguna sudah menyentuh atau menggeser halaman ketika stok dimuat,
+     pulihkan tautan kategori tanpa menarik scroll kembali ke katalog. */
+  try { if(!applyDeepLink(userMoved)) updateUrl(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
   try { let searchTimer = null;
