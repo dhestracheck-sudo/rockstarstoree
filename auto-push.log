@@ -65822,3 +65822,27 @@ fatal: the remote end hung up unexpectedly
 error: failed to push some refs to 'https://github.com/dhestracheck-sudo/rockstarstoree.git'
 
 [2026-10-22 15:15:52] perubahan terdeteksi, push...
+[2026-10-22 15:15:57] push GAGAL: git : 
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Unhandled Exception: System.IO.FileLoadException: Could not load file or assembly 'System.Net.Http, Version=4.2.0.0, 
+Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' or one of its dependencies. The paging file is too small for this 
+operation to complete. (Exception from HRESULT: 0x800705AF)
+   at GitCredentialManager.Program.AppMain(Object o)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, 
+Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, 
+Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.ThreadHelper.ThreadStart(Object obj)
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 15:16:28] perubahan terdeteksi, push...
+[2026-10-22 15:16:37] push GAGAL: 
+[2026-10-22 15:19:11] perubahan terdeteksi, push...
