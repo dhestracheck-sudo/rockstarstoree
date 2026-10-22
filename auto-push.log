@@ -66003,3 +66003,38 @@ error: failed to push some refs to 'https://github.com/dhestracheck-sudo/rocksta
 [2026-10-22 15:45:31] perubahan terdeteksi, push...
 [2026-10-22 15:47:09] push OK 2026-10-22 15-46
 [2026-10-22 15:47:25] perubahan terdeteksi, push...
+[2026-10-22 15:48:13] push GAGAL: git : git credential-manager get: line 1: /mingw64/libexec/git-core/git: Resource temporarily unavailable
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (git credential-...ily unavailable:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: failed to execute prompt script (exit code 66)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 15:48:28] perubahan terdeteksi, push...
+[2026-10-22 15:49:01] push GAGAL: git : git credential-manager get: line 1: /mingw64/libexec/git-core/git: Resource temporarily unavailable
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (git credential-...ily unavailable:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: cannot spawn bash: Function not implemented
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 15:50:01] perubahan terdeteksi, push...
+[2026-10-22 15:50:20] push GAGAL: 
+[2026-10-22 15:50:35] perubahan terdeteksi, push...
+[2026-10-22 15:50:50] push GAGAL: git : fatal: remote helper 'https' aborted session
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: remote h...aborted session:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[2026-10-22 15:51:05] perubahan terdeteksi, push...
+[2026-10-22 15:54:20] watcher mulai
+[2026-10-22 15:54:36] perubahan terdeteksi, push...
