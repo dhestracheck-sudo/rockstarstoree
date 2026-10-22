@@ -65976,3 +65976,30 @@ error: failed to execute prompt script (exit code 1)
 fatal: could not read Username for 'https://github.com': No such file or directory
 
 [2026-10-22 15:43:06] perubahan terdeteksi, push...
+[2026-10-22 15:44:21] push GAGAL: git : error: LoadLibraryExW() failed with: Insufficient system resources exist to complete the requested service.?
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (error: LoadLibr...ested service.?:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+fatal: failed to load library 'libcurl-4.dll'
+fatal: remote helper 'https' aborted session
+
+[2026-10-22 15:44:36] perubahan terdeteksi, push...
+[2026-10-22 15:45:15] push GAGAL: git : fatal: Out of memory, malloc failed (tried to allocate 3291949 bytes)
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: Out of m... 3291949 bytes):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+fatal: the remote end hung up unexpectedly
+send-pack: unexpected disconnect while reading sideband packet
+fatal: the remote end hung up unexpectedly
+error: failed to push some refs to 'https://github.com/dhestracheck-sudo/rockstarstoree.git'
+
+[2026-10-22 15:45:31] perubahan terdeteksi, push...
+[2026-10-22 15:47:09] push OK 2026-10-22 15-46
+[2026-10-22 15:47:25] perubahan terdeteksi, push...

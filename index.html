@@ -952,11 +952,13 @@ header {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===== bottom nav (menu bawah beremoji) ===== */
-.botnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 95; display: flex; background: transparent; backdrop-filter: blur(14px); border-top: none; text-shadow: 0 1px 6px rgba(0,0,0,.85); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
+.botnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 95; display: flex; background: transparent; backdrop-filter: blur(6px); border-top: none; text-shadow: 0 1px 6px rgba(0,0,0,.85); padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); }
 .bnitem { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 54px; padding: 6px 2px; border: none; background: none; border-radius: 14px; color: var(--mut); font-family: 'Poppins', sans-serif; cursor: pointer; transition: color .15s, background .15s, transform .12s; }
 .bnitem .bnico { font-size: 21px; line-height: 1; }
 .bnitem .bnlbl { font-size: 9.5px; font-weight: 600; line-height: 1.15; text-align: center; letter-spacing: .02em; }
 .bnitem.active { color: var(--blue2); background: rgba(43,78,255,.16); }
+.bnitem.flash { color: #ff5252; background: rgba(43,78,255,.30); border-radius: 14px; }
+.bnitem.flash .bnico, .bnitem.flash .bnlbl { color: #ff5252; text-shadow: 0 1px 6px rgba(0,0,0,.9); }
 .bnitem:active { transform: scale(.93); }
 .fab, .wafab { bottom: calc(84px + env(safe-area-inset-bottom)); }
 .fab { left: 22px; right: auto; align-items: flex-start; }
