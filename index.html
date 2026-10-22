@@ -2556,10 +2556,29 @@ function syncHeroCta(){
   });
 }
 /* Pengumuman selalu tampil (lipat otomatis dimatikan) */
-function goToBrainrot(){ currentPage = 'brainrot'; shownCat = -1; render(); updateUrl(); }
-function goToTopUp(){ currentPage = 'topup'; shownCat = -1; render(); updateUrl(); }
-function goToAkun(){ currentPage = 'akun'; shownCat = -1; render(); updateUrl(); }
-function goToJoki(){ currentPage = 'joki'; shownCat = -1; render(); updateUrl(); }
+function scrollToCatalog(){
+  try {
+    requestAnimationFrame(function(){
+      const section = document.querySelector(".section");
+      if(!section) return;
+      const sticky = document.querySelector(".topwrap");
+      const offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
+      const top = section.getBoundingClientRect().top + window.pageYOffset - offset - 10;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    });
+  } catch(e) {}
+}
+function goToCatalogPage(page){
+  currentPage = page;
+  shownCat = -1;
+  render();
+  updateUrl();
+  scrollToCatalog();
+}
+function goToBrainrot(){ goToCatalogPage('brainrot'); }
+function goToTopUp(){ goToCatalogPage('topup'); }
+function goToAkun(){ goToCatalogPage('akun'); }
+function goToJoki(){ goToCatalogPage('joki'); }
 
 /* ===== deep link + judul tab dinamis (SEO) =====
    URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
