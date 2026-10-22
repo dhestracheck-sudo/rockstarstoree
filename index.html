@@ -1667,7 +1667,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 <nav class="botnav" id="botnav">
   <button class="bnitem" data-page="home" onclick="bnGo('home')" title="Beranda"><span class="bnico">🏠</span><span class="bnlbl" data-i18n="nav_home">Beranda</span></button>
   <button class="bnitem" data-page="akun" onclick="bnGo('akun')" title="Beli Akun Sepuh Roblox"><span class="bnico">👤</span><span class="bnlbl" data-i18n="nav_akun_bn">Akun Sepuh</span></button>
-  <button class="bnitem" data-page="topup" onclick="bnGo('topup')" title="Top Up Robux"><span class="bnico">💎</span><span class="bnlbl" data-i18n="nav_topup">Top Up Robux</span></button>
+  <button class="bnitem" data-page="brainrot" onclick="bnGo('brainrot')" title="Brainrot"><span class="bnico">🧠</span><span class="bnlbl" data-i18n="nav_brainrot_bn">Brainrot</span></button>
   <button class="bnitem flash" data-page="flash" onclick="goFlash()" title="Flash Sale"><span class="bnico">⚡</span><span class="bnlbl" data-i18n="nav_flash_bn">Flash Sale</span></button>
   <button class="bnitem" data-page="joki" onclick="bnGo('joki')" title="Joki Sepuh Roblox"><span class="bnico">🏆</span><span class="bnlbl" data-i18n="nav_joki_bn">Joki Sepuh</span></button>
   <button class="bnitem" data-page="testi" onclick="toggleTestiPop()" title="Testimoni Amanah"><span class="bnico">⭐</span><span class="bnlbl" data-i18n="nav_testi">Testimoni</span></button>
@@ -1969,6 +1969,7 @@ function syncCta(){
 /* ===== bottom nav (menu bawah) ===== */
 function bnGo(page){
   if(page === 'home') goHome();
+  else if(page === 'brainrot') goToBrainrot();
   else if(page === 'akun') goToAkun();
   else if(page === 'topup') goToTopUp();
   else if(page === 'joki') goToJoki();
@@ -2025,7 +2026,7 @@ cb_title: "Cara Beli 🎮", cb_sub: "5 langkah gampang, ikuti gambarnya ya!",
 s1t: "Pilih mainanmu", s2t: "Cek keranjang", s3t: "Chat admin", s4t: "Bayar", s5t: "Item datang!",
 foot_wa: "No WA Admin:", back: "← Kembali", back_home: "← Beranda",
 nav_home: "Beranda", nav_akun: "Akun Sepuh Roblox Berbagai Map", nav_topup: "Top Up Robux", nav_joki: "Joki Sepuh Berbagai Map",
-  nav_akun_bn: "Akun Sepuh", nav_joki_bn: "Joki Sepuh", nav_flash_bn: "Flash Sale",
+  nav_akun_bn: "Akun Sepuh", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Joki Sepuh", nav_flash_bn: "Flash Sale",
 cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "kategori — klik untuk lihat item", cat_empty: "Katalog kosong", cat_empty_x: "Data belum termuat (koneksi lambat).",
 cat_empty_msg: "😢 Katalog belum tampil. Biasanya karena sinyal.", reload: "🔄 Muat Ulang",
@@ -2065,7 +2066,7 @@ cb_title: "How to Buy 🎮", cb_sub: "5 easy steps, follow the pictures!",
 s1t: "Pick your item", s2t: "Check cart", s3t: "Chat admin", s4t: "Pay", s5t: "Item arrives!",
 foot_wa: "Admin WA:", back: "← Back", back_home: "← Home",
 nav_home: "Home", nav_akun: "Pro Account", nav_topup: "Robux Top Up", nav_joki: "Boosting",
-  nav_akun_bn: "Sepuh Account", nav_joki_bn: "Sepuh Boost", nav_flash_bn: "Flash Sale",
+  nav_akun_bn: "Sepuh Account", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Sepuh Boost", nav_flash_bn: "Flash Sale",
 cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up", cat_joki: "Joki",
 cat_sub: "categories — click to view items", cat_empty: "Empty catalog", cat_empty_x: "Data not loaded (slow connection).",
 cat_empty_msg: "😢 Catalog not showing. Usually the signal.", reload: "🔄 Reload",
