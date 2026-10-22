@@ -65795,3 +65795,30 @@ At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
  
 
 [2026-10-22 15:13:33] perubahan terdeteksi, push...
+[2026-10-22 15:14:11] loop error (tetap jalan): Program 'git.exe' failed to run: The paging file is too small for this operation to completeAt C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:50 char:7
++       git pull --rebase 2>&1 | Out-Null
++       ~~~~~~~~~~~~~~~~~~~~~~.
+[2026-10-22 15:14:41] perubahan terdeteksi, push...
+[2026-10-22 15:14:52] push GAGAL: git : error: cannot spawn git: Function not implemented
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (error: cannot s...not implemented:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[2026-10-22 15:15:22] perubahan terdeteksi, push...
+[2026-10-22 15:15:37] push GAGAL: git : fatal: Out of memory, malloc failed (tried to allocate 1048320 bytes)
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: Out of m... 1048320 bytes):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+send-pack: unexpected disconnect while reading sideband packet
+warning: suboptimal pack - out of memory
+fatal: Out of memory, malloc failed (tried to allocate 3281527 bytes)
+fatal: the remote end hung up unexpectedly
+error: failed to push some refs to 'https://github.com/dhestracheck-sudo/rockstarstoree.git'
+
+[2026-10-22 15:15:52] perubahan terdeteksi, push...
