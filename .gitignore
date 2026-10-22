@@ -5,6 +5,6 @@
 *.tmp
 Thumbs.db
 Desktop.ini
-# File kerja watcher auto-push
+# Penanda dan log auto-push lokal; jangan ikut commit/deploy
 .autopush-pending
 auto-push.log
