@@ -65622,3 +65622,35 @@ At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
 [2026-10-22 13:22:42] perubahan terdeteksi, push...
 [2026-10-22 13:22:46] push OK 2026-10-22 13-22
 [2026-10-22 13:23:31] perubahan terdeteksi, push...
+[2026-10-22 13:24:14] push GAGAL: git : bash: line 1: /dev/tty: No such device or address
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (bash: line 1: /...vice or address:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 13:25:00] perubahan terdeteksi, push...
+[2026-10-22 13:25:16] push GAGAL: git : fatal: unable to access 'https://github.com/dhestracheck-sudo/rockstarstoree.git/': schannel: 
+AcquireCredentialsHandle failed: SEC_E_SECPKG_NOT_FOUND (0x80090305) - The requested security package does not exist
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: unable t... does not exist:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+[2026-10-22 13:25:31] perubahan terdeteksi, push...
+[2026-10-22 13:25:41] push GAGAL: git : bash: line 1: /dev/tty: No such device or address
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (bash: line 1: /...vice or address:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+[2026-10-22 13:27:27] perubahan terdeteksi, push...
