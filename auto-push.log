@@ -65852,3 +65852,15 @@ fatal: could not read Username for 'https://github.com': No such file or directo
 [2026-10-22 15:23:10] perubahan terdeteksi, push...
 [2026-10-22 15:23:57] push OK 2026-10-22 15-23
 [2026-10-22 15:24:12] perubahan terdeteksi, push...
+[2026-10-22 15:24:47] push GAGAL: git : error launching git: The paging file is too small for this operation to complete.
+At C:\Users\User\OneDrive\Desktop\rockstar3\watch.ps1:51 char:14
++       $out = git push 2>&1 | Out-String
++              ~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (error launching...on to complete.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+
+[2026-10-22 15:25:33] perubahan terdeteksi, push...
+[2026-10-22 15:25:45] push GAGAL: 
+[2026-10-22 15:26:46] perubahan terdeteksi, push...
