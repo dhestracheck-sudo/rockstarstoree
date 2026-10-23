@@ -1184,6 +1184,14 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .mactions { flex-wrap: wrap; }
 }
 </style>
+<!-- Google tag (gtag.js) - Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-8CKBS3MNXH');
+</script>
 </head>
 <body>
 
@@ -2646,6 +2654,10 @@ function syncSeoMetadata(){
     setMetaProperty("og:url", canonicalUrl.href);
     setMetaName("twitter:title", title);
     setMetaName("twitter:description", description);
+    if (window.gtag){
+      if (window.__rockGaStarted){ window.gtag("event", "page_view", { page_title: title, page_location: canonicalUrl.href }); }
+      window.__rockGaStarted = true;
+    }
   } catch(e){}
 }
 function updateUrl(){
