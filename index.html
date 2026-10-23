@@ -1597,7 +1597,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
     <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
     <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
-    <button class="cartbtn" id="curBtn" onclick="toggleCurrency()" style="background:#0e1628;border:1px solid var(--line);">💱 IDR</button>
+    <button class="cartbtn" id="curBtn" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);">💱 IDR</button>
     <button class="burger" id="burgerBtn" onclick="toggleMnav()" aria-label="Buka menu">☰</button>
   </div>
 </header>
@@ -1615,7 +1615,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
   </div>
   <button class="cartbtn" id="mnavLang" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇬🇧 EN</button>
-  <button class="cartbtn" id="mnavCur" onclick="toggleCurrency()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">💱 IDR</button>
+  <button class="cartbtn" id="mnavCur" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">💱 IDR</button>
   <button type="button" class="mnote" data-i18n-html="rc_bub" onclick="closeMnav();openWaChat();">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</button>
 </div>
 
@@ -2580,17 +2580,26 @@ function toggleLang(){
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
 }
+function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
 const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083 };
 function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
 function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
-function toggleCurrency(){
-  const order = ["IDR","USD","MYR","SGD"];
-  const cur = currency();
-  const next = order[(order.indexOf(cur)+1) % order.length];
-  setCurrency(next);
-  const btn = document.getElementById("curBtn");
-  if (btn) btn.textContent = "💱 " + next;
+function selectCurrency(c){
+  setCurrency(c);
+  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="💱 "+c; });
   try { render(); } catch(e) {}
+}
+function toggleCurrencyMenu(e){
+  if (e) e.stopPropagation();
+  let m = document.getElementById("curMenu");
+  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:120px;"; document.body.appendChild(m); }
+  if (m.style.display==="flex"){ m.style.display="none"; return; }
+  m.innerHTML = ["IDR","USD","MYR","SGD"].map(c=>`<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 12px;text-align:left;border-radius:6px;cursor:pointer;">${c===currency()?'✓ ':''}${c}</button>`).join("");
+  const r = (e && e.currentTarget) ? e.currentTarget.getBoundingClientRect() : {left:10,top:60};
+  m.style.left = r.left + "px";
+  m.style.top = (r.bottom + 4) + "px";
+  m.style.display = "flex";
+  document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function formatCurrency(idr){
   const c = currency();
