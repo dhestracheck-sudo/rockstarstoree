@@ -2628,9 +2628,9 @@ function toggleCurrencyMenu(e){
   if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
   m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${c===currency()?'✓ ':''}${info.flag}<br>${c}</button>`; }).join("");
-  const r = (e && e.currentTarget) ? e.currentTarget.getBoundingClientRect() : {left:10,top:60};
-  m.style.left = r.left + "px";
-  m.style.top = (r.bottom + 4) + "px";
+m.style.left = "50%";
+  m.style.top = "50%";
+  m.style.transform = "translate(-50%,-50%)";
   m.style.display = "grid";
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
