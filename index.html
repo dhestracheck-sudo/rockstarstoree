@@ -1596,8 +1596,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn flashbtn" onclick="goFlash()"><span data-i18n="flash_btn">⚡ Flash Sale</span></button>
     <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
     <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
-    <button class="cartbtn" id="langBtn" onclick="toggleLangMenu(event)" style="background:#0e1628;border:1px solid var(--line);">🇮🇩 ID</button>
-    <button class="cartbtn" id="curBtn" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);">💱 IDR</button>
+    <button class="cartbtn" id="langBtn" onclick="toggleLangMenu(event)" style="background:#0e1628;border:1px solid var(--line);">Bahasa 🇮🇩</button>
+    <button class="cartbtn" id="curBtn" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);">Mata Uang 🇮🇩</button>
     <button class="burger" id="burgerBtn" onclick="toggleMnav()" aria-label="Buka menu">☰</button>
   </div>
 </header>
@@ -1614,8 +1614,8 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" onclick="mnavGo(openCartModal)"><span data-i18n="cart">🛒 Keranjang</span> <small id="mnavCartCount">0</small></button>
     <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
   </div>
-  <button class="cartbtn" id="mnavLang" onclick="toggleLangMenu(event)" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇮🇩 ID</button>
-  <button class="cartbtn" id="mnavCur" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">💱 IDR</button>
+  <button class="cartbtn" id="mnavLang" onclick="toggleLangMenu(event)" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">Bahasa 🇮🇩</button>
+  <button class="cartbtn" id="mnavCur" onclick="toggleCurrencyMenu(event)" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">Mata Uang 🇮🇩</button>
   <button type="button" class="mnote" data-i18n-html="rc_bub" onclick="closeMnav();openWaChat();">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</button>
 </div>
 
@@ -2567,15 +2567,15 @@ function applyLang(){
   });
   const b = document.getElementById("langBtn");
   const info = RS_LANGS.find(x=>x.code===L);
-  if(b && info) b.textContent = info.flag + " " + L.toUpperCase();
+  if(b && info) b.textContent = "Bahasa " + info.flag;
   const cb = document.getElementById("curBtn");
   const ci = RS_CURRENCY_INFO[currency()] || RS_CURRENCY_INFO.IDR;
-  if(cb) cb.textContent = ci.flag + " " + currency();
+  if(cb) cb.textContent = "Mata Uang " + ci.flag;
   const cb2 = document.getElementById("mnavCur");
-  if(cb2) cb2.textContent = ci.flag + " " + currency();
+  if(cb2) cb2.textContent = "Mata Uang " + ci.flag;
   const b2 = document.getElementById("mnavLang");
   const info2 = RS_LANGS.find(x=>x.code===L);
-  if(b2 && info2) b2.textContent = info2.flag + " " + L.toUpperCase();
+  if(b2 && info2) b2.textContent = "Bahasa " + info2.flag;
 }
 function toggleLang(){ /* legacy */ }
 const RS_LANGS = [
@@ -2591,7 +2591,7 @@ const RS_LANGS = [
 function selectLang(code){
   try { localStorage.setItem("rs_lang", code); } catch(e) {}
   const L = code;
-  ["langBtn","mnavLang"].forEach(id=>{ const b=document.getElementById(id); const info=RS_LANGS.find(x=>x.code===code); if(b&&info) b.textContent=info.flag+" "+code.toUpperCase(); });
+  ["langBtn","mnavLang"].forEach(id=>{ const b=document.getElementById(id); const info=RS_LANGS.find(x=>x.code===code); if(b&&info) b.textContent="Bahasa "+info.flag; });
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
@@ -2619,7 +2619,7 @@ function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e
 function selectCurrency(c){
   setCurrency(c);
   const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
-  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent=info.flag+" "+c; });
+  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
   try { render(); } catch(e) {}
 }
 function toggleCurrencyMenu(e){
