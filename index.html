@@ -1530,7 +1530,51 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   to { transform: translate3d(-50%, 0, 0); }
 }
 </style>
-
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Produk Rockstar.Store",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "Product",
+        "name": "Top Up Robux",
+        "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+        "description": "Top up Robux murah, proses kilat, aman 100%.",
+        "brand": { "@type": "Brand", "name": "Rockstar.Store" },
+        "offers": { "@type": "Offer", "priceCurrency": "IDR", "price": "10000", "availability": "https://schema.org/InStock" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "Product",
+        "name": "Item Brainrot",
+        "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+        "description": "Item Brainrot Roblox (Steal a Brainrot, Grow a Garden).",
+        "brand": { "@type": "Brand", "name": "Rockstar.Store" },
+        "offers": { "@type": "Offer", "priceCurrency": "IDR", "price": "5000", "availability": "https://schema.org/InStock" }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "Product",
+        "name": "Akun Roblox Premium",
+        "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+        "description": "Akun Roblox premium dengan item dan level tinggi.",
+        "brand": { "@type": "Brand", "name": "Rockstar.Store" },
+        "offers": { "@type": "Offer", "priceCurrency": "IDR", "price": "50000", "availability": "https://schema.org/InStock" }
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -2073,12 +2117,12 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
     <button class="rc-btn" id="waBtn" onclick="openWaChat()" aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
-      <img src="figur-8064.webp" alt="Min Rock">
+      <img src="figur-8064.webp" alt="Min Rock" loading="lazy">
     </button>
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
-      <span class="walogo"><img src="figur-8064.webp" alt="Min Rock" onerror="this.style.display='none';this.parentNode.classList.add('nolabel');"></span>
+      <span class="walogo"><img src="figur-8064.webp" alt="Min Rock" loading="lazy" onerror="this.style.display='none';this.parentNode.classList.add('nolabel');"></span>
       <div><b>Rockstar Support</b><span class="waonline"><i></i><span data-i18n="wa_online">Online</span></span></div>
       <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
     </div>
@@ -3198,7 +3242,7 @@ function checkout(){
     let itemImage = fixImg(item.img || item.categoryImg);
     previewHTML += `
       <div class="mrow">
-        <img src="${itemImage}" onerror="imgErr(this)">
+        <img src="${itemImage}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
       </div>`;
   });
