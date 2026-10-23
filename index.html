@@ -306,6 +306,9 @@ body {
   color: var(--txt);
   min-height: 100vh;
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 body::before {
   content: "";
