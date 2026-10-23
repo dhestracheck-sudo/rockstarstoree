@@ -2592,6 +2592,7 @@ function selectLang(code){
   try { localStorage.setItem("rs_lang", code); } catch(e) {}
   const L = code;
   ["langBtn","mnavLang"].forEach(id=>{ const b=document.getElementById(id); const info=RS_LANGS.find(x=>x.code===code); if(b&&info) b.textContent="Bahasa "+info.flag; });
+  document.body.style.overflow="";
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
@@ -2608,6 +2609,7 @@ function toggleLangMenu(e){
   m.style.top = Math.round(window.innerHeight/2) + "px";
   m.style.transform = "translate(-50%,-50%)";
   m.style.display = "grid";
+  document.body.style.overflow = "hidden";
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
@@ -2621,9 +2623,10 @@ function selectCurrency(c){
   setCurrency(c);
   const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
   ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
+  document.body.style.overflow="";
   try { render(); } catch(e) {}
 }
-function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }
+function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; document.body.style.overflow=""; }
 window.addEventListener("scroll", closeCurLangMenus, {passive:true});
 window.addEventListener("touchmove", closeCurLangMenus, {passive:true});
 window.addEventListener("wheel", closeCurLangMenus, {passive:true});
@@ -2638,6 +2641,7 @@ m.style.left = Math.round(window.innerWidth/2) + "px";
   m.style.top = Math.round(window.innerHeight/2) + "px";
   m.style.transform = "translate(-50%,-50%)";
   m.style.display = "grid";
+  document.body.style.overflow = "hidden";
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function formatCurrency(idr){
