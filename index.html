@@ -1615,6 +1615,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" onclick="mnavGo(openWishModal)" style="background:#6d28d9;">🤍 <small id="mnavWishCount">0</small></button>
   </div>
   <button class="cartbtn" id="mnavLang" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">🇬🇧 EN</button>
+  <button class="cartbtn" id="mnavCur" onclick="toggleCurrency()" style="background:#0e1628;border:1px solid var(--line);justify-content:center;">💱 IDR</button>
   <button type="button" class="mnote" data-i18n-html="rc_bub" onclick="closeMnav();openWaChat();">Butuh bantuan? Chat <b>Min Rock</b> aja 💬</button>
 </div>
 
@@ -2568,6 +2569,8 @@ function applyLang(){
   if(b) b.textContent = (L === "id") ? "🇬🇧 EN" : "🇮🇩 ID";
   const cb = document.getElementById("curBtn");
   if(cb) cb.textContent = "💱 " + currency();
+  const cb2 = document.getElementById("mnavCur");
+  if(cb2) cb2.textContent = "💱 " + currency();
   const b2 = document.getElementById("mnavLang");
   if(b2) b2.textContent = b ? b.textContent : ((L === "id") ? "🇬🇧 EN" : "🇮🇩 ID");
 }
