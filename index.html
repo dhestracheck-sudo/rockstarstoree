@@ -2402,7 +2402,11 @@ function chatAdmin(){
 let detailCur = null;
 function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
-  try { var _c = catsOf(page), _it = _c[i].items[j]; logAksi("klik", _it.name, _c[i].name, _it.price, page); } catch(e) {}
+  try {
+    var _c = catsOf(page), _it = _c[i].items[j];
+    logAksi("klik", _it.name, _c[i].name, _it.price, page);
+    if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
+  } catch(e) {}
   try {
     let rc = JSON.parse(localStorage.getItem("rs_recent") || "[]");
     if(!Array.isArray(rc)) rc = [];
