@@ -1203,10 +1203,10 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 <header>
   <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
   <nav class="headnav">
-    <a onclick="goHome()">🏠 <span data-i18n="nav_home">Beranda</span></a>
-    <a onclick="goToAkun()">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
-    <a onclick="goToTopUp()">💎 <span data-i18n="nav_topup">Top Up Robux</span></a>
-    <a onclick="goToJoki()">🏆 <span data-i18n="nav_joki">Joki Sepuh</span></a>
+    <a href="/" onclick="goHome(); return false;">🏠 <span data-i18n="nav_home">Beranda</span></a>
+    <a href="?tab=akun" onclick="goToAkun(); return false;">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
+    <a href="?tab=topup" onclick="goToTopUp(); return false;">💎 <span data-i18n="nav_topup">Top Up Robux</span></a>
+    <a href="?tab=joki" onclick="goToJoki(); return false;">🏆 <span data-i18n="nav_joki">Joki Sepuh</span></a>
   </nav>
   <div class="searchwrap"><input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autocomplete="off" onkeydown="if(event.key==='Enter')closeMnav()"><div id="searchSug" style="display:none;"></div></div>
   <div class="headicons">
@@ -1768,7 +1768,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 </div>
 
 <section class="section server-cta" id="serverCta">
-  <a class="ava-big" onclick="openServerModal()" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.webp?v=2" alt="Rockstar Avatar - Link Server" width="581" height="583" loading="lazy" decoding="async"></a>
+  <a class="ava-big" href="#server" onclick="openServerModal(); return false;" title="Lihat Link Server"><img src="ROCKSTAR AVATAR.webp?v=2" alt="Rockstar Avatar - Link Server" width="581" height="583" loading="lazy" decoding="async"></a>
   <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
 </section>
 
