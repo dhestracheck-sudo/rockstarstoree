@@ -1194,6 +1194,26 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 @media (min-width: 2000px) {
   .section { max-width: min(1900px, 97vw); }
 }
+@media (min-width: 1281px) {
+  /* tombol keranjang: pil panjang bertulisan (desktop saja) */
+  .fab-main {
+    width: auto; min-width: 66px; height: 64px;
+    border-radius: 999px;
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 26px; font-size: 26px;
+  }
+  .fab-main::after {
+    content: "Keranjang";
+    font-family: 'Poppins', sans-serif; font-weight: 700;
+    font-size: 16.5px; letter-spacing: .02em;
+  }
+  .fab-main b { top: -6px; right: -10px; min-width: 28px; height: 28px; font-size: 14px; }
+  /* foto Min Rock (ke WA): diperbesar */
+  .rockchat { bottom: calc(112px + env(safe-area-inset-bottom)); }
+  .rc-wrap, .rc-btn { width: 184px; height: 184px; }
+  #rcBubbleWrap { right: 20px; bottom: calc(112px + env(safe-area-inset-bottom) + 184px - 34px); }
+  .rc-bubble { font-size: 16px; max-width: 340px; padding: 13px 18px; }
+}
 </style>
 <!-- Google tag (gtag.js) - Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
