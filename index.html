@@ -102,15 +102,25 @@ html { scroll-behavior: auto; overflow-anchor: none; }
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
   background:
     linear-gradient(rgba(6,9,19,0.78), rgba(6,9,19,0.86)),
     radial-gradient(900px 320px at 85% -60px, rgba(43,78,255,0.22), transparent 60%),
     radial-gradient(700px 300px at 5% 0%, rgba(43,78,255,0.12), transparent 60%),
-    url("bg.jpg") center top / cover no-repeat fixed,
+    url("bg.jpg") center top / cover no-repeat,
     var(--bg);
-  color: var(--txt);
-  min-height: 100vh;
-  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  pointer-events: none;
+  transform: translate3d(0,0,0);
+  will-change: transform;
 }
 
 /* ===== loading screen ===== */
@@ -1011,7 +1021,7 @@ header {
   position: fixed; right: 16px; bottom: calc(84px + env(safe-area-inset-bottom) + 140px - 32px);
   z-index: 94; pointer-events: none;
 }
-.rc-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; }
+.rc-wrap { position: relative; width: 140px; height: 140px; flex-shrink: 0; animation: rcPulse 2.6s ease-in-out infinite; transform: translate3d(0,0,0); will-change: transform; }
 /* Foto Min Rock tampil UTUH (tanpa lingkaran, tanpa kotak) — fotonya dipertegas */
 .rc-btn {
   position: absolute; inset: 0; width: 140px; height: 140px; padding: 0;
@@ -1262,14 +1272,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .headicons { gap: 6px; }
 }
 </style>
-<!-- Google tag (gtag.js) - Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-8CKBS3MNXH');
-</script>
+
 </head>
 <body>
 
