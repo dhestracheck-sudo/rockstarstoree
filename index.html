@@ -2598,6 +2598,7 @@ function selectLang(code){
 }
 function toggleLangMenu(e){
   if (e) e.stopPropagation();
+  const cm = document.getElementById("curMenu"); if (cm) cm.style.display="none";
   let m = document.getElementById("langMenu");
   if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:240px;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
@@ -2625,6 +2626,7 @@ function selectCurrency(c){
 window.addEventListener("scroll", function(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }, {passive:true});
 function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
+  const lm = document.getElementById("langMenu"); if (lm) lm.style.display="none";
   let m = document.getElementById("curMenu");
   if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
