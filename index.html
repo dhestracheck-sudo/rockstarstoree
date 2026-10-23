@@ -1183,7 +1183,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .serverbtn { min-width: 0; font-size: 13px; padding: 12px 14px; overflow-wrap: break-word; }
   .mactions { flex-wrap: wrap; }
 }
-@media (min-width: 1281px) {
+@media (min-width: 901px) {
   .section { max-width: min(1640px, 97vw); padding: 52px 40px 8px; }
   .itemgrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
   .flashgrid { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
@@ -1194,7 +1194,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 @media (min-width: 2000px) {
   .section { max-width: min(1900px, 97vw); }
 }
-@media (min-width: 1281px) {
+@media (min-width: 901px) {
   /* tombol keranjang: pil panjang bertulisan (desktop saja) */
   .fab-main {
     width: auto; min-width: 66px; height: 64px;
@@ -1236,11 +1236,11 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     gap: 60px;
     padding: 40px 40px 50px;
   }
-  .hero-kicker { font-size: 15px; padding: 9px 20px; }
-  .hero h1 { font-size: 78px; }
-  .hero p { font-size: 19.5px; max-width: 680px; }
-  .channel-link { font-size: 18px; }
-  .hero-cta .btn-primary, .hero-cta .btn-ghost { font-size: 17.5px; padding: 16px 30px; border-radius: 14px; }
+  .hero-kicker { font-size: clamp(12px, 1.15vw, 15px); padding: 9px 20px; }
+  .hero h1 { font-size: clamp(40px, 6vw, 78px); }
+  .hero p { font-size: clamp(16px, 1.55vw, 19.5px); max-width: 680px; }
+  .channel-link { font-size: clamp(14px, 1.4vw, 18px); }
+  .hero-cta .btn-primary, .hero-cta .btn-ghost { font-size: clamp(15px, 1.35vw, 17.5px); padding: 16px 30px; border-radius: 14px; }
   .hero-visual img.hero-logo { width: min(320px, 80%); }
   /* rapatkan: stats -> bagian katalog di bawahnya (naikkan semua) */
   .stats { margin: 10px auto 0; max-width: min(1640px, 97vw); }
