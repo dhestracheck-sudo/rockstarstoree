@@ -1183,6 +1183,17 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .serverbtn { min-width: 0; font-size: 13px; padding: 12px 14px; overflow-wrap: break-word; }
   .mactions { flex-wrap: wrap; }
 }
+@media (min-width: 1281px) {
+  .section { max-width: min(1640px, 97vw); padding: 52px 40px 8px; }
+  .itemgrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .flashgrid { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
+  .catgrid { grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); }
+  .banners { grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
+  .steps { grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); }
+}
+@media (min-width: 2000px) {
+  .section { max-width: min(1900px, 97vw); }
+}
 </style>
 <!-- Google tag (gtag.js) - Google Analytics 4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
