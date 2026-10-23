@@ -41,10 +41,15 @@
       "@id": "https://rockstarstore.id/#website",
       "url": "https://rockstarstore.id/",
       "name": "Rockstar.Store",
-      "publisher": { "@id": "https://rockstarstore.id/#store" },
+      "publisher": {
+        "@id": "https://rockstarstore.id/#store"
+      },
       "potentialAction": {
         "@type": "SearchAction",
-        "target": { "@type": "EntryPoint", "urlTemplate": "https://rockstarstore.id/?q={search_term_string}" },
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://rockstarstore.id/?q={search_term_string}"
+        },
         "query-input": "required name=search_term_string"
       }
     },
@@ -64,7 +69,88 @@
         "@type": "ContactPoint",
         "telephone": "+62-896-6429-9571",
         "contactType": "customer service",
-        "availableLanguage": ["Indonesian", "English"]
+        "availableLanguage": [
+          "Indonesian",
+          "English"
+        ]
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://rockstarstore.id/#product-robux",
+      "name": "Top Up Robux Kilat & Aman",
+      "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+      "description": "Top up Robux termurah, kilat, dan aman 100% di Rockstar.Store. Pilihan paket Robux lengkap via login.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Rockstar.Store"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "100000",
+        "bestRating": "5"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "IDR",
+        "lowPrice": "5000",
+        "highPrice": "1000000",
+        "offerCount": "50",
+        "availability": "https://schema.org/InStock",
+        "url": "https://rockstarstore.id/?tab=topup"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://rockstarstore.id/#product-brainrot",
+      "name": "Item & Pet Brainrot Roblox",
+      "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+      "description": "Katalog item, pet, token, dan tanaman Brainrot Roblox terlengkap di Indonesia & Malaysia. Kualitas sultan.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Rockstar.Store"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "100000",
+        "bestRating": "5"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "IDR",
+        "lowPrice": "1000",
+        "highPrice": "500000",
+        "offerCount": "100",
+        "availability": "https://schema.org/InStock",
+        "url": "https://rockstarstore.id/?tab=brainrot"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://rockstarstore.id/#product-akun",
+      "name": "Akun Sepuh Roblox Sultan",
+      "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+      "description": "Beli akun sepuh Roblox berbagai map kualitas sultan dan siap pakai. Terpercaya dengan 100.000+ testimoni amanah.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Rockstar.Store"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "100000",
+        "bestRating": "5"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "IDR",
+        "lowPrice": "10000",
+        "highPrice": "2000000",
+        "offerCount": "50",
+        "availability": "https://schema.org/InStock",
+        "url": "https://rockstarstore.id/?tab=akun"
       }
     }
   ]
