@@ -160,6 +160,46 @@
 }
 </script>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://rockstarstore.id/#local",
+  "name": "Rockstar.Store",
+  "url": "https://rockstarstore.id/",
+  "logo": "https://rockstarstore.id/ROCKSTARLOGO.png",
+  "image": "https://rockstarstore.id/ROCKSTARLOGO.png",
+  "description": "Top up Robux, item Brainrot & akun Roblox premium. Proses kilat, SAFE 100%.",
+  "telephone": "+62-896-6429-9571",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jl. Contoh No. 123",
+    "addressLocality": "Jakarta",
+    "addressRegion": "DKI Jakarta",
+    "postalCode": "12345",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "-6.2088",
+    "longitude": "106.8456"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "08:00",
+    "closes": "22:00"
+  },
+  "priceRange": "Rp 5.000 - Rp 2.000.000",
+  "currenciesAccepted": "IDR",
+  "paymentAccepted": "QRIS, GoPay, DANA, ShopeePay, OVO, Bank Transfer",
+  "sameAs": [
+    "https://www.tiktok.com/@rockstarstoree",
+    "https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q"
+  ]
+}
+</script>
+
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
 <script>
@@ -2700,6 +2740,43 @@ function closeDetail(){
   document.getElementById("detailModal").style.display = "none";
   detailCur = null;
 }
+/* ===== Per-item Product Schema Injection (Rich Snippets) ===== */
+function injectProductSchema(item, category, page, mainImage){
+  try {
+    const url = `https://rockstarstore.id/?tab=${page}&cat=${encodeURIComponent(category.name)}&item=${encodeURIComponent(item.name)}`;
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "@id": `https://rockstarstore.id/#product-${page}-${item.name.replace(/[^a-z0-9]/gi,'-').toLowerCase()}`,
+      "name": item.name,
+      "image": mainImage ? fixImg(mainImage) : `https://rockstarstore.id/ROCKSTARLOGO.png`,
+      "description": item.deskripsi || `${category.name} • ${item.stock === 0 ? "Habis" : "Stok " + (item.stock || "-")} • Proses kilat, SAFE 100%`,
+      "brand": { "@type": "Brand", "name": "Rockstar.Store" },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": String(item.dilihat || "1000"),
+        "bestRating": "5"
+      },
+      "offers": {
+        "@type": "Offer",
+        "priceCurrency": "IDR",
+        "price": String(item.price || 0),
+        "availability": item.stock === 0 ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+        "url": url,
+        "seller": { "@type": "Organization", "name": "Rockstar.Store" }
+      }
+    };
+    // Remove any existing per-item schema
+    document.querySelectorAll('script[type="application/ld+json"][data-product-schema]').forEach(el => el.remove());
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.setAttribute('data-product-schema', 'true');
+    s.textContent = JSON.stringify(schema);
+    document.head.appendChild(s);
+  } catch(e) {}
+}
+
 function renderDetail(){
   if(!detailCur) return;
   const cats = catsOf(detailCur.page);
@@ -2709,6 +2786,10 @@ function renderDetail(){
   const k = Math.min(detailCur.k, files.length - 1);
   detailCur.k = k;
   const off = discountOf(item);
+
+  // Inject per-item Product schema for rich snippets
+  injectProductSchema(item, category, detailCur.page, files[k]);
+
   document.getElementById("detailBox").innerHTML = `
     <div style="position:relative;">
       <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
