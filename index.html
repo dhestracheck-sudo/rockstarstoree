@@ -230,6 +230,56 @@ src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1"/>
 ttq.push([t].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load('YOUR_TIKTOK_PIXEL_ID');ttq.page();}(window,document,'ttq');
 </script>
 
+<!-- Meta/TikTok Event Mapping Helper -->
+<script>
+window.RS_Pixels = {
+  mapEvent: function(gaEvent, params) {
+    // Meta Pixel (fbq) event mapping
+    const fbqMap = {
+      'tambah_keranjang': 'AddToCart',
+      'lihat_produk': 'ViewContent',
+      'buka_kategori': 'ViewContent',
+      'cari_barang': 'Search',
+      'kirim_ke_admin': 'InitiateCheckout',
+      'page_view': 'PageView'
+    };
+    // TikTok Pixel (ttq) event mapping
+    const ttqMap = {
+      'tambah_keranjang': 'AddToCart',
+      'lihat_produk': 'ViewContent',
+      'buka_kategori': 'ViewContent',
+      'cari_barang': 'Search',
+      'kirim_ke_admin': 'InitiateCheckout',
+      'page_view': 'PageView'
+    };
+    const fbqEvent = fbqMap[gaEvent];
+    const ttqEvent = ttqMap[gaEvent];
+    const value = params?.price || params?.value || 0;
+    const currency = params?.currency || 'IDR';
+    const contentName = params?.nama_produk || params?.content_name || '';
+    const contentCategory = params?.kategori || params?.content_category || '';
+    const searchString = params?.kata_cari || params?.search_string || '';
+    const contentIds = params?.content_ids || [];
+    const numItems = params?.jumlah_item || 1;
+
+    if (fbqEvent && typeof fbq === 'function') {
+      const fbqParams = { currency, value };
+      if (contentName) fbqParams.content_name = contentName;
+      if (contentCategory) fbqParams.content_category = contentCategory;
+      if (searchString) fbqParams.search_string = searchString;
+      if (contentIds.length) fbqParams.content_ids = contentIds;
+      fbq('track', fbqEvent, fbqParams);
+    }
+    if (ttqEvent && typeof ttq === 'function') {
+      const ttqParams = { currency, value, content_name: contentName, content_type: 'product' };
+      if (searchString) ttqParams.search_string = searchString;
+      if (contentCategory) ttqParams.content_category = contentCategory;
+      ttq.track(ttqEvent, ttqParams);
+    }
+  }
+};
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -2212,7 +2262,7 @@ function flashAdd(page, i, j){
   logAksi("keranjang", item.name, catsOf(page)[i].name, item.price, page);
   trackClick("tambah_keranjang", item.name, catsOf(page)[i].name);
   if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
+    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: catsOf(page)[i].name });
   }
   syncCart();
 }
@@ -2679,7 +2729,7 @@ function showItems(i){
   const category = categories[i];
   trackClick("buka_kategori", category.name, "");
   if(typeof gtag === "function"){
-    gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) });
+    gtag("event", "buka_kategori", { nama_kategori: category.name, items: category.items.slice(0, 10).map(it => ({ nama_produk: it.name })) }); if (window.RS_Pixels) RS_Pixels.mapEvent("buka_kategori", { nama_kategori: category.name, content_category: category.name });
   }
   shownCat = i;
   shownN = 10;
@@ -2723,7 +2773,7 @@ function openDetail(page, i, j){
   try {
     var _c = catsOf(page), _it = _c[i].items[j];
     logAksi("klik", _it.name, _c[i].name, _it.price, page);
-    if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
+    if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
   } catch(e) {}
   try {
     let rc = JSON.parse(localStorage.getItem("rs_recent") || "[]");
@@ -2837,7 +2887,7 @@ function detailAdd(){
     cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
   logAksi("keranjang", item.name, cats[detailCur.i].name, item.price, detailCur.page);
   if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
+    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
   }
   trackClick("tambah_keranjang", item.name, cats[detailCur.i].name);
   syncCart();
@@ -3018,7 +3068,7 @@ function syncSeoMetadata(){
     setMetaName("twitter:title", title);
     setMetaName("twitter:description", description);
     if (window.gtag){
-      if (window.__rockGaStarted){ window.gtag("event", "page_view", { page_title: title, page_location: canonicalUrl.href }); }
+      if (window.__rockGaStarted){ window.gtag("event", "page_view", { page_title: title, page_location: canonicalUrl.href }); if (window.RS_Pixels) RS_Pixels.mapEvent("page_view", { page_title: title, page_location: canonicalUrl.href }); }
       window.__rockGaStarted = true;
     }
   } catch(e){}
@@ -3078,14 +3128,14 @@ function addItem(i,j){
   logAksi("keranjang", item.name, categories[i].name, item.price, currentPage);
   trackClick("tambah_keranjang", item.name, categories[i].name);
   if(typeof gtag === "function"){
-    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
+    gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: categories[i].name });
   }
   syncCart();
 }
 
 function trackSearch(q){
   if(typeof gtag === "function"){
-    gtag("event", "cari_barang", { kata_cari: q });
+    gtag("event", "cari_barang", { kata_cari: q }); if (window.RS_Pixels) RS_Pixels.mapEvent("cari_barang", { kata_cari: q, search_string: q });
   }
   trackClick("cari_barang", q, "");
 }
@@ -3171,7 +3221,7 @@ function sendToAdmin(){
   if(cart.length==0){ alert(tr("kosong")); return; }
   if(typeof gtag === "function"){
     const totalValue = cart.reduce((s, p) => s + (p.price || 0), 0);
-    gtag("event", "kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" });
+    gtag("event", "kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" }); if (window.RS_Pixels) RS_Pixels.mapEvent("kirim_ke_admin", { jumlah_item: cart.length, value: totalValue, currency: "IDR" });
   }
   logAksi("checkout", cart.length + " item", "", cart.reduce((s, p) => s + (p.price || 0), 0), "");
   let text = "Halo saya mau beli:%0A";
@@ -3452,6 +3502,7 @@ function togetherAdd(page, i, j){
     trackClick("tambah_keranjang", item.name, cats[i].name);
     if(typeof gtag === "function"){
       gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
+      if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
     }
     syncCart();
     closeDetail();
@@ -3483,6 +3534,7 @@ function wishAdd(page, i, j){
     trackClick("tambah_keranjang", item.name, cats[i].name);
     if(typeof gtag === "function"){
       gtag("event", "tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
+      if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[i].name });
     }
     syncCart();
     closeWishModal();
