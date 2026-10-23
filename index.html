@@ -1357,6 +1357,64 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .searchwrap { display: none !important; }
   .headicons { gap: 6px; }
 }
+
+/* ===== Ticker Pita Berjalan (Skema Terpercaya) ===== */
+.trust-marquee {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(6,9,19,0.92), rgba(27,47,130,0.45) 50%, rgba(6,9,19,0.92));
+  border-top: 1px solid rgba(111,139,255,0.22);
+  border-bottom: 1px solid rgba(111,139,255,0.22);
+  padding: 11px 0;
+  display: flex;
+  user-select: none;
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+.trust-track {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  white-space: nowrap;
+  animation: trustScroll 30s linear infinite;
+  will-change: transform;
+  transform: translate3d(0,0,0);
+}
+.trust-track:hover {
+  animation-play-state: paused;
+}
+.trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #f2f5ff;
+  letter-spacing: 0.25px;
+}
+.trust-item b { color: #fff; }
+.trust-item .vstar { color: #ffd166; font-size: 14px; letter-spacing: 1px; }
+.trust-item .vbadge-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1d9bf0;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 0 7px rgba(29,155,240,0.6);
+}
+.trust-dot { color: #6f8bff; opacity: 0.55; font-size: 13px; }
+@keyframes trustScroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
 </style>
 
 </head>
@@ -1698,6 +1756,35 @@ if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ fitMega(); }, t
   </div>
   <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store" width="500" height="500" fetchpriority="high" decoding="async"></div>
 </section>
+
+<div class="trust-marquee" aria-label="Informasi Toko Terpercaya">
+  <div class="trust-track">
+    <div class="trust-item"><span class="vstar">⭐⭐⭐⭐⭐</span> <b>4.9/5.0 Rating</b> (100K+ Ulasan Pembeli)</div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">⚡ <b>Top Up Robux Kilat &amp; Aman</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">🧠 <b>Item &amp; Pet Brainrot Sultan</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">👤 <b>Akun Sepuh Roblox Ready</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">📦 <b>Stok Selalu Tersedia</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">🛡️ <b>SAFE 100%</b> <span class="vbadge-mini">✓</span> <b>VERIFIED</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item"><span class="vstar">⭐⭐⭐⭐⭐</span> <b>4.9/5.0 Rating</b> (100K+ Ulasan Pembeli)</div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">⚡ <b>Top Up Robux Kilat &amp; Aman</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">🧠 <b>Item &amp; Pet Brainrot Sultan</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">👤 <b>Akun Sepuh Roblox Ready</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">📦 <b>Stok Selalu Tersedia</b></div>
+    <span class="trust-dot">•</span>
+    <div class="trust-item">🛡️ <b>SAFE 100%</b> <span class="vbadge-mini">✓</span> <b>VERIFIED</b></div>
+    <span class="trust-dot">•</span>
+  </div>
+</div>
 
 <div class="stats">
   <div class="stat"><b>100K+</b><span data-i18n="st1">Testimoni amanah</span></div>
