@@ -302,14 +302,16 @@ html { scroll-behavior: auto; overflow-anchor: none; }
 img {
   image-rendering: -webkit-optimize-contrast;
 }
+body {
+  margin: 0;
   font-family: 'Poppins', sans-serif;
-  background-color: var(--bg);
   color: var(--txt);
   min-height: 100vh;
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
 }
 body::before {
   content: "";
