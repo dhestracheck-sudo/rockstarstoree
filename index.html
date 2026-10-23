@@ -2622,6 +2622,7 @@ function selectCurrency(c){
   ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
   try { render(); } catch(e) {}
 }
+window.addEventListener("scroll", function(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }, {passive:true});
 function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   let m = document.getElementById("curMenu");
