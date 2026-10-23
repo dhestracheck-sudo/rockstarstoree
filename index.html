@@ -2345,7 +2345,7 @@ function flashHTML(){
         <div class="stars">${starsOf(it)}</div>
         ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
         ${stockBarHTML(it)}`}
-        <div class="price"><span class="now">Rp ${it.price.toLocaleString()}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
+        <div class="price"><span class="now">${formatCurrency(it.price)}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
@@ -2780,7 +2780,7 @@ function itemCard(categories, i, j){
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
-          : `<span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}${rmFmt(item.price) ? `<div class="rm">${rmFmt(item.price)}</div>` : ``}`}
+          : `<span class="now">${formatCurrency(item.price)}</span>${item.originalPrice ? `<span class="was">${formatCurrency(item.originalPrice)}</span>` : ``}${rmFmt(item.price) ? `<div class="rm">${rmFmt(item.price)}</div>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
       <button class="btn" ${item.stock === 0 ? 'style="background:#232c44;color:var(--mut);cursor:not-allowed;"' : ''} onclick="event.stopPropagation();${item.stock === 0 ? `alert(tr('habis_alert'))` : `addItem(${i},${j})`}">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
@@ -2927,7 +2927,7 @@ function renderDetail(){
     </div>
     ${stockBarHTML(item)}
     <div class="detailprice">
-      <span class="now">Rp ${item.price.toLocaleString()}</span>${item.originalPrice ? `<span class="was">Rp ${item.originalPrice.toLocaleString()}</span>` : ``}
+      <span class="now">${formatCurrency(item.price)}</span>${item.originalPrice ? `<span class="was">${formatCurrency(item.originalPrice)}</span>` : ``}
       ${rmFmt(item.price) ? `<div class="rm" style="font-size:14px;">${rmFmt(item.price)}</div>` : ``}
     </div>
     <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
@@ -3265,7 +3265,7 @@ function checkout(){
     previewHTML += `
       <div class="mrow">
         <img src="${itemImage}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>Rp ${item.price.toLocaleString()}</div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}</div>
       </div>`;
   });
   previewHTML += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
@@ -3343,7 +3343,7 @@ function openCartModal(){
     totalPrice += item.price;
     html += `
       <div class="mrow">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">Rp ${item.price.toLocaleString()}</span></div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span></div>
         <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
       </div>`;
   });
