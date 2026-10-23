@@ -299,22 +299,16 @@ window.RS_Pixels = {
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: auto; overflow-anchor: none; }
-img {
-  image-rendering: -webkit-optimize-contrast;
-}
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
   color: var(--txt);
   min-height: 100vh;
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 body::before {
-  display: none;
-}
+  content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -1581,17 +1575,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   ]
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    { "@type": "Question", "name": "Bagaimana cara order di Rockstar.Store?", "acceptedAnswer": { "@type": "Answer", "text": "Pilih produk, masukkan keranjang, lalu chat admin WhatsApp untuk proses pembayaran dan pengiriman." } },
-    { "@type": "Question", "name": "Apakah aman dan bergaransi?", "acceptedAnswer": { "@type": "Answer", "text": "Ya, proses kilat dan aman 100%, dengan testimoni 100.000+ pelanggan." } },
-    { "@type": "Question", "name": "Berapa lama proses pengiriman?", "acceptedAnswer": { "@type": "Answer", "text": "Hitungan menit setelah pembayaran terkonfirmasi." } }
-  ]
-}
-</script>
 </head>
 <body>
 
@@ -2609,7 +2592,6 @@ function selectLang(code){
   try { localStorage.setItem("rs_lang", code); } catch(e) {}
   const L = code;
   ["langBtn","mnavLang"].forEach(id=>{ const b=document.getElementById(id); const info=RS_LANGS.find(x=>x.code===code); if(b&&info) b.textContent="Bahasa "+info.flag; });
-  document.body.style.overflow="";
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
@@ -2618,15 +2600,14 @@ function toggleLangMenu(e){
   if (e) e.stopPropagation();
   const cm = document.getElementById("curMenu"); if (cm) cm.style.display="none";
   let m = document.getElementById("langMenu");
-  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:14px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:260px;box-shadow:0 20px 50px rgba(0,0,0,0.6);backdrop-filter:blur(8px);"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:240px;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
   const cur = lang();
   m.innerHTML = RS_LANGS.map(l=>`<button onclick="selectLang('${l.code}');document.getElementById('langMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${l.code===cur?'<span style=\\"color:#3b82f6\\">✓</span> ':''}${l.flag}<br>${l.label}</button>`).join("");
-  m.style.left = Math.round(window.innerWidth/2) + "px";
-  m.style.top = Math.round(window.innerHeight/2) + "px";
+  m.style.left = "50%";
+  m.style.top = "50%";
   m.style.transform = "translate(-50%,-50%)";
   m.style.display = "grid";
-  document.body.style.overflow = "hidden";
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
@@ -2640,10 +2621,9 @@ function selectCurrency(c){
   setCurrency(c);
   const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
   ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
-  document.body.style.overflow="";
   try { render(); } catch(e) {}
 }
-function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; document.body.style.overflow=""; }
+function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }
 window.addEventListener("scroll", closeCurLangMenus, {passive:true});
 window.addEventListener("touchmove", closeCurLangMenus, {passive:true});
 window.addEventListener("wheel", closeCurLangMenus, {passive:true});
@@ -2651,14 +2631,13 @@ function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   const lm = document.getElementById("langMenu"); if (lm) lm.style.display="none";
   let m = document.getElementById("curMenu");
-  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:14px;padding:10px;display:none;grid-template-columns:repeat(3,1fr);gap:6px;min-width:200px;box-shadow:0 20px 50px rgba(0,0,0,0.6);backdrop-filter:blur(8px);"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
   m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${c===currency()?'<span style="color:#3b82f6">✓</span> ':''}${info.flag}<br>${c}</button>`; }).join("");
-m.style.left = Math.round(window.innerWidth/2) + "px";
-  m.style.top = Math.round(window.innerHeight/2) + "px";
+m.style.left = "50%";
+  m.style.top = "50%";
   m.style.transform = "translate(-50%,-50%)";
   m.style.display = "grid";
-  document.body.style.overflow = "hidden";
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function formatCurrency(idr){
