@@ -2623,7 +2623,10 @@ function selectCurrency(c){
   ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
   try { render(); } catch(e) {}
 }
-window.addEventListener("scroll", function(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }, {passive:true});
+function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }
+window.addEventListener("scroll", closeCurLangMenus, {passive:true});
+window.addEventListener("touchmove", closeCurLangMenus, {passive:true});
+window.addEventListener("wheel", closeCurLangMenus, {passive:true});
 function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   const lm = document.getElementById("langMenu"); if (lm) lm.style.display="none";
