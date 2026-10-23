@@ -2609,7 +2609,8 @@ function toggleLangMenu(e){
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
-const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083 };
+const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083, CNY: 0.00045, JPY: 0.0095, THB: 0.0022 };
+const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID"}, USD:{flag:"🇺🇸",sym:"$",loc:"en-US"}, MYR:{flag:"🇲🇾",sym:"RM",loc:"en-MY"}, SGD:{flag:"🇸🇬",sym:"S$",loc:"en-SG"}, CNY:{flag:"🇨🇳",sym:"¥",loc:"zh-CN"}, JPY:{flag:"🇯🇵",sym:"¥",loc:"ja-JP"}, THB:{flag:"🇹🇭",sym:"฿",loc:"th-TH"} };
 function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
 function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
 function selectCurrency(c){
@@ -2622,7 +2623,7 @@ function toggleCurrencyMenu(e){
   let m = document.getElementById("curMenu");
   if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:120px;"; document.body.appendChild(m); }
   if (m.style.display==="flex"){ m.style.display="none"; return; }
-  m.innerHTML = ["IDR","USD","MYR","SGD"].map(c=>`<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 12px;text-align:left;border-radius:6px;cursor:pointer;">${c===currency()?'✓ ':''}${c}</button>`).join("");
+  m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 12px;text-align:left;border-radius:6px;cursor:pointer;">${c===currency()?'✓ ':''}${info.flag} ${c}</button>`; }).join("");
   const r = (e && e.currentTarget) ? e.currentTarget.getBoundingClientRect() : {left:10,top:60};
   m.style.left = r.left + "px";
   m.style.top = (r.bottom + 4) + "px";
@@ -2631,10 +2632,10 @@ function toggleCurrencyMenu(e){
 }
 function formatCurrency(idr){
   const c = currency();
+  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
   const rate = RS_CURRENCIES[c] || 1;
   const v = Math.round((idr||0)*rate);
-  const sym = { IDR:"Rp", USD:"$", MYR:"RM", SGD:"S$" }[c] || c;
-  return sym + " " + v.toLocaleString(c==="IDR"?"id-ID":"en-US");
+  return info.sym + " " + v.toLocaleString(info.loc);
 }
 function render(){
   try { syncHeroCta(); } catch(e) {}
