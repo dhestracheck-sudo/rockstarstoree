@@ -2569,9 +2569,10 @@ function applyLang(){
   const info = RS_LANGS.find(x=>x.code===L);
   if(b && info) b.textContent = info.flag + " " + L.toUpperCase();
   const cb = document.getElementById("curBtn");
-  if(cb) cb.textContent = "💱 " + currency();
+  const ci = RS_CURRENCY_INFO[currency()] || RS_CURRENCY_INFO.IDR;
+  if(cb) cb.textContent = ci.flag + " " + currency();
   const cb2 = document.getElementById("mnavCur");
-  if(cb2) cb2.textContent = "💱 " + currency();
+  if(cb2) cb2.textContent = ci.flag + " " + currency();
   const b2 = document.getElementById("mnavLang");
   const info2 = RS_LANGS.find(x=>x.code===L);
   if(b2 && info2) b2.textContent = info2.flag + " " + L.toUpperCase();
@@ -2611,11 +2612,14 @@ function toggleLangMenu(e){
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
 const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083, CNY: 0.00045, JPY: 0.0095, THB: 0.0022 };
 const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID"}, USD:{flag:"🇺🇸",sym:"$",loc:"en-US"}, MYR:{flag:"🇲🇾",sym:"RM",loc:"en-MY"}, SGD:{flag:"🇸🇬",sym:"S$",loc:"en-SG"}, CNY:{flag:"🇨🇳",sym:"¥",loc:"zh-CN"}, JPY:{flag:"🇯🇵",sym:"¥",loc:"ja-JP"}, THB:{flag:"🇹🇭",sym:"฿",loc:"th-TH"} };
+// Fetch live rates from IDR
+fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{ if(d&&d.rates){ Object.keys(RS_CURRENCIES).forEach(c=>{ if(d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; }); } }).catch(()=>{});
 function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
 function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
 function selectCurrency(c){
   setCurrency(c);
-  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="💱 "+c; });
+  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
+  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent=info.flag+" "+c; });
   try { render(); } catch(e) {}
 }
 function toggleCurrencyMenu(e){
