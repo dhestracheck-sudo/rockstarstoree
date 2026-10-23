@@ -2599,7 +2599,7 @@ function selectLang(code){
 function toggleLangMenu(e){
   if (e) e.stopPropagation();
   let m = document.getElementById("langMenu");
-  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:150px;"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:150px;max-height:60vh;overflow-y:auto;"; document.body.appendChild(m); }
   if (m.style.display==="flex"){ m.style.display="none"; return; }
   const cur = lang();
   m.innerHTML = RS_LANGS.map(l=>`<button onclick="selectLang('${l.code}');document.getElementById('langMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 12px;text-align:left;border-radius:6px;cursor:pointer;">${l.code===cur?'✓ ':''}${l.flag} ${l.label}</button>`).join("");
@@ -2625,7 +2625,7 @@ function selectCurrency(c){
 function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   let m = document.getElementById("curMenu");
-  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:120px;"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;flex-direction:column;gap:4px;min-width:120px;max-height:60vh;overflow-y:auto;"; document.body.appendChild(m); }
   if (m.style.display==="flex"){ m.style.display="none"; return; }
   m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 12px;text-align:left;border-radius:6px;cursor:pointer;">${c===currency()?'✓ ':''}${info.flag} ${c}</button>`; }).join("");
   const r = (e && e.currentTarget) ? e.currentTarget.getBoundingClientRect() : {left:10,top:60};
