@@ -1227,6 +1227,19 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     padding: 0;
   }
   body { overflow-x: hidden; }
+  /* hero utama: satu layar penuh + tulisan diperbesar (desktop saja) */
+  .hero {
+    max-width: min(1640px, 97vw);
+    min-height: 100vh;
+    gap: 60px;
+    padding: 40px 40px 50px;
+  }
+  .hero-kicker { font-size: 15px; padding: 9px 20px; }
+  .hero h1 { font-size: 78px; }
+  .hero p { font-size: 19.5px; max-width: 680px; }
+  .channel-link { font-size: 18px; }
+  .hero-cta .btn-primary, .hero-cta .btn-ghost { font-size: 17.5px; padding: 16px 30px; border-radius: 14px; }
+  .hero-visual img.hero-logo { width: min(320px, 80%); }
 }
 </style>
 <!-- Google tag (gtag.js) - Google Analytics 4 -->
