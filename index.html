@@ -1597,6 +1597,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     <button class="cartbtn" id="wishBtn" onclick="openWishModal()" style="background:#6d28d9;">🤍 <small id="wishCount">0</small></button>
     <button class="cartbtn" onclick="openCartModal()"><span data-i18n="cart">🛒 Keranjang</span> <small id="cartCount">0</small></button>
     <button class="cartbtn" id="langBtn" onclick="toggleLang()" style="background:#0e1628;border:1px solid var(--line);">🇬🇧 EN</button>
+    <button class="cartbtn" id="curBtn" onclick="toggleCurrency()" style="background:#0e1628;border:1px solid var(--line);">💱 IDR</button>
     <button class="burger" id="burgerBtn" onclick="toggleMnav()" aria-label="Buka menu">☰</button>
   </div>
 </header>
@@ -2565,6 +2566,8 @@ function applyLang(){
   });
   const b = document.getElementById("langBtn");
   if(b) b.textContent = (L === "id") ? "🇬🇧 EN" : "🇮🇩 ID";
+  const cb = document.getElementById("curBtn");
+  if(cb) cb.textContent = "💱 " + currency();
   const b2 = document.getElementById("mnavLang");
   if(b2) b2.textContent = b ? b.textContent : ((L === "id") ? "🇬🇧 EN" : "🇮🇩 ID");
 }
@@ -2573,6 +2576,25 @@ function toggleLang(){
   applyLang();
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
+}
+const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083 };
+function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
+function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
+function toggleCurrency(){
+  const order = ["IDR","USD","MYR","SGD"];
+  const cur = currency();
+  const next = order[(order.indexOf(cur)+1) % order.length];
+  setCurrency(next);
+  const btn = document.getElementById("curBtn");
+  if (btn) btn.textContent = "💱 " + next;
+  try { render(); } catch(e) {}
+}
+function formatCurrency(idr){
+  const c = currency();
+  const rate = RS_CURRENCIES[c] || 1;
+  const v = Math.round((idr||0)*rate);
+  const sym = { IDR:"Rp", USD:"$", MYR:"RM", SGD:"S$" }[c] || c;
+  return sym + " " + v.toLocaleString(c==="IDR"?"id-ID":"en-US");
 }
 function render(){
   try { syncHeroCta(); } catch(e) {}
