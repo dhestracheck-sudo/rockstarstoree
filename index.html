@@ -1211,8 +1211,15 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   /* foto Min Rock (ke WA): diperbesar */
   .rockchat { bottom: calc(112px + env(safe-area-inset-bottom)); }
   .rc-wrap, .rc-btn { width: 184px; height: 184px; }
-  #rcBubbleWrap { right: 20px; bottom: calc(112px + env(safe-area-inset-bottom) + 184px - 34px); }
+  #rcBubbleWrap { right: 20px; bottom: calc(112px + env(safe-area-inset-bottom) + 192px); }
   .rc-bubble { font-size: 16px; max-width: 340px; padding: 13px 18px; }
+  /* bar bawah desktop: melebar sampai ujung kiri-kanan layar */
+  .botnav {
+    left: 0; right: 0; transform: none;
+    bottom: 0; width: 100%; max-width: none;
+    border-radius: 0; border: none;
+    padding: 10px 18px calc(10px + env(safe-area-inset-bottom));
+  }
 }
 </style>
 <!-- Google tag (gtag.js) - Google Analytics 4 -->
