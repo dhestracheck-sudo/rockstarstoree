@@ -206,7 +206,7 @@ async function getCatalogRows(context, table) {
   const url = `${SUPABASE_URL}/rest/v1/${table}?select=*&order=urutan`;
   const response = await fetch(url, {
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-    signal: AbortSignal.timeout(2500)
+    signal: AbortSignal.timeout(1000)
   });
   if (!response.ok) throw new Error("Catalog request failed");
   const rows = await response.json();
@@ -244,7 +244,7 @@ export async function onRequest(context) {
   const request = context.request;
   const url = new URL(request.url);
   const page = String(url.searchParams.get("tab") || "").toLowerCase();
-  if (request.method !== "GET" || url.pathname !== "/" || !PAGE_TABLES[page]) return context.next();
+  if (request.method !== "GET" || url.pathname !== "/" || !PAGE_TABLES[page] || url.searchParams.has("q")) return context.next();
 
   const langParam = String(url.searchParams.get("lang") || "id").toLowerCase();
   const lang = LANGUAGES.includes(langParam) ? langParam : "id";
@@ -252,6 +252,7 @@ export async function onRequest(context) {
   try {
     const rows = await getCatalogRows(context, PAGE_TABLES[page]);
     const categories = buildCategories(rows);
+    if (!categories.length) return context.next();
     const requestedCategory = String(url.searchParams.get("cat") || "").trim();
     const selectedIndex = requestedCategory ? categories.findIndex((category) => category.name.toLowerCase() === requestedCategory.toLowerCase()) : -1;
     const selectedCategory = selectedIndex >= 0 ? categories[selectedIndex] : null;
