@@ -1,14 +1,26 @@
 # Rockstar.Store
 
-> Rockstar.Store is an online store for Roblox top-ups, game items, accounts, and services.
+> Rockstar.Store is an online store for Roblox top-ups, Brainrot items, Roblox accounts, and game services. Check the live catalog for current prices and product availability.
 
-## Main pages
-- [Home](https://rockstarstore.id/): Browse the store and current product catalog.
-- [Robux top-up](https://rockstarstore.id/?tab=topup): View Robux top-up products.
+## Shop
+- [Home and product catalog](https://rockstarstore.id/): Browse currently listed products and services.
+- [Robux top-ups](https://rockstarstore.id/?tab=topup): Browse Robux top-up products.
 - [Brainrot items](https://rockstarstore.id/?tab=brainrot): Browse Brainrot game items.
 - [Roblox accounts](https://rockstarstore.id/?tab=akun): Browse Roblox account listings.
-- [Joki services](https://rockstarstore.id/?tab=joki): View available game services.
+- [Joki services](https://rockstarstore.id/?tab=joki): Browse available game services.
+
+## Languages
+- [Bahasa Indonesia](https://rockstarstore.id/?lang=id)
+- [English](https://rockstarstore.id/?lang=en)
+- [Japanese](https://rockstarstore.id/?lang=ja)
+- [Korean](https://rockstarstore.id/?lang=ko)
+- [Chinese](https://rockstarstore.id/?lang=zh)
+- [French](https://rockstarstore.id/?lang=fr)
+- [Thai](https://rockstarstore.id/?lang=th)
+- [Vietnamese](https://rockstarstore.id/?lang=vi)
 
 ## Site information
 - [Sitemap](https://rockstarstore.id/sitemap.xml): Index of public store pages.
 - [Robots instructions](https://rockstarstore.id/robots.txt): Public crawler access and sitemap information.
+- [ARD resource manifest](https://rockstarstore.id/.well-known/ard.json): Current agent-resource discovery manifest.
+- [AI catalog](https://rockstarstore.id/.well-known/ai-catalog.json): AI catalog discovery manifest.
