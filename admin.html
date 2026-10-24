@@ -123,6 +123,10 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 .srow .sacts button:hover { color:#fff; border-color:var(--blue); filter:none; }
 .srow .sacts button.del { background:rgba(255,93,93,.14); border-color:rgba(255,93,93,.35); color:#ff9a9a; }
 @media (min-width:600px){ .srow .sacts { flex:0 0 auto; margin-left:auto; } }
+.testimoni-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:10px; margin-top:12px; }
+.testimoni-admin-card { min-width:0; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:12px; padding:8px; }
+.testimoni-admin-card img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; border-radius:8px; background:#09152c; }
+.testimoni-admin-card small { display:block; margin-top:6px; color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* ===== baris data akun ===== */
 .arow { display:flex; gap:10px; align-items:center; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:13px; padding:10px 12px; margin-top:10px; font-size:13px; line-height:1.55; }
@@ -168,11 +172,13 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <a href="#mainCard" class="tile"><div class="ico">📦</div><div class="lbl">Produk</div></a>
     <a href="#slideCard" class="tile"><div class="ico">🖼️</div><div class="lbl">Foto</div></a>
     <a href="#catCard" class="tile"><div class="ico">🗂️</div><div class="lbl">Kategori</div></a>
+    <a href="#testimoniCard" class="tile"><div class="ico">⭐</div><div class="lbl">Testimoni</div></a>
+    <a href="#serverConfigCard" class="tile"><div class="ico">🔗</div><div class="lbl">Private Server</div></a>
     <a href="#addCard" class="tile"><div class="ico">➕</div><div class="lbl">Tambah Baru</div></a>
   </div>
 
   <nav class="minibar" id="miniNav">
-    <a href="#teksCard">Teks</a><a href="#akunDataCard">Data Akun</a><a href="#mainCard">Produk</a><a href="#slideCard">Foto</a><a href="#catCard">Kategori</a><a href="#addCard">Tambah</a>
+    <a href="#teksCard">Teks</a><a href="#akunDataCard">Data Akun</a><a href="#mainCard">Produk</a><a href="#slideCard">Foto</a><a href="#catCard">Kategori</a><a href="#testimoniCard">Testimoni</a><a href="#serverConfigCard">Server</a><a href="#addCard">Tambah</a>
   </nav>
 
   <div class="card" id="pinCard">
@@ -205,6 +211,30 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     </div>
     <div id="statusKurs"></div>
     <p class="hint">Nilai kurs di sini menjadi sumber konversi harga IDR ke MYR (RM) pada fitur mata uang storefront. Setelah menyimpan, muat ulang storefront agar nilai kurs terbaru digunakan.</p>
+  </div>
+
+  <h2 class="sect" id="sectTestimoni" style="display:none;">⭐ TESTIMONI — foto publik di galeri storefront</h2>
+  <div class="card" id="testimoniCard" style="display:none;">
+    <label>Tambah foto testimoni (maksimal 100 foto per proses)</label>
+    <input type="file" id="testimoniFiles" accept="image/*" multiple>
+    <button id="testimoniUploadBtn" onclick="uploadTestimoniPhotos()">⬆️ Upload Foto Testimoni</button>
+    <div id="testimoniUploadStatus"></div>
+    <div id="testimoniAdminList" class="testimoni-admin-grid"></div>
+    <p class="hint" style="margin-top:12px;">Foto otomatis dikecilkan menjadi WebP hingga 1600 px dan dibuat thumbnail 480 px. Foto yang diunggah tampil untuk umum di tombol “Lihat Semua Testimoni”. Hindari foto yang memuat nomor telepon, bukti transaksi, atau data pribadi tanpa izin.</p>
+  </div>
+
+  <h2 class="sect" id="sectServerConfig" style="display:none;">🔗 LINK PRIVATE SERVER — tampil di halaman server Rockstar</h2>
+  <div class="card" id="serverConfigCard" style="display:none;">
+    <label>Daftar link private server Roblox</label>
+    <div id="serverDraftList"></div>
+    <label>Nama server</label>
+    <input id="serverNameInput" type="text" maxlength="60" placeholder="misal: Server Grow A Garden 2">
+    <label>Link private server Roblox</label>
+    <input id="serverUrlInput" type="url" placeholder="https://www.roblox.com/share?code=...&amp;type=Server">
+    <button class="ghost" onclick="addServerDraft()">➕ Tambah ke daftar</button>
+    <button class="succ" id="serverSaveBtn" onclick="saveServerSettings()">💾 Simpan Daftar Server</button>
+    <div id="serverSettingsStatus"></div>
+    <p class="hint" style="margin-top:12px;">Perubahan langsung dibaca dari Supabase saat pengunjung membuka daftar server. Jika daftar belum disimpan, web tetap memakai link bawaan saat ini.</p>
   </div>
 
   <h2 class="sect" id="sectAkun" style="display:none;">🔐 DATA AKUN — id/pw per akun (pengunjung tidak bisa intip)</h2>
@@ -438,13 +468,15 @@ window.addEventListener("resize", stickSync);
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","miniNav","sheetCard","teksCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","miniNav","sheetCard","teksCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     document.getElementById("featMenu").style.display = "grid";
     document.getElementById("sheetBar").style.display = "flex";
     stickSync();
     loadTeks();
     loadItems();
     loadAkunProds();
+    loadTestimoniAdmin();
+    loadServerSettings();
   } else {
     alert("PIN salah.");
   }
