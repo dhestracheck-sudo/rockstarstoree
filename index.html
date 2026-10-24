@@ -200,7 +200,7 @@
   },
   "priceRange": "Rp 5.000 - Rp 2.000.000",
   "currenciesAccepted": "IDR",
-  "paymentAccepted": "QRIS, GoPay, DANA, ShopeePay, OVO, Bank Transfer",
+  "paymentAccepted": "QRIS, GoPay, DANA, ShopeePay, OVO, All Bank Transfer, Binance Pay",
   "sameAs": [
     "https://www.tiktok.com/@rockstarstoree",
     "https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q"
@@ -1179,7 +1179,10 @@ header {
 .payment-method.bank-transfer { width: 102px; }
 .payment-logo-surface { display: grid; width: 58px; height: 52px; place-items: center; padding: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,.18); }
 .payment-method img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.bank-transfer .payment-logo-surface { width: 94px; }
+.payment-method.all-bank, .payment-method.binance { width: 82px; }
+.payment-text-mark { display: grid; width: 72px; height: 52px; place-items: center; padding: 5px; border: 1px solid rgba(255,255,255,.18); border-radius: 9px; color: #e6efff; background: rgba(255,255,255,.07); font-size: 11px; font-weight: 900; line-height: 1.1; letter-spacing: .04em; }
+.payment-method.binance .payment-text-mark { color: #181a20; border-color: #f0b90b; background: #f0b90b; font-size: 10px; letter-spacing: .08em; }
+.payment-method.all-bank > span:last-child, .payment-method.binance > span:last-child { white-space: nowrap; }
 .payment-note { margin: 14px 0 0; color: var(--mut); font-size: 11px; line-height: 1.6; }
 @media (max-width: 760px) {
   .faq-section.section { padding-top: 36px; padding-bottom: 26px; }
@@ -2354,7 +2357,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     </details>
     <details class="faq-item">
       <summary>Apa saja metode pembayarannya?</summary>
-      <div class="faq-answer">Pembayaran tersedia melalui QRIS, GoPay, DANA, ShopeePay, OVO, dan transfer bank. Konfirmasikan metode serta jumlah akhir kepada admin sebelum membayar, lalu kirim bukti pembayaran melalui WhatsApp.</div>
+      <div class="faq-answer">Pembayaran tersedia melalui QRIS, GoPay, DANA, ShopeePay, OVO, All Bank, dan Binance Pay. Konfirmasikan metode serta jumlah akhir kepada admin sebelum membayar, lalu kirim bukti pembayaran melalui WhatsApp.</div>
     </details>
     <details class="faq-item">
       <summary>Kenapa total pembayaran bisa berbeda dari harga produk?</summary>
@@ -2379,7 +2382,8 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="dana.webp" alt="DANA" width="58" height="52" loading="lazy" decoding="async"></span><span>DANA</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="shopee.png" alt="ShopeePay" width="58" height="52" loading="lazy" decoding="async"></span><span>ShopeePay</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="ovo.jpg" alt="OVO" width="58" height="52" loading="lazy" decoding="async"></span><span>OVO</span></div>
-    <div class="payment-method bank-transfer" role="listitem"><span class="payment-logo-surface"><img src="bank-transfer.webp" alt="Transfer bank Mandiri dan BNI" width="94" height="52" loading="lazy" decoding="async"></span><span>Transfer Bank</span></div>
+    <div class="payment-method all-bank" role="listitem"><span class="payment-text-mark">ALL BANK</span></div>
+    <div class="payment-method binance" role="listitem"><span class="payment-text-mark">BINANCE</span><span>Binance Pay</span></div>
   </div>
   <p class="payment-note">Pastikan metode pembayaran dan total pesanan dikonfirmasi admin sebelum melakukan pembayaran.</p>
 </section>
