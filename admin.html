@@ -127,6 +127,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 .testimoni-admin-card { min-width:0; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:12px; padding:8px; }
 .testimoni-admin-card img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; border-radius:8px; background:#09152c; }
 .testimoni-admin-card small { display:block; margin-top:6px; color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.testimoni-admin-card.selected { border-color:rgba(155,178,255,.78); background:rgba(74,104,255,.1); box-shadow:0 0 0 1px rgba(155,178,255,.16); }
 
 /* ===== baris data akun ===== */
 /* ===== kontrol pilihan foto testimoni ===== */
@@ -1303,11 +1304,14 @@ function setTestimoniAdminListExpanded(expanded){
   const count = TESTIMONI_INFO_ROWS.length;
   const open = !!expanded && count > 0;
   box.style.display = open ? "grid" : "none";
+  const tools = document.getElementById("testimoniBulkTools");
+  if(tools) tools.style.display = open ? "flex" : "none";
   toggle.disabled = count === 0;
   toggle.setAttribute("aria-expanded", open ? "true" : "false");
   toggle.textContent = count
     ? (open ? "🙈 Sembunyikan foto" : "👁️ Tampilkan foto") + " yang sudah diunggah (" + count + ")"
     : "Belum ada foto tersimpan";
+  updateTestimoniSelection();
 }
 function toggleTestimoniAdminList(){
   const toggle = document.getElementById("testimoniListToggle");
@@ -1330,6 +1334,16 @@ function loadTestimoniAdmin(){
     TESTIMONI_INFO_ROWS.forEach(function(row, i){
       const card = document.createElement("div");
       card.className = "testimoni-admin-card";
+      const selectLabel = document.createElement("label");
+      selectLabel.className = "testimoni-card-select";
+      const select = document.createElement("input");
+      select.type = "checkbox";
+      select.className = "testimoni-row-checkbox";
+      select.value = String(row.name || "");
+      select.setAttribute("aria-label", "Pilih foto testimoni " + (i + 1));
+      select.onchange = function(){ card.classList.toggle("selected", select.checked); updateTestimoniSelection(); };
+      selectLabel.appendChild(select);
+      selectLabel.appendChild(document.createTextNode("Pilih foto ini"));
       const link = document.createElement("a");
       link.href = row.image; link.target = "_blank"; link.rel = "noopener noreferrer";
       const img = document.createElement("img");
@@ -1338,10 +1352,99 @@ function loadTestimoniAdmin(){
       img.onerror = function(){ if(img.src !== row.image) img.src = row.image; };
       link.appendChild(img);
       const cap = document.createElement("small"); cap.textContent = "Foto testimoni #" + (i + 1);
-      card.appendChild(link); card.appendChild(cap); box.appendChild(card);
+      card.appendChild(selectLabel); card.appendChild(link); card.appendChild(cap); box.appendChild(card);
     });
     setTestimoniAdminListExpanded(wasExpanded);
   });
+}
+
+let TESTIMONI_DELETE_BUSY = false;
+function updateTestimoniSelection(){
+  const box = document.getElementById("testimoniAdminList");
+  const countLabel = document.getElementById("testimoniSelectionCount");
+  const deleteBtn = document.getElementById("testimoniDeleteBtn");
+  const selectAll = document.getElementById("testimoniSelectAll");
+  if(!box || !countLabel || !deleteBtn || !selectAll) return;
+  const checks = Array.from(box.querySelectorAll(".testimoni-row-checkbox"));
+  const selected = checks.filter(function(check){ return check.checked; }).length;
+  countLabel.textContent = selected + " dipilih dari " + checks.length;
+  deleteBtn.disabled = selected === 0 || TESTIMONI_DELETE_BUSY;
+  selectAll.checked = checks.length > 0 && selected === checks.length;
+  selectAll.indeterminate = selected > 0 && selected < checks.length;
+}
+function toggleAllTestimoniRows(checked){
+  document.querySelectorAll("#testimoniAdminList .testimoni-row-checkbox").forEach(function(input){
+    input.checked = !!checked;
+    input.closest(".testimoni-admin-card").classList.toggle("selected", !!checked);
+  });
+  updateTestimoniSelection();
+}
+function fotoStoragePath(value){
+  try {
+    const u = new URL(String(value || "").trim());
+    const prefix = "/storage/v1/object/public/foto/";
+    if(!isPublicFotoUrl(u.href) || u.pathname.indexOf(prefix) !== 0) return "";
+    const path = decodeURIComponent(u.pathname.slice(prefix.length));
+    return /^[A-Za-z0-9._-]+$/.test(path) && path.indexOf("..") === -1 ? path : "";
+  } catch(e){ return ""; }
+}
+async function deleteSelectedTestimoniPhotos(){
+  if(TESTIMONI_DELETE_BUSY) return;
+  const status = document.getElementById("testimoniUploadStatus");
+  const checks = Array.from(document.querySelectorAll("#testimoniAdminList .testimoni-row-checkbox:checked"));
+  const names = Array.from(new Set(checks.map(function(check){ return String(check.value || "").trim(); })))
+    .filter(function(name){ return /^INFO_TESTIMONI_[A-Za-z0-9_-]+$/.test(name) && TESTIMONI_INFO_ROWS.some(function(row){ return String(row.name || "").trim() === name; }); });
+  if(!names.length){ status.textContent = "Pilih satu atau beberapa foto dulu."; updateTestimoniSelection(); return; }
+  if(!confirm("Hapus " + names.length + " foto testimoni yang dipilih beserta thumbnail-nya? Penghapusan permanen dan tidak bisa dibatalkan.")) return;
+
+  const rows = names.map(function(name){ return TESTIMONI_INFO_ROWS.find(function(row){ return String(row.name || "").trim() === name; }); });
+  const paths = [];
+  for(const row of rows){
+    const photoPath = fotoStoragePath(row && row.image);
+    if(!photoPath){ status.textContent = "Ada foto dengan URL Storage tidak valid. Tidak ada yang dihapus."; return; }
+    paths.push(photoPath, "thumb_" + photoPath);
+  }
+  const uniquePaths = Array.from(new Set(paths));
+  if(uniquePaths.length > 1000){ status.textContent = "Pilihan terlalu banyak untuk satu kali hapus. Pilih maksimal 500 foto."; return; }
+
+  TESTIMONI_DELETE_BUSY = true;
+  updateTestimoniSelection();
+  const deleteBtn = document.getElementById("testimoniDeleteBtn");
+  deleteBtn.textContent = "Menghapus foto...";
+  status.textContent = "Menghapus file foto dan thumbnail dari Supabase Storage...";
+  try {
+    const storageResponse = await fetch(SB_URL + "/storage/v1/object/foto", {
+      method: "DELETE",
+      headers: sbH(),
+      body: JSON.stringify({ prefixes: uniquePaths })
+    });
+    if(!storageResponse.ok) throw new Error("Storage menolak penghapusan (HTTP " + storageResponse.status + "). Periksa izin delete pada bucket foto.");
+
+    let deletedCount = 0;
+    for(let i = 0; i < names.length; i += 100){
+      const batch = names.slice(i, i + 100);
+      status.textContent = "File foto terhapus. Menghapus data galeri " + Math.min(i + batch.length, names.length) + "/" + names.length + "...";
+      const rowResponse = await fetch(SB_URL + "/rest/v1/info?name=in.(" + batch.join(",") + ")", {
+        method: "DELETE",
+        headers: sbH({ Prefer: "return=representation" })
+      });
+      if(!rowResponse.ok) throw new Error("File terhapus, tetapi data galeri gagal dihapus (HTTP " + rowResponse.status + "). Muat ulang lalu coba hapus lagi.");
+      const deletedRows = await rowResponse.json().catch(function(){ return []; });
+      deletedCount += Array.isArray(deletedRows) ? deletedRows.length : 0;
+      if(!Array.isArray(deletedRows) || deletedRows.length !== batch.length){
+        throw new Error("File terhapus, tetapi hanya " + deletedCount + "/" + names.length + " data galeri yang terhapus.");
+      }
+    }
+    status.innerHTML = '<span class="ok">✅ ' + names.length + ' foto beserta thumbnail berhasil dihapus.</span>';
+    await loadTestimoniAdmin();
+  } catch(e){
+    status.innerHTML = '<span class="err">Gagal menghapus: ' + String(e && e.message || "koneksi Supabase") + '</span>';
+    await loadTestimoniAdmin();
+  } finally {
+    TESTIMONI_DELETE_BUSY = false;
+    deleteBtn.textContent = "🗑️ Hapus yang dipilih";
+    updateTestimoniSelection();
+  }
 }
 
 async function uploadTestimoniPhotos(){
