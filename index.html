@@ -2709,8 +2709,15 @@ const RS_LANGS = [
   { code: "vi", flag: "🇻🇳", label: "Tiếng Việt" }
 ];
 function selectLang(code){
-  try { localStorage.setItem("rs_lang", code); } catch(e) {}
-  const L = code;
+  const L = RS_LANGS.some(item => item.code === code) ? code : "id";
+  try { localStorage.setItem("rs_lang", L); } catch(e) {}
+  /* URL menjadi sumber utama lang(), jadi perbarui sebelum applyLang membaca nilainya. */
+  try {
+    const u = new URL(location.href);
+    if(L === "id") u.searchParams.delete("lang");
+    else u.searchParams.set("lang", L);
+    history.replaceState(history.state, "", u);
+  } catch(e) {}
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
@@ -3321,6 +3328,8 @@ function updateUrl(){
   try {
     const p = new URLSearchParams();
     if(currentPage !== "home") p.set("tab", currentPage);
+    const activeLang = lang();
+    if(activeLang !== "id") p.set("lang", activeLang);
     if(currentPage !== "home" && shownCat >= 0){
       const c = getCurrentCategories()[shownCat];
       if(c) p.set("cat", c.name);
