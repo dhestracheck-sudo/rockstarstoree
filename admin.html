@@ -129,6 +129,12 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 .testimoni-admin-card small { display:block; margin-top:6px; color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 /* ===== baris data akun ===== */
+/* ===== kontrol pilihan foto testimoni ===== */
+.testimoni-admin-tools { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.025); color:var(--mut); font-size:12.5px; }
+.testimoni-admin-tools .testimoni-select-all { display:flex; align-items:center; gap:8px; margin:0; color:var(--txt); font-size:12px; font-weight:600; letter-spacing:0; text-transform:none; cursor:pointer; }
+.testimoni-admin-tools input[type=checkbox],.testimoni-card-select input[type=checkbox] { width:18px; height:18px; margin:0; accent-color:var(--blue2); cursor:pointer; }
+.testimoni-admin-tools #testimoniDeleteBtn { width:auto; min-height:40px; margin:0 0 0 auto; padding:9px 14px; font-size:12.5px; }
+.testimoni-card-select { display:flex; align-items:center; gap:7px; margin:0 0 8px; color:var(--mut); font-size:11px; font-weight:600; letter-spacing:0; text-transform:none; cursor:pointer; }
 .arow { display:flex; gap:10px; align-items:center; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:13px; padding:10px 12px; margin-top:10px; font-size:13px; line-height:1.55; }
 .arow .ainfo { flex:1; min-width:0; }
 .arow .abtn { display:flex; flex-direction:column; gap:6px; }
@@ -410,6 +416,11 @@ button.danger { background:linear-gradient(135deg,#f15c68,#d94350); }
     <button id="testimoniUploadBtn" onclick="uploadTestimoniPhotos()">⬆️ Upload Foto Testimoni</button>
     <div id="testimoniUploadStatus"></div>
     <button id="testimoniListToggle" type="button" class="ghost" aria-expanded="false" aria-controls="testimoniAdminList" onclick="toggleTestimoniAdminList()" disabled>Memuat daftar foto...</button>
+    <div id="testimoniBulkTools" class="testimoni-admin-tools" style="display:none;">
+      <label class="testimoni-select-all"><input id="testimoniSelectAll" type="checkbox" onchange="toggleAllTestimoniRows(this.checked)"> Pilih semua foto</label>
+      <span id="testimoniSelectionCount">0 dipilih</span>
+      <button id="testimoniDeleteBtn" type="button" class="danger" onclick="deleteSelectedTestimoniPhotos()" disabled>🗑️ Hapus yang dipilih</button>
+    </div>
     <div id="testimoniAdminList" class="testimoni-admin-grid" style="display:none;"></div>
     <p class="hint" style="margin-top:12px;">Foto otomatis dikecilkan menjadi WebP hingga 1600 px dan dibuat thumbnail 480 px. Foto yang diunggah tampil untuk umum di tombol “Lihat Semua Testimoni”. Hindari foto yang memuat nomor telepon, bukti transaksi, atau data pribadi tanpa izin.</p>
   </div>
@@ -634,7 +645,7 @@ function makeThumb(blob){
   });
 }
 const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
-const ADMIN_V = "v2026.10.24.3";
+const ADMIN_V = "v2026.10.24.4";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
