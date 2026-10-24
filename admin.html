@@ -346,7 +346,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
     <div id="statusAdd"></div>
-    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b>. Storefront memakai harga IDR yang sama dan mengonversinya ke <b>MYR (RM)</b> memakai Kurs Malaysia yang disimpan di panel ini. Produk baru dan perubahan harga otomatis mengikuti kedua tampilan mata uang tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
+    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b> dan tetap menjadi harga utama di storefront. Jika pengunjung memilih mata uang lain, nilai konversinya tampil di bawah harga Rp. Konversi <b>MYR (RM)</b> mengikuti Kurs Malaysia yang disimpan di panel ini; produk baru dan perubahan harga otomatis ikut tersinkron tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
   </div>
 
   <div class="card">

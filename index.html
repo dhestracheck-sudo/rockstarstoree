@@ -998,7 +998,7 @@ header {
 .hot-product-card img { width:68px; height:68px; flex:none; border-radius:8px; object-fit:cover; background:#05080f; }
 .hot-product-info { display:flex; min-width:0; flex-direction:column; gap:5px; }
 .hot-product-name { overflow:hidden; color:#fff; font-size:12px; font-weight:700; line-height:1.35; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
-.hot-product-meta { color:#f3d27a; font-size:11px; font-weight:700; white-space:nowrap; }
+.hot-product-meta { color:#f3d27a; font-size:11px; font-weight:700; white-space:normal; line-height:1.35; }
 .hot-product-track:hover,.hot-product-track:focus-within { animation-play-state:paused; }
 @keyframes hotProductScroll { from { transform:translate3d(0,0,0); } to { transform:translate3d(-50%,0,0); } }
 @media (max-width:760px) {
@@ -3925,7 +3925,6 @@ function hasKatArr(arr){
 }
 
 let infoTeksValue = "";
-function rmFmt(rp){ return selectedCurrencyFmt(rp); }
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
   if(!el) return;
