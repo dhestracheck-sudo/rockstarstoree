@@ -805,6 +805,9 @@ header {
 .testimoni-cta { border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.055); color:#c7d5ef; padding:12px 24px; font:700 14px 'Poppins',sans-serif; letter-spacing:.5px; cursor:pointer; transition:background .2s ease,border-color .2s ease,transform .2s ease; }
 .testimoni-cta:hover { background:rgba(43,78,255,.18); border-color:var(--blue); transform:translateY(-2px); }
 .testimoni-modal { width:min(980px,94vw); max-height:84vh; }
+.testimoni-channel { margin:0 0 14px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.035); color:var(--mut); font-size:13px; line-height:1.6; }
+.testimoni-channel a { display:inline-block; margin-left:6px; color:#84d7ff; font-weight:800; text-decoration:none; }
+.testimoni-channel a:hover { text-decoration:underline; }
 .testimoni-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 .testimoni-photo-link { display:block; min-width:0; padding:6px; overflow:hidden; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.025); }
 .testimoni-photo { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:contain; border-radius:8px; background:#07152b; }
@@ -2212,7 +2215,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <button class="bnitem" data-page="brainrot" onclick="bnGo('brainrot')" title="Brainrot"><span class="bnico">🧠</span><span class="bnlbl" data-i18n="nav_brainrot_bn">Brainrot</span></button>
   <button class="bnitem flash" data-page="flash" onclick="goFlash()" title="Flash Sale"><span class="bnico">⚡</span><span class="bnlbl" data-i18n="nav_flash_bn">Flash Sale</span></button>
   <button class="bnitem" data-page="joki" onclick="bnGo('joki')" title="Joki Sepuh Roblox"><span class="bnico">🏆</span><span class="bnlbl" data-i18n="nav_joki_bn">Joki Sepuh</span></button>
-  <button class="bnitem" data-page="testi" onclick="toggleTestiPop()" title="Testimoni Amanah"><span class="bnico">⭐</span><span class="bnlbl" data-i18n="nav_testi">Testimoni</span></button>
+  <button class="bnitem" data-page="faq" onclick="bnGo('faq')" title="FAQ"><span class="bnico">❓</span><span class="bnlbl" data-i18n="nav_faq">FAQ</span></button>
   <div class="wapop" id="testiPop" style="display:none;">
     <div class="watext"><b data-i18n="testi_t">⭐ Testimoni Customer</b><span data-i18n="testi_x">100K+ testimoni amanah, klik tombol di bawah untuk lihat di saluran WA</span></div>
     <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener" data-i18n="testi_btn">Lihat Testimoni</a>
@@ -2298,6 +2301,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
       <h2 id="testimoniModalTitle">⭐ Testimoni Customer</h2>
       <button class="ghost" type="button" onclick="closeTestimoniGallery()">Tutup</button>
     </div>
+    <p class="testimoni-channel">Testimoni lengkap dan update terbaru tersedia di Saluran WhatsApp Rockstar.Store. <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener noreferrer">Join saluran →</a></p>
     <p id="testimoniGalleryStatus" class="hint" aria-live="polite">Memuat testimoni...</p>
     <div id="testimoniGalleryGrid" class="testimoni-grid"></div>
     <button id="testimoniGalleryMore" class="ghost" type="button" onclick="loadMoreTestimoni()" style="display:none;width:100%;margin-top:14px;">Muat foto lainnya</button>
@@ -2307,6 +2311,10 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
 <section class="section faq-section" id="faq" aria-labelledby="faqTitle">
   <h2 class="faq-title" id="faqTitle">PERTANYAAN UMUM (FAQ)</h2>
   <div class="faq-list">
+    <details class="faq-item">
+      <summary>Di mana saya bisa melihat testimoni customer?</summary>
+      <div class="faq-answer">Buka <a href="#testimoniModal" onclick="openTestimoniGallery(); return false;">galeri foto testimoni lengkap</a> atau <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener noreferrer">join Saluran WhatsApp Rockstar.Store</a> untuk melihat testimoni dan update terbaru.</div>
+    </details>
     <details class="faq-item">
       <summary>Apa saja yang bisa dibeli di Rockstar.Store?</summary>
       <div class="faq-answer">Tersedia Top Up Robux, item dan pet Brainrot, akun Roblox, serta jasa joki untuk berbagai map.</div>
@@ -2552,6 +2560,7 @@ function bnGo(page){
   else if(page === 'akun') goToAkun();
   else if(page === 'topup') goToTopUp();
   else if(page === 'joki') goToJoki();
+  else if(page === 'faq') goToFaq();
 }
 function bnSync(){
   document.querySelectorAll('#botnav .bnitem').forEach(function(b){
@@ -2634,7 +2643,7 @@ testi_t: "⭐ Testimoni Customer", testi_btn: "Lihat Testimoni", wa_t: "Butuh ba
 wa_online: "Online", wa_ph: "Ketik pesan...",
 wa_greet: "Halo! 👋 Ada yang bisa dibantu? Ketik di bawah, langsung tersambung ke WA admin.",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan! Keburu habis:", flash_btn: "⚡ Flash Sale",
-nav_testi: "Testimoni", rc_bub: "Butuh bantuan? Chat <b>Min Rock</b> aja 💬",
+nav_testi: "Testimoni", nav_faq: "FAQ", rc_bub: "Butuh bantuan? Chat <b>Min Rock</b> aja 💬",
 },
 en: {
 search_ph: "Search items, e.g.: moon bloom, robux...", cart: "🛒 Cart",
@@ -2671,7 +2680,7 @@ b_brain_d: "Your roblox upgrade solution — dozens of item categories.", b_top_
 b_joki_t: "🎮 Joki Roblox", b_joki_d: "Jasa joki sepuh berbagai map, cepat & aman, harga bersaing.",
 lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
 flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry! Selling out:", flash_btn: "⚡ Flash Sale",
-nav_testi: "Reviews", rc_bub: "Need help? Just chat <b>Min Rock</b> 💬",
+nav_testi: "Reviews", nav_faq: "FAQ", rc_bub: "Need help? Just chat <b>Min Rock</b> 💬",
 }};
 /* ====== I18N: ja・ko・zh・fr・th・vi (terjemahan penuh) ====== */
 I18N.ja = { search_ph:"アイテムを検索  例: moon bloom, robux...", cart:"🛒 カート", kicker:"#1 ブレインロットストア — インドネシア＆マレーシア最大級", channel:"📢 WhatsAppチャンネルに参加", cta_brainrot:"ブレインロット一覧 🧠", cta_topup:"Robux チャージ 💰", cta_akun:"アカウント一覧 👤", cta_joki:"ブースト 🎮", st1:"信頼できるレビュー", st2:"数分で処理完了", st3:"全決済対応", st4:"数千のアイテム＆ペット", cb_title:"買い方 🎮", cb_sub:"5つの簡単ステップ、画像に従ってね!", s1t:"商品を選ぶ", s2t:"カートを確認", s3t:"管理人に連絡", s4t:"支払う", s5t:"アイテム到着!", foot_wa:"管理人のWA番号:", back:"← 戻る", back_home:"← ホーム", nav_home:"ホーム", nav_akun:"各マップの上級アカウント", nav_topup:"Robuxチャージ", nav_joki:"ブースト", nav_akun_bn:"上級アカウント", nav_brainrot_bn:"Brainrot", nav_joki_bn:"ブースト", nav_flash_bn:"Flash Sale", cat_brainrot:"ブレインロット一覧", cat_akun:"アカウント一覧", cat_topup:"チャージ", cat_joki:"ブースト", cat_sub:"カテゴリー — クリックしてアイテムを表示", cat_empty:"カタログが空です", cat_empty_x:"データ未読み込み（接続が遅い）", cat_empty_msg:"😢 カタログが表示されません。たぶん電波が弱いです。", reload:"🔄 再読み込み", mulai:"ショッピング開始", pilih_sub:"下のカテゴリを選択してください", hasil:"検索結果", cocok_a:"件が一致:", none_a:"一致する商品はありません", add_cart:"カートに追加", sold_out_btn:"売り切れ", habis:"売り切れ", habis_txt:"在庫切れです", stock:"在庫:", stock_na:"在庫: -", sold_w:"販売済み", kilat:"⚡ 高速処理", safe:"🛡️ 100%安全", verified:"認証済み", hubungi:"価格は管理人まで", more_a:"もっと見る", more_b:"もっと", hemat:"お得", tutup:"閉じる", lihat:"表示", checkout:"チェックアウト", batal:"キャンセル", cart_title:"📋 カートの中身", lanjut:"買い物を続ける", preview:"📸 注文プレビュー", kirim:"✓ 管理人へ送信", kosong:"カートは空です!", habis_alert:"すみません、このアイテムは売り切れです!", cancel_q:"チェックアウトをキャンセルしますか？すべてのアイテムが削除されます。", dilihat_w:"回閲覧", wish_title:"❤️ お気に入り", hapus:"削除", recent_t:"🕘 閲覧履歴", together:"🎞️ よく一緒に買われる物", bought_with:"と一緒に購入", hot_t:"🔥 最多クリック", clicked:"クリック", sold_done:"販売済み", rest_stock:"残り在庫", avail_stock:"販売中の在庫", low_a:"残り", low_b:"個！お早めに!", avail:"販売中", server_t:"🔗 Rock Star サーバー一覧", server_sub:"サーバーをクリックするとRobloxに直接参加", wa_t:"お困りですか？", wa_btn:"WhatsAppで相談", testi_t:"⭐ カスタマーレビュー", testi_btn:"レビューを見る", b_brain_t:"🧠 ブレインロット一覧", b_top_t:"💰 チャージ", b_akun_t:"👤 Robloxアカウント", b_brain_d:"Robloxをレベルアップする解決策 — 何十カテゴリーのアイテム。", b_top_d:"最安値でRobux＆ゲームパスをチャージ。", b_akun_d:"各マップの上級アカウント、データ新品 — すぐ使える。", b_joki_t:"🎮 Robloxブースト", b_joki_d:"各マップのブーストサービス — 迅速・安全・お得。", wa_online:"オンライン", wa_ph:"メッセージを入力...", wa_greet:"こんにちは! 👋 何かお手伝いできますか？下に入力すると、すぐ管理人のWAに繋がります。", flash_t:"⚡ FLASH SALE", flash_click:"👆 「Flash Sale」をクリックして値引き品を見る", flash_fomo:"🔥 急いで! すぐなくなるよ:", flash_btn:"⚡ Flash Sale", nav_testi:"レビュー", rc_bub:"助けが必要？ <b>Min Rock</b> に話しかけてね 💬", lang_btn:"言語", cur_btn:"通貨" };
@@ -3330,6 +3339,19 @@ function goHome(){
   const hadTab = new URLSearchParams(location.search).has("tab");
   currentPage = 'home'; shownCat = -1; render(); updateUrl();
   if(hadTab) window.__hotReady = paintHot();
+}
+function goToFaq(){
+  if(currentPage !== "home" || shownCat >= 0 || new URLSearchParams(location.search).has("tab")) goHome();
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      const faq = document.getElementById("faq");
+      if(!faq) return;
+      const sticky = document.querySelector(".topwrap");
+      const offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
+      const top = faq.getBoundingClientRect().top + window.pageYOffset - offset - 8;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    });
+  });
 }
 function goToMostClicked(){
   if(currentPage !== "home" || shownCat >= 0 || new URLSearchParams(location.search).has("tab")) goHome();
