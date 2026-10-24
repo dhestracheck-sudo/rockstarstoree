@@ -985,17 +985,33 @@ header {
 .wishbtn::before { content: ""; position: absolute; inset: -6px; }
 .wishbtn.on { border-color:#ff5d7e; background:rgba(255,60,90,.25); }
 .viewpill { position:absolute; top:10px; right:10px; z-index:3; background:rgba(0,0,0,.65); color:#fff; font-size:10px; font-weight:700; border-radius:999px; padding:3px 8px; }
-/* ===== terakhir dilihat + dibeli bersama ===== */
-.recentrow { display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px; scrollbar-width:none;
-  -webkit-mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%);
-  mask-image: linear-gradient(to right, #000 92%, rgba(0,0,0,0) 100%); }
-.recentrow::-webkit-scrollbar { display:none; }
-.recentcard { min-width:150px; max-width:150px; background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; flex-shrink:0; position:relative; }
-.recentcard .soldstamp b { font-size:18px; letter-spacing:3px; padding:4px 12px 4px 15px; }
-.recentcard img { width:100%; aspect-ratio:1/1; object-fit:cover; display:block; background:#05080f; }
-.recentcard .rb { padding:8px 10px 10px; }
-.recentcard .rn { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.recentcard .rp { font-size:13px; color:#f3d27a; font-weight:700; }
+/* ===== hot product marquee ===== */
+.hot-product-banner { display:none; max-width:1144px; margin:14px auto 8px; padding:14px 16px 16px; overflow:hidden; border:1px solid rgba(111,139,255,.3); border-radius:16px; background:linear-gradient(115deg,rgba(10,15,34,.96),rgba(24,39,94,.78),rgba(10,15,34,.96)); box-shadow:0 10px 30px rgba(0,0,0,.24); }
+.hot-product-heading { display:flex; align-items:center; gap:9px; margin:0 0 10px; }
+.hot-product-heading h2 { margin:0; color:#fff; font-size:18px; font-weight:900; letter-spacing:.09em; }
+.hot-product-heading span { color:#ffd166; font-size:14px; }
+.hot-product-window { overflow:hidden; -webkit-mask-image:linear-gradient(to right,transparent,#000 2%,#000 98%,transparent); mask-image:linear-gradient(to right,transparent,#000 2%,#000 98%,transparent); }
+.hot-product-track { display:flex; width:max-content; animation:hotProductScroll 38s linear infinite; will-change:transform; }
+.hot-product-group { display:flex; flex:none; gap:10px; padding-right:10px; }
+.hot-product-card { display:flex; align-items:center; gap:10px; flex:none; width:224px; min-height:84px; padding:7px; overflow:hidden; border:1px solid rgba(111,139,255,.28); border-radius:12px; background:rgba(5,8,18,.76); color:#fff; text-align:left; cursor:pointer; }
+.hot-product-card:hover,.hot-product-card:focus-visible { border-color:var(--blue2); background:rgba(43,78,255,.2); outline:none; }
+.hot-product-card img { width:68px; height:68px; flex:none; border-radius:8px; object-fit:cover; background:#05080f; }
+.hot-product-info { display:flex; min-width:0; flex-direction:column; gap:5px; }
+.hot-product-name { overflow:hidden; color:#fff; font-size:12px; font-weight:700; line-height:1.35; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; }
+.hot-product-meta { color:#f3d27a; font-size:11px; font-weight:700; white-space:nowrap; }
+.hot-product-track:hover,.hot-product-track:focus-within { animation-play-state:paused; }
+@keyframes hotProductScroll { from { transform:translate3d(0,0,0); } to { transform:translate3d(-50%,0,0); } }
+@media (max-width:760px) {
+  .hot-product-banner { margin:12px 12px 8px; padding:12px 10px 13px; }
+  .hot-product-heading h2 { font-size:16px; }
+  .hot-product-heading span { font-size:13px; }
+  .hot-product-card { width:196px; min-height:76px; gap:8px; }
+  .hot-product-card img { width:60px; height:60px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .hot-product-window { overflow-x:auto; -webkit-mask-image:none; mask-image:none; }
+  .hot-product-track { animation:none; }
+}
 .statrow { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12px; color:var(--mut); }
 .statrow b.st-ok { color:var(--green); }
 .statrow b.st-no { color:var(--red); }
@@ -1930,6 +1946,13 @@ function megaAuto(){ megaTimer = setTimeout(function(){ megaGo(megaIdx + 1); meg
   </div>
 </div>
 
+<section id="hotProductBanner" class="hot-product-banner" aria-labelledby="hotProductTitle">
+  <div class="hot-product-heading"><h2 id="hotProductTitle">HOT PRODUCT</h2><span aria-hidden="true">🔥</span></div>
+  <div class="hot-product-window" aria-label="Produk terpopuler">
+    <div class="hot-product-track" id="hotProductTrack"></div>
+  </div>
+</section>
+
 <div class="stats">
   <div class="stat"><b>100K+</b><span data-i18n="st1">Testimoni amanah</span></div>
   <div class="stat"><b>⚡</b><span data-i18n="st2">Proses hitungan menit</span></div>
@@ -2767,12 +2790,13 @@ function render(){
   try { syncHeroCta(); } catch(e) {}
   const el = document.getElementById("products");
   const title = document.getElementById("pageTitle");
+  const hotBanner = document.getElementById("hotProductBanner");
+  if(hotBanner) hotBanner.style.display = currentPage === "home" && shownCat < 0 ? "block" : "none";
   syncCta();
   try { bnSync(); } catch(e) {}
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
-      <div id="hotSec" style="display:none;margin-bottom:26px;"><h2 data-i18n="hot_t">🔥 Paling Banyak Diklik</h2><div class="recentrow" id="hotRow"></div></div>
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
@@ -2965,6 +2989,8 @@ function showItems(i){
   }
   shownCat = i;
   shownN = 10;
+  const hotBanner = document.getElementById("hotProductBanner");
+  if(hotBanner) hotBanner.style.display = "none";
   paintItems();
   updateUrl();
 }
@@ -3168,10 +3194,10 @@ function goHome(){
   if(hadTab) window.__hotReady = paintHot();
 }
 function goToMostClicked(){
-  if(currentPage !== "home" || new URLSearchParams(location.search).has("tab")) goHome();
+  if(currentPage !== "home" || shownCat >= 0 || new URLSearchParams(location.search).has("tab")) goHome();
   var ready = window.__hotReady || Promise.resolve(false);
   Promise.resolve(ready).then(function(shown){
-    var section = document.getElementById("hotSec");
+    var section = document.getElementById("hotProductBanner");
     if(section && shown && section.style.display !== "none"){
       var sticky = document.querySelector(".topwrap");
       var offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
@@ -3697,8 +3723,9 @@ function syncWishCount(){
   if(a2) a2.textContent = n;
 }
 function paintHot(){
-  const wrap = document.getElementById("hotSec");
-  if(!wrap) return Promise.resolve(false);
+  const wrap = document.getElementById("hotProductBanner");
+  const track = document.getElementById("hotProductTrack");
+  if(!wrap || !track) return Promise.resolve(false);
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
   return fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
@@ -3710,18 +3737,18 @@ function paintHot(){
         if(nm) freq[nm] = (freq[nm] || 0) + 1;
       });
       const top = Object.keys(freq).map(k => ({ k: k, v: freq[k] }))
-        .sort((a, b) => b.v - a.v).slice(0, 8)
+        .sort((a, b) => b.v - a.v)
         .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
-        .filter(o => o.r);
-      if(!top.length || !document.getElementById("hotRow")){ wrap.style.display = "none"; return false; }
-      wrap.style.display = "";
-      document.getElementById("hotRow").innerHTML = top.map(o =>
-        `<div class="recentcard" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
-        (o.r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
-        thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy"`) +
-        `<div class="rb"><div class="rn">${escWish(o.r.item.name)}</div>` +
-        `<div class="rp">🔥 ${o.v}x ${tr("clicked")} · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`
+        .filter(o => o.r && Number(o.r.item.stock) > 0).slice(0, 8);
+      if(!top.length){ wrap.style.display = "none"; return false; }
+      wrap.style.display = "block";
+      const cards = top.map(o =>
+        `<button type="button" class="hot-product-card" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
+        thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
+        `<span class="hot-product-info"><span class="hot-product-name">${escWish(o.r.item.name)}</span>` +
+        `<span class="hot-product-meta">🔥 ${o.v}x · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</span></span></button>`
       ).join("");
+      track.innerHTML = `<div class="hot-product-group">${cards}</div><div class="hot-product-group" aria-hidden="true" inert>${cards}</div>`;
       return true;
     } catch(e) { return false; }
   }).catch(() => false);
