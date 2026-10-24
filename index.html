@@ -1633,6 +1633,18 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
     background: rgba(6,9,19,.86); backdrop-filter: blur(12px);
   }
   .bnitem { min-height: 48px; gap: 2px; }
+
+  /* Keranjang sudah tersedia di header; widget tetap di sudut dan tidak menimpa hero. */
+  .fab { display: none !important; }
+  .rockchat { right: 18px; bottom: 14px; }
+  .rc-wrap, .rc-btn { width: 112px; height: 112px; }
+  #rcBubbleWrap {
+    display: none;
+    right: 18px;
+    bottom: calc(14px + 112px + 8px);
+  }
+  .rockchat:hover #rcBubbleWrap { display: block; }
+  .rc-bubble { max-width: 240px; padding: 9px 12px; font-size: 13px; }
 }
 
 /* Header desktop tetap terbaca tanpa membuat kolom pencarian terjepit. */
