@@ -1162,12 +1162,7 @@ header {
 }
 
 
-.recent-section { margin: 0 auto 26px; max-width: 1180px; }
-.recent-section h2 { margin: 0 0 12px; font-size: clamp(19px, 3vw, 25px); }
-.recentrow { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scroll-snap-type: x proximity; }
-.recentrow .hot-product-card { scroll-snap-align: start; }
-.recent-empty, .hot-product-empty { color: var(--mut); font-size: 13px; line-height: 1.6; padding: 12px 2px; }
-.hot-product-empty { width: 100%; text-align: center; }
+.hot-product-empty { width: 100%; text-align: center; color: var(--mut); font-size: 13px; line-height: 1.6; padding: 12px 2px; }
 
 /* ===== bottom server CTA ===== */
 .server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
@@ -2924,7 +2919,6 @@ function render(){
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
-      <section id="recentSec" class="recent-section" aria-labelledby="recentTitle"><h2 id="recentTitle">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></section>
       <div class="banners>
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
@@ -2950,7 +2944,6 @@ function render(){
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
-    paintRecent();
     const hasPendingTab = !!(new URLSearchParams(location.search).get("tab"));
     window.__hotReady = hasPendingTab ? Promise.resolve(false) : paintHot();
     watchViews();
@@ -3161,7 +3154,6 @@ function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
   try {
     var _c = catsOf(page), _it = _c[i].items[j];
-    try { let _recent = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(_recent)) _recent = []; _recent = [_it.name].concat(_recent.filter(name => name !== _it.name)).slice(0,12); localStorage.setItem("rs_recent", JSON.stringify(_recent)); if(currentPage === "home") paintRecent(); } catch(e) {}
     logAksi("klik", _it.name, _c[i].name, _it.price, page);
     if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
   } catch(e) {}
@@ -3855,23 +3847,6 @@ function syncWishCount(){
   if(a) a.textContent = n;
   const a2 = document.getElementById("mnavWishCount");
   if(a2) a2.textContent = n;
-}
-
-function paintRecent(){
-  const row = document.getElementById("recentRow");
-  if(!row) return;
-  let names = [];
-  try { names = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(names)) names = []; } catch(e) {}
-  const items = [];
-  names.forEach(name => { const found = resolveWish(name); if(found) items.push(found); });
-  if(!items.length){ row.innerHTML = '<div class="recent-empty">Produk yang kamu buka akan muncul di sini pada perangkat ini.</div>'; return; }
-  row.innerHTML = items.slice(0,12).map(r => {
-    const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
-    return '<button type="button" class="hot-product-card" onclick="openDetail(&#39;' + r.page + '&#39;,' + r.i + ',' + r.j + ')" aria-label="Lihat ' + escWish(r.item.name) + '">' +
-      thumbTag(im, 'alt="" loading="lazy" decoding="async"') +
-      '<span class="hot-product-info"><span class="hot-product-name">' + escWish(r.item.name) + '</span>' +
-      '<span class="hot-product-meta">' + formatCurrency(r.item.price) + (selectedCurrencyFmt(r.item.price) ? ' · ' + selectedCurrencyFmt(r.item.price) : '') + '</span></span></button>';
-  }).join("");
 }
 
 function paintHot(){
