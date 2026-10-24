@@ -2681,20 +2681,13 @@ function applyLang(){
   try { applySeoLang(L, D); } catch(e) {}
 }
 function applySeoLang(L, D){
-  /* SEO dinamis: html lang, title, meta description, og:, twitter:,
-     dan URL ?lang= disinkronkan supaya tiap bahasa punya URL sendiri. */
+  /* Sinkronkan bahasa dokumen dan URL, lalu perbarui metadata sesuai halaman aktif. */
   try {
     document.documentElement.lang = L;
-    if (D.seo_title) document.title = D.seo_title;
-    const set = (sel, val) => { if (!val) return; const el = document.querySelector(sel); if (el) el.setAttribute("content", val); };
-    set('meta[name="description"]', D.seo_desc);
-    set('meta[property="og:title"]', D.seo_title);
-    set('meta[property="og:description"]', D.seo_desc);
-    set('meta[name="twitter:title"]', D.seo_title);
-    set('meta[name="twitter:description"]', D.seo_desc);
     const u = new URL(location.href);
     if (L === "id") u.searchParams.delete("lang"); else u.searchParams.set("lang", L);
-    history.replaceState(null, "", u);
+    history.replaceState(history.state, "", u);
+    if (typeof syncSeoMetadata === "function") syncSeoMetadata();
   } catch(e) {}
 }
 function toggleLang(){ /* legacy */ }
@@ -3274,12 +3267,58 @@ function goToJoki(){ goToCatalogPage('joki'); }
 /* ===== deep links + page-specific SEO metadata =====
    URL shareable: /?tab=brainrot&cat=Grow%20A%20Garden%202  |  /?q=kata+kunci */
 const SEO_PAGES = {
-  home: { title: "Rockstar.Store | Top Up Robux, Akun & Brainrot Roblox", description: "Top up Robux, akun Roblox, item Brainrot, dan jasa joki tersedia di Rockstar.Store. Lihat pilihan produk, harga, dan cara pemesanan." },
-  brainrot: { title: "Item Brainrot Roblox | Rockstar.Store", description: "Jelajahi item Brainrot Roblox dari berbagai map. Lihat kategori, detail produk, dan harga di katalog Rockstar.Store." },
-  topup: { title: "Top Up Robux Roblox | Rockstar.Store", description: "Pilih paket top up Robux Roblox di Rockstar.Store. Cek pilihan nominal, metode pembayaran, dan cara pemesanan." },
-  akun: { title: "Akun Roblox Sepuh | Rockstar.Store", description: "Cari akun Roblox sepuh untuk berbagai map di Rockstar.Store. Lihat detail akun, harga, dan ketersediaannya sebelum memesan." },
-  joki: { title: "Jasa Joki Roblox Aman & Cepat | Rockstar.Store", description: "Cari jasa joki Roblox untuk map favoritmu. Lihat pilihan layanan, harga, dan cara pemesanan di Rockstar.Store." }
+  brainrot: {
+    id: { title: "Item Brainrot Roblox | Rockstar.Store", description: "Jelajahi item Brainrot Roblox dari berbagai map. Lihat kategori, detail produk, dan harga di katalog Rockstar.Store." },
+    en: { title: "Roblox Brainrot Items | Rockstar.Store", description: "Browse Brainrot items for popular Roblox maps at Rockstar.Store. Explore categories, product details, and prices before ordering." },
+    ja: { title: "Robloxブレインロットアイテム | Rockstar.Store", description: "Rockstar.Storeで人気のRobloxマップ向けブレインロットアイテムをチェック。カテゴリー、商品情報、価格をご覧いただけます。" },
+    ko: { title: "로블록스 브레인롯 아이템 | Rockstar.Store", description: "Rockstar.Store에서 인기 Roblox 맵의 브레인롯 아이템을 찾아보세요. 카테고리와 상품 정보, 가격을 확인할 수 있습니다." },
+    zh: { title: "Roblox Brainrot 道具 | Rockstar.Store", description: "在 Rockstar.Store 浏览热门 Roblox 地图的 Brainrot 道具，查看分类、商品详情与价格后再下单。" },
+    fr: { title: "Objets Brainrot Roblox | Rockstar.Store", description: "Découvrez des objets Brainrot pour les jeux Roblox populaires chez Rockstar.Store. Consultez les catégories, détails et prix." },
+    th: { title: "ไอเทม Brainrot Roblox | Rockstar.Store", description: "เลือกชมไอเทม Brainrot สำหรับแมป Roblox ยอดนิยมที่ Rockstar.Store พร้อมดูหมวดหมู่ รายละเอียดสินค้า และราคา" },
+    vi: { title: "Vật phẩm Brainrot Roblox | Rockstar.Store", description: "Khám phá vật phẩm Brainrot cho các map Roblox phổ biến tại Rockstar.Store. Xem danh mục, chi tiết sản phẩm và giá." }
+  },
+  topup: {
+    id: { title: "Top Up Robux Roblox | Rockstar.Store", description: "Pilih paket top up Robux Roblox di Rockstar.Store. Cek pilihan nominal, metode pembayaran, dan cara pemesanan." },
+    en: { title: "Buy Robux Top Up | Rockstar.Store", description: "Top up Robux for Roblox at Rockstar.Store. Compare available amounts, payment options, and ordering details." },
+    ja: { title: "Robuxチャージ | Rockstar.Store", description: "Rockstar.StoreでRobloxのRobuxをチャージ。購入できる金額、支払い方法、注文手順をご確認ください。" },
+    ko: { title: "Roblox Robux 충전 | Rockstar.Store", description: "Rockstar.Store에서 Roblox Robux를 충전하세요. 충전 금액과 결제 방법, 주문 절차를 확인할 수 있습니다." },
+    zh: { title: "Roblox Robux 充值 | Rockstar.Store", description: "在 Rockstar.Store 为 Roblox 充值 Robux。查看可选金额、付款方式与下单步骤。" },
+    fr: { title: "Recharge Robux Roblox | Rockstar.Store", description: "Rechargez vos Robux Roblox chez Rockstar.Store. Comparez les montants, les moyens de paiement et les étapes de commande." },
+    th: { title: "เติม Robux Roblox | Rockstar.Store", description: "เติม Robux สำหรับ Roblox ที่ Rockstar.Store เลือกจำนวนเงิน ดูช่องทางชำระเงิน และขั้นตอนการสั่งซื้อ" },
+    vi: { title: "Nạp Robux Roblox | Rockstar.Store", description: "Nạp Robux cho Roblox tại Rockstar.Store. Chọn mệnh giá, xem phương thức thanh toán và hướng dẫn đặt hàng." }
+  },
+  akun: {
+    id: { title: "Akun Roblox Sepuh | Rockstar.Store", description: "Cari akun Roblox sepuh untuk berbagai map di Rockstar.Store. Lihat detail akun, harga, dan ketersediaannya sebelum memesan." },
+    en: { title: "Roblox Accounts | Rockstar.Store", description: "Find Roblox accounts for popular maps at Rockstar.Store. Review account details, prices, and availability before ordering." },
+    ja: { title: "Robloxアカウント | Rockstar.Store", description: "Rockstar.Storeで人気のRobloxマップ向けアカウントを探せます。アカウント情報、価格、在庫をご確認ください。" },
+    ko: { title: "로블록스 계정 | Rockstar.Store", description: "Rockstar.Store에서 인기 Roblox 맵 계정을 찾아보세요. 계정 정보와 가격, 재고를 확인한 뒤 주문할 수 있습니다." },
+    zh: { title: "Roblox 游戏账号 | Rockstar.Store", description: "在 Rockstar.Store 查找热门 Roblox 地图账号。下单前可查看账号信息、价格与库存状态。" },
+    fr: { title: "Comptes Roblox | Rockstar.Store", description: "Trouvez des comptes pour les jeux Roblox populaires chez Rockstar.Store. Consultez les détails, les prix et la disponibilité." },
+    th: { title: "บัญชี Roblox | Rockstar.Store", description: "ค้นหาบัญชีสำหรับแมป Roblox ยอดนิยมที่ Rockstar.Store ดูรายละเอียดบัญชี ราคา และสถานะสินค้าก่อนสั่งซื้อ" },
+    vi: { title: "Tài khoản Roblox | Rockstar.Store", description: "Tìm tài khoản cho các map Roblox phổ biến tại Rockstar.Store. Xem thông tin tài khoản, giá và tình trạng hàng trước khi đặt." }
+  },
+  joki: {
+    id: { title: "Jasa Joki Roblox Aman & Cepat | Rockstar.Store", description: "Cari jasa joki Roblox untuk map favoritmu. Lihat pilihan layanan, harga, dan cara pemesanan di Rockstar.Store." },
+    en: { title: "Roblox Boosting Service | Rockstar.Store", description: "Explore Roblox boosting services for popular maps at Rockstar.Store. Compare available services, prices, and ordering details." },
+    ja: { title: "Robloxブースト代行 | Rockstar.Store", description: "Rockstar.Storeで人気のRobloxマップ向けブースト代行をチェック。サービス内容、料金、注文方法をご覧いただけます。" },
+    ko: { title: "로블록스 부스팅 서비스 | Rockstar.Store", description: "Rockstar.Store에서 인기 Roblox 맵 부스팅 서비스를 확인하세요. 서비스 종류와 가격, 주문 방법을 살펴볼 수 있습니다." },
+    zh: { title: "Roblox 代练服务 | Rockstar.Store", description: "在 Rockstar.Store 查看热门 Roblox 地图代练服务，了解服务内容、价格与下单方式。" },
+    fr: { title: "Service de boost Roblox | Rockstar.Store", description: "Découvrez nos services de boost pour les jeux Roblox populaires. Consultez les options, les prix et les modalités de commande." },
+    th: { title: "บริการบูสต์ Roblox | Rockstar.Store", description: "เลือกบริการบูสต์สำหรับแมป Roblox ยอดนิยมที่ Rockstar.Store ดูตัวเลือกบริการ ราคา และวิธีสั่งซื้อ" },
+    vi: { title: "Dịch vụ boost Roblox | Rockstar.Store", description: "Khám phá dịch vụ boost cho các map Roblox phổ biến tại Rockstar.Store. Xem lựa chọn dịch vụ, giá và cách đặt hàng." }
+  }
 };
+const SEO_CATEGORY_COPY = {
+  id: { title: name => name + " | Katalog Roblox Rockstar.Store", description: name => "Jelajahi " + name + " di Rockstar.Store. Lihat detail produk, harga, dan ketersediaan sebelum memesan." },
+  en: { title: name => name + " | Roblox Catalog Rockstar.Store", description: name => "Browse " + name + " at Rockstar.Store. Check product details, prices, and availability before ordering." },
+  ja: { title: name => name + " | Roblox商品 Rockstar.Store", description: name => "Rockstar.Storeで" + name + "をチェック。注文前に商品情報、価格、在庫をご確認いただけます。" },
+  ko: { title: name => name + " | Roblox 상품 Rockstar.Store", description: name => "Rockstar.Store에서 " + name + " 상품을 확인하세요. 주문 전에 상품 정보와 가격, 재고를 살펴볼 수 있습니다." },
+  zh: { title: name => name + " | Roblox 商品 Rockstar.Store", description: name => "在 Rockstar.Store 浏览" + name + "，下单前查看商品详情、价格与库存状态。" },
+  fr: { title: name => name + " | Catalogue Roblox Rockstar.Store", description: name => "Découvrez " + name + " chez Rockstar.Store. Consultez les détails, les prix et la disponibilité avant de commander." },
+  th: { title: name => name + " | แคตตาล็อก Roblox Rockstar.Store", description: name => "เลือกชม " + name + " ที่ Rockstar.Store ดูรายละเอียดสินค้า ราคา และสถานะสินค้าก่อนสั่งซื้อ" },
+  vi: { title: name => name + " | Danh mục Roblox Rockstar.Store", description: name => "Khám phá " + name + " tại Rockstar.Store. Xem chi tiết sản phẩm, giá và tình trạng hàng trước khi đặt." }
+};
+const SEO_OG_LOCALES = { id: "id_ID", en: "en_US", ja: "ja_JP", ko: "ko_KR", zh: "zh_CN", fr: "fr_FR", th: "th_TH", vi: "vi_VN" };
 function setMetaName(name, content){
   let tag = document.head.querySelector('meta[name="' + name + '"]');
   if(!tag){ tag = document.createElement("meta"); tag.setAttribute("name", name); document.head.appendChild(tag); }
@@ -3290,32 +3329,61 @@ function setMetaProperty(property, content){
   if(!tag){ tag = document.createElement("meta"); tag.setAttribute("property", property); document.head.appendChild(tag); }
   tag.setAttribute("content", content);
 }
+function syncSeoAlternates(routeParams, isSearchPage){
+  document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(link => link.remove());
+  if(isSearchPage) return;
+  const base = "https://rockstarstore.id/";
+  ["id", "en", "ja", "ko", "zh", "fr", "th", "vi", "x-default"].forEach(code => {
+    const params = new URLSearchParams(routeParams.toString());
+    params.delete("lang");
+    if(code !== "id" && code !== "x-default") params.set("lang", code);
+    const url = new URL(base);
+    url.search = params.toString();
+    const link = document.createElement("link");
+    link.setAttribute("rel", "alternate");
+    link.setAttribute("hreflang", code);
+    link.setAttribute("href", url.href);
+    document.head.appendChild(link);
+  });
+}
 function syncSeoMetadata(){
   try {
-    const page = SEO_PAGES[currentPage] || SEO_PAGES.home;
+    const L = I18N[lang()] ? lang() : "id";
+    const page = currentPage === "home" ? null : ((SEO_PAGES[currentPage] || SEO_PAGES.brainrot)[L] || (SEO_PAGES[currentPage] || SEO_PAGES.brainrot).id);
     const cat = (currentPage !== "home" && shownCat >= 0) ? getCurrentCategories()[shownCat] : null;
     const params = new URLSearchParams(location.search);
     const isSearchPage = !!(params.get("q") || "").trim();
-    const title = cat ? (cat.name + " | Rockstar.Store") : page.title;
-    const description = cat
-      ? ("Jelajahi " + cat.name + " di Rockstar.Store. Periksa detail produk, harga, dan ketersediaan sebelum memesan.")
-      : page.description;
+    const homeMeta = I18N[L] || I18N.id;
+    const categoryCopy = SEO_CATEGORY_COPY[L] || SEO_CATEGORY_COPY.id;
+    const title = cat ? categoryCopy.title(cat.name) : (currentPage === "home" ? homeMeta.seo_title : page.title);
+    const description = cat ? categoryCopy.description(cat.name) : (currentPage === "home" ? homeMeta.seo_desc : page.description);
     const canonicalParams = new URLSearchParams();
-    if(!isSearchPage && currentPage !== "home"){
+    if(currentPage !== "home"){
       canonicalParams.set("tab", currentPage);
       if(cat) canonicalParams.set("cat", cat.name);
     }
-    const canonicalUrl = new URL(location.pathname, location.origin);
+    if(L !== "id") canonicalParams.set("lang", L);
+    const canonicalUrl = new URL("https://rockstarstore.id/");
     canonicalUrl.search = canonicalParams.toString();
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if(!canonical){ canonical = document.createElement("link"); canonical.setAttribute("rel", "canonical"); document.head.appendChild(canonical); }
     canonical.setAttribute("href", canonicalUrl.href);
+    syncSeoAlternates(canonicalParams, isSearchPage);
     document.title = title;
+    document.documentElement.lang = L;
     setMetaName("description", description);
     setMetaName("robots", isSearchPage ? "noindex,follow" : "index,follow");
     setMetaProperty("og:title", title);
     setMetaProperty("og:description", description);
     setMetaProperty("og:url", canonicalUrl.href);
+    document.head.querySelectorAll('meta[property="og:locale"], meta[property="og:locale:alternate"]').forEach(tag => tag.remove());
+    setMetaProperty("og:locale", SEO_OG_LOCALES[L] || SEO_OG_LOCALES.id);
+    Object.keys(SEO_OG_LOCALES).filter(code => code !== L).forEach(code => {
+      const alternateLocale = document.createElement("meta");
+      alternateLocale.setAttribute("property", "og:locale:alternate");
+      alternateLocale.setAttribute("content", SEO_OG_LOCALES[code]);
+      document.head.appendChild(alternateLocale);
+    });
     setMetaName("twitter:title", title);
     setMetaName("twitter:description", description);
     if (window.gtag){
