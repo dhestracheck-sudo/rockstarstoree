@@ -346,11 +346,11 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
     <div id="statusAdd"></div>
-    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b>. Storefront memakai harga IDR yang sama dan otomatis mengonversinya ke <b>MYR (RM)</b> saat pengunjung memilih Malaysia; menambah atau mengubah harga produk di sini langsung memperbarui tampilan kedua mata uang tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
+    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b>. Storefront memakai harga IDR yang sama dan mengonversinya ke <b>MYR (RM)</b> memakai Kurs Malaysia yang disimpan di panel ini. Produk baru dan perubahan harga otomatis mengikuti kedua tampilan mata uang tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
   </div>
 
   <div class="card">
-    <p class="hint">Produk, harga dasar IDR, stok, kategori, dan foto tersimpan di katalog yang sama dengan storefront SSR. Harga MYR/RM dihitung otomatis dari harga IDR yang dikelola di sini. Buka ulang atau muat ulang storefront untuk melihat perubahan; data SSR di edge diperbarui paling lama sekitar 20 detik. Tidak perlu commit atau deploy untuk perubahan produk—GitHub digunakan saat mengubah kode.</p>
+    <p class="hint">Produk, harga dasar IDR, stok, kategori, dan foto tersimpan di katalog yang sama dengan storefront SSR. Harga MYR/RM dihitung otomatis dari harga IDR memakai Kurs Malaysia yang diatur di atas. Muat ulang storefront untuk melihat perubahan; data SSR di edge diperbarui paling lama sekitar 20 detik. Perubahan produk tidak perlu deploy—GitHub digunakan saat mengubah kode.</p>
   </div>
 </div>
 
