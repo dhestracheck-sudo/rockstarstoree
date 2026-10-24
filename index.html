@@ -9,6 +9,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2">
 <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co">
+<link rel="preload" as="image" href="figur-8062-fast.webp" fetchpriority="high">
 <title>Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox</title>
 <meta name="description" content="Marketplace Roblox Indonesia untuk akun sepuh, Brainrot dan pet, top up Robux, serta jasa joki profesional. Jelajahi Rockstar.Store.">
 <meta name="keywords" content="rockstarstore, rockstar store roblox, marketplace roblox indonesia, top up robux, brainrot pet, pet roblox, akun roblox sepuh, jasa joki profesional, joki sepuh, rockstarstore.id">
@@ -40,8 +41,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox">
 <meta name="twitter:description" content="Marketplace Roblox Indonesia untuk akun sepuh, Brainrot dan pet, top up Robux, serta jasa joki profesional. Jelajahi Rockstar.Store.">
-<link rel="icon" type="image/png" href="ROCKSTARLOGO.png">
-<link rel="apple-touch-icon" href="ROCKSTARLOGO.png">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
 <script type="application/ld+json">
 {
@@ -192,9 +193,16 @@
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+n.queue=[];
+function loadMetaPixel(){
+  if(f.__rsMetaPixelLoaded)return;
+  f.__rsMetaPixelLoaded=true;
+  t=b.createElement(e);t.async=!0;t.src=v;
+  s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
+}
+/* fbq queues events immediately; defer its large vendor script until after load. */
+f.addEventListener('load',function(){f.setTimeout(loadMetaPixel,3000)},{once:true})
+}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '2181744626091763');
 fbq('track', 'PageView');
@@ -1854,7 +1862,7 @@ src="https://www.facebook.com/tr?id=2181744626091763&ev=PageView&noscript=1"
 <div class="mega">
   <div class="mega-track" id="megaTrack">
     <div class="mega-slide s0">
-      <div class="mega-fig left"><img src="figur-8062-fast.webp" width="300" height="400" alt="Rockstar" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-fig left"><img src="figur-8062-fast.webp" width="300" height="400" alt="Rockstar" loading="eager" fetchpriority="high" decoding="async" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-fig right"><img src="figur-3-fast.webp" width="300" height="282" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
         <div class="mega-brand">★ ROCKSTAR.STORE ★</div>
@@ -2394,10 +2402,10 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <p class="payment-methods-title">PILIHAN METODE PEMBAYARAN</p>
   <div class="payment-methods" role="list" aria-label="Metode pembayaran Rockstar.Store">
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img class="payment-logo-qris" src="qr%20terbaru2.webp" alt="QRIS" width="58" height="52" loading="lazy" decoding="async"></span><span>QRIS</span></div>
-    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="gopay.png" alt="GoPay" width="58" height="52" loading="lazy" decoding="async"></span><span>GoPay</span></div>
-    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="dana.webp" alt="DANA" width="58" height="52" loading="lazy" decoding="async"></span><span>DANA</span></div>
-    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="shope%20terbaru.jpeg" alt="ShopeePay" width="58" height="52" loading="lazy" decoding="async"></span><span>ShopeePay</span></div>
-    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="ovo%20terbaru.jpg" alt="OVO" width="58" height="52" loading="lazy" decoding="async"></span><span>OVO</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="gopay-small.webp" alt="GoPay" width="58" height="52" loading="lazy" decoding="async"></span><span>GoPay</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="dana-small.webp" alt="DANA" width="58" height="52" loading="lazy" decoding="async"></span><span>DANA</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="shopee-small.webp" alt="ShopeePay" width="58" height="52" loading="lazy" decoding="async"></span><span>ShopeePay</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="ovo-small.webp" alt="OVO" width="58" height="52" loading="lazy" decoding="async"></span><span>OVO</span></div>
     <div class="payment-method all-bank" role="listitem"><span class="payment-text-mark">ALL BANK</span><span>Transfer Bank</span></div>
     <div class="payment-method binance" role="listitem"><span class="payment-text-mark">BINANCE</span><span>Binance Pay</span></div>
   </div>
