@@ -1165,11 +1165,28 @@ header {
 .faq-item summary:focus-visible { outline: 2px solid #9cddff; outline-offset: -4px; }
 .faq-answer { padding: 0 22px 20px; color: #c0cee4; font-size: 14px; line-height: 1.75; }
 .faq-answer a { color: #84d7ff; font-weight: 700; }
+.payment-brand-section.section { max-width: 1000px; margin: 0 auto; padding: 34px 24px 30px; text-align: center; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(155deg, rgba(18,56,99,.72), rgba(7,16,38,.94)); box-shadow: 0 18px 42px rgba(0,0,0,.24); }
+.payment-brand-copy { max-width: 860px; margin: 0 auto; }
+.payment-brand-kicker { color: #9cddff; font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+.payment-brand-copy h2 { margin: 5px 0 8px; padding: 0; border: 0; color: #f5f7ff; font: 800 clamp(34px,6vw,54px)/1.05 'Baloo 2',sans-serif; letter-spacing: .02em; }
+.payment-brand-copy h2 span { color: var(--blue2); }
+.payment-brand-copy p { max-width: 830px; margin: 0 auto; color: #d5def0; font-size: 14px; line-height: 1.8; }
+.payment-methods-title { margin: 26px 0 12px; color: var(--mut); font-size: 12px; font-weight: 800; letter-spacing: .08em; }
+.payment-methods { display: flex; justify-content: center; align-items: flex-start; flex-wrap: wrap; gap: 10px; }
+.payment-method { display: flex; width: 68px; flex-direction: column; align-items: center; gap: 6px; color: #dbe7f8; font-size: 10px; font-weight: 700; line-height: 1.2; }
+.payment-method.bank-transfer { width: 102px; }
+.payment-logo-surface { display: grid; width: 58px; height: 52px; place-items: center; padding: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,.18); }
+.payment-method img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.bank-transfer .payment-logo-surface { width: 94px; }
+.payment-note { margin: 14px 0 0; color: var(--mut); font-size: 11px; line-height: 1.6; }
 @media (max-width: 760px) {
   .faq-section.section { padding-top: 36px; padding-bottom: 26px; }
   .faq-item summary { min-height: 62px; padding: 15px 54px 15px 16px; font-size: 14px; }
   .faq-item summary::after { right: 14px; }
   .faq-answer { padding: 0 16px 17px; font-size: 13px; }
+  .payment-brand-section.section { margin: 0 16px; width: calc(100% - 32px); padding: 27px 15px 24px; border-radius: 18px; }
+  .payment-brand-copy p { font-size: 13px; }
+  .payment-methods { gap: 11px 8px; }
 }
 
 
@@ -2329,7 +2346,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     </details>
     <details class="faq-item">
       <summary>Apa saja metode pembayarannya?</summary>
-      <div class="faq-answer">Metode yang tersedia meliputi QRIS, GoPay, DANA, ShopeePay, OVO, dan transfer bank. Konfirmasikan pilihan pembayaran dan jumlah akhir kepada admin sebelum membayar.</div>
+      <div class="faq-answer">Pembayaran tersedia melalui QRIS, GoPay, DANA, ShopeePay, OVO, dan transfer bank. Konfirmasikan metode serta jumlah akhir kepada admin sebelum membayar, lalu kirim bukti pembayaran melalui WhatsApp.</div>
     </details>
     <details class="faq-item">
       <summary>Kenapa total pembayaran bisa berbeda dari harga produk?</summary>
@@ -2340,6 +2357,23 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
       <div class="faq-answer">Setelah pembayaran dikonfirmasi, admin akan mengirim item di dalam game dan memberi petunjuk bila diperlukan.</div>
     </details>
   </div>
+</section>
+<section class="section payment-brand-section" aria-labelledby="paymentBrandTitle">
+  <div class="payment-brand-copy">
+    <span class="payment-brand-kicker">TOKO ROBLOX</span>
+    <h2 id="paymentBrandTitle">ROCKSTAR<span>.STORE</span></h2>
+    <p>Temukan top up Robux, item dan pet Brainrot, akun Roblox, serta jasa joki berbagai map di Rockstar.Store. Pilih produk dari katalog, lalu hubungi admin melalui WhatsApp untuk konfirmasi pesanan dan pembayaran.</p>
+  </div>
+  <p class="payment-methods-title">PILIHAN METODE PEMBAYARAN</p>
+  <div class="payment-methods" role="list" aria-label="Metode pembayaran Rockstar.Store">
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="qris.webp" alt="QRIS" width="58" height="52" loading="lazy" decoding="async"></span><span>QRIS</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="gopay.png" alt="GoPay" width="58" height="52" loading="lazy" decoding="async"></span><span>GoPay</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="dana.webp" alt="DANA" width="58" height="52" loading="lazy" decoding="async"></span><span>DANA</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="shopee.png" alt="ShopeePay" width="58" height="52" loading="lazy" decoding="async"></span><span>ShopeePay</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="ovo.jpg" alt="OVO" width="58" height="52" loading="lazy" decoding="async"></span><span>OVO</span></div>
+    <div class="payment-method bank-transfer" role="listitem"><span class="payment-logo-surface"><img src="bank-transfer.webp" alt="Transfer bank Mandiri dan BNI" width="94" height="52" loading="lazy" decoding="async"></span><span>Transfer Bank</span></div>
+  </div>
+  <p class="payment-note">Pastikan metode pembayaran dan total pesanan dikonfirmasi admin sebelum melakukan pembayaran.</p>
 </section>
 <footer>
   <a href="#faq">FAQ &amp; Cara Beli</a><br>
