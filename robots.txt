@@ -4,3 +4,4 @@ Disallow: /admin.html
 Disallow: /analisis.html
 
 Sitemap: https://rockstarstore.id/sitemap.xml
+Agentmap: https://rockstarstore.id/.well-known/ard.json

@@ -1,0 +1,14 @@
+# Rockstar.Store
+
+> Rockstar.Store is an online store for Roblox top-ups, game items, accounts, and services.
+
+## Main pages
+- [Home](https://rockstarstore.id/): Browse the store and current product catalog.
+- [Robux top-up](https://rockstarstore.id/?tab=topup): View Robux top-up products.
+- [Brainrot items](https://rockstarstore.id/?tab=brainrot): Browse Brainrot game items.
+- [Roblox accounts](https://rockstarstore.id/?tab=akun): Browse Roblox account listings.
+- [Joki services](https://rockstarstore.id/?tab=joki): View available game services.
+
+## Site information
+- [Sitemap](https://rockstarstore.id/sitemap.xml): Index of public store pages.
+- [Robots instructions](https://rockstarstore.id/robots.txt): Public crawler access and sitemap information.
