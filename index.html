@@ -1179,6 +1179,7 @@ header {
 .payment-method.bank-transfer { width: 102px; }
 .payment-logo-surface { display: grid; width: 58px; height: 52px; place-items: center; padding: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 9px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,.18); }
 .payment-method img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.payment-method .payment-logo-qris { object-fit: cover; object-position: center center; }
 .payment-method.all-bank, .payment-method.binance { width: 82px; }
 .payment-text-mark { display: grid; width: 72px; height: 52px; place-items: center; padding: 5px; border: 1px solid rgba(255,255,255,.18); border-radius: 9px; color: #e6efff; background: rgba(255,255,255,.07); font-size: 11px; font-weight: 900; line-height: 1.1; letter-spacing: .04em; }
 .payment-method.binance .payment-text-mark { color: #181a20; border-color: #f0b90b; background: #f0b90b; font-size: 10px; letter-spacing: .08em; }
@@ -2377,12 +2378,12 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   </div>
   <p class="payment-methods-title">PILIHAN METODE PEMBAYARAN</p>
   <div class="payment-methods" role="list" aria-label="Metode pembayaran Rockstar.Store">
-    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="qris.webp" alt="QRIS" width="58" height="52" loading="lazy" decoding="async"></span><span>QRIS</span></div>
+    <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img class="payment-logo-qris" src="qris.webp" alt="QRIS" width="58" height="52" loading="lazy" decoding="async"></span><span>QRIS</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="gopay.png" alt="GoPay" width="58" height="52" loading="lazy" decoding="async"></span><span>GoPay</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="dana.webp" alt="DANA" width="58" height="52" loading="lazy" decoding="async"></span><span>DANA</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="shopee.png" alt="ShopeePay" width="58" height="52" loading="lazy" decoding="async"></span><span>ShopeePay</span></div>
     <div class="payment-method" role="listitem"><span class="payment-logo-surface"><img src="ovo.jpg" alt="OVO" width="58" height="52" loading="lazy" decoding="async"></span><span>OVO</span></div>
-    <div class="payment-method all-bank" role="listitem"><span class="payment-text-mark">ALL BANK</span></div>
+    <div class="payment-method all-bank" role="listitem"><span class="payment-text-mark">ALL BANK</span><span>Transfer Bank</span></div>
     <div class="payment-method binance" role="listitem"><span class="payment-text-mark">BINANCE</span><span>Binance Pay</span></div>
   </div>
   <p class="payment-note">Pastikan metode pembayaran dan total pesanan dikonfirmasi admin sebelum melakukan pembayaran.</p>
