@@ -206,13 +206,22 @@
 }
 </script>
 
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH"></script>
+<!-- Google Analytics: simpan event lebih dulu, muat skrip setelah tampilan awal stabil -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-8CKBS3MNXH');
+  window.addEventListener('load', function(){
+    window.setTimeout(function(){
+      if(window.__rockGaScriptLoaded) return;
+      window.__rockGaScriptLoaded = true;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-8CKBS3MNXH';
+      document.head.appendChild(s);
+    }, 10000);
+  }, { once: true });
 </script>
 
 <!-- Meta Pixel (Facebook) -->
@@ -324,7 +333,7 @@ body::before {
     linear-gradient(rgba(6,9,19,0.78), rgba(6,9,19,0.86)),
     radial-gradient(900px 320px at 85% -60px, rgba(43,78,255,0.22), transparent 60%),
     radial-gradient(700px 300px at 5% 0%, rgba(43,78,255,0.12), transparent 60%),
-    url("bg.jpg") center top / cover no-repeat,
+    url("bg-fast.webp") center top / cover no-repeat,
     var(--bg);
   pointer-events: none;
   transform: translate3d(0,0,0);
@@ -352,6 +361,16 @@ body::before {
   top: 0;
   z-index: 101;
 }
+.hot-shortcut { max-width: 1144px; margin: 10px auto 0; padding: 0 24px; }
+.hot-shortcut button {
+  display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 42px;
+  padding: 8px 14px; border: 1px solid rgba(111,139,255,.38); border-radius: 12px;
+  background: linear-gradient(90deg, rgba(43,78,255,.16), rgba(10,18,43,.9), rgba(43,78,255,.16));
+  color: var(--txt); font: 600 13px 'Poppins', sans-serif; cursor: pointer;
+}
+.hot-shortcut button:hover, .hot-shortcut button:focus-visible { border-color: var(--blue2); background-color: rgba(43,78,255,.22); outline: none; }
+.hot-shortcut .hot-arrow { color: var(--blue2); font-size: 17px; }
+@media (max-width: 760px) { .hot-shortcut { padding: 0 12px; margin-top: 8px; } }
 .announce {
   background: linear-gradient(90deg, #12225e, var(--blue), #12225e);
   color: #fff;
@@ -387,8 +406,8 @@ header {
 @media (prefers-reduced-motion: no-preference) {
   .brand img { animation: logoFloat 2.4s ease-in-out infinite; }
   @keyframes logoFloat {
-    0%,100% { transform: translateY(0) rotate(0) scale(1); filter: drop-shadow(0 0 0 rgba(66,105,255,0)); }
-    50% { transform: translateY(-4px) rotate(-4deg) scale(1.05); filter: drop-shadow(0 0 7px rgba(66,105,255,.65)); }
+    0%,100% { transform: translateY(0) rotate(0) scale(1); }
+    50% { transform: translateY(-4px) rotate(-4deg) scale(1.05); }
   }
   .brandshine { color: #fff; }
   .brl { display: inline-block; opacity: 0; animation: letterIn 0.45s ease forwards; }
@@ -615,7 +634,8 @@ header {
 .s5 .mega-cta { margin-top: 10px; }
 .s5 .mega-char.wide img { border-radius: 16px; border: 1px solid rgba(140,170,255,.55); object-fit: cover; box-shadow: 0 0 30px rgba(43,120,255,.45); }
 /* slide 5 Joki: kembali ke banner foto dan CTA sebelumnya */
-.s5 { background: linear-gradient(90deg, rgba(3,6,20,.94) 0%, rgba(3,6,20,.78) 38%, rgba(3,6,20,.25) 62%, rgba(3,6,20,0) 80%), url('jokiroblox.webp') center right / cover no-repeat; }
+.s5 { background: linear-gradient(90deg, rgba(3,6,20,.94) 0%, rgba(3,6,20,.78) 38%, rgba(3,6,20,.25) 62%, rgba(3,6,20,0) 80%); }
+.s5.on { background-image: linear-gradient(90deg, rgba(3,6,20,.94) 0%, rgba(3,6,20,.78) 38%, rgba(3,6,20,.25) 62%, rgba(3,6,20,0) 80%), url('jokiroblox-fast.webp'); background-position: center right; background-size: cover; background-repeat: no-repeat; }
 .s5 .mega-char { display: none; }
 .s5 .mega-titlebox { text-shadow: 0 2px 12px rgba(0,0,0,.85); }
 .joki-hero { position: relative; overflow: hidden; padding: 6px 8px 2px; text-align: center; margin-bottom: 10px; }
@@ -680,7 +700,7 @@ header {
 }
 @media (max-width: 760px) {
   .mega { padding: 0 12px; }
-  .mega-slide { height: auto; min-height: 340px; padding: 18px 14px 46px; }
+  .mega-slide { height: 420px; min-height: 420px; padding: 18px 14px 46px; }
   .mega-fig { width: 34%; opacity: .4; }
   .mega-nav { display: none; }
 }
@@ -1586,13 +1606,13 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 </head>
 <body>
 
-<div id="loader"><img src="ROCKSTARLOGO.webp" alt="Rockstar"><div class="spin"></div></div>
+<div id="loader"><img src="ROCKSTARLOGO-fast.webp" width="320" height="320" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="topwrap">
 <div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun"></span></div>
 
 <header>
-  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
+  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-fast.webp" width="320" height="320" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
   <nav class="headnav">
     <a href="/" onclick="goHome(); return false;">🏠 <span data-i18n="nav_home">Beranda</span></a>
     <a href="?tab=akun" onclick="goToAkun(); return false;">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
@@ -1610,12 +1630,14 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   </div>
 </header>
 </div>
+<div class="hot-shortcut"><button type="button" onclick="goToMostClicked()"><span aria-hidden="true">🔥</span><span data-i18n="hot_t">Paling Banyak Diklik</span><span class="hot-arrow" aria-hidden="true">↓</span></button></div>
 <div class="mpanel" id="mnav">
   <button class="mlink" onclick="mnavGo(goHome)"><span class="lico">🏠</span><span data-i18n="nav_home">Beranda</span></button>
   <button class="mlink" onclick="mnavGo(goToAkun)"><span class="lico">👤</span><span data-i18n="nav_akun">Akun Sepuh</span></button>
   <button class="mlink" onclick="mnavGo(goToBrainrot)"><span class="lico">🧠</span><span data-i18n="cat_brainrot">Katalog Brainrot</span></button>
   <button class="mlink" onclick="mnavGo(goToTopUp)"><span class="lico">💎</span><span data-i18n="nav_topup">Top Up Robux</span></button>
   <button class="mlink" onclick="mnavGo(goToJoki)"><span class="lico">🏆</span><span data-i18n="nav_joki">Joki Sepuh</span></button>
+  <button class="mlink" onclick="mnavGo(goToMostClicked)"><span class="lico">🔥</span><span data-i18n="hot_t">Paling Banyak Diklik</span></button>
   <button class="mlink" onclick="mnavGo(goFlash)"><span class="lico">⚡</span><span data-i18n="flash_btn">Flash Sale</span></button>
   <button class="mlink" onclick="mnavGo(toggleTestiPop)"><span class="lico">⭐</span><span data-i18n="nav_testi">Testimoni</span></button>
   <div class="mnrow">
