@@ -809,8 +809,10 @@ header {
 .testimoni-channel a { display:inline-block; margin-left:6px; color:#84d7ff; font-weight:800; text-decoration:none; }
 .testimoni-channel a:hover { text-decoration:underline; }
 .testimoni-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-.testimoni-photo-link { display:block; min-width:0; padding:6px; overflow:hidden; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.025); }
+.testimoni-photo-link { display:block; width:100%; min-width:0; padding:6px; overflow:hidden; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.025); color:inherit; font:inherit; text-align:left; cursor:zoom-in; }
 .testimoni-photo { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:contain; border-radius:8px; background:#07152b; }
+.testimoni-viewer-actions { display:flex; margin:0 0 12px; }
+.testimoni-viewer-photo { display:block; width:100%; max-height:64vh; object-fit:contain; border-radius:12px; background:#07152b; }
 @media (max-width:760px) { .testimoni-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; } .testimoni-modal { padding:18px 14px; } }
 
 /* ===== stats strip ===== */
@@ -2319,9 +2321,15 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
       <button class="ghost" type="button" onclick="closeTestimoniGallery()">Tutup</button>
     </div>
     <p class="testimoni-channel">Testimoni lengkap dan update terbaru tersedia di Saluran WhatsApp Rockstar.Store. <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener noreferrer">Join saluran →</a></p>
-    <p id="testimoniGalleryStatus" class="hint" aria-live="polite">Memuat testimoni...</p>
-    <div id="testimoniGalleryGrid" class="testimoni-grid"></div>
-    <button id="testimoniGalleryMore" class="ghost" type="button" onclick="loadMoreTestimoni()" style="display:none;width:100%;margin-top:14px;">Muat foto lainnya</button>
+    <div id="testimoniGalleryContent">
+      <p id="testimoniGalleryStatus" class="hint" aria-live="polite">Memuat testimoni...</p>
+      <div id="testimoniGalleryGrid" class="testimoni-grid"></div>
+      <button id="testimoniGalleryMore" class="ghost" type="button" onclick="loadMoreTestimoni()" style="display:none;width:100%;margin-top:14px;">Muat foto lainnya</button>
+    </div>
+    <div id="testimoniPhotoViewer" style="display:none;">
+      <div class="testimoni-viewer-actions"><button class="ghost" type="button" onclick="returnToTestimoniGallery()">← Kembali ke galeri</button></div>
+      <img id="testimoniPhotoViewerImage" class="testimoni-viewer-photo" alt="Foto testimoni ukuran penuh">
+    </div>
   </div>
 </div>
 
@@ -3754,6 +3762,7 @@ const DEFAULT_ROCKSTAR_SERVERS = [
 let TESTIMONI_GALLERY_ROWS = [];
 let TESTIMONI_GALLERY_SHOWN = 0;
 let TESTIMONI_GALLERY_LOADED = false;
+let TESTIMONI_VIEWER_SCROLL_TOP = 0;
 
 function validRobloxServerUrl(value){
   try {
@@ -3812,6 +3821,7 @@ function isPublicFotoUrl(value){
 function openTestimoniGallery(){
   const modal = document.getElementById("testimoniModal");
   const status = document.getElementById("testimoniGalleryStatus");
+  returnToTestimoniGallery();
   modal.style.display = "block";
   if(TESTIMONI_GALLERY_LOADED){
     TESTIMONI_GALLERY_SHOWN = 0;
@@ -3842,18 +3852,41 @@ function loadMoreTestimoni(){
   const more = document.getElementById("testimoniGalleryMore");
   const batch = TESTIMONI_GALLERY_ROWS.slice(TESTIMONI_GALLERY_SHOWN, TESTIMONI_GALLERY_SHOWN + 12);
   batch.forEach(function(row, i){
-    const link = document.createElement("a");
-    link.className = "testimoni-photo-link"; link.href = row.image; link.target = "_blank"; link.rel = "noopener noreferrer";
-    link.setAttribute("aria-label", "Buka foto testimoni ukuran penuh");
+    const link = document.createElement("button");
+    link.type = "button";
+    link.className = "testimoni-photo-link";
+    link.setAttribute("aria-label", "Lihat foto testimoni ukuran penuh");
     const img = document.createElement("img");
     img.className = "testimoni-photo"; img.src = thumbOf(row.image); img.width = 480; img.height = 600;
     img.loading = "lazy"; img.decoding = "async"; img.alt = "Foto testimoni " + (TESTIMONI_GALLERY_SHOWN + i + 1);
     img.onerror = function(){ img.onerror = null; if(img.src !== row.image) img.src = row.image; };
+    link.addEventListener("click", function(){ openTestimoniPhoto(row.image, img.alt); });
     link.appendChild(img); grid.appendChild(link);
   });
   TESTIMONI_GALLERY_SHOWN += batch.length;
   if(status && TESTIMONI_GALLERY_ROWS.length) status.textContent = "Menampilkan " + TESTIMONI_GALLERY_SHOWN + " dari " + TESTIMONI_GALLERY_ROWS.length + " foto.";
   more.style.display = TESTIMONI_GALLERY_SHOWN < TESTIMONI_GALLERY_ROWS.length ? "block" : "none";
+}
+function openTestimoniPhoto(imageUrl, altText){
+  const modal = document.querySelector("#testimoniModal .modal");
+  const content = document.getElementById("testimoniGalleryContent");
+  const viewer = document.getElementById("testimoniPhotoViewer");
+  const image = document.getElementById("testimoniPhotoViewerImage");
+  if(!modal || !content || !viewer || !image || !imageUrl) return;
+  TESTIMONI_VIEWER_SCROLL_TOP = modal.scrollTop;
+  image.src = imageUrl;
+  image.alt = altText || "Foto testimoni ukuran penuh";
+  content.style.display = "none";
+  viewer.style.display = "block";
+  modal.scrollTop = 0;
+}
+function returnToTestimoniGallery(){
+  const modal = document.querySelector("#testimoniModal .modal");
+  const content = document.getElementById("testimoniGalleryContent");
+  const viewer = document.getElementById("testimoniPhotoViewer");
+  if(viewer) viewer.style.display = "none";
+  if(content) content.style.display = "";
+  if(modal) requestAnimationFrame(function(){ modal.scrollTop = TESTIMONI_VIEWER_SCROLL_TOP; });
 }
 function closeTestimoniGallery(){ document.getElementById("testimoniModal").style.display = "none"; }
 
