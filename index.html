@@ -1018,7 +1018,8 @@ header {
 /* ===== wishlist ===== */
 .payicons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .payicons span { font-size: 10.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; color: var(--mut); }
-.rm { font-size: 12.5px; font-weight: 700; color: #f3d27a; margin-top: 2px; }
+.price-alt { font-size: 12.5px; font-weight: 700; color: #f3d27a; margin-top: 2px; }
+#searchSug .sug .pr .price-alt { font-size: 10px; font-weight: 500; color: var(--mut); }
 /* ===== sentuhan mewah & elegan: aksen biru + background foto grid ===== */
 .itemgrid { background: transparent; border: none; box-shadow: none; padding: 0; }
 .item { border: 1px solid rgba(66,105,255,0.25); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
@@ -2364,7 +2365,7 @@ function flashHTML(){
         <div class="stars">${starsOf(it)}</div>
         ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
         ${stockBarHTML(it)}`}
-        <div class="price"><span class="now">${formatCurrency(it.price)}</span><span class="was">${formatCurrency(it.originalPrice)}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
+        <div class="price"><span class="now">${formatCurrency(it.price)}</span><span class="was">${formatCurrency(it.originalPrice)}</span>${selectedCurrencyFmt(it.price) ? `<div class="price-alt">${selectedCurrencyFmt(it.price)}</div>` : ``}</div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
@@ -2791,7 +2792,8 @@ function formatCurrencyFor(idr, c){
   const formatted = new Intl.NumberFormat(info.loc, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(digits ? value : Math.round(value));
   return info.sym + " " + formatted;
 }
-function formatCurrency(idr){ return formatCurrencyFor(idr, currency()); }
+function formatCurrency(idr){ return formatCurrencyFor(idr, "IDR"); }
+function selectedCurrencyFmt(idr){ const c=currency(); return c === "IDR" ? "" : "≈ " + formatCurrencyFor(idr, c); }
 function render(){
   try { syncHeroCta(); } catch(e) {}
   const el = document.getElementById("products");
@@ -2910,11 +2912,12 @@ function sugShow(q, rows){
     const cats = catsOf(r.page);
     const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
     const pr = (r.item.stock === 0) ? tr("habis") : formatCurrency(r.item.price);
+    const alt = (r.item.stock === 0) ? "" : selectedCurrencyFmt(r.item.price);
     const nm = String(r.item.name || "").replace(/</g, "&lt;");
     return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
       thumbTag(im, `alt="" loading="lazy" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#05080f;"`) +
       `<div><b>${nm}</b><span>${String(r.cname || "").replace(/</g, "&lt;")}</span></div>` +
-      `<div class="pr">${pr}</div></div>`;
+      `<div class="pr">${pr}${alt ? `<small class="price-alt" style="display:block;text-align:right;">${alt}</small>` : ``}</div></div>`;
   }).join("");
   box.style.display = "block";
 }
@@ -2977,7 +2980,7 @@ function itemCard(categories, i, j){
       <div class="price">
         ${hidePrice
           ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${tr("hubungi")}</span>`
-          : `<span class="now">${formatCurrency(item.price)}</span>${item.originalPrice ? `<span class="was">${formatCurrency(item.originalPrice)}</span>` : ``}${rmFmt(item.price) ? `<div class="rm">${rmFmt(item.price)}</div>` : ``}`}
+          : `<span class="now">${formatCurrency(item.price)}</span>${item.originalPrice ? `<span class="was">${formatCurrency(item.originalPrice)}</span>` : ``}${selectedCurrencyFmt(item.price) ? `<div class="price-alt">${selectedCurrencyFmt(item.price)}</div>` : ``}`}
       </div>
       <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
       <button class="btn" ${item.stock === 0 ? 'style="background:#232c44;color:var(--mut);cursor:not-allowed;"' : ''} onclick="event.stopPropagation();${item.stock === 0 ? `alert(tr('habis_alert'))` : `addItem(${i},${j})`}">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
@@ -3121,7 +3124,7 @@ function renderDetail(){
     ${stockBarHTML(item)}
     <div class="detailprice">
       <span class="now">${formatCurrency(item.price)}</span>${item.originalPrice ? `<span class="was">${formatCurrency(item.originalPrice)}</span>` : ``}
-      ${rmFmt(item.price) ? `<div class="rm" style="font-size:14px;">${rmFmt(item.price)}</div>` : ``}
+      ${selectedCurrencyFmt(item.price) ? `<div class="price-alt" style="font-size:14px;">${selectedCurrencyFmt(item.price)}</div>` : ``}
     </div>
     <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
     ${off ? `<div style="margin-top:6px;"><span class="badge-off" style="position:static;">${tr("hemat")} -${off}%</span></div>` : ``}
@@ -3570,10 +3573,10 @@ function checkout(){
     previewHTML += `
       <div class="mrow">
         <img src="${itemImage}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}</div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}${selectedCurrencyFmt(item.price) ? `<br><small class="price-alt">${selectedCurrencyFmt(item.price)}</small>` : ``}</div>
       </div>`;
   });
-  previewHTML += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}${currency() === "IDR" ? "" : `<br><span>Harga dasar admin: ${formatCurrencyFor(totalPrice, "IDR")}</span>`}<br><span>📦 ${cart.length} item</span></div>`;
+  previewHTML += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}${selectedCurrencyFmt(totalPrice) ? `<br><span>${selectedCurrencyFmt(totalPrice)}</span>` : ``}<br><span>📦 ${cart.length} item</span></div>`;
   const m = document.createElement('div');
   m.id = 'checkoutModal';
   m.className = 'overlay';
@@ -3648,11 +3651,11 @@ function openCartModal(){
     totalPrice += item.price;
     html += `
       <div class="mrow">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span></div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span>${selectedCurrencyFmt(item.price) ? `<br><small class="price-alt">${selectedCurrencyFmt(item.price)}</small>` : ``}</div>
         <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
       </div>`;
   });
-  html += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}<br><span>📦 ${cart.length} item</span></div>`;
+  html += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}${selectedCurrencyFmt(totalPrice) ? `<br><span>${selectedCurrencyFmt(totalPrice)}</span>` : ``}<br><span>📦 ${cart.length} item</span></div>`;
   document.getElementById("cartList").innerHTML = html;
   document.getElementById("cartModal").style.display = "block";
 }
@@ -3756,7 +3759,7 @@ function paintHot(){
         `<button type="button" class="hot-product-card" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
         thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
         `<span class="hot-product-info"><span class="hot-product-name">${escWish(o.r.item.name)}</span>` +
-        `<span class="hot-product-meta">🔥 ${o.v}x · ${formatCurrency(o.r.item.price)}</span></span></button>`
+        `<span class="hot-product-meta">🔥 ${o.v}x · ${formatCurrency(o.r.item.price)}${selectedCurrencyFmt(o.r.item.price) ? ` · ${selectedCurrencyFmt(o.r.item.price)}` : ``}</span></span></button>`
       ).join("");
       track.innerHTML = `<div class="hot-product-group">${cards}</div><div class="hot-product-group" aria-hidden="true" inert>${cards}</div>`;
       return true;
@@ -3797,7 +3800,7 @@ function openWishModal(){
     const r = resolveWish(nm);
     if(!r) return;
     shown++;
-    const pr = (r.item.stock === 0) ? tr("habis") : formatCurrency(r.item.price);
+    const pr = (r.item.stock === 0) ? tr("habis") : `${formatCurrency(r.item.price)}${selectedCurrencyFmt(r.item.price) ? `<br><small class="price-alt">${selectedCurrencyFmt(r.item.price)}</small>` : ``}`;
     html += `<div class="mrow">
       <div class="grow"><strong>${escWish(nm)}</strong><br><span style="color:var(--blue2);font-weight:600;">${pr}</span></div>
       <button class="del" style="background:var(--blue);" onclick="wishAdd('${r.page}',${r.i},${r.j})">🛒</button>
@@ -3844,7 +3847,7 @@ function paintTogether(){
       box.style.display = "";
       box.innerHTML = `<b>${tr("together")}</b>` + top.map(o =>
         `<div class="mrow"><div class="grow"><strong>${escWish(o.k).slice(0, 50)}</strong><br>` +
-        `<span style="color:var(--blue2);font-weight:600;">${formatCurrency(o.r.item.price)}</span> ` +
+        `<span style="color:var(--blue2);font-weight:600;">${formatCurrency(o.r.item.price)}${selectedCurrencyFmt(o.r.item.price) ? `<br><small class="price-alt">${selectedCurrencyFmt(o.r.item.price)}</small>` : ``}</span> ` +
         `<span style="color:var(--mut);font-size:12px;">• ${o.v}x ${tr("bought_with")}</span></div>` +
         `<button class="del" style="background:var(--blue);" onclick="togetherAdd('${o.r.page}',${o.r.i},${o.r.j})">🛒</button></div>`
       ).join("");
@@ -3922,11 +3925,7 @@ function hasKatArr(arr){
 }
 
 let infoTeksValue = "";
-function rmFmt(rp){
-  rp = Number(rp) || 0;
-  if(rp <= 0 || currency() === "MYR") return "";
-  return "≈ " + formatCurrencyFor(rp, "MYR");
-}
+function rmFmt(rp){ return selectedCurrencyFmt(rp); }
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
   if(!el) return;
