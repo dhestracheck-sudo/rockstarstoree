@@ -3122,7 +3122,7 @@ function render(){
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
     const hasPendingTab = !!(new URLSearchParams(location.search).get("tab"));
-    window.__hotReady = hasPendingTab ? Promise.resolve(false) : paintHot();
+    window.__hotReady = hasPendingTab ? Promise.resolve(false) : scheduleHotProducts();
     watchViews();
     return;
   }
@@ -3492,7 +3492,7 @@ function updateCarousel(i, j, index){
 function goHome(){
   const hadTab = new URLSearchParams(location.search).has("tab");
   currentPage = 'home'; shownCat = -1; render(); updateUrl();
-  if(hadTab) window.__hotReady = paintHot();
+  if(hadTab) window.__hotReady = scheduleHotProducts();
 }
 function goToFaq(){
   if(currentPage !== "home" || shownCat >= 0 || new URLSearchParams(location.search).has("tab")) goHome();
@@ -4141,6 +4141,23 @@ function fetchSheet(sheet, cbName){
 }
 /* ===== catat aktivitas pengunjung (klik / keranjang / checkout) — tanpa data pribadi ===== */
 let hotClickFetchPromise = null;
+let hotProductObserver = null;
+function scheduleHotProducts(){
+  const wrap = document.getElementById("hotProductBanner");
+  if(!wrap) return Promise.resolve(false);
+  if(hotProductObserver) return window.__hotReady || Promise.resolve(false);
+  if(!("IntersectionObserver" in window)) return paintHot();
+  window.__hotReady = new Promise(resolve => {
+    hotProductObserver = new IntersectionObserver(entries => {
+      if(!entries.some(entry => entry.isIntersecting)) return;
+      hotProductObserver.disconnect();
+      hotProductObserver = null;
+      Promise.resolve(paintHot()).then(resolve);
+    }, { rootMargin: "700px 0px" });
+    hotProductObserver.observe(wrap);
+  });
+  return window.__hotReady;
+}
 function logAksi(aksi, name, kat, price, page){
   if(aksi === "klik") hotClickFetchPromise = null;
   try {
