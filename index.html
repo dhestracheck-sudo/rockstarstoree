@@ -3686,6 +3686,8 @@ function sbGet(path){
   }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
 }
 function fetchSheet(sheet, cbName){
+  const ssr = window.__RS_SSR_CATALOG__;
+  if (ssr && Array.isArray(ssr.rows) && String(sheet || "").toLowerCase() === ssr.page) return Promise.resolve(ssr.rows);
   return sbGet(sbTableOf(sheet) + "?select=*&order=urutan");
 }
 /* ===== catat aktivitas pengunjung (klik / keranjang / checkout) — tanpa data pribadi ===== */
@@ -4051,17 +4053,38 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 
 function loadLiveStock(){
   try {
-    applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
+    const ssr = window.__RS_SSR_CATALOG__;
+    const ssrActive = !!(ssr && ["brainrot", "topup", "akun", "joki"].includes(ssr.page) && Array.isArray(ssr.rows));
+    window.__RS_SSR_ACTIVE__ = ssrActive;
+    applySnap(
+      ssrActive && ssr.page === "brainrot" ? ssr.rows : loadCached("Brainrot"),
+      ssrActive && ssr.page === "topup" ? ssr.rows : loadCached("Topup"),
+      ssrActive && ssr.page === "akun" ? ssr.rows : loadCached("Akun"),
+      ssrActive && ssr.page === "joki" ? ssr.rows : loadCached("Joki"),
+      loadCached("Info")
+    );
     applyLang();
     const requestedTab = (new URLSearchParams(location.search).get("tab") || "").toLowerCase();
     const waitingForCatalog = ["brainrot", "topup", "akun", "joki"].includes(requestedTab) && !catsOf(requestedTab).length;
     window.__waitingForDeepLinkData = waitingForCatalog;
-    try {
-      if(!applyDeepLink(false)){
-        render();
-        if(!waitingForCatalog) updateUrl();
-      }
-    } catch(e) { render(); }
+    if(ssrActive){
+      currentPage = ssr.page;
+      const categories = catsOf(ssr.page);
+      shownCat = ssr.categoryName ? categories.findIndex(category => category.name.toLowerCase() === String(ssr.categoryName).toLowerCase()) : -1;
+      shownN = PAGE_N;
+      window.__waitingForDeepLinkData = false;
+      const hotBanner = document.getElementById("hotProductBanner");
+      if(hotBanner) hotBanner.style.display = "none";
+      syncCta();
+      syncSeoMetadata();
+    } else {
+      try {
+        if(!applyDeepLink(false)){
+          render();
+          if(!waitingForCatalog) updateUrl();
+        }
+      } catch(e) { render(); }
+    }
     hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
@@ -4101,7 +4124,11 @@ loadLiveStock().then(() => {
   /* Deep link sudah diterapkan bersama cache sebelum permintaan jaringan berjalan.
      Setelah ada interaksi, jangan render ulang seluruh halaman: perubahan tinggi konten
      dapat membuat browser mengunci posisi scroll ke footer. */
-  if(!userMoved || window.__waitingForDeepLinkData){
+  if(window.__RS_SSR_ACTIVE__){
+    try { applyLang(); } catch(e) {}
+    try { syncSeoMetadata(); } catch(e) {}
+    window.__waitingForDeepLinkData = false;
+  } else if(!userMoved || window.__waitingForDeepLinkData){
     try { applyLang(); } catch(e) {}
     try {
       if(!applyDeepLink(false)){ render(); updateUrl(); }
