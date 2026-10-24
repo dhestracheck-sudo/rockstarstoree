@@ -3867,7 +3867,7 @@ function paintRecent(){
   if(!items.length){ row.innerHTML = '<div class="recent-empty">Produk yang kamu buka akan muncul di sini pada perangkat ini.</div>'; return; }
   row.innerHTML = items.slice(0,12).map(r => {
     const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
-    return '<button type="button" class="hot-product-card" onclick="openDetail('' + r.page + '',' + r.i + ',' + r.j + ')" aria-label="Lihat ' + escWish(r.item.name) + '">' +
+    return '<button type="button" class="hot-product-card" onclick="openDetail(&#39;' + r.page + '&#39;,' + r.i + ',' + r.j + ')" aria-label="Lihat ' + escWish(r.item.name) + '">' +
       thumbTag(im, 'alt="" loading="lazy" decoding="async"') +
       '<span class="hot-product-info"><span class="hot-product-name">' + escWish(r.item.name) + '</span>' +
       '<span class="hot-product-meta">' + formatCurrency(r.item.price) + (selectedCurrencyFmt(r.item.price) ? ' · ' + selectedCurrencyFmt(r.item.price) : '') + '</span></span></button>';
