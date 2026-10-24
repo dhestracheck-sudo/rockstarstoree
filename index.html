@@ -3740,6 +3740,7 @@ function paintHot(){
         .sort((a, b) => b.v - a.v)
         .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
         .filter(o => o.r && Number(o.r.item.stock) > 0).slice(0, 8);
+      if(currentPage !== "home" || shownCat >= 0){ wrap.style.display = "none"; return false; }
       if(!top.length){ wrap.style.display = "none"; return false; }
       wrap.style.display = "block";
       const cards = top.map(o =>
