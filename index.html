@@ -1434,17 +1434,28 @@ footer {
   font-size: 13px;
   background: linear-gradient(180deg, rgba(6,9,19,.96), rgba(4,7,18,.99));
 }
-.site-footer-inner { display: grid; grid-template-columns: minmax(230px,1.2fr) minmax(140px,.7fr) minmax(190px,.9fr); gap: 42px; width: min(1180px,100%); margin: 0 auto 34px; align-items: start; }
+.site-footer-inner { display: grid; grid-template-columns: minmax(230px,1.2fr) minmax(180px,.8fr) minmax(240px,1fr); gap: 46px; width: min(1180px,100%); margin: 0 auto 34px; align-items: start; }
 .footer-brand-link { display: inline-flex; align-items: center; gap: 12px; color: var(--txt); text-decoration: none; font-size: 22px; font-weight: 900; letter-spacing: -.03em; }
 .footer-brand-link img { display: block; width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 5px 14px rgba(44,114,255,.28)); }
-.footer-col h2 { position: relative; margin: 4px 0 13px; padding-bottom: 9px; color: var(--txt); font-size: 12px; font-weight: 800; letter-spacing: .09em; }
-.footer-col h2::after { content: ''; position: absolute; left: 0; bottom: 0; width: 68px; height: 2px; border-radius: 2px; background: var(--blue2); }
-.footer-col-links { display: grid; justify-items: start; gap: 3px; }
+.footer-col h2 { position: relative; margin: 3px 0 17px; padding-bottom: 12px; color: #f5f7ff; font-size: 15px; font-weight: 900; letter-spacing: .12em; }
+.footer-col h2::after { content: ''; position: absolute; left: 0; bottom: 0; width: 82px; height: 3px; border-radius: 3px; background: linear-gradient(90deg,#5578ff,#a9bcff,#49d3ff); background-size: 200% 100%; box-shadow: 0 0 12px rgba(91,137,255,.35); animation: footerAccentShine 4s ease-in-out infinite; transition: width .28s ease; }
+.footer-col:hover h2::after { width: 116px; }
+.footer-col-links { display: grid; justify-items: start; gap: 6px; }
 footer.site-footer .footer-col-links a,
-footer.site-footer .footer-col-links button { display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 7px 0; border: 0; background: transparent; color: var(--mut); font: inherit; font-weight: 600; line-height: 1.5; text-align: left; text-decoration: none; cursor: pointer; }
+footer.site-footer .footer-col-links button { display: inline-flex; align-items: center; gap: 12px; width: min(100%,340px); margin: 0; padding: 8px 10px; border: 1px solid transparent; border-radius: 14px; background: linear-gradient(100deg,rgba(255,255,255,.035),rgba(255,255,255,.008)); color: #b7c4e1; font: inherit; font-size: 14px; font-weight: 700; line-height: 1.45; text-align: left; text-decoration: none; cursor: pointer; transition: transform .24s cubic-bezier(.2,.8,.2,1), border-color .24s ease, background .24s ease, box-shadow .24s ease, color .24s ease; }
 footer.site-footer .footer-col-links a:hover,
-footer.site-footer .footer-col-links button:hover { color: var(--txt); }
-.footer-link-icon { display: inline-grid; flex: 0 0 30px; width: 30px; height: 30px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.035); color: var(--blue2); font-size: 14px; }
+footer.site-footer .footer-col-links button:hover { color: var(--txt); border-color: rgba(111,139,255,.24); background: linear-gradient(100deg,rgba(62,93,189,.2),rgba(255,255,255,.035)); box-shadow: 0 8px 22px rgba(0,0,0,.2); transform: translateX(5px); }
+footer.site-footer .footer-col-links a:focus-visible,
+footer.site-footer .footer-col-links button:focus-visible { outline: 2px solid #9cddff; outline-offset: 2px; }
+.footer-link-icon { display: inline-grid; flex: 0 0 36px; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(111,139,255,.25); border-radius: 50%; background: linear-gradient(145deg,rgba(70,103,198,.2),rgba(255,255,255,.04)); box-shadow: inset 0 1px rgba(255,255,255,.08),0 4px 14px rgba(0,0,0,.18); color: #91aaff; font-size: 17px; transition: transform .28s cubic-bezier(.2,.8,.2,1), color .24s ease, background .24s ease, box-shadow .24s ease; }
+footer.site-footer .footer-col-links a:hover .footer-link-icon,
+footer.site-footer .footer-col-links button:hover .footer-link-icon { transform: rotate(-7deg) scale(1.08); border-color: rgba(126,166,255,.58); background: linear-gradient(145deg,rgba(82,125,255,.42),rgba(61,198,255,.16)); box-shadow: 0 0 18px rgba(79,133,255,.28); color: #fff; }
+.site-footer.is-visible .footer-brand,
+.site-footer.is-visible .footer-col { animation: footerRiseIn .68s cubic-bezier(.2,.8,.2,1) both; }
+.site-footer.is-visible .footer-col:nth-child(2) { animation-delay: .1s; }
+.site-footer.is-visible .footer-col:nth-child(3) { animation-delay: .2s; }
+@keyframes footerRiseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes footerAccentShine { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .footer-bottom { display: flex; justify-content: space-between; gap: 12px; width: min(1180px,100%); margin: 0 auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,.08); color: #8491ad; font-size: 11px; }
 .footer-bottom strong { color: #dce5ff; }
 
@@ -1513,11 +1524,23 @@ footer.site-footer .footer-col-links button:hover { color: var(--txt); }
   .footer-brand { grid-column: 1 / -1; }
   .footer-brand-link { font-size: 20px; }
   .footer-brand-link img { width: 52px; height: 52px; }
+  .footer-col h2 { font-size: 14px; }
+  footer.site-footer .footer-col-links a,
+  footer.site-footer .footer-col-links button { gap: 9px; width: 100%; padding: 7px 6px; font-size: 12px; }
+  .footer-link-icon { flex-basis: 32px; width: 32px; height: 32px; font-size: 15px; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 360px) {
   .site-footer-inner { grid-template-columns: 1fr; }
   .footer-brand { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-col h2::after { animation: none; }
+  .site-footer.is-visible .footer-brand,
+  .site-footer.is-visible .footer-col { animation: none; }
+  footer.site-footer .footer-col-links a,
+  footer.site-footer .footer-col-links button,
+  .footer-link-icon { transition: none; }
 }
 @media (min-width: 901px) {
   .section { max-width: min(1640px, 97vw); padding: 52px 40px 8px; }
