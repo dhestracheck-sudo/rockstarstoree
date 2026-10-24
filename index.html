@@ -1142,6 +1142,33 @@ header {
   font-size: 22px; cursor: pointer;
 }
 
+/* ===== FAQ di bagian bawah beranda ===== */
+.faq-section.section { max-width: 1000px; padding-top: 46px; padding-bottom: 32px; scroll-margin-top: 90px; }
+.faq-section .faq-title { border: 0; padding: 0; margin: 0 0 26px; text-align: center; color: #9cddff; font-size: clamp(28px, 5vw, 44px); line-height: 1.15; letter-spacing: 1px; text-shadow: 0 0 24px rgba(49,181,255,.2); }
+.faq-list { display: grid; gap: 12px; }
+.faq-item { overflow: hidden; border: 1px solid rgba(49,181,255,.34); border-radius: 15px; background: linear-gradient(115deg, rgba(14,48,88,.94), rgba(12,37,72,.94)); box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.faq-item summary { position: relative; display: flex; align-items: center; min-height: 66px; padding: 17px 62px 17px 22px; color: #f5f8ff; font-size: 15px; line-height: 1.5; font-weight: 700; cursor: pointer; list-style: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; position: absolute; right: 18px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: #12a8e9; color: #fff; font-size: 21px; font-weight: 500; line-height: 1; }
+.faq-item[open] summary::after { content: "−"; }
+.faq-item summary:focus-visible { outline: 2px solid #9cddff; outline-offset: -4px; }
+.faq-answer { padding: 0 22px 20px; color: #c0cee4; font-size: 14px; line-height: 1.75; }
+.faq-answer a { color: #84d7ff; font-weight: 700; }
+@media (max-width: 760px) {
+  .faq-section.section { padding-top: 36px; padding-bottom: 26px; }
+  .faq-item summary { min-height: 62px; padding: 15px 54px 15px 16px; font-size: 14px; }
+  .faq-item summary::after { right: 14px; }
+  .faq-answer { padding: 0 16px 17px; font-size: 13px; }
+}
+
+
+.recent-section { margin: 0 auto 26px; max-width: 1180px; }
+.recent-section h2 { margin: 0 0 12px; font-size: clamp(19px, 3vw, 25px); }
+.recentrow { display: flex; gap: 10px; overflow-x: auto; padding: 2px 2px 8px; scroll-snap-type: x proximity; }
+.recentrow .hot-product-card { scroll-snap-align: start; }
+.recent-empty, .hot-product-empty { color: var(--mut); font-size: 13px; line-height: 1.6; padding: 12px 2px; }
+.hot-product-empty { width: 100%; text-align: center; }
+
 /* ===== bottom server CTA ===== */
 .server-cta { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
 .server-cta .ava-big { cursor: pointer; }
@@ -1747,6 +1774,7 @@ src="https://www.facebook.com/tr?id=2181744626091763&ev=PageView&noscript=1"
   <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-fast.webp" width="34" height="34" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
   <nav class="headnav">
     <a href="/" onclick="goHome(); return false;">🏠 <span data-i18n="nav_home">Beranda</span></a>
+    <a href="faq.html">❓ <span>FAQ</span></a>
     <a href="?tab=akun" onclick="goToAkun(); return false;">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
     <a href="?tab=brainrot" onclick="goToBrainrot(); return false;">🧠 <span data-i18n="nav_brainrot_bn">Brainrot</span></a>
     <a href="?tab=joki" onclick="goToJoki(); return false;">🏆 <span data-i18n="nav_joki">Joki Sepuh</span></a>
@@ -1765,6 +1793,7 @@ src="https://www.facebook.com/tr?id=2181744626091763&ev=PageView&noscript=1"
 <div class="hot-shortcut"><button type="button" onclick="goToMostClicked()"><span data-i18n="hot_t">🔥 Paling Banyak Diklik</span><span class="hot-arrow" aria-hidden="true">↓</span></button></div>
 <div class="mpanel" id="mnav">
   <button class="mlink" onclick="mnavGo(goHome)"><span class="lico">🏠</span><span data-i18n="nav_home">Beranda</span></button>
+  <a class="mlink" href="faq.html" style="text-decoration:none;"><span class="lico">❓</span><span>FAQ &amp; Cara Beli</span></a>
   <button class="mlink" onclick="mnavGo(goToAkun)"><span class="lico">👤</span><span data-i18n="nav_akun">Akun Sepuh</span></button>
   <button class="mlink" onclick="mnavGo(goToBrainrot)"><span class="lico">🧠</span><span data-i18n="cat_brainrot">Katalog Brainrot</span></button>
   <button class="mlink" onclick="mnavGo(goToTopUp)"><span class="lico">💎</span><span data-i18n="nav_topup">Top Up Robux</span></button>
@@ -2090,74 +2119,6 @@ function megaAuto(){ megaTimer = setTimeout(function(){ megaGo(megaIdx + 1); meg
   </div>
 </section>
 
-<section class="section" id="carabeli">
-  <h2 data-i18n="cb_title">Cara Beli 🎮</h2>
-  <p data-i18n="cb_sub">5 langkah gampang, ikuti gambarnya ya!</p>
-  <div class="tutwrap">
-    <div class="tutcard" id="tutCard">
-      <img class="tutimg" id="tutImg" width="882" height="676" loading="lazy" decoding="async" alt="Langkah cara order" style="display:none;" onerror="this.style.display='none';document.getElementById('tutEmoji').style.display='';">
-      <div class="tutemoji" id="tutEmoji">🛍️</div>
-      <div class="tutnum" id="tutNum">1 / 5</div>
-      <div class="tuttit" id="tutTit">Pilih mainanmu</div>
-      <div class="tuttxt" id="tutTxt">Lihat-lihat, klik Tambah ke Keranjang 🛒</div>
-      <div class="tutdots" id="tutDots"></div>
-    </div>
-    <div class="tutnav">
-      <button onclick="tutGo(-1)" aria-label="Sebelumnya">‹</button>
-      <button id="tutPlayBtn" onclick="tutToggle()" aria-label="Putar/Jeda">⏸</button>
-      <button onclick="tutGo(1)" aria-label="Berikutnya">›</button>
-    </div>
-  </div>
-</section>
-<script>
-var TUT_STEPS = [
-  { e: "🛍️", img: "CARA-ORDER-1-fast.webp", tk: "s1t", xk: "s1x" },
-  { e: "🧺", img: "CARA%20ORDER%202.webp", tk: "s2t", xk: "s2x" },
-  { e: "💬", img: "CARA%20ORDER%203.webp", tk: "s3t", xk: "s3x" },
-  { e: "💳", img: "CARA%20ORDER%204.webp", tk: "s4t", xk: "s4x" },
-  { e: "🎁", img: "CARA%20ORDER%205.webp", tk: "s5t", xk: "s5x" }
-];
-var tutIdx = 0, tutTimer = null, tutVisible = false;
-function tutShow(i){
-  tutIdx = (i + TUT_STEPS.length) % TUT_STEPS.length;
-  var s = TUT_STEPS[tutIdx];
-  var im = document.getElementById("tutImg");
-  if(s.img){ im.src = s.img; im.style.display = ""; document.getElementById("tutEmoji").style.display = "none"; }
-  else { im.removeAttribute("src"); im.style.display = "none"; document.getElementById("tutEmoji").style.display = ""; }
-  document.getElementById("tutEmoji").textContent = s.e;
-  document.getElementById("tutNum").textContent = (tutIdx + 1) + " / " + TUT_STEPS.length;
-  document.getElementById("tutTit").textContent = (typeof tr === "function") ? tr(s.tk) : s.tk;
-  const _tt = document.getElementById("tutTxt");
-  if (_tt) _tt.innerHTML = (typeof tr === "function") ? tr(s.xk) : s.xk;
-  var d = document.getElementById("tutDots");
-  d.innerHTML = TUT_STEPS.map(function(_, j){
-    return '<i onclick="tutGo(' + (j - tutIdx) + ')" class="' + (j === tutIdx ? "on" : "") + '"></i>';
-  }).join("");
-}
-function tutGo(n){ tutShow(tutIdx + n); tutRestart(); }
-function tutRestart(){
-  if(tutTimer) clearInterval(tutTimer);
-  tutTimer = null;
-  if(tutVisible && document.getElementById("tutPlayBtn").textContent === "⏸"){
-    tutTimer = setInterval(function(){ tutShow(tutIdx + 1); }, 5000);
-  }
-}
-function tutToggle(){
-  var b = document.getElementById("tutPlayBtn");
-  if(b.textContent === "⏸"){ b.textContent = "▶"; if(tutTimer) clearInterval(tutTimer); tutTimer = null; }
-  else { b.textContent = "⏸"; tutRestart(); }
-}
-try {
-  tutShow(0);
-  if("IntersectionObserver" in window){
-    var tutObserver = new IntersectionObserver(function(entries){
-      tutVisible = !!(entries[0] && entries[0].isIntersecting);
-      tutRestart();
-    }, { rootMargin: "120px" });
-    tutObserver.observe(document.getElementById("tutCard"));
-  } else { tutVisible = true; tutRestart(); }
-} catch(e) {}
-</script>
 <script>
 /* ===== PWA: install ke HP ===== */
 if("serviceWorker" in navigator){
@@ -2334,9 +2295,39 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
 </section>
 
+<section class="section faq-section" id="faq" aria-labelledby="faqTitle">
+  <h2 class="faq-title" id="faqTitle">PERTANYAAN UMUM (FAQ)</h2>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>Apa saja yang bisa dibeli di Rockstar.Store?</summary>
+      <div class="faq-answer">Tersedia Top Up Robux, item dan pet Brainrot, akun Roblox, serta jasa joki untuk berbagai map.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Bagaimana cara order?</summary>
+      <div class="faq-answer">Pilih produk, tambahkan ke keranjang, lalu tekan Checkout. Periksa ringkasan pesanan dan pilih <b>Kirim ke Admin</b> supaya WhatsApp terbuka dengan detail order. <a href="faq.html">Lihat panduan cara beli bergambar.</a></div>
+    </details>
+    <details class="faq-item">
+      <summary>Bagaimana cara cek status pesanan saya?</summary>
+      <div class="faq-answer">Balas chat WhatsApp yang digunakan untuk mengirim pesanan dan tanyakan pembaruannya. Sertakan nama item atau ringkasan order agar admin lebih mudah membantu.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Apa saja metode pembayarannya?</summary>
+      <div class="faq-answer">Metode yang tersedia meliputi QRIS, GoPay, DANA, ShopeePay, OVO, dan transfer bank. Konfirmasikan pilihan pembayaran dan jumlah akhir kepada admin sebelum membayar.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Kenapa total pembayaran bisa berbeda dari harga produk?</summary>
+      <div class="faq-answer">Keranjang menjumlahkan harga produk yang dipilih. Jika ada biaya dari metode pembayaran, admin akan mengonfirmasi jumlah akhir sebelum pembayaran dilakukan.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Kapan item dikirim?</summary>
+      <div class="faq-answer">Setelah pembayaran dikonfirmasi, admin akan mengirim item di dalam game dan memberi petunjuk bila diperlukan.</div>
+    </details>
+  </div>
+</section>
 <footer>
-  <span data-i18n="foot_wa">No WA Admin:</span> <a href="https://wa.me/6289664299571" target="_blank">+6289664299571</a><br>
-  <span data-i18n="foot_tag">TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu</span>
+  <a href="#faq">FAQ &amp; Cara Beli</a><br>
+  <span data-i18n="foot_tag">TikTok @rockstarstoree • Rockstar.Store — solusi sepuh roblox kamu</span><br>
+  <span data-i18n="foot_wa">No WA Admin:</span> <a href="https://wa.me/6289664299571" target="_blank" rel="noopener">+6289664299571</a>
 </footer>
 
 <script>
@@ -2855,7 +2846,6 @@ function selectLang(code){
   } catch(e) {}
   try { applyLang(); } catch(e) {}
   try { render(); } catch(e) {}
-  try { tutShow(tutIdx); } catch(e) {}
 }
 function anchorMenu(m, btn){
   /* Panel ikat-ke-tombol: muncul di bawah tombol yang diklik,
@@ -2934,7 +2924,8 @@ function render(){
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
-      <div class="banners">
+      <section id="recentSec" class="recent-section" aria-labelledby="recentTitle"><h2 id="recentTitle">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></section>
+      <div class="banners>
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
           <h3>${tr("b_brain_t")}</h3>
@@ -2959,6 +2950,7 @@ function render(){
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
+    paintRecent();
     const hasPendingTab = !!(new URLSearchParams(location.search).get("tab"));
     window.__hotReady = hasPendingTab ? Promise.resolve(false) : paintHot();
     watchViews();
@@ -3169,6 +3161,7 @@ function openDetail(page, i, j){
   detailCur = { page: page, i: i, j: j, k: 0 };
   try {
     var _c = catsOf(page), _it = _c[i].items[j];
+    try { let _recent = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(_recent)) _recent = []; _recent = [_it.name].concat(_recent.filter(name => name !== _it.name)).slice(0,12); localStorage.setItem("rs_recent", JSON.stringify(_recent)); if(currentPage === "home") paintRecent(); } catch(e) {}
     logAksi("klik", _it.name, _c[i].name, _it.price, page);
     if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
   } catch(e) {}
@@ -3847,7 +3840,7 @@ function wishList(){ try { const a = JSON.parse(localStorage.getItem("rs_wish") 
 function saveWish(a){ try { localStorage.setItem("rs_wish", JSON.stringify(a)); } catch(e){} }
 function isWished(nm){ return wishList().indexOf(nm) !== -1; }
 function resolveWish(nm){
-  const pages = ["brainrot", "topup", "akun"];
+  const pages = ["brainrot", "topup", "akun", "joki"];
   for(let p = 0; p < pages.length; p++){
     const cats = catsOf(pages[p]);
     for(let i = 0; i < cats.length; i++)
@@ -3863,14 +3856,33 @@ function syncWishCount(){
   const a2 = document.getElementById("mnavWishCount");
   if(a2) a2.textContent = n;
 }
+
+function paintRecent(){
+  const row = document.getElementById("recentRow");
+  if(!row) return;
+  let names = [];
+  try { names = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(names)) names = []; } catch(e) {}
+  const items = [];
+  names.forEach(name => { const found = resolveWish(name); if(found) items.push(found); });
+  if(!items.length){ row.innerHTML = '<div class="recent-empty">Produk yang kamu buka akan muncul di sini pada perangkat ini.</div>'; return; }
+  row.innerHTML = items.slice(0,12).map(r => {
+    const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
+    return '<button type="button" class="hot-product-card" onclick="openDetail('' + r.page + '',' + r.i + ',' + r.j + ')" aria-label="Lihat ' + escWish(r.item.name) + '">' +
+      thumbTag(im, 'alt="" loading="lazy" decoding="async"') +
+      '<span class="hot-product-info"><span class="hot-product-name">' + escWish(r.item.name) + '</span>' +
+      '<span class="hot-product-meta">' + formatCurrency(r.item.price) + (selectedCurrencyFmt(r.item.price) ? ' · ' + selectedCurrencyFmt(r.item.price) : '') + '</span></span></button>';
+  }).join("");
+}
+
 function paintHot(){
   const wrap = document.getElementById("hotProductBanner");
   const track = document.getElementById("hotProductTrack");
   if(!wrap || !track) return Promise.resolve(false);
+  const showMessage = message => { wrap.style.display = "block"; track.style.animation = "none"; track.style.width = "100%"; track.innerHTML = '<div class="hot-product-empty">' + message + '</div>'; };
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
   return fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-  }).then(r => r.json()).then(rows => {
+  }).then(r => { if(!r.ok) throw new Error("Gagal memuat klik"); return r.json(); }).then(rows => {
     try {
       const freq = {};
       (Array.isArray(rows) ? rows : []).forEach(o => {
@@ -3882,8 +3894,10 @@ function paintHot(){
         .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
         .filter(o => o.r && Number(o.r.item.stock) > 0).slice(0, 8);
       if(currentPage !== "home" || shownCat >= 0){ wrap.style.display = "none"; return false; }
-      if(!top.length){ wrap.style.display = "none"; return false; }
+      if(!top.length){ showMessage("Belum ada data klik produk dalam 30 hari terakhir."); return false; }
       wrap.style.display = "block";
+      track.style.animation = "";
+      track.style.width = "";
       const cards = top.map(o =>
         `<button type="button" class="hot-product-card" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
         thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
@@ -3892,8 +3906,8 @@ function paintHot(){
       ).join("");
       track.innerHTML = `<div class="hot-product-group">${cards}</div><div class="hot-product-group" aria-hidden="true" inert>${cards}</div>`;
       return true;
-    } catch(e) { return false; }
-  }).catch(() => false);
+    } catch(e) { showMessage("Data produk populer belum dapat ditampilkan."); return false; }
+  }).catch(() => { if(currentPage === "home" && shownCat < 0) showMessage("Data klik belum tersinkron. Coba muat ulang halaman."); return false; });
 }
 function syncWishBtns(nm){
   const on = isWished(nm);
@@ -4279,7 +4293,6 @@ loadLiveStock().then(() => {
     window.__waitingForDeepLinkData = false;
   }
   try { syncWishCount(); } catch(e) {}
-  try { tutShow(tutIdx); } catch(e) {}
   try { let searchTimer = null;
 /* Saran instan (ringan, maks 6) — render penuh ditunda biar ketikan tidak nyendat */
 function searchSuggestNow(){
