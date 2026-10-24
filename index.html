@@ -810,17 +810,17 @@ header {
 /* ===== flash sale ===== */
 .flashsec { margin-top: 26px; }
 .flashhead {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   background: linear-gradient(90deg, #3d0a0a, #7a1010);
   border: 1px solid var(--red); border-radius: var(--r);
-  padding: 16px 20px; margin-bottom: 0; cursor: pointer; user-select: none;
+  padding: 12px 16px; margin-bottom: 0; cursor: pointer; user-select: none;
 }
-.flashhead h3 { font-family: 'Baloo 2', sans-serif; font-size: 24px; margin: 0; }
-.flashhead .arrow { margin-left: 4px; font-size: 18px; color: var(--blue2); }
-.flashhead .fomo { font-weight: 700; font-size: 13.5px; color: #ffb3b3; }
+.flashhead h3 { font-family: 'Baloo 2', sans-serif; font-size: 19px; margin: 0; }
+.flashhead .arrow { margin-left: 0; font-size: 14px; color: var(--blue2); }
+.flashhead .fomo { font-weight: 600; font-size: 12px; color: #ffd1d1; }
 .flashhead .timer {
-  margin-left: auto; font-family: 'Baloo 2', sans-serif; font-size: 22px;
-  background: #000; border-radius: 10px; padding: 6px 14px; letter-spacing: 2px;
+  margin-left: auto; font-family: 'Baloo 2', sans-serif; font-size: 16px;
+  background: #000; border-radius: 8px; padding: 4px 10px; letter-spacing: 1.5px;
 }
 .flashbody { margin-top: 18px; }
 .flashgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
@@ -2611,7 +2611,7 @@ function flashHTML(){
   }).join("");
   return `
   <div class="flashsec">
-    <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▼</span><span>${tr("flash_click")}</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▼</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
     <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid">${cards}</div></div>
   </div>`;
 }
