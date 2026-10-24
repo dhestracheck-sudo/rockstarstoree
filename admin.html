@@ -198,12 +198,13 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     </div>
     <div id="statusTeks"></div>
     <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
-    <label>💱 Kurs Ringgit (Rp per RM 1 — web convert otomatis)</label>
+    <label>💱 Kurs Malaysia (IDR per RM 1 — dipakai storefront)</label>
     <div style="display:flex;gap:8px;">
       <input type="number" id="kursInput" placeholder="misal 3600" style="flex:1">
       <button id="kursBtn" onclick="saveKurs()" style="flex:1;">💱 Simpan Kurs</button>
     </div>
     <div id="statusKurs"></div>
+    <p class="hint">Nilai kurs di sini menjadi sumber konversi harga IDR ke MYR (RM) pada fitur mata uang storefront. Setelah menyimpan, muat ulang storefront agar nilai kurs terbaru digunakan.</p>
   </div>
 
   <h2 class="sect" id="sectAkun" style="display:none;">🔐 DATA AKUN — id/pw per akun (pengunjung tidak bisa intip)</h2>
