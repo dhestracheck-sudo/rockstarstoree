@@ -1,6 +1,6 @@
-# watch.ps1 — auto commit+push tiap ada file berubah di rockstar3 (dengan jeda 30 detik)
+# watch.ps1 — auto commit+push tiap ada file berubah di repo ini.
 # Dijalankan otomatis tiap login via Scheduled Task "RockstarAutoPush". Log: auto-push.log
-$repo = "C:\Users\User\OneDrive\Desktop\rockstar3"
+$repo = $PSScriptRoot
 $pending = Join-Path $repo ".autopush-pending"
 $log = Join-Path $repo "auto-push.log"
 Set-Location $repo
@@ -16,22 +16,23 @@ $lastBeat = Get-Date
 $watcher = New-Object IO.FileSystemWatcher $repo
 $watcher.IncludeSubdirectories = $true
 $watcher.EnableRaisingEvents = $true
+$watchData = @{ Pending = $pending; Log = $log }
 
 $onChange = {
   $p = $Event.SourceEventArgs.FullPath
   if ($p -match "\.git\\") { return }
   if ($p -like "*.autopush-pending") { return }
   if ($p -like "*auto-push.log") { return }
-  Set-Content -LiteralPath "C:\Users\User\OneDrive\Desktop\rockstar3\.autopush-pending" (Get-Date).ToString("o")
+  Set-Content -LiteralPath $Event.MessageData.Pending (Get-Date).ToString("o")
 }
 
-Register-ObjectEvent $watcher Created -Action $onChange | Out-Null
-Register-ObjectEvent $watcher Changed -Action $onChange | Out-Null
-Register-ObjectEvent $watcher Deleted -Action $onChange | Out-Null
-Register-ObjectEvent $watcher Renamed -Action $onChange | Out-Null
+Register-ObjectEvent $watcher Created -MessageData $watchData -Action $onChange | Out-Null
+Register-ObjectEvent $watcher Changed -MessageData $watchData -Action $onChange | Out-Null
+Register-ObjectEvent $watcher Deleted -MessageData $watchData -Action $onChange | Out-Null
+Register-ObjectEvent $watcher Renamed -MessageData $watchData -Action $onChange | Out-Null
 
 while ($true) {
-  Start-Sleep -Seconds 15
+  Start-Sleep -Seconds 5
   try {
     if (((Get-Date) - $lastBeat).TotalMinutes -ge 60) {
       $lastBeat = Get-Date

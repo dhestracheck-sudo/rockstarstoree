@@ -286,7 +286,9 @@ window.RS_Pixels = {
 };
 </script>
 
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 
 <style>
 :root {
@@ -364,7 +366,7 @@ body::before {
 }
 .announce a { color: #fff; font-weight: 700; text-decoration: underline; display: inline-block; padding: 12px 4px; margin: -12px 0; }
 .announce .run { display: inline-block; padding-left: 100%; animation: run 18s linear infinite; }
-.announce .customrun { display: block; white-space: nowrap; overflow: hidden; color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
+.announce .customrun { display: block; box-sizing: border-box; height: 18px; line-height: 16px; visibility: hidden; white-space: nowrap; overflow: hidden; color: #fff; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.15); }
 .announce .customrun > span { display: inline-block; padding-left: 100%; animation: run 22s linear infinite; }
 @keyframes run { to { transform: translateX(-100%); } }
 
@@ -1587,7 +1589,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 <div id="loader"><img src="ROCKSTARLOGO.webp" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="topwrap">
-<div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun" style="display:none;"></span></div>
+<div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun"></span></div>
 
 <header>
   <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO.webp" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
@@ -1767,10 +1769,8 @@ var megaIdx = 0, megaTimer = null;
     }
   });
   const n = slides.length;
-  /* gambar banner dipaksa eager (memang di atas layar) supaya tinggi seragam sudah tepat sejak awal */
-  slides.forEach(function(s){
-    s.querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
-  });
+  /* Hanya gambar slide pertama yang diprioritaskan; gambar slide lain tetap lazy. */
+  slides[0].querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
   const box = document.getElementById("megaDots");
   for(let i = 0; i < n; i++){
     const d = document.createElement("i");
@@ -1845,6 +1845,8 @@ function megaPaint(){
 function megaGo(i, manual){
   const n = document.querySelectorAll("#megaTrack .mega-slide").length;
   megaIdx = ((i % n) + n) % n;
+  const activeSlide = document.querySelectorAll("#megaTrack .mega-slide")[megaIdx];
+  if(activeSlide) activeSlide.querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
   megaPaint();
   if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
 }
@@ -1872,10 +1874,7 @@ function fitMega(){
 fitMega();
 let megaFitT;
 window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT = setTimeout(fitMega, 150); });
-window.addEventListener("load", function(){ fitMega(); setTimeout(fitMega, 1200); setTimeout(fitMega, 3200); });
-if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ fitMega(); });
-const megaTrackEl = document.getElementById("megaTrack");
-if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ fitMega(); }, true);
+/* Hindari pengukuran ulang setelah font dan gambar selesai dimuat; itu dapat menggeser konten. */
 </script>
 <script>
 /* tombol kembali HP = kembali di web: tutup popup dulu, bukan close web */
@@ -3385,8 +3384,41 @@ function trackSearch(q){
   trackClick("cari_barang", q, "");
 }
 
-// Hitung dilihat per produk: tiap card yang tampil di layar +1 (sekali per render).
+// Hitung dilihat saat browser idle agar permintaan statistik tidak berebut dengan interaksi toko.
 let viewObs = null;
+const viewQueue = [];
+let viewQueueBusy = false;
+let viewQueueScheduled = false;
+function scheduleViewQueue(){
+  if(viewQueueBusy || viewQueueScheduled || !viewQueue.length) return;
+  viewQueueScheduled = true;
+  if("requestIdleCallback" in window) requestIdleCallback(flushViewQueue, { timeout: 2500 });
+  else setTimeout(flushViewQueue, 500);
+}
+function flushViewQueue(){
+  viewQueueScheduled = false;
+  if(viewQueueBusy || !viewQueue.length) return;
+  viewQueueBusy = true;
+  const job = viewQueue.shift();
+  const tbl = sbTableOf(job.pg);
+  const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
+  fetch(SB_URL + "/rest/v1/" + tbl + "?select=dilihat&name=eq." + encodeURIComponent(job.nm), { headers: H, priority: "low" })
+    .then(r => r.json()).then(a => {
+      const cur = (a && a[0] && Number(a[0].dilihat)) || 0;
+      return fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(job.nm), {
+        method: "PATCH", headers: H, body: JSON.stringify({ dilihat: cur + 1 }), priority: "low"
+      }).then(r => r.json()).then(u => {
+        const v = (u && u[0] && u[0].dilihat !== undefined) ? u[0].dilihat : cur + 1;
+        const c = job.el.querySelector(".viewcount");
+        if(c) c.textContent = "👁 " + Number(v).toLocaleString("id-ID");
+        const vp = job.el.querySelector(".viewpill");
+        if(vp) vp.textContent = "👁 " + Number(v).toLocaleString("id-ID");
+      });
+    }).catch(() => {}).finally(() => {
+      viewQueueBusy = false;
+      scheduleViewQueue();
+    });
+}
 function watchViews(){
   try {
     if(viewObs) viewObs.disconnect();
@@ -3397,23 +3429,8 @@ function watchViews(){
         viewObs.unobserve(el);
         const nm = el.dataset.viewname, pg = el.dataset.page;
         if(!nm || pg === "topup") return;
-        (function(nm, pg, el){
-          const tbl = sbTableOf(pg);
-          const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
-          fetch(SB_URL + "/rest/v1/" + tbl + "?select=dilihat&name=eq." + encodeURIComponent(nm), { headers: H })
-            .then(r => r.json()).then(a => {
-              const cur = (a && a[0] && Number(a[0].dilihat)) || 0;
-              return fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
-                method: "PATCH", headers: H, body: JSON.stringify({ dilihat: cur + 1 })
-              }).then(r => r.json()).then(u => {
-                const v = (u && u[0] && u[0].dilihat !== undefined) ? u[0].dilihat : cur + 1;
-                const c = el.querySelector(".viewcount");
-                if(c) c.textContent = "👁 " + Number(v).toLocaleString("id-ID");
-                const vp = el.querySelector(".viewpill");
-                if(vp) vp.textContent = "👁 " + Number(v).toLocaleString("id-ID");
-              });
-            }).catch(() => {});
-        })(nm, pg, el);
+        viewQueue.push({ nm, pg, el });
+        scheduleViewQueue();
       });
     }, { threshold: 0.3 });
     document.querySelectorAll('.item[data-viewname]').forEach(el => {
@@ -3816,15 +3833,12 @@ function rmFmt(rp){
 }
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
-  const hd = document.querySelector("header");
   if(!el) return;
   if(infoTeksValue){
     el.innerHTML = "<span>" + infoTeksValue + " • " + infoTeksValue + "</span>";
-    el.style.display = "";
-    if(hd) hd.style.top = "74px";
+    el.style.visibility = "visible";
   } else {
-    el.style.display = "none";
-    if(hd) hd.style.top = "37px";
+    el.style.visibility = "hidden";
   }
 }
 
