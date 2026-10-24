@@ -123,7 +123,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
 .srow .sacts button:hover { color:#fff; border-color:var(--blue); filter:none; }
 .srow .sacts button.del { background:rgba(255,93,93,.14); border-color:rgba(255,93,93,.35); color:#ff9a9a; }
 @media (min-width:600px){ .srow .sacts { flex:0 0 auto; margin-left:auto; } }
-.testimoni-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:10px; margin-top:12px; }
+.testimoni-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:10px; margin-top:12px; max-height:420px; overflow-y:auto; overscroll-behavior:contain; padding:4px 6px 8px 0; scrollbar-color:rgba(153,178,255,.5) rgba(255,255,255,.04); scrollbar-width:thin; }
 .testimoni-admin-card { min-width:0; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:12px; padding:8px; }
 .testimoni-admin-card img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; border-radius:8px; background:#09152c; }
 .testimoni-admin-card small { display:block; margin-top:6px; color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -409,7 +409,8 @@ button.danger { background:linear-gradient(135deg,#f15c68,#d94350); }
     <input type="file" id="testimoniFiles" accept="image/*" multiple>
     <button id="testimoniUploadBtn" onclick="uploadTestimoniPhotos()">⬆️ Upload Foto Testimoni</button>
     <div id="testimoniUploadStatus"></div>
-    <div id="testimoniAdminList" class="testimoni-admin-grid"></div>
+    <button id="testimoniListToggle" type="button" class="ghost" aria-expanded="false" aria-controls="testimoniAdminList" onclick="toggleTestimoniAdminList()" disabled>Memuat daftar foto...</button>
+    <div id="testimoniAdminList" class="testimoni-admin-grid" style="display:none;"></div>
     <p class="hint" style="margin-top:12px;">Foto otomatis dikecilkan menjadi WebP hingga 1600 px dan dibuat thumbnail 480 px. Foto yang diunggah tampil untuk umum di tombol “Lihat Semua Testimoni”. Hindari foto yang memuat nomor telepon, bukti transaksi, atau data pribadi tanpa izin.</p>
   </div>
 
@@ -633,7 +634,7 @@ function makeThumb(blob){
   });
 }
 const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
-const ADMIN_V = "v2026.10.24.2";
+const ADMIN_V = "v2026.10.24.3";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -1284,16 +1285,37 @@ function fotoThumbUrl(value){
   var slash = u.lastIndexOf("/");
   return slash < 0 ? u : u.slice(0, slash + 1) + "thumb_" + u.slice(slash + 1);
 }
+function setTestimoniAdminListExpanded(expanded){
+  const box = document.getElementById("testimoniAdminList");
+  const toggle = document.getElementById("testimoniListToggle");
+  if(!box || !toggle) return;
+  const count = TESTIMONI_INFO_ROWS.length;
+  const open = !!expanded && count > 0;
+  box.style.display = open ? "grid" : "none";
+  toggle.disabled = count === 0;
+  toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  toggle.textContent = count
+    ? (open ? "🙈 Sembunyikan foto" : "👁️ Tampilkan foto") + " yang sudah diunggah (" + count + ")"
+    : "Belum ada foto tersimpan";
+}
+function toggleTestimoniAdminList(){
+  const toggle = document.getElementById("testimoniListToggle");
+  const isOpen = toggle && toggle.getAttribute("aria-expanded") === "true";
+  setTestimoniAdminListExpanded(!isOpen);
+}
 function loadTestimoniAdmin(){
   const box = document.getElementById("testimoniAdminList");
   if(!box) return Promise.resolve();
-  box.textContent = "Memuat foto testimoni...";
+  const toggle = document.getElementById("testimoniListToggle");
+  const wasExpanded = toggle && toggle.getAttribute("aria-expanded") === "true";
+  if(toggle){ toggle.disabled = true; toggle.textContent = "Memuat daftar foto..."; }
+  box.innerHTML = "";
   return sbList("Info").then(function(arr){
     TESTIMONI_INFO_ROWS = (arr || []).filter(function(row){
       return String(row.name || "").trim().indexOf("INFO_TESTIMONI_") === 0 && isPublicFotoUrl(row.image);
     }).sort(function(a,b){ return Number(a.urutan || 0) - Number(b.urutan || 0); });
     box.innerHTML = "";
-    if(!TESTIMONI_INFO_ROWS.length){ box.textContent = "Belum ada foto testimoni."; return; }
+    if(!TESTIMONI_INFO_ROWS.length){ setTestimoniAdminListExpanded(false); return; }
     TESTIMONI_INFO_ROWS.forEach(function(row, i){
       const card = document.createElement("div");
       card.className = "testimoni-admin-card";
@@ -1307,6 +1329,7 @@ function loadTestimoniAdmin(){
       const cap = document.createElement("small"); cap.textContent = "Foto testimoni #" + (i + 1);
       card.appendChild(link); card.appendChild(cap); box.appendChild(card);
     });
+    setTestimoniAdminListExpanded(wasExpanded);
   });
 }
 
