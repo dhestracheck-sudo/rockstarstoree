@@ -1990,7 +1990,8 @@ function tutShow(i){
   document.getElementById("tutEmoji").textContent = s.e;
   document.getElementById("tutNum").textContent = (tutIdx + 1) + " / " + TUT_STEPS.length;
   document.getElementById("tutTit").textContent = (typeof tr === "function") ? tr(s.tk) : s.tk;
-  document.getElementById("tutTxt").textContent = (typeof tr === "function") ? tr(s.xk) : s.xk;
+  const _tt = document.getElementById("tutTxt");
+  if (_tt) _tt.innerHTML = (typeof tr === "function") ? tr(s.xk) : s.xk;
   var d = document.getElementById("tutDots");
   d.innerHTML = TUT_STEPS.map(function(_, j){
     return '<i onclick="tutGo(' + (j - tutIdx) + ')" class="' + (j === tutIdx ? "on" : "") + '"></i>';
