@@ -322,7 +322,7 @@ body::before {
 /* ===== loading screen ===== */
 #loader { position: fixed; inset: 0; z-index: 999; background: var(--bg); display: flex; flex-direction: column; gap: 18px; align-items: center; justify-content: center; transition: opacity 0.4s ease; }
 #loader.hide { opacity: 0; pointer-events: none; }
-#loader img { width: 110px; border-radius: 18px; }
+#loader img { width: 110px; height: 110px; object-fit: contain; border-radius: 18px; }
 #loader .spin { width: 44px; height: 44px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--blue2); animation: spin 0.9s linear infinite; }
 /* ===== rating & bar stok ===== */
 .stars { color: #ffd166; font-size: 13px; letter-spacing: 1px; }
@@ -381,7 +381,7 @@ header {
   border-bottom: 1px solid rgba(255,255,255,0.09);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; letter-spacing: 0.4px; white-space: nowrap; cursor: pointer; text-decoration: none; color: inherit; }
-.brand img { height: 34px; border-radius: 9px; }
+.brand img { width: 34px; height: 34px; border-radius: 9px; object-fit: cover; }
 @media (prefers-reduced-motion: no-preference) {
   .brand img { animation: logoFloat 2.4s ease-in-out infinite; }
   @keyframes logoFloat {
@@ -1585,13 +1585,13 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
 </head>
 <body>
 
-<div id="loader"><img src="ROCKSTARLOGO-fast.webp" width="320" height="320" alt="Rockstar"><div class="spin"></div></div>
+<div id="loader"><img src="ROCKSTARLOGO-fast.webp" width="110" height="110" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="topwrap">
 <div class="announce"><span class="run" data-i18n-html="run_html">⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a> • ⚡ Proses kilat • 💰 Harga termurah • Tiktok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank">Join saluran WA</a></span><span class="customrun" id="customrun"></span></div>
 
 <header>
-  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-fast.webp" width="320" height="320" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
+  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-fast.webp" width="34" height="34" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
   <nav class="headnav">
     <a href="/" onclick="goHome(); return false;">🏠 <span data-i18n="nav_home">Beranda</span></a>
     <a href="?tab=akun" onclick="goToAkun(); return false;">👤 <span data-i18n="nav_akun">Akun Sepuh</span></a>
@@ -4020,8 +4020,9 @@ function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
     applyLang();
-    render();
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+    try {
+      if(!applyDeepLink(false)){ render(); updateUrl(); }
+    } catch(e) { render(); }
     hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
