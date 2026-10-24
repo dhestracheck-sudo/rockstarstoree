@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/baloo2/v23/wXKrE3kTposypRyd51jcAA.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiEyp8kv8JHgFVrJJfecg.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/poppins/v24/pxiByp8kv8JHgFVrLCz7Z1xlFQ.woff2">
 <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co">
-<link rel="preload" as="image" href="figur-8062-fast.webp" fetchpriority="high">
+<link rel="preload" as="image" href="figur-8062-200.webp" fetchpriority="high">
 <title>Rockstar.Store | Top Up Robux, Akun &amp; Brainrot Roblox</title>
 <meta name="description" content="Marketplace Roblox Indonesia untuk akun sepuh, Brainrot dan pet, top up Robux, serta jasa joki profesional. Jelajahi Rockstar.Store.">
 <meta name="keywords" content="rockstarstore, rockstar store roblox, marketplace roblox indonesia, top up robux, brainrot pet, pet roblox, akun roblox sepuh, jasa joki profesional, joki sepuh, rockstarstore.id">
@@ -200,8 +199,17 @@ function loadMetaPixel(){
   t=b.createElement(e);t.async=!0;t.src=v;
   s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
 }
-/* fbq queues events immediately; defer its large vendor script until after load. */
-f.addEventListener('load',function(){f.setTimeout(loadMetaPixel,3000)},{once:true})
+/* Queue events immediately; fetch the large vendor script only after visitor intent. */
+let metaPixelTimer=0;
+function activateMetaPixel(){
+  if(f.__rsMetaPixelLoaded)return;
+  if(metaPixelTimer)f.clearTimeout(metaPixelTimer);
+  loadMetaPixel();
+}
+['pointerdown','touchstart','keydown','scroll'].forEach(function(type){
+  f.addEventListener(type,activateMetaPixel,{once:true,passive:true});
+});
+f.addEventListener('load',function(){metaPixelTimer=f.setTimeout(activateMetaPixel,20000)},{once:true})
 }(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '2181744626091763');
@@ -1814,13 +1822,13 @@ footer.site-footer .footer-col-links button:hover .footer-link-icon { transform:
 src="https://www.facebook.com/tr?id=2181744626091763&ev=PageView&noscript=1"
 /></noscript>
 
-<div id="loader"><img src="ROCKSTARLOGO-fast.webp" width="110" height="110" alt="Rockstar"><div class="spin"></div></div>
+<div id="loader"><img src="ROCKSTARLOGO-256.webp" width="110" height="110" alt="Rockstar"><div class="spin"></div></div>
 
 <div class="topwrap">
 <div class="announce"><span class="run" data-i18n-html="run_html">⭐ 100K+ Testimoni Amanah • ⚡ Proses hitungan menit • 💳 Semua payment • 🎁 Ribuan item &amp; pet • TikTok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Join Saluran WA</a> • ⭐ 100K+ Testimoni Amanah • ⚡ Proses hitungan menit • 💳 Semua payment • 🎁 Ribuan item &amp; pet • TikTok @rockstarstoree • <a href="https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q" target="_blank" rel="noopener">Join Saluran WA</a></span><span class="customrun" id="customrun"></span></div>
 
 <header>
-  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-fast.webp" width="34" height="34" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
+  <a class="brand" href="/" onclick="goHome(); return false;" title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda"><img src="ROCKSTARLOGO-256.webp" width="34" height="34" alt="Rockstar.Store"> <span class="brandshine">ROCKSTAR.STORE</span></a>
   <nav class="headnav">
     <a href="/" onclick="goHome(); return false;">🏠 <span data-i18n="nav_home">Beranda</span></a>
     <a href="faq.html">❓ <span>FAQ</span></a>
@@ -1862,8 +1870,8 @@ src="https://www.facebook.com/tr?id=2181744626091763&ev=PageView&noscript=1"
 <div class="mega">
   <div class="mega-track" id="megaTrack">
     <div class="mega-slide s0">
-      <div class="mega-fig left"><img src="figur-8062-fast.webp" width="300" height="400" alt="Rockstar" loading="eager" fetchpriority="high" decoding="async" onerror="this.parentNode.style.display='none'"></div>
-      <div class="mega-fig right"><img src="figur-3-fast.webp" width="300" height="282" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-fig left"><img src="figur-8062-200.webp" width="150" height="200" alt="Rockstar" loading="eager" fetchpriority="high" decoding="async" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-fig right"><img src="figur-3-240.webp" width="240" height="226" alt="Roblox" loading="lazy" decoding="async" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
         <div class="mega-brand">★ ROCKSTAR.STORE ★</div>
         <p class="mega-title-w" data-i18n="sl1_t">MALU SAMA TEMAN?</p>
@@ -1996,7 +2004,7 @@ var megaIdx = 0, megaTimer = null;
     if(!s.querySelector(".mega-logo")){
       const l = document.createElement("div");
       l.className = "mega-logo";
-      l.innerHTML = '<img src="ROCKSTARLOGO-fast.webp" width="320" height="320" alt="Rockstar.Store">rockstar.store';
+      l.innerHTML = '<img src="ROCKSTARLOGO-256.webp" width="256" height="256" alt="Rockstar.Store">rockstar.store';
       s.insertBefore(l, s.firstChild);
     }
   });
@@ -2129,7 +2137,7 @@ function megaAuto(){ megaTimer = setTimeout(function(){ megaGo(megaIdx + 1); meg
       <button id="ctaJoki" class="btn-ghost" onclick="goToJoki()" data-i18n="cta_joki">Joki 🎮</button>
     </div>
   </div>
-  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO-fast.webp" alt="Rockstar.Store" width="320" height="320" fetchpriority="high" decoding="async"></div>
+  <div class="hero-visual"><img class="hero-logo" src="ROCKSTARLOGO-256.webp" alt="Rockstar.Store" width="256" height="256" fetchpriority="high" decoding="async"></div>
 </section>
 
 <div class="trust-marquee" aria-label="Informasi Toko Terpercaya">
@@ -2277,12 +2285,12 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
     <span class="rc-ring"></span>
     <span class="rc-ring rc-d2"></span>
     <button class="rc-btn" id="waBtn" onclick="openWaChat()" aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
-      <img src="figur-8064-fast.webp" alt="Min Rock" loading="lazy" width="300" height="400">
+      <img src="figur-8064-160.webp" alt="Min Rock" loading="lazy" width="120" height="160" decoding="async">
     </button>
   </div>
   <div class="wapop wachat" id="waPop" style="display:none;">
     <div class="wachead">
-      <span class="walogo"><img src="figur-8064-fast.webp" alt="Min Rock" loading="lazy" width="300" height="400" onerror="this.style.display='none';this.parentNode.classList.add('nolabel');"></span>
+      <span class="walogo"><img src="figur-8064-160.webp" alt="Min Rock" loading="lazy" width="120" height="160" decoding="async" onerror="this.style.display='none';this.parentNode.classList.add('nolabel');"></span>
       <div><b>Rockstar Support</b><span class="waonline"><i></i><span data-i18n="wa_online">Online</span></span></div>
       <button class="wax" onclick="toggleWaPop()" aria-label="Tutup">✕</button>
     </div>
@@ -2419,7 +2427,7 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <div class="site-footer-inner">
     <div class="footer-brand">
       <a class="footer-brand-link" href="/" onclick="goHome(); return false;" aria-label="Rockstar.Store beranda">
-        <img src="ROCKSTARLOGO-fast.webp" width="58" height="58" alt="Logo Rockstar.Store" loading="lazy" decoding="async">
+        <img src="ROCKSTARLOGO-256.webp" width="58" height="58" alt="Logo Rockstar.Store" loading="lazy" decoding="async">
         <span>ROCKSTAR.STORE</span>
       </a>
     </div>
@@ -2481,6 +2489,26 @@ function thumbTag(full, attrs){
   const t = thumbOf(full);
   if(t === full) return `<img src="${full}" width="400" height="400" ${attrs} onerror="imgErr(this)">`;
   return `<img src="${t}" width="400" height="400" data-full="${full}" ${attrs} onerror="thumbErr(this)">`;
+}
+function tinyThumbTag(full, attrs){
+  full = fixImg(full);
+  const marker = "/storage/v1/object/public/foto/";
+  const markerAt = full.indexOf(marker);
+  if(markerAt < 0) return thumbTag(full, attrs);
+  const slash = full.lastIndexOf("/");
+  if(slash < markerAt + marker.length - 1) return thumbTag(full, attrs);
+  let name = full.slice(slash + 1);
+  if(name.indexOf("thumb_") === 0) name = name.slice(6);
+  if(name.indexOf("tiny_") === 0) return thumbTag(full, attrs);
+  const base = full.slice(0, slash + 1);
+  return `<img src="${base}tiny_${name}" width="128" height="128" data-thumb-fallback="${base}thumb_${name}" data-full-fallback="${base}${name}" ${attrs} onerror="tinyThumbErr(this)">`;
+}
+function tinyThumbErr(el){
+  const thumb = el.getAttribute("data-thumb-fallback");
+  if(thumb){ el.removeAttribute("data-thumb-fallback"); el.src = thumb; return; }
+  const full = el.getAttribute("data-full-fallback");
+  if(full){ el.removeAttribute("data-full-fallback"); el.src = full; return; }
+  imgErr(el);
 }
 function thumbErr(el){
   try {
@@ -3009,12 +3037,25 @@ let kursRM = 3600;
 const RS_CURRENCIES = { IDR: 1, MYR: 1 / kursRM, USD: 0.000062, SGD: 0.000083, CNY: 0.00045, JPY: 0.0095, THB: 0.0022 };
 const RS_CURRENCY_ORDER = ["IDR", "MYR", "USD", "SGD", "CNY", "JPY", "THB"];
 const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID",label:"Indonesia"}, MYR:{flag:"🇲🇾",sym:"RM",loc:"en-MY",label:"Malaysia"}, USD:{flag:"🇺🇸",sym:"$",loc:"en-US",label:"United States"}, SGD:{flag:"🇸🇬",sym:"S$",loc:"en-SG",label:"Singapore"}, CNY:{flag:"🇨🇳",sym:"¥",loc:"zh-CN",label:"China"}, JPY:{flag:"🇯🇵",sym:"¥",loc:"ja-JP",label:"Japan"}, THB:{flag:"🇹🇭",sym:"฿",loc:"th-TH",label:"Thailand"} };
-// Fetch live rates from IDR
-fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{ if(d&&d.rates){ RS_CURRENCY_ORDER.forEach(c=>{ if(c !== "MYR" && d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; }); RS_CURRENCIES.MYR=1/kursRM; if(currency() !== "IDR") render(); } }).catch(()=>{});
+// Fetch nilai tukar hanya saat pengunjung memilih mata uang asing.
+let exchangeRatePromise = null;
+function refreshExchangeRates(){
+  if(exchangeRatePromise) return exchangeRatePromise;
+  exchangeRatePromise = fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{
+    if(d&&d.rates){
+      RS_CURRENCY_ORDER.forEach(c=>{ if(c !== "MYR" && d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; });
+      RS_CURRENCIES.MYR=1/kursRM;
+      if(currency() !== "IDR") render();
+    }
+  }).catch(()=>{});
+  return exchangeRatePromise;
+}
 function currency(){ try { const c=localStorage.getItem("rs_currency"); return Object.prototype.hasOwnProperty.call(RS_CURRENCIES, c) ? c : "IDR"; } catch(e) { return "IDR"; } }
+if(currency() !== "IDR") refreshExchangeRates();
 function setCurrency(c){ const selected=Object.prototype.hasOwnProperty.call(RS_CURRENCIES, c) ? c : "IDR"; try { localStorage.setItem("rs_currency", selected); } catch(e) {} return selected; }
 function selectCurrency(c){
   const selected = setCurrency(c);
+  if(selected !== "IDR") refreshExchangeRates();
   const info = RS_CURRENCY_INFO[selected] || RS_CURRENCY_INFO.IDR;
   const label = tr("cur_btn") || "Mata Uang";
   ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent=label+" "+info.flag; });
@@ -4099,7 +4140,9 @@ function fetchSheet(sheet, cbName){
   return sbGet(sbTableOf(sheet) + "?select=*&order=urutan");
 }
 /* ===== catat aktivitas pengunjung (klik / keranjang / checkout) — tanpa data pribadi ===== */
+let hotClickFetchPromise = null;
 function logAksi(aksi, name, kat, price, page){
+  if(aksi === "klik") hotClickFetchPromise = null;
   try {
     fetch(SB_URL + "/rest/v1/klik", {
       method: "POST",
@@ -4139,9 +4182,12 @@ function paintHot(){
   if(!wrap || !track) return Promise.resolve(false);
   const showMessage = message => { wrap.style.display = "block"; track.style.animation = "none"; track.style.width = "100%"; track.innerHTML = '<div class="hot-product-empty">' + message + '</div>'; };
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-  return fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-  }).then(r => { if(!r.ok) throw new Error("Gagal memuat klik"); return r.json(); }).then(rows => {
+  if(!hotClickFetchPromise){
+    hotClickFetchPromise = fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+    }).then(r => { if(!r.ok) throw new Error("Gagal memuat klik"); return r.json(); }).catch(error => { hotClickFetchPromise = null; throw error; });
+  }
+  return hotClickFetchPromise.then(rows => {
     try {
       const freq = {};
       (Array.isArray(rows) ? rows : []).forEach(o => {
@@ -4159,7 +4205,7 @@ function paintHot(){
       track.style.width = "";
       const cards = top.map(o =>
         `<button type="button" class="hot-product-card" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
-        thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
+        tinyThumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
         `<span class="hot-product-info"><span class="hot-product-name">${escWish(o.r.item.name)}</span>` +
         `<span class="hot-product-meta">🔥 ${o.v}x · ${formatCurrency(o.r.item.price)}${selectedCurrencyFmt(o.r.item.price) ? ` · ${selectedCurrencyFmt(o.r.item.price)}` : ``}</span></span></button>`
       ).join("");

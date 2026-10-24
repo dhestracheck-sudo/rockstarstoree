@@ -624,7 +624,9 @@ function b64ToBlob(b64, mime){
   return new Blob([u8], { type: mime || "image/jpeg" });
 }
 function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
-function makeThumb(blob){
+function makeThumb(blob, maxEdge, quality){
+  maxEdge = Number(maxEdge) > 0 ? Number(maxEdge) : 480;
+  quality = Number(quality) > 0 ? Number(quality) : 0.75;
   return new Promise(resolve => {
     try {
       const url = URL.createObjectURL(blob);
@@ -632,12 +634,12 @@ function makeThumb(blob){
       im.onload = () => {
         try {
           URL.revokeObjectURL(url);
-          const sc = Math.min(1, 480 / Math.max(im.naturalWidth, im.naturalHeight));
+          const sc = Math.min(1, maxEdge / Math.max(im.naturalWidth, im.naturalHeight));
           const cv = document.createElement("canvas");
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
           cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
           cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-          cv.toBlob(b => resolve(b || null), "image/webp", 0.75);
+          cv.toBlob(b => resolve(b || null), "image/webp", quality);
         } catch(e){ resolve(null); }
       };
       im.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
@@ -645,8 +647,9 @@ function makeThumb(blob){
     } catch(e){ resolve(null); }
   });
 }
+function makeTinyThumb(blob){ return makeThumb(blob, 128, 0.7); }
 const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
-const ADMIN_V = "v2026.10.24.4";
+const ADMIN_V = "v2026.10.24.5";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -1860,7 +1863,15 @@ function slideAddFile(){
         body: tblob
       }).catch(function(){});
     });
-    return Promise.all([putFull, putThumb]).then(rs => {
+    const putTiny = makeTinyThumb(blob).then(tblob => {
+      if(!tblob) return;
+      return fetch(SB_URL + "/storage/v1/object/foto/tiny_" + path, {
+        method: "PUT",
+        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "x-upsert": "true" },
+        body: tblob
+      }).catch(function(){});
+    });
+    return Promise.all([putFull, putThumb, putTiny]).then(rs => {
       if(!rs[0].ok) throw new Error("upload gagal: " + f.name);
       done++;
       st.textContent = "Mengupload " + done + "/" + todo.length + " (paralel)...";
@@ -2147,6 +2158,15 @@ async function sbAction(action, tbl, body, signal){
           headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
             "Content-Type": "image/webp", "x-upsert": "true" },
           body: tblob, signal: signal
+        });
+      }
+      const tiny = await makeTinyThumb(blob);
+      if(tiny){
+        await fetch(SB_URL + "/storage/v1/object/foto/tiny_" + path, {
+          method: "PUT",
+          headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
+            "Content-Type": "image/webp", "x-upsert": "true" },
+          body: tiny, signal: signal
         });
       }
     } catch(e) {}
