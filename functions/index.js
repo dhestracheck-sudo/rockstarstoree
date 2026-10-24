@@ -240,6 +240,12 @@ function routeMetadata(page, category, lang, requestUrl) {
   return { title, description, canonical, alternates, locale: { id: "id_ID", en: "en_US", ja: "ja_JP", ko: "ko_KR", zh: "zh_CN", fr: "fr_FR", th: "th_TH", vi: "vi_VN" }[lang] || "id_ID" };
 }
 
+function markResponse(response, mode) {
+  const headers = new Headers(response.headers);
+  headers.set("X-RS-SSR", mode);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 export async function onRequest(context) {
   const request = context.request;
   const url = new URL(request.url);
@@ -287,8 +293,8 @@ export async function onRequest(context) {
       .on("#pageTitle", { element(element) { element.setInnerContent(markup.titleHtml, { html: true }); } })
       .on("#products", { element(element) { element.setInnerContent(markup.productsHtml + `<script>window.__RS_SSR_CATALOG__=${bootstrap};</script>`, { html: true }); } })
       .transform(staticPage);
-    return html;
+    return markResponse(html, "rendered");
   } catch (_) {
-    return staticPage || context.next();
+    return markResponse(staticPage || await context.next(), "fallback");
   }
 }
