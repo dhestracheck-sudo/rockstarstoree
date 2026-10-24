@@ -2798,7 +2798,8 @@ function render(){
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
-    window.__hotReady = paintHot();
+    const hasPendingTab = !!(new URLSearchParams(location.search).get("tab"));
+    window.__hotReady = hasPendingTab ? Promise.resolve(false) : paintHot();
     watchViews();
     return;
   }
@@ -3161,9 +3162,13 @@ function updateCarousel(i, j, index){
   }
 }
 
-function goHome(){ currentPage = 'home'; shownCat = -1; render(); updateUrl(); }
+function goHome(){
+  const hadTab = new URLSearchParams(location.search).has("tab");
+  currentPage = 'home'; shownCat = -1; render(); updateUrl();
+  if(hadTab) window.__hotReady = paintHot();
+}
 function goToMostClicked(){
-  if(currentPage !== "home") goHome();
+  if(currentPage !== "home" || new URLSearchParams(location.search).has("tab")) goHome();
   var ready = window.__hotReady || Promise.resolve(false);
   Promise.resolve(ready).then(function(shown){
     var section = document.getElementById("hotSec");
@@ -4024,9 +4029,12 @@ function loadLiveStock(){
     const waitingForCatalog = ["brainrot", "topup", "akun", "joki"].includes(requestedTab) && !catsOf(requestedTab).length;
     window.__waitingForDeepLinkData = waitingForCatalog;
     try {
-      if(!applyDeepLink(false) && !waitingForCatalog){ render(); updateUrl(); }
+      if(!applyDeepLink(false)){
+        render();
+        if(!waitingForCatalog) updateUrl();
+      }
     } catch(e) { render(); }
-    if(!waitingForCatalog) hideLoader();
+    hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
