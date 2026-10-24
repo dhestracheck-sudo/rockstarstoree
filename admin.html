@@ -1069,6 +1069,161 @@ function loadTeks(){
   });
 }
 
+const DEFAULT_ROCKSTAR_SERVERS = [
+  { label: "🎲 Server Kotak Gulung untuk Brainrot", url: "https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" },
+  { label: "🍂 Server Fall for Brainrot", url: "https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" },
+  { label: "🪙 Server Lempar Koin", url: "https://www.roblox.com/share?code=f0a1cedc6be4f041a22d1079ca713f2d&type=Server" },
+  { label: "🌱 Server Grow A Garden 2", url: "https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" },
+  { label: "🐔 Server Tarik Telur", url: "https://www.roblox.com/share?code=592596d70f7d1044ae692f625524368e&type=Server" },
+  { label: "🎲 Server Dadu Anime", url: "https://www.roblox.com/share?code=555c4557fd120c4ab3a050b2116a2e6c&type=Server" },
+  { label: "🥊 Server Boxing for Brainrot", url: "https://www.roblox.com/share?code=33212d5bded8e24e8e290f40fd34b8cf&type=Server" },
+  { label: "🧠 Server Become Brainrot", url: "https://www.roblox.com/share?code=a6e16fde64c68d4c85e7f68dc5596eda&type=Server" }
+];
+let TESTIMONI_INFO_ROWS = [];
+let SERVER_DRAFTS = [];
+let SERVER_SETTING_EXISTS = false;
+
+function isPublicFotoUrl(value){
+  try {
+    var u = new URL(String(value || ""));
+    return u.protocol === "https:" && u.hostname === new URL(SB_URL).hostname && u.pathname.indexOf("/storage/v1/object/public/foto/") === 0;
+  } catch(e){ return false; }
+}
+function fotoThumbUrl(value){
+  var u = String(value || "");
+  var slash = u.lastIndexOf("/");
+  return slash < 0 ? u : u.slice(0, slash + 1) + "thumb_" + u.slice(slash + 1);
+}
+function loadTestimoniAdmin(){
+  const box = document.getElementById("testimoniAdminList");
+  if(!box) return Promise.resolve();
+  box.textContent = "Memuat foto testimoni...";
+  return sbList("Info").then(function(arr){
+    TESTIMONI_INFO_ROWS = (arr || []).filter(function(row){
+      return String(row.name || "").trim().indexOf("INFO_TESTIMONI_") === 0 && isPublicFotoUrl(row.image);
+    }).sort(function(a,b){ return Number(a.urutan || 0) - Number(b.urutan || 0); });
+    box.innerHTML = "";
+    if(!TESTIMONI_INFO_ROWS.length){ box.textContent = "Belum ada foto testimoni."; return; }
+    TESTIMONI_INFO_ROWS.forEach(function(row, i){
+      const card = document.createElement("div");
+      card.className = "testimoni-admin-card";
+      const link = document.createElement("a");
+      link.href = row.image; link.target = "_blank"; link.rel = "noopener noreferrer";
+      const img = document.createElement("img");
+      img.src = fotoThumbUrl(row.image); img.loading = "lazy"; img.decoding = "async";
+      img.alt = "Foto testimoni " + (i + 1);
+      img.onerror = function(){ if(img.src !== row.image) img.src = row.image; };
+      link.appendChild(img);
+      const cap = document.createElement("small"); cap.textContent = "Foto testimoni #" + (i + 1);
+      card.appendChild(link); card.appendChild(cap); box.appendChild(card);
+    });
+  });
+}
+
+async function uploadTestimoniPhotos(){
+  const input = document.getElementById("testimoniFiles");
+  const button = document.getElementById("testimoniUploadBtn");
+  const status = document.getElementById("testimoniUploadStatus");
+  const files = Array.from(input.files || []);
+  if(!files.length){ status.textContent = "Pilih foto dulu."; return; }
+  if(files.length > 100){ status.textContent = "Maksimal 100 foto per proses upload."; return; }
+  const eligible = files.filter(function(file){ return file.size <= 8 * 1024 * 1024; });
+  const skipped = files.length - eligible.length;
+  if(!eligible.length){ status.textContent = "Semua foto melebihi batas 8 MB per file."; return; }
+  button.disabled = true;
+  let ok = 0, failed = 0;
+  for(let i = 0; i < eligible.length; i++){
+    const file = eligible[i];
+    status.textContent = "Mengunggah " + (i + 1) + "/" + eligible.length + " — " + file.name;
+    const itemName = "INFO_TESTIMONI_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
+    try {
+      const result = await sendUpload(file, { action: "upload", item_name: itemName, filename: file.name,
+        mime: file.type || "image/jpeg", sheet: "Info", kategori: "INFO" });
+      if(result && result.result === "success") ok++; else failed++;
+    } catch(e){ failed++; }
+  }
+  input.value = "";
+  button.disabled = false;
+  status.textContent = "Selesai: " + ok + " foto berhasil" + (skipped ? ", " + skipped + " dilewati karena melebihi 8 MB" : "") + (failed ? ", " + failed + " gagal." : ".");
+  await loadTestimoniAdmin();
+}
+
+function validRobloxServerUrl(value){
+  try {
+    const u = new URL(String(value || "").trim());
+    return u.protocol === "https:" && (u.hostname === "roblox.com" || u.hostname === "www.roblox.com") &&
+      u.pathname === "/share" && !!u.searchParams.get("code") && u.searchParams.get("type") === "Server";
+  } catch(e){ return false; }
+}
+function loadServerSettings(){
+  const status = document.getElementById("serverSettingsStatus");
+  if(status) status.textContent = "Memuat daftar server...";
+  return sbList("Info").then(function(arr){
+    const row = (arr || []).find(function(item){ return String(item.name || "").trim() === "INFO_SERVERS"; });
+    SERVER_SETTING_EXISTS = !!row;
+    if(row){
+      try {
+        const saved = JSON.parse(String(row.deskripsi || "[]"));
+        SERVER_DRAFTS = Array.isArray(saved) ? saved.map(function(item){
+          return { label: String(item.label || "").trim(), url: String(item.url || "").trim() };
+        }).filter(function(item){ return item.label && validRobloxServerUrl(item.url); }) : [];
+      } catch(e){ SERVER_DRAFTS = []; }
+      if(status) status.textContent = "Memakai daftar yang tersimpan di Supabase.";
+    } else {
+      SERVER_DRAFTS = DEFAULT_ROCKSTAR_SERVERS.map(function(item){ return { label: item.label, url: item.url }; });
+      if(status) status.textContent = "Menampilkan link bawaan. Klik Simpan untuk mulai mengaturnya dari panel.";
+    }
+    renderServerDrafts();
+  });
+}
+function renderServerDrafts(){
+  const box = document.getElementById("serverDraftList");
+  if(!box) return;
+  box.innerHTML = "";
+  if(!SERVER_DRAFTS.length){ box.textContent = "Belum ada link server. Tambahkan link di bawah."; return; }
+  SERVER_DRAFTS.forEach(function(item, i){
+    const row = document.createElement("div"); row.className = "srow";
+    const name = document.createElement("input"); name.type = "text"; name.maxLength = 60; name.placeholder = "Nama server"; name.value = item.label;
+    name.style.flex = "1 1 190px"; name.oninput = function(){ SERVER_DRAFTS[i].label = name.value; };
+    const url = document.createElement("input"); url.type = "url"; url.placeholder = "Link private server Roblox"; url.value = item.url;
+    url.style.flex = "2 1 300px"; url.oninput = function(){ SERVER_DRAFTS[i].url = url.value; };
+    const del = document.createElement("button"); del.type = "button"; del.className = "del"; del.textContent = "Hapus";
+    del.onclick = function(){ SERVER_DRAFTS.splice(i, 1); renderServerDrafts(); };
+    row.appendChild(name); row.appendChild(url); row.appendChild(del); box.appendChild(row);
+  });
+}
+function addServerDraft(){
+  const label = document.getElementById("serverNameInput").value.trim();
+  const url = document.getElementById("serverUrlInput").value.trim();
+  const status = document.getElementById("serverSettingsStatus");
+  if(!label){ status.textContent = "Isi nama server dulu."; return; }
+  if(!validRobloxServerUrl(url)){ status.textContent = "Masukkan link https://www.roblox.com/share?code=...&type=Server yang valid."; return; }
+  if(SERVER_DRAFTS.length >= 50){ status.textContent = "Maksimal 50 link server."; return; }
+  SERVER_DRAFTS.push({ label: label.slice(0, 60), url: url });
+  document.getElementById("serverNameInput").value = "";
+  document.getElementById("serverUrlInput").value = "";
+  status.textContent = "Link ditambahkan ke daftar sementara. Klik Simpan Daftar Server untuk menerapkan.";
+  renderServerDrafts();
+}
+async function saveServerSettings(){
+  const status = document.getElementById("serverSettingsStatus");
+  const button = document.getElementById("serverSaveBtn");
+  const clean = SERVER_DRAFTS.map(function(item){ return { label: String(item.label || "").trim().slice(0, 60), url: String(item.url || "").trim() }; });
+  if(clean.length > 50 || clean.some(function(item){ return !item.label || !validRobloxServerUrl(item.url); })){
+    status.textContent = "Periksa nama dan URL Roblox di setiap baris sebelum menyimpan."; return;
+  }
+  button.disabled = true; status.textContent = "Menyimpan daftar server...";
+  const body = { item_name: "INFO_SERVERS", kategori: "INFO", deskripsi: JSON.stringify(clean), sheet: "Info" };
+  const result = SERVER_SETTING_EXISTS
+    ? await postRetry({ action: "set", item_name: "INFO_SERVERS", col: "deskripsi", value: body.deskripsi, sheet: "Info" }, 2)
+    : await postRetry(Object.assign({ action: "add" }, body), 2);
+  button.disabled = false;
+  if(result && result.result === "success"){
+    SERVER_SETTING_EXISTS = true;
+    status.textContent = "Daftar server tersimpan. Link baru tampil saat pengunjung membuka panel server.";
+  } else status.textContent = "Gagal menyimpan: " + String(result && result.result || "koneksi Supabase");
+}
+
 function saveTeks(){
   const v = document.getElementById("teksInput").value.trim();
   const st = document.getElementById("statusTeks");
