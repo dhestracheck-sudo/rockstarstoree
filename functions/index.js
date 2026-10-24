@@ -58,14 +58,25 @@ const CATEGORY_COPY = {
 };
 
 const LABELS = {
-  id: { back: "Semua kategori", categories: "kategori", products: "produk", stock: "Stok", sold: "Habis", buy: "Tambah ke keranjang", details: "Lihat detail" },
-  en: { back: "All categories", categories: "categories", products: "products", stock: "Stock", sold: "Sold out", buy: "Add to cart", details: "View details" },
-  ja: { back: "すべてのカテゴリ", categories: "カテゴリー", products: "商品", stock: "在庫", sold: "売り切れ", buy: "カートに追加", details: "詳細を見る" },
-  ko: { back: "모든 카테고리", categories: "개 카테고리", products: "개 상품", stock: "재고", sold: "품절", buy: "장바구니에 담기", details: "상세 보기" },
-  zh: { back: "所有分类", categories: "个分类", products: "件商品", stock: "库存", sold: "已售罄", buy: "加入购物车", details: "查看详情" },
-  fr: { back: "Toutes les catégories", categories: "catégories", products: "produits", stock: "Stock", sold: "Épuisé", buy: "Ajouter au panier", details: "Voir les détails" },
-  th: { back: "ทุกหมวดหมู่", categories: "หมวดหมู่", products: "สินค้า", stock: "สต็อก", sold: "สินค้าหมด", buy: "เพิ่มลงตะกร้า", details: "ดูรายละเอียด" },
-  vi: { back: "Tất cả danh mục", categories: "danh mục", products: "sản phẩm", stock: "Còn hàng", sold: "Hết hàng", buy: "Thêm vào giỏ", details: "Xem chi tiết" }
+  id: { back: "Semua kategori", categories: "kategori", products: "produk", stock: "Stok", sold: "Habis", buy: "Tambah ke keranjang", details: "Terverifikasi", contact: "Hubungi admin" },
+  en: { back: "All categories", categories: "categories", products: "products", stock: "Stock", sold: "Sold out", buy: "Add to cart", details: "Verified", contact: "Contact admin" },
+  ja: { back: "すべてのカテゴリ", categories: "カテゴリー", products: "商品", stock: "在庫", sold: "売り切れ", buy: "カートに追加", details: "認証済み", contact: "管理者に連絡" },
+  ko: { back: "모든 카테고리", categories: "개 카테고리", products: "개 상품", stock: "재고", sold: "품절", buy: "장바구니에 담기", details: "인증 완료", contact: "관리자 문의" },
+  zh: { back: "所有分类", categories: "个分类", products: "件商品", stock: "库存", sold: "已售罄", buy: "加入购物车", details: "已验证", contact: "联系管理员" },
+  fr: { back: "Toutes les catégories", categories: "catégories", products: "produits", stock: "Stock", sold: "Épuisé", buy: "Ajouter au panier", details: "Vérifié", contact: "Contacter l’admin" },
+  th: { back: "ทุกหมวดหมู่", categories: "หมวดหมู่", products: "สินค้า", stock: "สต็อก", sold: "สินค้าหมด", buy: "เพิ่มลงตะกร้า", details: "ยืนยันแล้ว", contact: "ติดต่อแอดมิน" },
+  vi: { back: "Tất cả danh mục", categories: "danh mục", products: "sản phẩm", stock: "Còn hàng", sold: "Hết hàng", buy: "Thêm vào giỏ", details: "Đã xác minh", contact: "Liên hệ quản trị viên" }
+};
+
+const PAGE_HEADINGS = {
+  id: { brainrot: "Brainrot", topup: "Top Up Robux", akun: "Akun Roblox", joki: "Jasa Joki" },
+  en: { brainrot: "Brainrot Items", topup: "Robux Top Up", akun: "Roblox Accounts", joki: "Boosting Services" },
+  ja: { brainrot: "Brainrotアイテム", topup: "Robuxチャージ", akun: "Robloxアカウント", joki: "ブーストサービス" },
+  ko: { brainrot: "브레인롯 아이템", topup: "Robux 충전", akun: "Roblox 계정", joki: "부스팅 서비스" },
+  zh: { brainrot: "Brainrot 道具", topup: "Robux 充值", akun: "Roblox 游戏账号", joki: "代练服务" },
+  fr: { brainrot: "Objets Brainrot", topup: "Recharge Robux", akun: "Comptes Roblox", joki: "Services de boost" },
+  th: { brainrot: "ไอเทม Brainrot", topup: "เติม Robux", akun: "บัญชี Roblox", joki: "บริการบูสต์" },
+  vi: { brainrot: "Vật phẩm Brainrot", topup: "Nạp Robux", akun: "Tài khoản Roblox", joki: "Dịch vụ boost" }
 };
 
 function escapeHtml(value) {
@@ -159,7 +170,8 @@ function categoryMarkup(page, categories, lang, selectedIndex) {
       const available = item.stock > 0;
       const status = available ? `${escapeHtml(labels.stock)} ${item.stock}` : escapeHtml(labels.sold);
       const price = formatRupiah(item.price);
-      return `<div class="item" data-viewname="${itemName}" data-page="${page}" onclick="openDetail('${page}',${selectedIndex},${itemIndex})"><div class="thumb"><span class="catemoji">${categoryEmoji(category.name)}</span>${imageMarkup}${available ? "" : '<div class="soldstamp"><b>SOLD</b></div>'}</div><div class="ibody"><h3>${itemName}</h3><div class="meta"><span class="${available ? "stock" : "sold"}">${status}</span></div><div class="price"><span class="now">${price}</span>${item.originalPrice ? `<span class="was">${formatRupiah(item.originalPrice)}</span>` : ""}</div><div class="kilat"><span>⚡</span><span>🔒</span><span class="vbadge"><i>✓</i> ${escapeHtml(labels.details)}</span></div><button class="btn" ${available ? `onclick="event.stopPropagation();addItem(${selectedIndex},${itemIndex})"` : 'disabled style="background:#232c44;color:var(--mut);cursor:not-allowed;"'}>${available ? escapeHtml(labels.buy) : escapeHtml(labels.sold)}</button></div></div>`;
+      const hidePrice = item.name.toLowerCase().includes("admin brainrot") && !item.name.toLowerCase().includes("be a lucky block") && !item.name.toLowerCase().includes("be flash");
+      return `<div class="item" data-viewname="${itemName}" data-page="${page}" onclick="openDetail('${page}',${selectedIndex},${itemIndex})"><div class="thumb"><span class="catemoji">${categoryEmoji(category.name)}</span>${imageMarkup}${available ? "" : '<div class="soldstamp"><b>SOLD</b></div>'}</div><div class="ibody"><h3>${itemName}</h3><div class="meta"><span class="${available ? "stock" : "sold"}">${status}</span></div><div class="price">${hidePrice ? `<span style="color:var(--red);font-weight:600;font-size:14px;">${escapeHtml(labels.contact)}</span>` : `<span class="now">${price}</span>${item.originalPrice ? `<span class="was">${formatRupiah(item.originalPrice)}</span>` : ""}`}</div><div class="kilat"><span>⚡</span><span>🔒</span><span class="vbadge"><i>✓</i> ${escapeHtml(labels.details)}</span></div><button class="btn" ${available ? `onclick="event.stopPropagation();addItem(${selectedIndex},${itemIndex})"` : 'disabled style="background:#232c44;color:var(--mut);cursor:not-allowed;"'}>${available ? escapeHtml(labels.buy) : escapeHtml(labels.sold)}</button></div></div>`;
     }).join("");
     return {
       titleHtml: `<button class="backbtn" onclick="render()">${escapeHtml(labels.back)}</button><h2>${escapeHtml(category.name)}</h2><p>${category.items.length} ${escapeHtml(labels.products)}</p>`,
@@ -173,7 +185,7 @@ function categoryMarkup(page, categories, lang, selectedIndex) {
     const href = `/?tab=${encodeURIComponent(page)}&cat=${encodeURIComponent(category.name)}${lang !== "id" ? `&lang=${encodeURIComponent(lang)}` : ""}`;
     return `<a class="catcard" href="${escapeHtml(href)}" onclick="event.preventDefault();showItems(${index})" style="display:block;color:inherit;text-decoration:none;"><div class="catimgwrap"><span class="catemoji">${categoryEmoji(category.name)}</span>${imageMarkup}</div><div class="catbody"><h3>${name}</h3><span class="go">→</span></div></a>`;
   }).join("");
-  const headerText = { brainrot: "Brainrot", topup: "Top Up Robux", akun: "Akun Roblox", joki: "Jasa Joki" }[page] || "Katalog Roblox";
+  const headerText = (PAGE_HEADINGS[lang] && PAGE_HEADINGS[lang][page]) || PAGE_HEADINGS.id[page] || "Katalog Roblox";
   return {
     titleHtml: `<button class="backbtn" onclick="goHome()">${escapeHtml(labels.back)}</button><h2>${escapeHtml(headerText)}</h2><p>${categories.length} ${escapeHtml(labels.categories)}</p>`,
     productsHtml: `<div class="catgrid">${cards}</div>`
@@ -247,7 +259,14 @@ export async function onRequest(context) {
     const metadata = routeMetadata(page, selectedCategory && selectedCategory.name, lang, url);
     staticPage = await context.next();
 
-    const bootstrap = JSON.stringify({ page, rows, categoryIndex: selectedIndex, categoryName: selectedCategory ? selectedCategory.name : null, lang }).replace(/</g, "\\u003c");
+    const bootstrapRows = rows.map((row) => {
+      const reduced = {};
+      ["name", "kategori", "price", "stock", "soldout", "image", "sold", "dilihat", "deskripsi", "coret", "urutan"].forEach((key) => {
+        if (Object.prototype.hasOwnProperty.call(row, key)) reduced[key] = row[key];
+      });
+      return reduced;
+    });
+    const bootstrap = JSON.stringify({ page, rows: bootstrapRows, categoryIndex: selectedIndex, categoryName: selectedCategory ? selectedCategory.name : null, lang }).replace(/</g, "\\u003c");
     const html = new HTMLRewriter()
       .on("html", { element(element) { element.setAttribute("lang", lang); } })
       .on("title", { element(element) { element.setInnerContent(metadata.title); } })
