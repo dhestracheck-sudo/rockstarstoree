@@ -1657,14 +1657,16 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .headicons .cartbtn { gap: 4px; padding: 7px 8px; font-size: 11px; }
   .headicons .cartbtn small { min-width: 18px; height: 18px; font-size: 10px; }
 }
-@media (min-width: 1281px) {
+@media (min-width: 1281px) and (max-width: 1600px) {
   header { gap: 10px; padding-inline: 20px; }
   .headnav { gap: 0; }
-  .headnav a { gap: 4px; padding: 8px 6px; font-size: 12px; }
-  .searchwrap { flex: 1 1 180px; min-width: 150px; }
-  #searchInput { font-size: 14px; }
-  .headicons { gap: 5px; }
-  .headicons .cartbtn { gap: 5px; padding: 8px 10px; font-size: 12px; }
+  .headnav a { gap: 3px; padding: 7px 4px; font-size: 11.5px; }
+  .headnav a span { max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+  .searchwrap { flex: 1 1 220px; min-width: 190px; }
+  #searchInput { font-size: 13px; padding: 8px 12px 8px 34px; }
+  .headicons { gap: 4px; }
+  .headicons .cartbtn { gap: 4px; padding: 6px 8px; font-size: 11px; }
+  .headicons .cartbtn small { min-width: 18px; height: 18px; font-size: 10px; }
 }
 </style>
 <script type="application/ld+json">
