@@ -4020,10 +4020,13 @@ function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
     applyLang();
+    const requestedTab = (new URLSearchParams(location.search).get("tab") || "").toLowerCase();
+    const waitingForCatalog = ["brainrot", "topup", "akun", "joki"].includes(requestedTab) && !catsOf(requestedTab).length;
+    window.__waitingForDeepLinkData = waitingForCatalog;
     try {
-      if(!applyDeepLink(false)){ render(); updateUrl(); }
+      if(!applyDeepLink(false) && !waitingForCatalog){ render(); updateUrl(); }
     } catch(e) { render(); }
-    hideLoader();
+    if(!waitingForCatalog) hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
   return once().then(res => {
@@ -4062,10 +4065,12 @@ loadLiveStock().then(() => {
   /* Deep link sudah diterapkan bersama cache sebelum permintaan jaringan berjalan.
      Setelah ada interaksi, jangan render ulang seluruh halaman: perubahan tinggi konten
      dapat membuat browser mengunci posisi scroll ke footer. */
-  if(!userMoved){
+  if(!userMoved || window.__waitingForDeepLinkData){
     try { applyLang(); } catch(e) {}
-    try { render(); } catch(e) {}
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+    try {
+      if(!applyDeepLink(false)){ render(); updateUrl(); }
+    } catch(e) { try { render(); } catch(e) {} }
+    window.__waitingForDeepLinkData = false;
   }
   try { syncWishCount(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
