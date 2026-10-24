@@ -224,27 +224,6 @@
   }, { once: true });
 </script>
 
-<!-- Meta Pixel (Facebook) -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'YOUR_META_PIXEL_ID', {});
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=YOUR_META_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
-
-<!-- TikTok Pixel -->
-<script>
-!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[
-"page","track","identify","instances","debug","on","off","once","ready","alias",
-"group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){
-ttq.push([t].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load('YOUR_TIKTOK_PIXEL_ID');ttq.page();}(window,document,'ttq');
-</script>
-
 <!-- Meta/TikTok Event Mapping Helper -->
 <script>
 window.RS_Pixels = {
@@ -1680,7 +1659,7 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
       </div>
     </div>
     <div class="mega-slide s2">
-      <div class="mega-fig left"><img src="figur-3-fast.webp" width="300" height="282" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
+      <div class="mega-fig left"><img data-src="figur-3-fast.webp" width="300" height="282" alt="Roblox" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-fig right"><img data-src="figur-2.webp" alt="Robux" loading="lazy" onerror="this.parentNode.style.display='none'"></div>
       <div class="mega-in">
         <div class="mega-brand">★ TOP UP ROBUX ★</div>
@@ -1801,7 +1780,7 @@ var megaIdx = 0, megaTimer = null;
   }
   megaPaint(); megaAuto();
   const track = document.getElementById("megaTrack");
-  track.addEventListener("pointerdown", function(){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }, { passive: true });
+  track.addEventListener("pointerdown", function(){ if(megaTimer) clearTimeout(megaTimer); megaAuto(); }, { passive: true });
   let tx0 = null;
   track.addEventListener("touchstart", function(e){ tx0 = e.touches[0].clientX; }, { passive: true });
   track.addEventListener("touchend", function(e){
@@ -1871,36 +1850,10 @@ function megaPaint(){
 function megaGo(i, manual){
   const n = document.querySelectorAll("#megaTrack .mega-slide").length;
   megaIdx = ((i % n) + n) % n;
-  const activeSlide = document.querySelectorAll("#megaTrack .mega-slide")[megaIdx];
-  if(activeSlide) activeSlide.querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
   megaPaint();
-  if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
+  if(manual){ if(megaTimer) clearTimeout(megaTimer); megaAuto(); }
 }
-function megaAuto(){ megaTimer = setInterval(function(){ megaGo(megaIdx + 1); }, 5000); }
-/* Semua slide dikasih tinggi SAMA PERSIS supaya banner auto-slide tidak loncat ukurannya tiap ganti (HP & PC) */
-function fitMega(){
-  try{
-    const track = document.getElementById("megaTrack");
-    if(!track) return;
-    const slides = Array.prototype.slice.call(track.querySelectorAll(".mega-slide"));
-    if(!slides.length) return;
-    let max = 0;
-    slides.forEach(function(s){
-      const d = s.style.display;
-      s.style.display = "flex"; s.style.height = "auto"; s.style.minHeight = "0";
-      const h = Math.ceil(s.getBoundingClientRect().height); /* tinggi kotak asli; scrollHeight kepalsuan gara-gara ::before */
-      s.style.display = d; s.style.height = ""; s.style.minHeight = "";
-      if(h > max) max = h;
-    });
-    if(!max) return;
-    const H = Math.max(max, window.innerWidth <= 760 ? 340 : 380);
-    slides.forEach(function(s){ s.style.height = H + "px"; });
-  }catch(e){}
-}
-fitMega();
-let megaFitT;
-window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT = setTimeout(fitMega, 150); });
-/* Hindari pengukuran ulang setelah font dan gambar selesai dimuat; itu dapat menggeser konten. */
+function megaAuto(){ megaTimer = setTimeout(function(){ megaGo(megaIdx + 1); megaAuto(); }, 12000); }
 </script>
 <script>
 /* tombol kembali HP = kembali di web: tutup popup dulu, bukan close web */
@@ -1989,7 +1942,7 @@ window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT =
   <p data-i18n="cb_sub">5 langkah gampang, ikuti gambarnya ya!</p>
   <div class="tutwrap">
     <div class="tutcard" id="tutCard">
-      <img class="tutimg" id="tutImg" alt="Langkah cara order" style="display:none;" onerror="this.style.display='none';document.getElementById('tutEmoji').style.display='';">
+      <img class="tutimg" id="tutImg" width="882" height="676" loading="lazy" decoding="async" alt="Langkah cara order" style="display:none;" onerror="this.style.display='none';document.getElementById('tutEmoji').style.display='';">
       <div class="tutemoji" id="tutEmoji">🛍️</div>
       <div class="tutnum" id="tutNum">1 / 5</div>
       <div class="tuttit" id="tutTit">Pilih mainanmu</div>
@@ -2005,13 +1958,13 @@ window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT =
 </section>
 <script>
 var TUT_STEPS = [
-  { e: "🛍️", img: "CARA%20ORDER%201.webp", tk: "s1t", xk: "s1x" },
+  { e: "🛍️", img: "CARA-ORDER-1-fast.webp", tk: "s1t", xk: "s1x" },
   { e: "🧺", img: "CARA%20ORDER%202.webp", tk: "s2t", xk: "s2x" },
   { e: "💬", img: "CARA%20ORDER%203.webp", tk: "s3t", xk: "s3x" },
   { e: "💳", img: "CARA%20ORDER%204.webp", tk: "s4t", xk: "s4x" },
   { e: "🎁", img: "CARA%20ORDER%205.webp", tk: "s5t", xk: "s5x" }
 ];
-var tutIdx = 0, tutTimer = null;
+var tutIdx = 0, tutTimer = null, tutVisible = false;
 function tutShow(i){
   tutIdx = (i + TUT_STEPS.length) % TUT_STEPS.length;
   var s = TUT_STEPS[tutIdx];
@@ -2031,8 +1984,9 @@ function tutShow(i){
 function tutGo(n){ tutShow(tutIdx + n); tutRestart(); }
 function tutRestart(){
   if(tutTimer) clearInterval(tutTimer);
-  if(document.getElementById("tutPlayBtn").textContent === "⏸"){
-    tutTimer = setInterval(function(){ tutShow(tutIdx + 1); }, 3000);
+  tutTimer = null;
+  if(tutVisible && document.getElementById("tutPlayBtn").textContent === "⏸"){
+    tutTimer = setInterval(function(){ tutShow(tutIdx + 1); }, 5000);
   }
 }
 function tutToggle(){
@@ -2040,7 +1994,16 @@ function tutToggle(){
   if(b.textContent === "⏸"){ b.textContent = "▶"; if(tutTimer) clearInterval(tutTimer); tutTimer = null; }
   else { b.textContent = "⏸"; tutRestart(); }
 }
-try { tutShow(0); tutRestart(); } catch(e) {}
+try {
+  tutShow(0);
+  if("IntersectionObserver" in window){
+    var tutObserver = new IntersectionObserver(function(entries){
+      tutVisible = !!(entries[0] && entries[0].isIntersecting);
+      tutRestart();
+    }, { rootMargin: "120px" });
+    tutObserver.observe(document.getElementById("tutCard"));
+  } else { tutVisible = true; tutRestart(); }
+} catch(e) {}
 </script>
 <script>
 /* ===== PWA: install ke HP ===== */
@@ -2242,8 +2205,8 @@ function thumbOf(u){
 function thumbTag(full, attrs){
   full = fixImg(full);
   const t = thumbOf(full);
-  if(t === full) return `<img src="${full}" ${attrs} onerror="imgErr(this)">`;
-  return `<img src="${t}" data-full="${full}" ${attrs} onerror="thumbErr(this)">`;
+  if(t === full) return `<img src="${full}" width="400" height="400" ${attrs} onerror="imgErr(this)">`;
+  return `<img src="${t}" width="400" height="400" data-full="${full}" ${attrs} onerror="thumbErr(this)">`;
 }
 function thumbErr(el){
   try {
@@ -2832,12 +2795,10 @@ function render(){
           <p>${tr("b_joki_d")}</p>
         </div>
       </div>
-      <div id="recentSec" style="display:none;margin-top:26px;"><h2 data-i18n="recent_t">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></div>
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
-    paintRecent();
-    paintHot();
+    window.__hotReady = paintHot();
     watchViews();
     return;
   }
@@ -3045,12 +3006,6 @@ function openDetail(page, i, j){
     logAksi("klik", _it.name, _c[i].name, _it.price, page);
     if (typeof gtag === "function"){ gtag("event", "lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); if (window.RS_Pixels) RS_Pixels.mapEvent("lihat_produk", { nama_produk: _it.name, price: _it.price, currency: "IDR", kategori: _c[i].name }); }
   } catch(e) {}
-  try {
-    let rc = JSON.parse(localStorage.getItem("rs_recent") || "[]");
-    if(!Array.isArray(rc)) rc = [];
-    rc = [_it.name].concat(rc.filter(x => x !== _it.name)).slice(0, 12);
-    localStorage.setItem("rs_recent", JSON.stringify(rc));
-  } catch(e) {}
   try { renderDetail(); } catch(e) {
     document.getElementById("detailBox").innerHTML = `<h2>😢 Gagal buka produk</h2><p style="color:var(--mut);">Coba tutup lalu buka lagi, atau muat ulang halaman.</p><div class="mactions"><button class="ghost" onclick="closeDetail()">${tr("tutup")}</button></div>`;
   }
@@ -3207,6 +3162,19 @@ function updateCarousel(i, j, index){
 }
 
 function goHome(){ currentPage = 'home'; shownCat = -1; render(); updateUrl(); }
+function goToMostClicked(){
+  if(currentPage !== "home") goHome();
+  var ready = window.__hotReady || Promise.resolve(false);
+  Promise.resolve(ready).then(function(shown){
+    var section = document.getElementById("hotSec");
+    if(section && shown && section.style.display !== "none"){
+      var sticky = document.querySelector(".topwrap");
+      var offset = sticky ? Math.ceil(sticky.getBoundingClientRect().height) : 0;
+      var top = section.getBoundingClientRect().top + window.pageYOffset - offset - 8;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    }
+  });
+}
 
 function toggleWaPop(){
   const p = document.getElementById("waPop");
@@ -3725,9 +3693,9 @@ function syncWishCount(){
 }
 function paintHot(){
   const wrap = document.getElementById("hotSec");
-  if(!wrap) return;
+  if(!wrap) return Promise.resolve(false);
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-  fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
+  return fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
   }).then(r => r.json()).then(rows => {
     try {
@@ -3740,7 +3708,7 @@ function paintHot(){
         .sort((a, b) => b.v - a.v).slice(0, 8)
         .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
         .filter(o => o.r);
-      if(!top.length || !document.getElementById("hotRow")) return;
+      if(!top.length || !document.getElementById("hotRow")){ wrap.style.display = "none"; return false; }
       wrap.style.display = "";
       document.getElementById("hotRow").innerHTML = top.map(o =>
         `<div class="recentcard" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
@@ -3749,8 +3717,9 @@ function paintHot(){
         `<div class="rb"><div class="rn">${escWish(o.r.item.name)}</div>` +
         `<div class="rp">🔥 ${o.v}x ${tr("clicked")} · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`
       ).join("");
-    } catch(e) {}
-  }).catch(() => {});
+      return true;
+    } catch(e) { return false; }
+  }).catch(() => false);
 }
 function syncWishBtns(nm){
   const on = isWished(nm);
@@ -3798,23 +3767,6 @@ function openWishModal(){
 }
 function escWish(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 function closeWishModal(){ document.getElementById("wishModal").style.display = "none"; }
-function paintRecent(){
-  const wrap = document.getElementById("recentSec");
-  if(!wrap) return;
-  let rc = [];
-  try { rc = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(rc)) rc = []; } catch(e) {}
-  const cards = [];
-  rc.forEach(nm => { const r = resolveWish(nm); if(r) cards.push(r); });
-  if(!cards.length){ wrap.style.display = "none"; return; }
-  wrap.style.display = "";
-  document.getElementById("recentRow").innerHTML = cards.slice(0, 12).map(r => {
-    const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
-    return `<div class="recentcard" onclick="openDetail('${r.page}',${r.i},${r.j})">` +
-      (r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
-      thumbTag(im, `alt="" loading="lazy"`) +
-      `<div class="rb"><div class="rn">${escWish(r.item.name)}</div><div class="rp">Rp ${Number(r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`;
-  }).join("");
-}
 let orderCache = null;
 function getOrdersOnce(){
   if(orderCache) return Promise.resolve(orderCache);
