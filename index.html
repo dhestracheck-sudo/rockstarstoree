@@ -2364,7 +2364,7 @@ function flashHTML(){
         <div class="stars">${starsOf(it)}</div>
         ${simpleF ? `<div class="statrow">STATUS&nbsp;<b class="${it.stock === 0 ? "st-no" : "st-ok"}">${it.stock === 0 ? tr("habis") : tr("avail")}</b></div>` : `
         ${stockBarHTML(it)}`}
-        <div class="price"><span class="now">${formatCurrency(it.price)}</span><span class="was">Rp ${it.originalPrice.toLocaleString()}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
+        <div class="price"><span class="now">${formatCurrency(it.price)}</span><span class="was">${formatCurrency(it.originalPrice)}</span>${rmFmt(it.price) ? `<div class="rm">${rmFmt(it.price)}</div>` : ``}</div>
         <div class="kilat"><span>${tr("kilat")}</span><span>${tr("safe")}</span><span class="vbadge"><i>✓</i>${tr("verified")}</span></div>
         <button class="btn" onclick="event.stopPropagation();flashAdd('${r.page}',${r.i},${r.j})">${tr("add_cart")}</button>
       </div>
@@ -2753,16 +2753,19 @@ function toggleLangMenu(e){
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
-const RS_CURRENCIES = { IDR: 1, USD: 0.000062, MYR: 0.00028, SGD: 0.000083, CNY: 0.00045, JPY: 0.0095, THB: 0.0022 };
-const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID"}, USD:{flag:"🇺🇸",sym:"$",loc:"en-US"}, MYR:{flag:"🇲🇾",sym:"RM",loc:"en-MY"}, SGD:{flag:"🇸🇬",sym:"S$",loc:"en-SG"}, CNY:{flag:"🇨🇳",sym:"¥",loc:"zh-CN"}, JPY:{flag:"🇯🇵",sym:"¥",loc:"ja-JP"}, THB:{flag:"🇹🇭",sym:"฿",loc:"th-TH"} };
+/* Harga katalog dan Admin Panel selalu disimpan dalam IDR. Mata uang lain hanya untuk tampilan. */
+const RS_CURRENCIES = { IDR: 1, MYR: 0.00028, USD: 0.000062, SGD: 0.000083, CNY: 0.00045, JPY: 0.0095, THB: 0.0022 };
+const RS_CURRENCY_ORDER = ["IDR", "MYR", "USD", "SGD", "CNY", "JPY", "THB"];
+const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID",label:"Indonesia"}, MYR:{flag:"🇲🇾",sym:"RM",loc:"en-MY",label:"Malaysia"}, USD:{flag:"🇺🇸",sym:"$",loc:"en-US",label:"United States"}, SGD:{flag:"🇸🇬",sym:"S$",loc:"en-SG",label:"Singapore"}, CNY:{flag:"🇨🇳",sym:"¥",loc:"zh-CN",label:"China"}, JPY:{flag:"🇯🇵",sym:"¥",loc:"ja-JP",label:"Japan"}, THB:{flag:"🇹🇭",sym:"฿",loc:"th-TH",label:"Thailand"} };
 // Fetch live rates from IDR
-fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{ if(d&&d.rates){ Object.keys(RS_CURRENCIES).forEach(c=>{ if(d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; }); } }).catch(()=>{});
-function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
-function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
+fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{ if(d&&d.rates){ RS_CURRENCY_ORDER.forEach(c=>{ if(d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; }); if(currency() !== "IDR") render(); } }).catch(()=>{});
+function currency(){ try { const c=localStorage.getItem("rs_currency"); return Object.prototype.hasOwnProperty.call(RS_CURRENCIES, c) ? c : "IDR"; } catch(e) { return "IDR"; } }
+function setCurrency(c){ const selected=Object.prototype.hasOwnProperty.call(RS_CURRENCIES, c) ? c : "IDR"; try { localStorage.setItem("rs_currency", selected); } catch(e) {} return selected; }
 function selectCurrency(c){
-  setCurrency(c);
-  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
-  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
+  const selected = setCurrency(c);
+  const info = RS_CURRENCY_INFO[selected] || RS_CURRENCY_INFO.IDR;
+  const label = tr("cur_btn") || "Mata Uang";
+  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent=label+" "+info.flag; });
   try { render(); } catch(e) {}
 }
 function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }
@@ -2773,19 +2776,21 @@ function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   const lm = document.getElementById("langMenu"); if (lm) lm.style.display="none";
   let m = document.getElementById("curMenu");
-  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:1fr;gap:2px;min-width:190px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
-  m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${c===currency()?'<span style="color:#3b82f6">✓</span> ':''}${info.flag}<br>${c}</button>`; }).join("");
+  m.innerHTML = RS_CURRENCY_ORDER.map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button type="button" aria-label="${c} ${info.label}" onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:none;color:#fff;padding:9px 10px;text-align:left;border-radius:6px;cursor:pointer;font-size:13px;"><span style="font-size:18px;">${info.flag}</span><span style="flex:1;"><b>${c}</b><span style="display:block;color:#9ca8c1;font-size:11px;">${info.label} · ${info.sym}</span></span>${c===currency()?'<span style="color:#3b82f6;font-weight:700">✓</span>':''}</button>`; }).join("");
   anchorMenu(m, (e && e.currentTarget) || document.getElementById("curBtn") || document.getElementById("mnavCur"));
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
-function formatCurrency(idr){
-  const c = currency();
+function formatCurrencyFor(idr, c){
   const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
   const rate = RS_CURRENCIES[c] || 1;
-  const v = Math.round((idr||0)*rate);
-  return info.sym + " " + v.toLocaleString(info.loc);
+  const value = (Number(idr)||0)*rate;
+  const digits = c === "MYR" ? 2 : 0;
+  const formatted = new Intl.NumberFormat(info.loc, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(digits ? value : Math.round(value));
+  return info.sym + " " + formatted;
 }
+function formatCurrency(idr){ return formatCurrencyFor(idr, currency()); }
 function render(){
   try { syncHeroCta(); } catch(e) {}
   const el = document.getElementById("products");
@@ -2903,7 +2908,7 @@ function sugShow(q, rows){
   box.innerHTML = rows.map(r => {
     const cats = catsOf(r.page);
     const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
-    const pr = (r.item.stock === 0) ? tr("habis") : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    const pr = (r.item.stock === 0) ? tr("habis") : formatCurrency(r.item.price);
     const nm = String(r.item.name || "").replace(/</g, "&lt;");
     return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
       thumbTag(im, `alt="" loading="lazy" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#05080f;"`) +
@@ -3567,7 +3572,7 @@ function checkout(){
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}</div>
       </div>`;
   });
-  previewHTML += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  previewHTML += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}${currency() === "IDR" ? "" : `<br><span>Harga dasar admin: ${formatCurrencyFor(totalPrice, "IDR")}</span>`}<br><span>📦 ${cart.length} item</span></div>`;
   const m = document.createElement('div');
   m.id = 'checkoutModal';
   m.className = 'overlay';
@@ -3646,7 +3651,7 @@ function openCartModal(){
         <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
       </div>`;
   });
-  html += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
+  html += `<div class="mtotal">💰 TOTAL: ${formatCurrency(totalPrice)}<br><span>📦 ${cart.length} item</span></div>`;
   document.getElementById("cartList").innerHTML = html;
   document.getElementById("cartModal").style.display = "block";
 }
@@ -3750,7 +3755,7 @@ function paintHot(){
         `<button type="button" class="hot-product-card" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
         thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy" decoding="async"`) +
         `<span class="hot-product-info"><span class="hot-product-name">${escWish(o.r.item.name)}</span>` +
-        `<span class="hot-product-meta">🔥 ${o.v}x · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</span></span></button>`
+        `<span class="hot-product-meta">🔥 ${o.v}x · ${formatCurrency(o.r.item.price)}</span></span></button>`
       ).join("");
       track.innerHTML = `<div class="hot-product-group">${cards}</div><div class="hot-product-group" aria-hidden="true" inert>${cards}</div>`;
       return true;
@@ -3791,7 +3796,7 @@ function openWishModal(){
     const r = resolveWish(nm);
     if(!r) return;
     shown++;
-    const pr = (r.item.stock === 0) ? "HABIS" : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    const pr = (r.item.stock === 0) ? tr("habis") : formatCurrency(r.item.price);
     html += `<div class="mrow">
       <div class="grow"><strong>${escWish(nm)}</strong><br><span style="color:var(--blue2);font-weight:600;">${pr}</span></div>
       <button class="del" style="background:var(--blue);" onclick="wishAdd('${r.page}',${r.i},${r.j})">🛒</button>
@@ -3838,7 +3843,7 @@ function paintTogether(){
       box.style.display = "";
       box.innerHTML = `<b>${tr("together")}</b>` + top.map(o =>
         `<div class="mrow"><div class="grow"><strong>${escWish(o.k).slice(0, 50)}</strong><br>` +
-        `<span style="color:var(--blue2);font-weight:600;">Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</span> ` +
+        `<span style="color:var(--blue2);font-weight:600;">${formatCurrency(o.r.item.price)}</span> ` +
         `<span style="color:var(--mut);font-size:12px;">• ${o.v}x ${tr("bought_with")}</span></div>` +
         `<button class="del" style="background:var(--blue);" onclick="togetherAdd('${o.r.page}',${o.r.i},${o.r.j})">🛒</button></div>`
       ).join("");
@@ -3919,8 +3924,8 @@ let infoTeksValue = "";
 let kursRM = 3600;
 function rmFmt(rp){
   rp = Number(rp) || 0;
-  if(rp <= 0 || !(kursRM > 0)) return "";
-  return "≈ RM " + (rp / kursRM).toFixed(2);
+  if(rp <= 0 || currency() === "MYR") return "";
+  return "≈ " + formatCurrencyFor(rp, "MYR");
 }
 function applyInfoTeks(){
   const el = document.getElementById("customrun");

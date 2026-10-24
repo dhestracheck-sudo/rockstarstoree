@@ -288,7 +288,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <div class="curprod">Barang: <b id="curProdEdit">-</b></div>
     <label>Kategori barang terpilih</label>
     <div id="catInfo" class="static">-</div>
-    <label>Harga baru (Rp)</label>
+    <label>Harga baru (IDR / Rp)</label>
     <input type="number" id="priceInput" placeholder="misal 15000">
     <label>Stok baru</label>
     <input type="number" id="stockInput" placeholder="misal 10">
@@ -336,7 +336,7 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <input type="text" id="addName" placeholder="nama lengkap produk">
     <select id="addCatSel"><option>Memuat kategori...</option></select>
     <div style="display:flex;gap:8px;margin-top:8px;">
-      <input type="number" id="addPrice" placeholder="harga" style="flex:1">
+      <input type="number" id="addPrice" placeholder="Harga IDR (Rp)" aria-label="Harga produk dalam IDR" style="flex:1">
       <input type="number" id="addStock" placeholder="stok" style="flex:1">
     </div>
     <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="margin-top:8px;">
@@ -345,11 +345,11 @@ button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0
     <input type="file" id="addFile" accept="image/*">
     <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
     <div id="statusAdd"></div>
-    <p class="hint" style="margin-top:14px;">Produk masuk ke katalog yang dipilih di atas. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
+    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b>. Storefront memakai harga IDR yang sama dan otomatis mengonversinya ke <b>MYR (RM)</b> saat pengunjung memilih Malaysia; menambah atau mengubah harga produk di sini langsung memperbarui tampilan kedua mata uang tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
   </div>
 
   <div class="card">
-    <p class="hint">Produk, harga, stok, kategori, dan foto tersimpan di Supabase yang sama dengan sumber katalog SSR. Buka ulang atau muat ulang storefront untuk melihat produk baru; data SSR di edge diperbarui paling lama sekitar 20 detik. Tidak perlu commit atau deploy untuk perubahan produk—GitHub digunakan saat mengubah kode.</p>
+    <p class="hint">Produk, harga dasar IDR, stok, kategori, dan foto tersimpan di katalog yang sama dengan storefront SSR. Harga MYR/RM dihitung otomatis dari harga IDR yang dikelola di sini. Buka ulang atau muat ulang storefront untuk melihat perubahan; data SSR di edge diperbarui paling lama sekitar 20 detik. Tidak perlu commit atau deploy untuk perubahan produk—GitHub digunakan saat mengubah kode.</p>
   </div>
 </div>
 
