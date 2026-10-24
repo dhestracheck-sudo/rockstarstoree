@@ -851,7 +851,7 @@ header {
 }
 .flashbody { margin-top: 18px; }
 .flashgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-.banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.banners { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .banner {
   position: relative;
   overflow: hidden;
@@ -1463,7 +1463,6 @@ footer a { color: var(--wa); text-decoration: none; font-weight: 700; display: i
   .itemgrid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
   .flashgrid { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
   .catgrid { grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); }
-  .banners { grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); }
   .steps { grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); }
 }
 @media (min-width: 2000px) {
