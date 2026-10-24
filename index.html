@@ -801,6 +801,14 @@ header {
   transition: background 0.15s ease, transform 0.15s ease;
 }
 .serverbtn:hover { background: var(--blue); transform: translateY(-2px); }
+.testimoni-cta-section { display:flex; justify-content:center; padding-top:16px; padding-bottom:18px; }
+.testimoni-cta { border:1px solid var(--line); border-radius:999px; background:rgba(255,255,255,.055); color:#c7d5ef; padding:12px 24px; font:700 14px 'Poppins',sans-serif; letter-spacing:.5px; cursor:pointer; transition:background .2s ease,border-color .2s ease,transform .2s ease; }
+.testimoni-cta:hover { background:rgba(43,78,255,.18); border-color:var(--blue); transform:translateY(-2px); }
+.testimoni-modal { width:min(980px,94vw); max-height:84vh; }
+.testimoni-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.testimoni-photo-link { display:block; min-width:0; padding:6px; overflow:hidden; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.025); }
+.testimoni-photo { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:contain; border-radius:8px; background:#07152b; }
+@media (max-width:760px) { .testimoni-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; } .testimoni-modal { padding:18px 14px; } }
 
 /* ===== stats strip ===== */
 .stats {
@@ -2243,16 +2251,8 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <div class="modal">
     <h2 data-i18n="server_t">🔗 Link Server Rock Star</h2>
     <p style="color:var(--mut);font-size:13.5px;margin:0 0 14px;" data-i18n="server_sub">Klik server untuk join langsung dari Roblox</p>
-    <div class="serverbtns" style="flex-direction:column;">
-      <a class="serverbtn" href="https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" target="_blank" rel="noopener">🎲 Server Kotak Gulung untuk Brainrot</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" target="_blank" rel="noopener">🍂 Server Fall for Brainrot</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=f0a1cedc6be4f041a22d1079ca713f2d&type=Server" target="_blank" rel="noopener">🪙 Server Lempar Koin</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" target="_blank" rel="noopener">🌱 Server Grow A Garden 2</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=592596d70f7d1044ae692f625524368e&type=Server" target="_blank" rel="noopener">🐔 Server Tarik Telur</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=555c4557fd120c4ab3a050b2116a2e6c&type=Server" target="_blank" rel="noopener">🎲 Server Dadu Anime</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=33212d5bded8e24e8e290f40fd34b8cf&type=Server" target="_blank" rel="noopener">🥊 Server Boxing for Brainrot</a>
-      <a class="serverbtn" href="https://www.roblox.com/share?code=a6e16fde64c68d4c85e7f68dc5596eda&type=Server" target="_blank" rel="noopener">🧠 Server Become Brainrot</a>
-    </div>
+    <div class="serverbtns" id="serverLinkList" style="flex-direction:column;"></div>
+    <p class="hint" id="serverLinkStatus" aria-live="polite"></p>
     <div class="mactions">
       <button class="ghost" onclick="closeServerModal()" data-i18n="tutup">Tutup</button>
     </div>
@@ -2288,6 +2288,21 @@ try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
   <a class="ava-big" href="#server" onclick="openServerModal(); return false;" title="Lihat Link Server"><img src="ROCKSTAR-AVATAR-fast.webp" alt="Rockstar Avatar - Link Server" width="320" height="321" loading="lazy" decoding="async"></a>
   <div class="ava-caption"><span class="finger">👆</span><br>KLIK AVA ROCKSTAR<br>BUAT MASUK <b>PRIVAT SERVER MABAR GRATIS</b></div>
 </section>
+
+<section class="section testi-cta-section" aria-label="Testimoni pelanggan">
+  <button class="testimoni-cta" type="button" onclick="openTestimoniGallery()">LIHAT SEMUA TESTIMONI →</button>
+</section>
+<div class="overlay" id="testimoniModal" onclick="if(event.target.id==='testimoniModal')closeTestimoniGallery()">
+  <div class="modal testimoni-modal" role="dialog" aria-modal="true" aria-labelledby="testimoniModalTitle">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <h2 id="testimoniModalTitle">⭐ Testimoni Customer</h2>
+      <button class="ghost" type="button" onclick="closeTestimoniGallery()">Tutup</button>
+    </div>
+    <p id="testimoniGalleryStatus" class="hint" aria-live="polite">Memuat testimoni...</p>
+    <div id="testimoniGalleryGrid" class="testimoni-grid"></div>
+    <button id="testimoniGalleryMore" class="ghost" type="button" onclick="loadMoreTestimoni()" style="display:none;width:100%;margin-top:14px;">Muat foto lainnya</button>
+  </div>
+</div>
 
 <section class="section faq-section" id="faq" aria-labelledby="faqTitle">
   <h2 class="faq-title" id="faqTitle">PERTANYAAN UMUM (FAQ)</h2>
@@ -3670,11 +3685,121 @@ function trackClick(ev, nama, kat){ return; }
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxFQEIeLqMYXC6tN7SG8i5Un7FDM_QgEJ7-Y78uihxjHBfC01TvyEk082nKzG5y5aip/exec";
 
-function openServerModal(){ document.getElementById("serverModal").style.display = "block"; }
+const DEFAULT_ROCKSTAR_SERVERS = [
+  { label: "🎲 Server Kotak Gulung untuk Brainrot", url: "https://www.roblox.com/share?code=6caff481af8f144eb47162f2e1a3e2eb&type=Server" },
+  { label: "🍂 Server Fall for Brainrot", url: "https://www.roblox.com/share?code=7268a4699798254193752fa24104e7f7&type=Server" },
+  { label: "🪙 Server Lempar Koin", url: "https://www.roblox.com/share?code=f0a1cedc6be4f041a22d1079ca713f2d&type=Server" },
+  { label: "🌱 Server Grow A Garden 2", url: "https://www.roblox.com/share?code=41a39158889f0f40a1ba639898c22c9f&type=Server" },
+  { label: "🐔 Server Tarik Telur", url: "https://www.roblox.com/share?code=592596d70f7d1044ae692f625524368e&type=Server" },
+  { label: "🎲 Server Dadu Anime", url: "https://www.roblox.com/share?code=555c4557fd120c4ab3a050b2116a2e6c&type=Server" },
+  { label: "🥊 Server Boxing for Brainrot", url: "https://www.roblox.com/share?code=33212d5bded8e24e8e290f40fd34b8cf&type=Server" },
+  { label: "🧠 Server Become Brainrot", url: "https://www.roblox.com/share?code=a6e16fde64c68d4c85e7f68dc5596eda&type=Server" }
+];
+let TESTIMONI_GALLERY_ROWS = [];
+let TESTIMONI_GALLERY_SHOWN = 0;
+let TESTIMONI_GALLERY_LOADED = false;
+
+function validRobloxServerUrl(value){
+  try {
+    const u = new URL(String(value || "").trim());
+    return u.protocol === "https:" && (u.hostname === "roblox.com" || u.hostname === "www.roblox.com") &&
+      u.pathname === "/share" && !!u.searchParams.get("code") && u.searchParams.get("type") === "Server";
+  } catch(e){ return false; }
+}
+function renderServerLinks(list){
+  const box = document.getElementById("serverLinkList");
+  const status = document.getElementById("serverLinkStatus");
+  if(!box) return;
+  box.innerHTML = "";
+  const clean = (Array.isArray(list) ? list : []).filter(function(item){
+    return item && String(item.label || "").trim() && validRobloxServerUrl(item.url);
+  });
+  if(!clean.length){
+    if(status) status.textContent = "Belum ada link private server yang tersedia.";
+    return;
+  }
+  clean.forEach(function(item){
+    const a = document.createElement("a");
+    a.className = "serverbtn"; a.href = item.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.textContent = String(item.label).trim(); box.appendChild(a);
+  });
+}
+function loadServerLinks(){
+  const status = document.getElementById("serverLinkStatus");
+  renderServerLinks(DEFAULT_ROCKSTAR_SERVERS);
+  if(status) status.textContent = "Memuat daftar server...";
+  fetchSheet("Info").then(function(rows){
+    const setting = (rows || []).find(function(row){ return String(row.name || "").trim() === "INFO_SERVERS"; });
+    if(!setting) { if(status) status.textContent = "Menampilkan daftar bawaan."; return; }
+    try {
+      const saved = JSON.parse(String(setting.deskripsi || "[]"));
+      if(Array.isArray(saved)){ renderServerLinks(saved); if(status) status.textContent = ""; return; }
+    } catch(e) {}
+    if(status) status.textContent = "Daftar server tersimpan tidak dapat dibaca; memakai daftar bawaan.";
+  }).catch(function(){ if(status) status.textContent = "Koneksi gagal; memakai daftar bawaan."; });
+}
+function openServerModal(){
+  document.getElementById("serverModal").style.display = "block";
+  loadServerLinks();
+}
 function closeServerModal(){ document.getElementById("serverModal").style.display = "none"; }
 document.getElementById("serverModal").addEventListener('click', e => {
   if(e.target.id === "serverModal") closeServerModal();
 });
+
+function isPublicFotoUrl(value){
+  try {
+    const u = new URL(String(value || ""));
+    return u.protocol === "https:" && u.hostname === new URL(SB_URL).hostname && u.pathname.indexOf("/storage/v1/object/public/foto/") === 0;
+  } catch(e){ return false; }
+}
+function openTestimoniGallery(){
+  const modal = document.getElementById("testimoniModal");
+  const status = document.getElementById("testimoniGalleryStatus");
+  modal.style.display = "block";
+  if(TESTIMONI_GALLERY_LOADED){
+    TESTIMONI_GALLERY_SHOWN = 0;
+    document.getElementById("testimoniGalleryGrid").innerHTML = "";
+    loadMoreTestimoni();
+    return;
+  }
+  status.textContent = "Memuat foto testimoni...";
+  fetchSheet("Info").then(function(rows){
+    TESTIMONI_GALLERY_ROWS = (rows || []).filter(function(row){
+      return String(row.name || "").trim().indexOf("INFO_TESTIMONI_") === 0 && isPublicFotoUrl(row.image);
+    }).sort(function(a,b){ return Number(a.urutan || 0) - Number(b.urutan || 0); });
+    TESTIMONI_GALLERY_LOADED = true;
+    TESTIMONI_GALLERY_SHOWN = 0;
+    document.getElementById("testimoniGalleryGrid").innerHTML = "";
+    if(!TESTIMONI_GALLERY_ROWS.length){
+      status.textContent = "Belum ada foto testimoni yang diunggah.";
+      document.getElementById("testimoniGalleryMore").style.display = "none";
+      return;
+    }
+    status.textContent = TESTIMONI_GALLERY_ROWS.length + " foto testimoni";
+    loadMoreTestimoni();
+  }).catch(function(){ status.textContent = "Foto testimoni gagal dimuat. Coba buka lagi sebentar."; });
+}
+function loadMoreTestimoni(){
+  const grid = document.getElementById("testimoniGalleryGrid");
+  const status = document.getElementById("testimoniGalleryStatus");
+  const more = document.getElementById("testimoniGalleryMore");
+  const batch = TESTIMONI_GALLERY_ROWS.slice(TESTIMONI_GALLERY_SHOWN, TESTIMONI_GALLERY_SHOWN + 12);
+  batch.forEach(function(row, i){
+    const link = document.createElement("a");
+    link.className = "testimoni-photo-link"; link.href = row.image; link.target = "_blank"; link.rel = "noopener noreferrer";
+    link.setAttribute("aria-label", "Buka foto testimoni ukuran penuh");
+    const img = document.createElement("img");
+    img.className = "testimoni-photo"; img.src = thumbOf(row.image); img.width = 480; img.height = 600;
+    img.loading = "lazy"; img.decoding = "async"; img.alt = "Foto testimoni " + (TESTIMONI_GALLERY_SHOWN + i + 1);
+    img.onerror = function(){ img.onerror = null; if(img.src !== row.image) img.src = row.image; };
+    link.appendChild(img); grid.appendChild(link);
+  });
+  TESTIMONI_GALLERY_SHOWN += batch.length;
+  if(status && TESTIMONI_GALLERY_ROWS.length) status.textContent = "Menampilkan " + TESTIMONI_GALLERY_SHOWN + " dari " + TESTIMONI_GALLERY_ROWS.length + " foto.";
+  more.style.display = TESTIMONI_GALLERY_SHOWN < TESTIMONI_GALLERY_ROWS.length ? "block" : "none";
+}
+function closeTestimoniGallery(){ document.getElementById("testimoniModal").style.display = "none"; }
 
 function checkout(){
   if(cart.length==0){ alert(tr("kosong")); return; }
