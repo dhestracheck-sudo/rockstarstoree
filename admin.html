@@ -404,7 +404,7 @@ function makeThumb(blob){
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
           cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
           cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-          cv.toBlob(b => resolve(b || null), "image/webp", 0.7);
+          cv.toBlob(b => resolve(b || null), "image/webp", 0.75);
         } catch(e){ resolve(null); }
       };
       im.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
