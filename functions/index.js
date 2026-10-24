@@ -255,8 +255,10 @@ export async function onRequest(context) {
   const langParam = String(url.searchParams.get("lang") || "id").toLowerCase();
   const lang = LANGUAGES.includes(langParam) ? langParam : "id";
   let staticPage;
+  let stage = "catalog";
   try {
     const rows = await getCatalogRows(context, PAGE_TABLES[page]);
+    stage = "categories";
     const categories = buildCategories(rows);
     if (!categories.length) return context.next();
     const requestedCategory = String(url.searchParams.get("cat") || "").trim();
@@ -264,6 +266,7 @@ export async function onRequest(context) {
     const selectedCategory = selectedIndex >= 0 ? categories[selectedIndex] : null;
     const markup = categoryMarkup(page, categories, lang, selectedIndex);
     const metadata = routeMetadata(page, selectedCategory && selectedCategory.name, lang, url);
+    stage = "static-page";
     staticPage = await context.next();
 
     const bootstrapRows = rows.map((row) => {
@@ -274,6 +277,7 @@ export async function onRequest(context) {
       return reduced;
     });
     const bootstrap = JSON.stringify({ page, rows: bootstrapRows, categoryIndex: selectedIndex, categoryName: selectedCategory ? selectedCategory.name : null, lang }).replace(/</g, "\\u003c");
+    stage = "html-rewriter";
     const html = new HTMLRewriter()
       .on("html", { element(element) { element.setAttribute("lang", lang); } })
       .on("title", { element(element) { element.setInnerContent(metadata.title); } })
@@ -295,6 +299,7 @@ export async function onRequest(context) {
       .transform(staticPage);
     return markResponse(html, "rendered");
   } catch (_) {
-    return markResponse(staticPage || await context.next(), "fallback");
+    const name = _ && _.name ? String(_.name).replace(/[^A-Za-z0-9_-]/g, "").slice(0, 24) : "Error";
+    return markResponse(staticPage || await context.next(), `fallback-${stage}-${name}`);
   }
 }
