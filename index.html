@@ -2596,18 +2596,29 @@ function selectLang(code){
   try { render(); } catch(e) {}
   try { tutShow(tutIdx); } catch(e) {}
 }
+function anchorMenu(m, btn){
+  /* Panel ikat-ke-tombol: muncul di bawah tombol yang diklik,
+     dikawal biar tidak keluar layar, dibalik ke atas bila ruang bawah kurang. */
+  if (!btn || !btn.getBoundingClientRect) btn = document.body;
+  const r = btn.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight;
+  m.style.display = "grid";
+  const w = m.offsetWidth, h = m.offsetHeight;
+  let x = Math.max(8, Math.min(r.left + r.width/2 - w/2, vw - w - 8));
+  let y = r.bottom + 8;
+  if (y + h > vh - 8) y = Math.max(8, Math.min(r.top - h - 8, vh - h - 8));
+  m.style.left = Math.round(x) + "px";
+  m.style.top = Math.round(y) + "px";
+  m.style.transform = "none";
+}
 function toggleLangMenu(e){
   if (e) e.stopPropagation();
   const cm = document.getElementById("curMenu"); if (cm) cm.style.display="none";
   let m = document.getElementById("langMenu");
-  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:240px;"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="langMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:240px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
   const cur = lang();
-  m.innerHTML = RS_LANGS.map(l=>`<button onclick="selectLang('${l.code}');document.getElementById('langMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${l.code===cur?'<span style=\\"color:#3b82f6\\">✓</span> ':''}${l.flag}<br>${l.label}</button>`).join("");
-  m.style.left = "50%";
-  m.style.top = "50%";
-  m.style.transform = "translate(-50%,-50%)";
-  m.style.display = "grid";
+  m.innerHTML = RS_LANGS.map(l=>`<button onclick="selectLang('${l.code}');document.getElementById('langMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${l.code===cur?'<span style="color:#3b82f6">✓</span> ':''}${l.flag}<br>${l.label}</button>`).join("");
+  anchorMenu(m, (e && e.currentTarget) || document.getElementById("langBtn") || document.getElementById("mnavLang"));
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function toggleCurrency(){ /* legacy */ selectCurrency(currency()); }
@@ -2631,13 +2642,10 @@ function toggleCurrencyMenu(e){
   if (e) e.stopPropagation();
   const lm = document.getElementById("langMenu"); if (lm) lm.style.display="none";
   let m = document.getElementById("curMenu");
-  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;"; document.body.appendChild(m); }
+  if (!m){ m = document.createElement("div"); m.id="curMenu"; m.style.cssText="position:fixed;z-index:9999;background:#0e1628;border:1px solid var(--line);border-radius:10px;padding:6px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;min-width:180px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;"; document.body.appendChild(m); }
   if (m.style.display==="grid"){ m.style.display="none"; return; }
   m.innerHTML = Object.keys(RS_CURRENCIES).map(c=>{ const info=RS_CURRENCY_INFO[c]; return `<button onclick="selectCurrency('${c}');document.getElementById('curMenu').style.display='none';" style="background:transparent;border:none;color:#fff;padding:8px 6px;text-align:center;border-radius:6px;cursor:pointer;font-size:13px;">${c===currency()?'<span style="color:#3b82f6">✓</span> ':''}${info.flag}<br>${c}</button>`; }).join("");
-m.style.left = "50%";
-  m.style.top = "50%";
-  m.style.transform = "translate(-50%,-50%)";
-  m.style.display = "grid";
+  anchorMenu(m, (e && e.currentTarget) || document.getElementById("curBtn") || document.getElementById("mnavCur"));
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
 function formatCurrency(idr){
