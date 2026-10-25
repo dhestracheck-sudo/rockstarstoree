@@ -257,22 +257,26 @@ function unlockPageScrollForMnav(){
   window.scrollTo(0, mnavSavedScrollY);
   mnavSavedBodyStyles = null;
 }
+function positionMnavPanel(){
+  const menu = document.getElementById("mnav");
+  const topWrap = document.querySelector(".topwrap");
+  if(!menu || !topWrap) return;
+  const top = Math.max(0, Math.round(topWrap.getBoundingClientRect().bottom));
+  menu.style.setProperty("--mnav-top", top + "px");
+}
 function toggleMnav(){
   const m = document.getElementById("mnav");
   if(!m) return;
   const open = !m.classList.contains("open");
   m.classList.toggle("open", open);
-  if(open) lockPageScrollForMnav();
+  if(open){
+    positionMnavPanel();
+    lockPageScrollForMnav();
+  }
   else unlockPageScrollForMnav();
   const b = document.getElementById("burgerBtn");
   if(b) b.textContent = open ? "✕" : "☰";
-  if(open){
-    try {
-      const hd = document.querySelector("header");
-      if(hd) m.style.paddingTop = (Math.round(hd.getBoundingClientRect().bottom) + 10) + "px";
-    } catch(e) {}
-  }
-  placeSearch();
+  placeSearch();
   if(!open){ try { document.getElementById("searchSug").style.display = "none"; } catch(e) {} }
 }
 function closeMnav(){
@@ -286,10 +290,19 @@ function mnavGo(fn){
 /* Pencarian selalu tampil di baris kedua header (HP) — tidak dipindah ke menu lagi */
 function placeSearch(){}
 try { placeSearch(); } catch(e) {}
-window.addEventListener("resize", function(){
-  clearTimeout(window.__psT);
-  window.__psT = setTimeout(placeSearch, 150);
-});
+window.addEventListener("resize", function(){
+  clearTimeout(window.__psT);
+  window.__psT = setTimeout(placeSearch, 150);
+  const menu = document.getElementById("mnav");
+  if(menu && menu.classList.contains("open")) positionMnavPanel();
+});
+window.addEventListener("orientationchange", function(){ setTimeout(positionMnavPanel, 200); });
+function preventMnavBackgroundScroll(event){
+  const menu = document.getElementById("mnav");
+  if(menu && menu.classList.contains("open") && !menu.contains(event.target)) event.preventDefault();
+}
+document.addEventListener("touchmove", preventMnavBackgroundScroll, { passive: false });
+document.addEventListener("wheel", preventMnavBackgroundScroll, { passive: false });
 /* bubble "Chat Min Rock" — dihapus */
 
 /* ===== bahasa ID/EN ===== */
@@ -1419,52 +1432,21 @@ function syncWishCount(){
   const a2 = document.getElementById("mnavWishCount");
   if(a2) a2.textContent = n;
 }
-function paintHotLegacy(){
-  const wrap = document.getElementById("hotSec");
-  if(!wrap) return;
-  const row = document.getElementById("hotRow");
-  if(!row) return;
-  wrap.style.display = "";
-  row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Memuat produk populer…</div>';
-  const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-  fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-  }).then(r => { if(!r.ok) throw new Error("Gagal mengambil data klik"); return r.json(); }).then(rows => {
-    try {
-      const freq = {};
-      (Array.isArray(rows) ? rows : []).forEach(o => {
-        const nm = String(o.name || "").slice(0, 80);
-        if(nm) freq[nm] = (freq[nm] || 0) + 1;
-      });
-      const top = Object.keys(freq).map(k => ({ k: k, v: freq[k] }))
-        .sort((a, b) => b.v - a.v).slice(0, 8)
-        .map(o => ({ k: o.k, v: o.v, r: resolveWish(o.k) }))
-        .filter(o => o.r);
-      if(!top.length){
-        row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Belum ada data klik produk dalam 30 hari terakhir.</div>';
-        return;
-      }
-      row.innerHTML = top.map(o =>
-        `<div class="recentcard" onclick="openDetail('${o.r.page}',${o.r.i},${o.r.j})">` +
-        (o.r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
-        thumbTag(o.r.item.img || (o.r.item.images && o.r.item.images[0]) || o.r.cat.img, `alt="" loading="lazy"`) +
-        `<div class="rb"><div class="rn">${escWish(o.r.item.name)}</div>` +
-        `<div class="rp">🔥 ${o.v}x ${tr("clicked")} · Rp ${Number(o.r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`
-      ).join("");
-    } catch(e) { row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Data produk populer belum dapat ditampilkan.</div>'; }
-  }).catch(() => {
-    row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Data klik belum tersinkron. Coba muat ulang halaman.</div>';
-  });
-}
 function paintHot(){
   const track = document.getElementById("hotProductTrack");
   if(!track) return;
   const requestId = (paintHot.requestId || 0) + 1;
   paintHot.requestId = requestId;
   track.innerHTML = '<div class="hot-product-message">Memuat produk pilihan…</div>';
+  let hasRendered = false;
+  const fallbackTimer = window.setTimeout(function(){
+    if(!hasRendered) renderProducts(catalogFallback());
+  }, 2500);
 
   function renderProducts(products){
     if(requestId !== paintHot.requestId || !track.isConnected) return;
+    hasRendered = true;
+    window.clearTimeout(fallbackTimer);
     track.replaceChildren();
     if(!products.length){
       track.innerHTML = '<div class="hot-product-message">Belum ada produk yang tersedia saat ini.</div>';
@@ -1538,8 +1520,13 @@ function paintHot(){
   }
 
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  const requestTimeout = window.setTimeout(function(){
+    if(controller) controller.abort();
+  }, 5000);
   fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
+    ...(controller ? { signal: controller.signal } : {})
   }).then(function(response){
     if(!response.ok) throw new Error("Gagal mengambil data produk populer");
     return response.json();
@@ -1556,6 +1543,8 @@ function paintHot(){
     renderProducts(popular.length ? popular : catalogFallback());
   }).catch(function(){
     renderProducts(catalogFallback());
+  }).finally(function(){
+    window.clearTimeout(requestTimeout);
   });
 }
 
@@ -1737,28 +1726,6 @@ function openWishModal(){
 }
 function escWish(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 function closeWishModal(){ document.getElementById("wishModal").style.display = "none"; }
-function paintRecent(){
-  const wrap = document.getElementById("recentSec");
-  if(!wrap) return;
-  const row = document.getElementById("recentRow");
-  if(!row) return;
-  let rc = [];
-  try { rc = JSON.parse(localStorage.getItem("rs_recent") || "[]"); if(!Array.isArray(rc)) rc = []; } catch(e) {}
-  const cards = [];
-  rc.forEach(nm => { const r = resolveWish(nm); if(r) cards.push(r); });
-  wrap.style.display = "";
-  if(!cards.length){
-    row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Produk yang kamu buka akan muncul di sini pada perangkat ini.</div>';
-    return;
-  }
-  row.innerHTML = cards.slice(0, 12).map(r => {
-    const im = r.item.img || (r.item.images && r.item.images[0]) || r.cat.img;
-    return `<div class="recentcard" onclick="openDetail('${r.page}',${r.i},${r.j})">` +
-      (r.item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``) +
-      thumbTag(im, `alt="" loading="lazy"`) +
-      `<div class="rb"><div class="rn">${escWish(r.item.name)}</div><div class="rp">Rp ${Number(r.item.price || 0).toLocaleString("id-ID")}</div></div></div>`;
-  }).join("");
-}
 let orderCache = null;
 function getOrdersOnce(){
   if(orderCache) return Promise.resolve(orderCache);
