@@ -4,7 +4,7 @@ import { adminMarkup, adminStyles } from '../content/adminLatest';
 
 const pageScripts = [
   '/site-scripts/admin-01.js?v=product-editor-20261026-1',
-  '/site-scripts/admin-02.js?v=product-editor-20261026-1',
+  '/site-scripts/admin-02.js?v=admin-collapse-20261026-1',
 ];
 
 const productEditorStyles = `
@@ -28,6 +28,9 @@ const productEditorStyles = `
   #productEditorCard .product-editor-actions #delBtn { width:100%; margin:0; }
   #productEditorCard .product-editor-actions #statusAll { margin:0; }
   #productEditorCard #slideList { display:grid; gap:8px; }
+  #serverConfigCard #serverConfigToggle { width:100%; margin:0; text-align:left; }
+  #serverConfigCard .server-config-toggle-note { margin:9px 2px 0; }
+  #serverConfigCard #serverConfigContent { margin-top:14px; }
   @media (max-width:560px) {
     #productEditorCard { padding:16px 14px; }
     #productEditorCard .product-editor-heading h2 { font-size:17px; }

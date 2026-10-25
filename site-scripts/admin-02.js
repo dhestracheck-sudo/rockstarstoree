@@ -69,12 +69,57 @@
     const uploadUrlButton = document.getElementById("slideUrlBtn");
     if (uploadUrlButton) uploadUrlButton.textContent = "🔗 Tambah foto dari link";
 
+    mountServerConfigToggle();
+
     ["nameInput", "priceInput", "stockInput", "soldInput", "coretInput", "descInput"].forEach((id) => {
       const input = document.getElementById(id);
       if (input) input.addEventListener("input", updateLivePreview);
     });
     const productSelect = document.getElementById("itemSel");
     if (productSelect) productSelect.addEventListener("change", () => setTimeout(updateLivePreview, 0));
+  }
+
+  function mountServerConfigToggle() {
+    const card = document.getElementById("serverConfigCard");
+    if (!card || document.getElementById("serverConfigToggle")) return;
+
+    const content = document.createElement("div");
+    content.id = "serverConfigContent";
+    while (card.firstChild) content.appendChild(card.firstChild);
+
+    const toggle = document.createElement("button");
+    toggle.id = "serverConfigToggle";
+    toggle.type = "button";
+    toggle.className = "ghost";
+    toggle.setAttribute("aria-controls", content.id);
+
+    const note = document.createElement("p");
+    note.className = "hint server-config-toggle-note";
+    note.textContent = "Pengaturan Private Server dilipat agar panel lebih ringkas.";
+
+    card.append(toggle, note, content);
+
+    let expanded = false;
+    try {
+      expanded = localStorage.getItem("rsAdminServerConfigOpen") === "true";
+    } catch (_) {}
+
+    function renderToggle() {
+      content.hidden = !expanded;
+      toggle.setAttribute("aria-expanded", String(expanded));
+      toggle.textContent = expanded ? "🙈 Sembunyikan pengaturan Private Server" : "🔗 Tampilkan pengaturan Private Server";
+      note.hidden = expanded;
+    }
+
+    toggle.addEventListener("click", () => {
+      expanded = !expanded;
+      try {
+        localStorage.setItem("rsAdminServerConfigOpen", String(expanded));
+      } catch (_) {}
+      renderToggle();
+    });
+
+    renderToggle();
   }
 
   function updateLivePreview() {
