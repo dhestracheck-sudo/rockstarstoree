@@ -565,7 +565,6 @@ function render(){
   if(currentPage === 'home'){
     title.innerHTML = `<h2>${tr("mulai")}</h2><p>${tr("pilih_sub")}</p>`;
     el.innerHTML = `
-      <div id="hotSec" style="margin-bottom:26px;"><h2 data-i18n="hot_t">🔥 Paling Banyak Diklik</h2><div class="recentrow" id="hotRow"></div></div>
       <div class="banners">
         <div class="banner" onclick="goToBrainrot()">
           <small>BRAINROT • PET • TOKEN • TANAMAN</small>
@@ -588,13 +587,10 @@ function render(){
           <p>${tr("b_joki_d")}</p>
         </div>
       </div>
-      <div id="recentSec" style="margin-top:26px;"><h2 data-i18n="recent_t">🕘 Terakhir dilihat</h2><div class="recentrow" id="recentRow"></div></div>
       <div id="flashwrap"></div>`;
     document.getElementById("flashwrap").outerHTML = flashHTML();
     if(document.getElementById("flashtime")) startFlashTick();
-    paintRecent();
-    paintHot();
-    watchViews();
+    watchViews();
     return;
   }
   const categories = getCurrentCategories();
@@ -807,7 +803,6 @@ function openDetail(page, i, j){
     rc = [_it.name].concat(rc.filter(x => x !== _it.name)).slice(0, 12);
     localStorage.setItem("rs_recent", JSON.stringify(rc));
   } catch(e) {}
-  if(currentPage === "home") { try { paintRecent(); } catch(e) {} }
   try { renderDetail(); } catch(e) {
     document.getElementById("detailBox").innerHTML = `<h2>😢 Gagal buka produk</h2><p style="color:var(--mut);">Coba tutup lalu buka lagi, atau muat ulang halaman.</p><div class="mactions"><button class="ghost" onclick="closeDetail()">${tr("tutup")}</button></div>`;
   }
@@ -1385,7 +1380,7 @@ function syncWishCount(){
   const a2 = document.getElementById("mnavWishCount");
   if(a2) a2.textContent = n;
 }
-function paintHot(){
+function paintHotLegacy(){
   const wrap = document.getElementById("hotSec");
   if(!wrap) return;
   const row = document.getElementById("hotRow");
@@ -1422,7 +1417,242 @@ function paintHot(){
     row.innerHTML = '<div style="color:var(--mut);font-size:13px;padding:12px 2px;">Data klik belum tersinkron. Coba muat ulang halaman.</div>';
   });
 }
-function syncWishBtns(nm){
+function paintHot(){
+  const track = document.getElementById("hotProductTrack");
+  if(!track) return;
+  const requestId = (paintHot.requestId || 0) + 1;
+  paintHot.requestId = requestId;
+  track.innerHTML = '<div class="hot-product-message">Memuat produk pilihan…</div>';
+
+  function renderProducts(products){
+    if(requestId !== paintHot.requestId || !track.isConnected) return;
+    track.replaceChildren();
+    if(!products.length){
+      track.innerHTML = '<div class="hot-product-message">Belum ada produk yang tersedia saat ini.</div>';
+      return;
+    }
+    function makeGroup(isClone){
+      const group = document.createElement("div");
+      group.className = "hot-product-group";
+      if(isClone) group.setAttribute("aria-hidden", "true");
+      products.forEach(function(entry){
+        const r = entry.r;
+        const item = r.item;
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "hot-product-card";
+        card.tabIndex = isClone ? -1 : 0;
+        card.setAttribute("aria-label", String(item.name || "Produk") + ", Rp " + Number(item.price || 0).toLocaleString("id-ID"));
+        card.addEventListener("click", function(){ openDetail(r.page, r.i, r.j); });
+        const image = document.createElement("img");
+        const fullImage = fixImg(item.img || (item.images && item.images[0]) || r.cat.img);
+        image.src = thumbOf(fullImage);
+        image.dataset.full = fullImage;
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.onerror = function(){
+          if(image.dataset.full && image.src !== image.dataset.full){
+            const fallback = image.dataset.full;
+            image.dataset.full = "";
+            image.src = fallback;
+          } else {
+            image.onerror = null;
+            image.src = FALLBACK_IMG;
+          }
+        };
+        const info = document.createElement("span");
+        info.className = "hot-product-info";
+        const name = document.createElement("span");
+        name.className = "hot-product-name";
+        name.textContent = String(item.name || "Produk Rockstar.Store");
+        const meta = document.createElement("span");
+        meta.className = "hot-product-meta";
+        const clickText = Number(entry.clicks) > 0 ? "🔥 " + Number(entry.clicks) + "x · " : "🔥 Hot product · ";
+        meta.textContent = clickText + "Rp " + Number(item.price || 0).toLocaleString("id-ID");
+        info.append(name, meta);
+        card.append(image, info);
+        group.appendChild(card);
+      });
+      return group;
+    }
+    track.append(makeGroup(false), makeGroup(true));
+  }
+
+  function catalogFallback(){
+    const candidates = [];
+    ["brainrot", "akun", "topup", "joki"].forEach(function(page){
+      catsOf(page).forEach(function(cat, i){
+        (cat.items || []).forEach(function(item, j){
+          if(!item || !item.name) return;
+          candidates.push({
+            r: { page: page, i: i, j: j, item: item, cat: cat },
+            clicks: 0,
+            views: Number(item.dilihat) || 0,
+            stock: Number(item.stock) || 0
+          });
+        });
+      });
+    });
+    candidates.sort(function(a, b){ return b.views - a.views || b.stock - a.stock; });
+    return candidates.slice(0, 8);
+  }
+
+  const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+  fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(function(response){
+    if(!response.ok) throw new Error("Gagal mengambil data produk populer");
+    return response.json();
+  }).then(function(rows){
+    const frequency = {};
+    (Array.isArray(rows) ? rows : []).forEach(function(row){
+      const name = String(row.name || "").slice(0, 80);
+      if(name) frequency[name] = (frequency[name] || 0) + 1;
+    });
+    const popular = Object.keys(frequency).map(function(name){
+      const r = resolveWish(name);
+      return r ? { r: r, clicks: frequency[name] } : null;
+    }).filter(Boolean).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
+    renderProducts(popular.length ? popular : catalogFallback());
+  }).catch(function(){
+    renderProducts(catalogFallback());
+  });
+}
+
+let TESTIMONI_GALLERY_ITEMS = [];
+let TESTIMONI_GALLERY_SHOWN = 0;
+let TESTIMONI_GALLERY_LOADING = false;
+let TESTIMONI_GALLERY_LOADED_AT = 0;
+let TESTIMONI_GALLERY_REQUEST = 0;
+
+function renderTestimoniGallery(){
+  const status = document.getElementById("testimoniGalleryStatus");
+  const grid = document.getElementById("testimoniGalleryGrid");
+  const more = document.getElementById("testimoniGalleryMore");
+  if(!status || !grid || !more) return;
+  grid.replaceChildren();
+  const visible = TESTIMONI_GALLERY_ITEMS.slice(0, TESTIMONI_GALLERY_SHOWN);
+  visible.forEach(function(row, index){
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "testimoni-photo-link";
+    button.setAttribute("aria-label", "Lihat foto testimoni " + (index + 1));
+    const image = document.createElement("img");
+    image.className = "testimoni-photo";
+    image.src = thumbOf(row.image);
+    image.dataset.full = row.image;
+    image.alt = "Foto testimoni " + (index + 1);
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.onerror = function(){
+      if(image.dataset.full && image.src !== image.dataset.full){
+        const full = image.dataset.full;
+        image.dataset.full = "";
+        image.src = full;
+      }
+    };
+    button.appendChild(image);
+    button.addEventListener("click", function(){ openTestimoniPhoto(row.image); });
+    grid.appendChild(button);
+  });
+  status.textContent = visible.length
+    ? "Menampilkan " + visible.length + " dari " + TESTIMONI_GALLERY_ITEMS.length + " foto testimoni."
+    : "Belum ada foto testimoni yang tersimpan.";
+  more.style.display = visible.length < TESTIMONI_GALLERY_ITEMS.length ? "block" : "none";
+}
+
+function openTestimoniGallery(){
+  const modal = document.getElementById("testimoniModal");
+  if(!modal) return;
+  modal.style.display = "block";
+  document.body.style.overflow = "hidden";
+  const content = document.getElementById("testimoniGalleryContent");
+  const viewer = document.getElementById("testimoniPhotoViewer");
+  if(content) content.style.display = "block";
+  if(viewer) viewer.style.display = "none";
+  if(TESTIMONI_GALLERY_ITEMS.length && Date.now() - TESTIMONI_GALLERY_LOADED_AT < 60000){
+    TESTIMONI_GALLERY_SHOWN = Math.min(12, TESTIMONI_GALLERY_ITEMS.length);
+    renderTestimoniGallery();
+    return;
+  }
+  if(TESTIMONI_GALLERY_LOADING) return;
+  const status = document.getElementById("testimoniGalleryStatus");
+  const grid = document.getElementById("testimoniGalleryGrid");
+  const more = document.getElementById("testimoniGalleryMore");
+  if(status) status.textContent = "Memuat foto testimoni…";
+  if(grid) grid.replaceChildren();
+  if(more) more.style.display = "none";
+  TESTIMONI_GALLERY_LOADING = true;
+  const requestId = ++TESTIMONI_GALLERY_REQUEST;
+  fetch(SB_URL + "/rest/v1/info?select=name,image,urutan&name=like.INFO_TESTIMONI_*&order=urutan.asc,name.asc&limit=500", {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(function(response){
+    if(!response.ok) throw new Error("Gagal mengambil galeri testimoni");
+    return response.json();
+  }).then(function(rows){
+    if(requestId !== TESTIMONI_GALLERY_REQUEST) return;
+    const allowedPrefix = SB_URL + "/storage/v1/object/public/foto/";
+    TESTIMONI_GALLERY_ITEMS = (Array.isArray(rows) ? rows : []).filter(function(row){
+      const name = String(row.name || "").trim();
+      const image = String(row.image || "").trim();
+      return name.indexOf("INFO_TESTIMONI_") === 0 && image.indexOf(allowedPrefix) === 0;
+    }).sort(function(a, b){
+      return (Number(a.urutan) || 0) - (Number(b.urutan) || 0) || String(a.name).localeCompare(String(b.name));
+    });
+    TESTIMONI_GALLERY_LOADED_AT = Date.now();
+    TESTIMONI_GALLERY_SHOWN = Math.min(12, TESTIMONI_GALLERY_ITEMS.length);
+    renderTestimoniGallery();
+  }).catch(function(){
+    if(requestId === TESTIMONI_GALLERY_REQUEST && status){
+      status.textContent = TESTIMONI_GALLERY_ITEMS.length
+        ? "Koneksi galeri terganggu. Foto yang tersimpan sebelumnya tetap bisa dilihat."
+        : "Foto testimoni belum dapat dimuat. Coba muat ulang halaman.";
+    }
+    if(TESTIMONI_GALLERY_ITEMS.length) renderTestimoniGallery();
+  }).then(function(){
+    if(requestId === TESTIMONI_GALLERY_REQUEST) TESTIMONI_GALLERY_LOADING = false;
+  });
+}
+
+function loadMoreTestimoni(){
+  TESTIMONI_GALLERY_SHOWN = Math.min(TESTIMONI_GALLERY_ITEMS.length, TESTIMONI_GALLERY_SHOWN + 12);
+  renderTestimoniGallery();
+}
+
+function openTestimoniPhoto(url){
+  const content = document.getElementById("testimoniGalleryContent");
+  const viewer = document.getElementById("testimoniPhotoViewer");
+  const image = document.getElementById("testimoniPhotoViewerImage");
+  if(!content || !viewer || !image) return;
+  image.src = url;
+  content.style.display = "none";
+  viewer.style.display = "block";
+}
+
+function returnToTestimoniGallery(){
+  const content = document.getElementById("testimoniGalleryContent");
+  const viewer = document.getElementById("testimoniPhotoViewer");
+  if(content) content.style.display = "block";
+  if(viewer) viewer.style.display = "none";
+}
+
+function closeTestimoniGallery(){
+  const modal = document.getElementById("testimoniModal");
+  if(modal) modal.style.display = "none";
+  document.body.style.overflow = "";
+}
+
+window.openTestimoniGallery = openTestimoniGallery;
+window.closeTestimoniGallery = closeTestimoniGallery;
+window.loadMoreTestimoni = loadMoreTestimoni;
+window.returnToTestimoniGallery = returnToTestimoniGallery;
+document.addEventListener("keydown", function(event){
+  const modal = document.getElementById("testimoniModal");
+  if(event.key === "Escape" && modal && modal.style.display === "block") closeTestimoniGallery();
+});
+
+function syncWishBtns(nm){
   const on = isWished(nm);
   document.querySelectorAll('[data-wish="' + encodeURIComponent(nm) + '"]').forEach(el => {
     el.textContent = on ? "❤️" : "🤍";
@@ -1752,9 +1982,10 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 function loadLiveStock(){
   try {
     applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
-    applyLang();
-    render();
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+    applyLang();
+    render();
+    try { paintHot(); } catch(e) {}
+    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
     hideLoader();
   } catch(e) {}
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
@@ -1794,11 +2025,12 @@ loadLiveStock().then(() => {
   /* Deep link sudah diterapkan bersama cache sebelum permintaan jaringan berjalan.
      Setelah ada interaksi, jangan render ulang seluruh halaman: perubahan tinggi konten
      dapat membuat browser mengunci posisi scroll ke footer. */
-  if(!userMoved){
+  if(!userMoved){
     try { applyLang(); } catch(e) {}
     try { render(); } catch(e) {}
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
   }
+  try { paintHot(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { let searchTimer = null;
 /* Saran instan (ringan, maks 6) — render penuh ditunda biar ketikan tidak nyendat */
