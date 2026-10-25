@@ -1,0 +1,24 @@
+# Backup / sementara - jangan upload
+*.bak
+*.syncbak
+*~
+*.tmp
+Thumbs.db
+Desktop.ini
+# Penanda dan log auto-push lokal; jangan ikut commit/deploy
+.autopush-pending
+auto-push.log
+
+# Next.js build artifacts and generated static asset copy
+/node_modules
+/.next
+/out
+/.open-next
+/.wrangler
+/public
+.dev.vars*
+
+/backups/
+/.vscode/
+/AGENTS.md
+/CNAME
