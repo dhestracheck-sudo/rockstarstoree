@@ -105,7 +105,7 @@ function flashItems(){
     });
   });
   out.sort((a, b) => b.off - a.off);
-  return out.slice(0, 12);
+  return out.slice(0, 4);
 }
 
 function flashAdd(page, i, j){

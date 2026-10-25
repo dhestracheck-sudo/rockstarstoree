@@ -813,6 +813,11 @@ body .flashbody {
   margin-top: 10px;
 }
 
+body .flashbody .itemgrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+}
+
 @media (max-width: 760px) {
   body .flashsec { margin-top: 12px; }
   body .flashsec,
@@ -837,7 +842,8 @@ body .flashbody {
   body .flashhead .fomo { font-size: 10px; }
   body .flashhead .arrow { font-size: 12px; }
   body .flashbody .itemgrid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, auto);
     gap: 12px;
   }
   body .flashbody .item { width: 100%; min-width: 0; }
