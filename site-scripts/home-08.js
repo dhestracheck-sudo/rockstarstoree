@@ -221,10 +221,12 @@ function bnSync(){
 /* ===== panel menu atas (gaya exstore: ☰ buka/tutup, pindah pencarian ke menu di HP) ===== */
 let mnavSavedScrollY = 0;
 let mnavSavedBodyStyles = null;
+let mnavSavedTopWrapStyles = null;
 function lockPageScrollForMnav(){
   const body = document.body;
   if(body.classList.contains("mnav-scroll-locked")) return;
   mnavSavedScrollY = window.scrollY || window.pageYOffset || 0;
+  const topWrap = document.querySelector(".topwrap");
   mnavSavedBodyStyles = {
     position: body.style.position,
     top: body.style.top,
@@ -233,6 +235,22 @@ function lockPageScrollForMnav(){
     width: body.style.width,
     overflow: body.style.overflow
   };
+  if(topWrap){
+    mnavSavedTopWrapStyles = {
+      position: topWrap.style.position,
+      top: topWrap.style.top,
+      left: topWrap.style.left,
+      right: topWrap.style.right,
+      width: topWrap.style.width,
+      zIndex: topWrap.style.zIndex
+    };
+    topWrap.style.position = "fixed";
+    topWrap.style.top = "0";
+    topWrap.style.left = "0";
+    topWrap.style.right = "0";
+    topWrap.style.width = "100%";
+    topWrap.style.zIndex = "101";
+  }
   document.documentElement.classList.add("mnav-scroll-locked");
   body.classList.add("mnav-scroll-locked");
   body.style.position = "fixed";
@@ -254,8 +272,19 @@ function unlockPageScrollForMnav(){
   body.style.right = saved.right || "";
   body.style.width = saved.width || "";
   body.style.overflow = saved.overflow || "";
+  const topWrap = document.querySelector(".topwrap");
+  const savedTopWrap = mnavSavedTopWrapStyles || {};
+  if(topWrap){
+    topWrap.style.position = savedTopWrap.position || "";
+    topWrap.style.top = savedTopWrap.top || "";
+    topWrap.style.left = savedTopWrap.left || "";
+    topWrap.style.right = savedTopWrap.right || "";
+    topWrap.style.width = savedTopWrap.width || "";
+    topWrap.style.zIndex = savedTopWrap.zIndex || "";
+  }
   window.scrollTo(0, mnavSavedScrollY);
   mnavSavedBodyStyles = null;
+  mnavSavedTopWrapStyles = null;
 }
 function positionMnavPanel(){
   const menu = document.getElementById("mnav");
