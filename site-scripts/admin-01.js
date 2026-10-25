@@ -84,7 +84,7 @@ window.addEventListener("resize", stickSync);
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","miniNav","sheetCard","teksCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","miniNav","sheetCard","teksCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","productEditorCard","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     document.getElementById("featMenu").style.display = "grid";
     document.getElementById("sheetBar").style.display = "flex";
     stickSync();
