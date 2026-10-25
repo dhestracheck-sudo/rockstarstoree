@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="id"><head><meta charSet="UTF-8" data-next-head=""/><meta name="viewport" content="width=device-width, initial-scale=1.0" data-next-head=""/><title data-next-head="">Analisis — Rockstar.Store</title><meta name="robots" content="noindex, nofollow" data-next-head=""/><meta name="description" content="Panel analisis Rockstar.Store (privat)." data-next-head=""/><link rel="icon" type="image/png" href="ROCKSTARLOGO.png" data-next-head=""/><link rel="apple-touch-icon" href="ROCKSTARLOGO.png" data-next-head=""/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="preload" href="/_next/static/chunks/3tpmtx3k9xklq.css" as="style"/><style data-next-head="">
+:root { --bg:#060913; --bg2:#0b1120; --card:#0e1628; --line:rgba(120,150,255,.14); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; padding:24px 16px 60px; }
+.wrap { max-width: 640px; margin: 0 auto; }
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:22px; margin-top:16px; }
+label { display:block; font-size:13px; color:var(--mut); margin:14px 0 6px; }
+input[type=password] {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14px;
+}
+button {
+  width:100%; margin-top:16px; padding:13px; border:none; border-radius:12px;
+  background:var(--blue); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:15px; cursor:pointer;
+}
+button:disabled { background:#232c44; color:var(--mut); cursor:wait; }
+.ok { color:var(--green); } .err { color:var(--red); }
+.hint { font-size:12.5px; color:var(--mut); line-height:1.7; }
+a { color:var(--blue2); }
+#analBox { margin-top:14px; font-size:13.5px; line-height:1.7; }
+</style><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&amp;family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link rel="stylesheet" href="/_next/static/chunks/3tpmtx3k9xklq.css" data-n-g=""/><noscript data-n-css=""></noscript><script>(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push({"otherChunks":["static/chunks/1kw_lwvrv5_4r.js","static/chunks/1-7tb_z2bpwj9.js","static/chunks/3tpmtx3k9xklq.css"],"runtimeModuleIds":[783,6703]});
+(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push({"otherChunks":["static/chunks/2c2ho1eyfkr1l.js"],"runtimeModuleIds":[783,9043]});</script><script src="/_next/static/chunks/1kw_lwvrv5_4r.js" defer=""></script><script src="/_next/static/chunks/1-7tb_z2bpwj9.js" defer=""></script><script src="/_next/static/chunks/turbopack-3-ry682tkyiqk.js" defer=""></script><script src="/_next/static/chunks/2c2ho1eyfkr1l.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_buildManifest.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_ssgManifest.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_clientMiddlewareManifest.js" defer=""></script></head><body><div id="__next">
+<div class="wrap">
+  <h1>📊 Analisis Rockstar.Store</h1>
+
+  <div class="card" id="pinCard">
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autoComplete="off"/>
+    <button>Buka Analisis</button>
+    </div><p class="hint" style="margin-top:12px"><a href="/admin">← Kembali ke Admin</a></p>
+  </div>
+
+  <div class="card" id="mainCard" style="display:none">
+    <div style="display:flex;gap:8px">
+      <button id="analBtn" style="flex:1">🔄 Muat Ulang</button>
+      <a href="/admin" style="flex:1;text-decoration:none"><button type="button" style="background:#232c44">← Admin</button></a>
+    </div>
+    <div id="asistenBox" style="margin-top:16px"></div>
+    <div id="orderBox" style="margin-top:16px"></div>
+    <div id="rekapBox" style="margin-top:16px"></div>
+    <div id="analBox"></div>
+    </div><p class="hint" style="margin-top:10px">Dihitung live dari Supabase. Counter naik tiap produk terlihat di layar pengunjung.</p>
+  <!-- -->
+<!-- -->
+
+<!-- -->
+</div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{}},"page":"/analisis","query":{},"buildId":"Ax06xFQb-yLd0gAp_krZU","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script></body></html>

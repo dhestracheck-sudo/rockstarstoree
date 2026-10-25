@@ -1,0 +1,575 @@
+<!DOCTYPE html><html lang="id"><head><meta charSet="UTF-8" data-next-head=""/><meta name="viewport" content="width=device-width, initial-scale=1.0" data-next-head=""/><title data-next-head="">Admin — Rockstar.Store</title><meta name="robots" content="noindex, nofollow" data-next-head=""/><meta name="description" content="Panel admin Rockstar.Store (privat)." data-next-head=""/><link rel="icon" type="image/png" href="/ROCKSTARLOGO.png" data-next-head=""/><link rel="apple-touch-icon" href="/ROCKSTARLOGO.png" data-next-head=""/><link rel="preconnect" href="https://fonts.googleapis.com" data-next-head=""/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" data-next-head=""/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="preload" href="/_next/static/chunks/3tpmtx3k9xklq.css" as="style"/><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&amp;family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet" data-next-head=""/><style data-next-head="">
+:root { --bg:#060913; --bg2:#0b1120; --card:#0c1322; --line:rgba(120,150,255,.12); --txt:#f2f5ff; --mut:#8b96b3; --blue:#2b4eff; --blue2:#6f8bff; --green:#2ecc71; --red:#ff5d5d; --gold:#f3d27a; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin:0; font-family:'Poppins',sans-serif; color:var(--txt);
+  background:
+    radial-gradient(900px 420px at 15% -8%, rgba(43,78,255,.22), transparent 60%),
+    radial-gradient(700px 380px at 100% 0%, rgba(111,139,255,.12), transparent 55%),
+    var(--bg);
+  min-height:100vh; padding:18px 14px 70px;
+}
+.wrap { max-width: 560px; margin: 0 auto; }
+
+/* ===== judul atas ===== */
+h1 { font-family:'Oswald',sans-serif; letter-spacing:.5px; font-size:21px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 6px;
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:16px; padding:12px 14px; }
+h1 img { height:40px; border-radius:11px; box-shadow:0 4px 14px rgba(0,0,0,.4); }
+#adminV { font-size:11px; color:var(--mut); font-family:'Poppins',sans-serif; font-weight:600; background:#131c36; border:1px solid var(--line); border-radius:999px; padding:3px 9px; }
+
+/* ===== tombol lebar (panel analisis) ===== */
+#analTopBtn { display:none; }
+.widebtn { display:block; text-align:center; background:linear-gradient(135deg,#1a2440,#141d36); color:var(--txt); font-weight:700; font-size:14px; border-radius:13px; padding:13px; text-decoration:none; margin-top:10px; border:1px solid var(--line); transition:.15s; }
+.widebtn:hover { border-color:var(--blue); transform:translateY(-1px); }
+
+/* ===== menu pintasan ===== */
+#featMenu { display:none; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+.tile { display:block; background:linear-gradient(180deg,#101a33,#0c1322); border:1px solid var(--line); border-radius:15px; padding:13px 8px; text-decoration:none; color:var(--txt); text-align:center; transition:.15s; }
+.tile:hover { transform:translateY(-2px); border-color:rgba(111,139,255,.45); box-shadow:0 10px 24px rgba(0,0,0,.35); }
+.tile .ico { width:44px; height:44px; margin:0 auto 7px; display:grid; place-items:center; font-size:21px; border-radius:13px; background:radial-gradient(circle at 30% 25%, rgba(90,120,255,.4), rgba(43,78,255,.12)); border:1px solid rgba(111,139,255,.25); }
+.tile .lbl { font-weight:700; font-size:12.5px; letter-spacing:.02em; }
+
+/* ===== bar Tab Sheet (nempel di bawah header, ikut scroll) ===== */
+.sheetbar { display:none; position:sticky; top:0; z-index:60; height:54px; box-sizing:border-box; align-items:center; gap:10px; padding:7px 10px; margin-top:10px;
+  background:rgba(6,9,19,.94); backdrop-filter:blur(10px); border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 28px rgba(0,0,0,.35); }
+.sbtag { font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--blue2); white-space:nowrap; }
+.sheetbar select { flex:1; min-width:0; height:40px; margin:0; padding:9px 34px 9px 12px; border-radius:10px; font-size:13.5px; }
+
+/* ===== nav lengket ===== */
+.minibar { display:none; position:sticky; top:var(--barh, 0px); z-index:50; background:rgba(6,9,19,.92); backdrop-filter:blur(10px); padding:10px 0; margin-top:12px; border-bottom:1px solid var(--line); }
+.minibar.show { display:block; }
+.minibar a { display:inline-block; font-size:12.5px; font-weight:600; color:var(--mut); text-decoration:none; background:#111a32; border:1px solid var(--line); border-radius:999px; padding:8px 14px; margin:0 6px 6px 0; transition:.15s; }
+.minibar a:hover { color:#fff; border-color:var(--blue); background:#182450; }
+
+/* ===== judul bagian ===== */
+h2.sect { font-family:'Poppins',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.1em; font-size:11.5px; margin:30px 0 0; color:var(--blue2); display:flex; align-items:center; gap:10px; scroll-margin-top:calc(var(--stickh, 170px) + 10px); }
+h2.sect::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, rgba(111,139,255,.45), transparent); }
+
+.curprod { font-size:12.5px; color:var(--mut); margin:0 0 2px; background:#0e1730; border:1px dashed var(--line); border-radius:10px; padding:8px 11px; }
+.curprod b { color:var(--blue2); }
+
+/* ===== kartu ===== */
+.card { background:linear-gradient(180deg, #0e1730 0%, #0b1223 100%); border:1px solid var(--line); border-radius:16px; padding:17px 16px 19px; margin-top:14px; box-shadow:0 12px 30px rgba(0,0,0,.3); scroll-margin-top:calc(var(--stickh, 170px) + 10px); }
+
+/* ===== form ===== */
+label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:var(--mut); margin:16px 0 7px; }
+select, input[type=password], input[type=text], input[type=number], textarea {
+  width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+  background:var(--bg2); color:var(--txt); font-family:'Poppins',sans-serif; font-size:14.5px; outline:none;
+  transition:border-color .15s, box-shadow .15s, background .15s;
+}
+select:focus, input:focus, textarea:focus { border-color:var(--blue2); box-shadow:0 0 0 3px rgba(111,139,255,.22); background:#0d1530; }
+select { appearance:none; -webkit-appearance:none; padding-right:38px; cursor:pointer;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M2 4.5l4 3.5 4-3.5" fill="none" stroke="%238b96b3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat:no-repeat; background-position:right 14px center; }
+input[type=file] { width:100%; font-size:13px; color:var(--mut); }
+.static { padding:12px 14px; border-radius:12px; border:1px dashed rgba(111,139,255,.3); background:rgba(111,139,255,.06); font-size:14px; font-weight:700; color:var(--blue2); }
+
+/* ===== tombol ===== */
+button {
+  width:100%; margin-top:14px; padding:13px 16px; border:none; border-radius:12px;
+  background:linear-gradient(135deg, var(--blue), #4a68ff); color:#fff; font-family:'Poppins',sans-serif; font-weight:700; font-size:14px; letter-spacing:.02em; cursor:pointer;
+  box-shadow:0 8px 20px rgba(43,78,255,.3); transition:filter .12s, transform .12s, box-shadow .12s;
+}
+button:hover { filter:brightness(1.1); transform:translateY(-1px); }
+button:active { transform:translateY(0); }
+button:disabled, button.danger:disabled, button.succ:disabled, button.ghost:disabled { background:#1a2340; color:#65718f; box-shadow:none; transform:none; cursor:wait; filter:none; }
+button.ghost { background:#161f3d; color:var(--mut); border:1px solid var(--line); box-shadow:none; }
+button.ghost:hover { color:var(--txt); border-color:var(--blue); filter:none; }
+button.danger { background:linear-gradient(135deg, #ff5d5d, #dd343c); box-shadow:0 8px 20px rgba(255,93,93,.22); }
+button.succ { background:linear-gradient(135deg, #2ecc71, #18a957); box-shadow:0 8px 20px rgba(46,204,113,.22); }
+
+#preview { width:100%; border-radius:12px; margin-top:12px; display:none; border:1px solid var(--line); }
+#prevImg { width:96px; height:96px; object-fit:cover; border-radius:12px; border:1px solid var(--line); background:var(--bg2); flex-shrink:0; }
+#catOld { width:100%; max-height:220px; object-fit:cover; border-radius:12px; border:1px solid var(--line); background:var(--bg2); }
+#catPreview { width:100%; border-radius:12px; margin-top:14px; display:none; border:1px solid var(--line); }
+#status { margin-top:12px; font-size:13px; line-height:1.6; }
+.ok { color:var(--green); } .err { color:#ff8080; }
+.hint { font-size:12px; color:var(--mut); line-height:1.65; }
+
+/* ===== notifikasi status (otomatis dari JS) ===== */
+[id^="status"] { margin-top:10px; font-size:13px; line-height:1.65; color:var(--mut); }
+[id^="status"] .ok { display:inline-block; padding:7px 13px; border-radius:10px; background:rgba(46,204,113,.1); border:1px solid rgba(46,204,113,.3); color:#5fe39b; font-weight:600; }
+[id^="status"] .err { display:inline-block; padding:7px 13px; border-radius:10px; background:rgba(255,93,93,.09); border:1px solid rgba(255,93,93,.3); color:#ff9a9a; font-weight:600; }
+
+/* ===== login PIN ===== */
+#pinCard { max-width:400px; margin-left:auto; margin-right:auto; text-align:center; padding:26px 20px 24px; }
+#pinCard .lockico { font-size:34px; }
+#pinCard .pinttl { font-family:'Oswald',sans-serif; font-size:16px; letter-spacing:.14em; text-transform:uppercase; color:var(--blue2); margin-top:4px; }
+#pinCard label { text-align:center; }
+#pinCard input { text-align:center; font-size:20px; letter-spacing:.5em; text-indent:.5em; }
+#pinCard button { margin-top:16px; }
+
+/* ===== baris foto (daftar slide) ===== */
+.srow { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; padding:10px; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:13px; }
+.srow .sthumb { width:64px; height:64px; object-fit:cover; border-radius:10px; border:1px solid var(--line); flex-shrink:0; }
+.srow .sinfo { flex:1; min-width:140px; font-size:12.5px; word-break:break-all; line-height:1.5; }
+.srow .sinfo b { color:var(--txt); }
+.srow .sinfo span { color:var(--mut); }
+.srow .sacts { display:flex; gap:6px; flex-wrap:wrap; flex:1 1 100%; }
+.srow .sacts button { width:auto; margin:0; padding:8px 12px; font-size:12.5px; border-radius:9px; background:#161f3d; color:var(--mut); border:1px solid var(--line); box-shadow:none; }
+.srow .sacts button:hover { color:#fff; border-color:var(--blue); filter:none; }
+.srow .sacts button.del { background:rgba(255,93,93,.14); border-color:rgba(255,93,93,.35); color:#ff9a9a; }
+@media (min-width:600px){ .srow .sacts { flex:0 0 auto; margin-left:auto; } }
+.testimoni-admin-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:10px; margin-top:12px; max-height:420px; overflow-y:auto; overscroll-behavior:contain; padding:4px 6px 8px 0; scrollbar-color:rgba(153,178,255,.5) rgba(255,255,255,.04); scrollbar-width:thin; }
+.testimoni-admin-card { min-width:0; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:12px; padding:8px; }
+.testimoni-admin-card img { width:100%; aspect-ratio:4/5; object-fit:cover; display:block; border-radius:8px; background:#09152c; }
+.testimoni-admin-card small { display:block; margin-top:6px; color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.testimoni-admin-card.selected { border-color:rgba(155,178,255,.78); background:rgba(74,104,255,.1); box-shadow:0 0 0 1px rgba(155,178,255,.16); }
+
+/* ===== baris data akun ===== */
+/* ===== kontrol pilihan foto testimoni ===== */
+.testimoni-admin-tools { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,.025); color:var(--mut); font-size:12.5px; }
+.testimoni-admin-tools .testimoni-select-all { display:flex; align-items:center; gap:8px; margin:0; color:var(--txt); font-size:12px; font-weight:600; letter-spacing:0; text-transform:none; cursor:pointer; }
+.testimoni-admin-tools input[type=checkbox],.testimoni-card-select input[type=checkbox] { width:18px; height:18px; margin:0; accent-color:var(--blue2); cursor:pointer; }
+.testimoni-admin-tools #testimoniDeleteBtn { width:auto; min-height:40px; margin:0 0 0 auto; padding:9px 14px; font-size:12.5px; }
+.testimoni-card-select { display:flex; align-items:center; gap:7px; margin:0 0 8px; color:var(--mut); font-size:11px; font-weight:600; letter-spacing:0; text-transform:none; cursor:pointer; }
+.arow { display:flex; gap:10px; align-items:center; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:13px; padding:10px 12px; margin-top:10px; font-size:13px; line-height:1.55; }
+.arow .ainfo { flex:1; min-width:0; }
+.arow .abtn { display:flex; flex-direction:column; gap:6px; }
+.arow button { width:auto; margin:0; padding:8px 12px; font-size:12.5px; border-radius:9px; box-shadow:none; }
+
+/* ===== baris antrean upload ===== */
+.qrow { display:flex; gap:8px; align-items:center; background:rgba(255,255,255,.02); border:1px solid var(--line); border-radius:11px; padding:7px 10px; margin-top:6px; font-size:12.5px; }
+.qrow button { width:auto; margin:0; padding:6px 10px; font-size:12px; border-radius:8px; background:#161f3d; color:var(--mut); border:1px solid var(--line); box-shadow:none; }
+.qrow button:hover { color:#fff; border-color:var(--blue); filter:none; }
+
+/* layar lebar: 2 kolom biar tidak scroll panjang */
+@media (min-width: 1000px){
+  .wrap { max-width: 1080px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; align-items: start; }
+  .wrap > h1, .wrap > #analTopBtn, .wrap > #pinCard, .wrap > #featMenu, .wrap > #miniNav,
+  .wrap > #sheetCard, .wrap > h2.sect, .wrap > .sheetbar { grid-column: 1 / -1; }
+  #featMenu { grid-template-columns: repeat(6, 1fr); }
+  .wrap > .card { margin-top: 0; }
+  .wrap > h2.sect { margin-top: 12px; }
+}
+
+/* ===== visual refresh: kontras, ketajaman, dan ritme yang lebih rapi ===== */
+:root {
+  color-scheme: dark;
+  --bg:#070d19;
+  --bg2:#0c172b;
+  --card:#101d35;
+  --line:rgba(153,178,255,.22);
+  --txt:#f7f9ff;
+  --mut:#b4c0dc;
+  --blue:#4264ff;
+  --blue2:#9bb2ff;
+  --green:#43dc88;
+  --red:#ff777f;
+}
+html { scroll-padding-top:calc(var(--stickh, 170px) + 18px); }
+body {
+  padding:24px 20px 72px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  background:
+    radial-gradient(1000px 520px at 8% -12%, rgba(66,100,255,.22), transparent 62%),
+    radial-gradient(780px 460px at 105% 4%, rgba(77,132,255,.13), transparent 58%),
+    linear-gradient(180deg,#080f1d 0%,var(--bg) 58%,#060a13 100%);
+}
+.wrap { max-width:1240px; }
+h1 {
+  min-height:68px;
+  padding:13px 18px;
+  border-color:rgba(153,178,255,.24);
+  background:linear-gradient(120deg,rgba(20,34,65,.96),rgba(12,20,38,.94));
+  box-shadow:0 14px 36px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.035);
+  font-size:23px;
+  line-height:1.3;
+}
+h1 img { height:42px; image-rendering:auto; }
+#adminV {
+  color:#d6e0ff;
+  background:rgba(74,104,255,.16);
+  border-color:rgba(143,167,255,.38);
+  font-size:11.5px;
+  letter-spacing:.03em;
+}
+.widebtn,.tile,.sheetbar,.minibar,.card { border-color:rgba(153,178,255,.2); }
+.widebtn { background:linear-gradient(135deg,#202f55,#172442); }
+#featMenu { gap:12px; }
+.tile {
+  min-height:92px;
+  padding:14px 10px;
+  background:linear-gradient(155deg,#142342,#0e192e);
+  box-shadow:0 8px 20px rgba(0,0,0,.16);
+}
+.tile:hover { border-color:rgba(155,178,255,.58); box-shadow:0 12px 28px rgba(0,0,0,.28); }
+.tile .ico { background:radial-gradient(circle at 30% 25%,rgba(128,153,255,.34),rgba(66,100,255,.12)); }
+.tile .lbl { font-size:13px; color:#f2f5ff; }
+.sheetbar {
+  min-height:58px;
+  background:rgba(8,15,29,.96);
+  border-radius:16px;
+  box-shadow:0 12px 28px rgba(0,0,0,.4);
+}
+.sbtag { color:#adbeff; }
+.minibar {
+  padding:10px 12px 4px;
+  border:1px solid rgba(153,178,255,.18);
+  border-radius:14px;
+  background:rgba(8,15,29,.95);
+  box-shadow:0 10px 22px rgba(0,0,0,.2);
+}
+.minibar a {
+  color:#c0cbe4;
+  background:#14213d;
+  border-color:rgba(153,178,255,.2);
+  margin-right:5px;
+}
+.minibar a:hover { color:#fff; border-color:#839cff; background:#1a2b50; }
+h2.sect {
+  margin-top:24px;
+  color:#a9bcff;
+  font-size:12.5px;
+  letter-spacing:.12em;
+  line-height:1.5;
+}
+h2.sect::after { background:linear-gradient(90deg,rgba(155,178,255,.55),transparent); }
+.card {
+  padding:20px 22px 22px;
+  border-radius:18px;
+  background:linear-gradient(155deg,rgba(18,31,57,.98),rgba(11,20,37,.98));
+  box-shadow:0 14px 34px rgba(0,0,0,.27),inset 0 1px rgba(255,255,255,.025);
+}
+.card label:first-of-type { margin-top:2px; }
+label {
+  color:#c0cbe4;
+  font-size:11.5px;
+  letter-spacing:.075em;
+  margin-top:19px;
+}
+select,
+input:not([type=hidden]):not([type=file]):not([type=checkbox]):not([type=radio]),
+textarea {
+  min-height:46px;
+  padding:12px 14px;
+  border-color:rgba(153,178,255,.24);
+  background-color:#0a1427;
+  color:#f7f9ff;
+  font-size:14.5px;
+  line-height:1.45;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.22);
+}
+textarea { min-height:90px; resize:vertical; }
+select:focus,input:focus,textarea:focus { border-color:#91aaff; box-shadow:0 0 0 3px rgba(111,139,255,.2); background-color:#101d36; }
+input::placeholder,textarea::placeholder { color:#8f9dbb; opacity:1; }
+input[type=file] { min-height:44px; padding:7px; border:1px solid rgba(153,178,255,.22); border-radius:12px; background:#0a1427; color:#c1cce4; }
+input[type=file]::file-selector-button {
+  margin-right:10px;
+  padding:8px 12px;
+  border:1px solid rgba(153,178,255,.3);
+  border-radius:8px;
+  background:#1a2a4b;
+  color:#f4f6ff;
+  font:600 12px 'Poppins',sans-serif;
+  cursor:pointer;
+}
+button {
+  min-height:46px;
+  padding:12px 17px;
+  border:1px solid rgba(180,196,255,.12);
+  background:linear-gradient(135deg,#4566ff,#5876ff);
+  box-shadow:0 8px 20px rgba(55,88,255,.24);
+  font-size:14px;
+}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
+  outline:2px solid #b7c7ff;
+  outline-offset:3px;
+}
+button.ghost { color:#d3dcf1; background:#182644; border-color:rgba(153,178,255,.24); }
+button.ghost:hover { border-color:#91aaff; background:#20335b; }
+button.succ { background:linear-gradient(135deg,#20b96c,#31ce7b); }
+button.danger { background:linear-gradient(135deg,#f15c68,#d94350); }
+.hint { color:#b3bfd9; font-size:12.5px; line-height:1.75; }
+.curprod { color:#c5d0eb; background:#101e39; border-color:rgba(153,178,255,.28); }
+.curprod b,.static { color:#aabaff; }
+.srow,.arow,.qrow,.testimoni-admin-card {
+  background:rgba(20,34,61,.72);
+  border-color:rgba(153,178,255,.2);
+}
+.testimoni-admin-card img { background:#091326; }
+#pinCard { max-width:460px; padding:30px 28px; }
+#pinCard .pinttl { color:#a9bcff; font-size:18px; }
+#pinCard .lockico { filter:drop-shadow(0 5px 14px rgba(75,105,255,.3)); }
+#preview,#catPreview { border-color:rgba(153,178,255,.3); }
+::selection { color:#fff; background:rgba(72,102,255,.55); }
+
+@media (min-width:1000px) {
+  body { padding:28px 30px 80px; }
+  .wrap { max-width:1280px; gap:18px 22px; }
+  #featMenu { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .wrap > #teksCard,
+  .wrap > #testimoniCard,
+  .wrap > #serverConfigCard,
+  .wrap > #akunDataCard,
+  .wrap > #slideCard,
+  .wrap > #catCard,
+  .wrap > #addCard,
+  .wrap > .card:last-child { grid-column:1 / -1; }
+  .wrap > h2.sect { margin-top:20px; }
+}
+@media (max-width:700px) {
+  body { padding:14px 12px 56px; }
+  h1 { gap:8px; padding:12px 13px; font-size:20px; }
+  h1 img { height:36px; }
+  .card { padding:17px 16px 19px; }
+  .minibar { overflow-x:auto; white-space:nowrap; scrollbar-width:thin; }
+  .minibar a { padding:8px 12px; }
+  .sheetbar { gap:8px; padding:7px 8px; }
+  .sbtag { font-size:10px; }
+}
+@media (max-width:430px) {
+  body { padding:10px 9px 44px; }
+  #featMenu { grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+  .tile { min-height:84px; padding:11px 7px; }
+  .tile .ico { width:40px; height:40px; font-size:19px; }
+  .tile .lbl { font-size:12px; }
+  h1 { font-size:18px; }
+  #adminV { font-size:10.5px; }
+  .card { padding:15px 13px 17px; }
+  .srow { gap:8px; padding:9px; }
+}
+</style><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700&amp;family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link rel="stylesheet" href="/_next/static/chunks/3tpmtx3k9xklq.css" data-n-g=""/><noscript data-n-css=""></noscript><script>(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push({"otherChunks":["static/chunks/1kw_lwvrv5_4r.js","static/chunks/1-7tb_z2bpwj9.js","static/chunks/3tpmtx3k9xklq.css"],"runtimeModuleIds":[783,6703]});
+(globalThis["TURBOPACK"] || (globalThis["TURBOPACK"] = [])).push({"otherChunks":["static/chunks/2elwaxa04mb2p.js"],"runtimeModuleIds":[783,9304]});</script><script src="/_next/static/chunks/1kw_lwvrv5_4r.js" defer=""></script><script src="/_next/static/chunks/1-7tb_z2bpwj9.js" defer=""></script><script src="/_next/static/chunks/turbopack-3-ry682tkyiqk.js" defer=""></script><script src="/_next/static/chunks/2elwaxa04mb2p.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_buildManifest.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_ssgManifest.js" defer=""></script><script src="/_next/static/Ax06xFQb-yLd0gAp_krZU/_clientMiddlewareManifest.js" defer=""></script></head><body><div id="__next"><div><div class="wrap">
+  <h1><img src="/ROCKSTARLOGO.png" alt="Rockstar">🔧 Admin Rockstar.Store <span id="adminV"></span></h1>
+
+  <div class="sheetbar" id="sheetBar">
+    <span class="sbtag">📦 Katalog</span>
+    <select id="sheetSel" onchange="loadItems()" title="Katalog yang dikelola">
+      <option value="Brainrot">Brainrot</option>
+      <option value="Akun">Akun</option>
+      <option value="Topup">Topup</option>
+      <option value="Joki">Joki</option>
+    </select>
+  </div>
+
+  <a id="analTopBtn" href="/analisis" class="widebtn">📊 Buka Panel Analisis →</a>
+
+  <div id="featMenu">
+    <a href="#teksCard" class="tile"><div class="ico">📢</div><div class="lbl">Teks Berjalan</div></a>
+    <a href="#akunDataCard" class="tile"><div class="ico">🔐</div><div class="lbl">Data Akun</div></a>
+    <a href="#mainCard" class="tile"><div class="ico">📦</div><div class="lbl">Produk</div></a>
+    <a href="#slideCard" class="tile"><div class="ico">🖼️</div><div class="lbl">Foto</div></a>
+    <a href="#catCard" class="tile"><div class="ico">🗂️</div><div class="lbl">Kategori</div></a>
+    <a href="#testimoniCard" class="tile"><div class="ico">⭐</div><div class="lbl">Testimoni</div></a>
+    <a href="#serverConfigCard" class="tile"><div class="ico">🔗</div><div class="lbl">Private Server</div></a>
+    <a href="#addCard" class="tile"><div class="ico">➕</div><div class="lbl">Tambah Baru</div></a>
+  </div>
+
+  <nav class="minibar" id="miniNav">
+    <a href="#teksCard">Teks</a><a href="#akunDataCard">Data Akun</a><a href="#mainCard">Produk</a><a href="#slideCard">Foto</a><a href="#catCard">Kategori</a><a href="#testimoniCard">Testimoni</a><a href="#serverConfigCard">Server</a><a href="#addCard">Tambah</a>
+  </nav>
+
+  <div class="card" id="pinCard">
+    <div class="lockico">🔐</div>
+    <div class="pinttl">Masuk Panel Admin</div>
+    <label>PIN Admin</label>
+    <input type="password" id="pinInput" placeholder="••••••" autocomplete="off">
+    <button onclick="unlock()">Buka Panel</button>
+  </div>
+
+  <div class="card" id="sheetCard" style="display:none;">
+    <p class="hint" style="margin-top:0;">Semua panel di bawah (foto, slide, harga, nama, kategori) mengikuti <b>katalog</b> yang dipilih di bar atas. Produk disimpan ke Supabase dan dibaca oleh storefront serta SSR Cloudflare Pages.</p>
+    <button id="reloadBtn" onclick="muatUlang()" class="ghost">🔄 Muat ulang katalog</button>
+    <div id="statusReload" style="font-size:12.5px;color:var(--mut);margin-top:6px;"></div>
+  </div>
+
+  <div class="card" id="teksCard" style="display:none;">
+    <label>📢 Teks berjalan web (baris kedua, kuning)</label>
+    <textarea id="teksInput" rows="2" placeholder="tulis pengumuman..."></textarea>
+    <div style="display:flex;gap:8px;">
+      <button id="teksBtn" onclick="saveTeks()" style="flex:1;">💾 Simpan Teks</button>
+      <button id="teksDefBtn" onclick="defaultTeks()" class="ghost" style="flex:1;">↩️ Balikin Default</button>
+    </div>
+    <div id="statusTeks"></div>
+    <p class="hint" style="margin-top:10px;">Kosongkan + simpan = kembali teks bawaan. Tersimpan di sheet baru "Info" baris INFO_TEKS (tidak campur Brainrot, jangan hapus baris itu).</p>
+    <label>💱 Kurs Malaysia (IDR per RM 1 — dipakai storefront)</label>
+    <div style="display:flex;gap:8px;">
+      <input type="number" id="kursInput" placeholder="misal 3600" style="flex:1">
+      <button id="kursBtn" onclick="saveKurs()" style="flex:1;">💱 Simpan Kurs</button>
+    </div>
+    <div id="statusKurs"></div>
+    <p class="hint">Nilai kurs di sini menjadi sumber konversi harga IDR ke MYR (RM) pada fitur mata uang storefront. Setelah menyimpan, muat ulang storefront agar nilai kurs terbaru digunakan.</p>
+  </div>
+
+  <h2 class="sect" id="sectTestimoni" style="display:none;">⭐ TESTIMONI — foto publik di galeri storefront</h2>
+  <div class="card" id="testimoniCard" style="display:none;">
+    <label>Tambah foto testimoni (maksimal 100 foto per proses)</label>
+    <input type="file" id="testimoniFiles" accept="image/*" multiple>
+    <button id="testimoniUploadBtn" onclick="uploadTestimoniPhotos()">⬆️ Upload Foto Testimoni</button>
+    <div id="testimoniUploadStatus"></div>
+    <button id="testimoniListToggle" type="button" class="ghost" aria-expanded="false" aria-controls="testimoniAdminList" onclick="toggleTestimoniAdminList()" disabled>Memuat daftar foto...</button>
+    <div id="testimoniBulkTools" class="testimoni-admin-tools" style="display:none;">
+      <label class="testimoni-select-all"><input id="testimoniSelectAll" type="checkbox" onchange="toggleAllTestimoniRows(this.checked)"> Pilih semua foto</label>
+      <span id="testimoniSelectionCount">0 dipilih</span>
+      <button id="testimoniDeleteBtn" type="button" class="danger" onclick="deleteSelectedTestimoniPhotos()" disabled>🗑️ Hapus yang dipilih</button>
+    </div>
+    <div id="testimoniAdminList" class="testimoni-admin-grid" style="display:none;"></div>
+    <p class="hint" style="margin-top:12px;">Foto otomatis dikecilkan menjadi WebP hingga 1600 px dan dibuat thumbnail 480 px. Foto yang diunggah tampil untuk umum di tombol “Lihat Semua Testimoni”. Hindari foto yang memuat nomor telepon, bukti transaksi, atau data pribadi tanpa izin.</p>
+  </div>
+
+  <h2 class="sect" id="sectServerConfig" style="display:none;">🔗 LINK PRIVATE SERVER — tampil di halaman server Rockstar</h2>
+  <div class="card" id="serverConfigCard" style="display:none;">
+    <label>Daftar link private server Roblox</label>
+    <div id="serverDraftList"></div>
+    <label>Nama server</label>
+    <input id="serverNameInput" type="text" maxlength="60" placeholder="misal: Server Grow A Garden 2">
+    <label>Link private server Roblox</label>
+    <input id="serverUrlInput" type="url" placeholder="https://www.roblox.com/share?code=...&amp;type=Server">
+    <button class="ghost" onclick="addServerDraft()">➕ Tambah ke daftar</button>
+    <button class="succ" id="serverSaveBtn" onclick="saveServerSettings()">💾 Simpan Daftar Server</button>
+    <div id="serverSettingsStatus"></div>
+    <p class="hint" style="margin-top:12px;">Perubahan langsung dibaca dari Supabase saat pengunjung membuka daftar server. Jika daftar belum disimpan, web tetap memakai link bawaan saat ini.</p>
+  </div>
+
+  <h2 class="sect" id="sectAkun" style="display:none;">🔐 DATA AKUN — id/pw per akun (pengunjung tidak bisa intip)</h2>
+
+  <div class="card" id="akunDataCard" style="display:none;">
+    <label>Produk akun</label>
+    <select id="akunProdSel" onchange="loadAkunData()"><option>Memuat...</option></select>
+    <div id="akunCount" style="font-size:13px;color:var(--mut);margin-top:8px;"></div>
+    <button id="akunRekapBtn" onclick="loadAkunRekap()" class="ghost">📋 Rekap Semua Produk</button>
+    <div id="akunRekap" style="margin-top:8px;font-size:13px;"></div>
+    <label>ID akun baru</label>
+    <input type="text" id="akunIdInput" placeholder="id- ...">
+    <label>Password baru</label>
+    <input type="text" id="akunPwInput" placeholder="pw- ...">
+    <label>Modal beli (Rp, opsional — biar ingat harga kulak)</label>
+    <input type="number" id="akunModalInput" placeholder="misal 80000">
+    <button id="akunAddBtn" onclick="addAkunData()">➕ Tambah Data Akun</button>
+    <div id="statusAkun"></div>
+    <div id="akunDataList" style="margin-top:12px;"></div>
+    <p class="hint" style="margin-top:10px;">Stok produk = jumlah READY otomatis. Lunas di analisis mengambilkan 1 READY tertua.</p>
+  </div>
+
+  <h2 class="sect" id="sectProd" style="display:none;">📦 PRODUK — yang di bawah ini mengubah BARANG terpilih</h2>
+
+  <div class="card" id="mainCard" style="display:none;">
+    <label>Barang (produk) yang diedit — berlaku untuk semua panel 📦 di bawah</label>
+    <input type="text" id="itemSearch" placeholder="🔍 Cari barang..." oninput="fillProductOptions(this.value.toLowerCase())" style="margin-bottom:8px;">
+    <select id="itemSel"><option>Memuat daftar barang...</option></select>
+  </div>
+
+  <div class="card" id="prevCard" style="display:none;">
+    <div style="display:flex;gap:14px;align-items:center;">
+      <img id="prevImg" alt="foto produk">
+      <div style="flex:1;min-width:0;">
+        <div id="prevName" style="font-weight:700;">-</div>
+        <div id="prevMeta" style="font-size:12.5px;color:var(--mut);margin-top:4px;">-</div>
+        <div id="prevPrice" style="font-family:'Oswald',sans-serif;font-size:22px;margin-top:4px;">-</div>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">Ubah lewat panel di bawah — preview ini ikut keganti otomatis.</p>
+    <button id="saveAllBtn" onclick="saveAll()" class="succ">💾 SIMPAN SEMUA PERUBAHAN</button>
+    <button id="delBtn" onclick="deleteProduct()" class="danger">🗑️ HAPUS BARANG INI</button>
+    <div id="statusAll"></div>
+    <p class="hint" style="margin-top:10px;">Satu tombol menyimpan Harga + Stok + Terjual + Nama baru sekaligus. Foto/slide tetap tersimpan instan masing-masing.</p>
+  </div>
+
+  <div class="card" id="slideCard" style="display:none;">
+    <label>Foto barang (maks 20 slide) — ganti / tambah / hapus di sini</label>
+    <div class="curprod">Barang: <b id="curProdSlide">-</b></div>
+    <div id="slideList"></div>
+    <label>Tambah dari file (kamera / galeri — bisa pilih banyak sekaligus)</label>
+    <input type="file" id="slideFileInput" accept="image/*" multiple onchange="stageFiles()">
+    <div id="stageList" style="margin-top:8px;"></div>
+    <button id="slideAddBtn" onclick="slideAddFile()">➕ Tambah Foto Ini</button>
+    <label>Tambah dari link (URL Drive / gambar)</label>
+    <input type="text" id="slideUrlInput" placeholder="https://...">
+    <button id="slideUrlBtn" onclick="slideAddUrl()">🔗 Tambah Link Ini</button>
+    <div id="statusSlide"></div>
+    <p class="hint" style="margin-top:14px;">Slide 1 = foto utama. Tersimpan di Supabase pada kolom <b>image</b> dipisah <b>|</b>, lalu web menampilkannya sebagai carousel.</p>
+  </div>
+
+  <h2 class="sect" id="sectCat" style="display:none;">🗂️ KATEGORI — yang di bawah ini mengubah DISPLAY kategori</h2>
+
+  <div class="card" id="catCard" style="display:none;">
+    <label>Kategori yang diedit (foto display)</label>
+    <input type="text" id="catSearch" placeholder="🔍 Cari kategori..." oninput="fillCatOptions(this.value.toLowerCase())" style="margin-bottom:8px;">
+    <select id="catSel"><option>Memuat kategori...</option></select>
+    <label>Foto display lama</label>
+    <img id="catOld" alt="foto display lama">
+    <div id="catOldCap" style="font-size:12px;color:var(--mut);margin-top:6px;word-break:break-all;">-</div>
+
+    <label>Foto kategori baru (kamera / galeri)</label>
+    <input type="file" id="catFileInput" accept="image/*">
+    <img id="catPreview" alt="preview">
+
+    <button id="catUpBtn" onclick="uploadCat()">🖼️ Upload & Pasang Foto Kategori</button>
+    <div id="statusCat"></div>
+    <p class="hint" style="margin-top:14px;">Contoh: pilih kategori <b>be flash for brainrot</b> lalu upload — otomatis mengganti <b>img: "BE FALSH DISPLAY.webp"</b> di web. Tersimpan sebagai baris <b>CAT:be flash for brainrot</b> di Sheet, tidak tampil sebagai produk. Kalau backend belum buat baris otomatis, tambah manual 1 baris di Sheet: name=<b>CAT:be flash for brainrot</b>, kategori=<b>be flash for brainrot</b>, image=kosongkan, lalu upload ulang dari sini.</p>
+  </div>
+
+  <div class="card" id="editCard" style="display:none;">
+    <div class="curprod">Barang: <b id="curProdEdit">-</b></div>
+    <label>Kategori barang terpilih</label>
+    <div id="catInfo" class="static">-</div>
+    <label>Harga baru (IDR / Rp)</label>
+    <input type="number" id="priceInput" placeholder="misal 15000">
+    <label>Stok baru</label>
+    <input type="number" id="stockInput" placeholder="misal 10">
+    <label>Terjual baru (sold, angka display)</label>
+    <input type="number" id="soldInput" placeholder="misal 100">
+    <label>Harga coret / diskon (opsional — tampil coret bila LEBIH BESAR dari harga)</label>
+    <input type="number" id="coretInput" placeholder="misal 30000, kosongkan = tanpa diskon">
+    <label>Deskripsi produk (opsional)</label>
+    <textarea id="descInput" rows="3" placeholder="misal: Proses kilat, full garansi..."></textarea>
+    <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas.</p>
+  </div>
+
+  <div class="card" id="renameCard" style="display:none;">
+    <div class="curprod">Barang: <b id="curProdRename">-</b></div>
+    <label>Kategori barang terpilih</label>
+    <div id="catInfo2" class="static">-</div>
+    <label>Nama baru barang</label>
+    <input type="text" id="nameInput" placeholder="nama lengkap baru">
+    <p class="hint" style="margin-top:10px;">Simpan via tombol hijau di atas. Perubahan nama tersimpan di Supabase dan digunakan web.</p>
+  </div>
+
+  <div class="card" id="renameCatCard" style="display:none;">
+    <label>Ganti nama kategori</label>
+    <label>Kategori lama</label>
+    <div id="catRenameOldName" class="static">-</div>
+    <select id="catRenameSel"><option>Memuat kategori...</option></select>
+    <label>Nama kategori baru</label>
+    <input type="text" id="catNameInput" placeholder="misal KOTAK GULUNG BRAINROT NEW">
+    <button id="renameCatBtn" onclick="renameCat()">✏️ Ganti Nama Kategori</button>
+    <button id="delCatBtn" onclick="deleteCategory()" class="danger">🗑️ HAPUS KATEGORI + ISINYA</button>
+    <div id="statusCatRename"></div>
+    <p class="hint" style="margin-top:14px;">Mengubah kolom <b>kategori</b> di SEMUA barang + baris <b>CAT:</b>-nya sekaligus. Foto display diganti lewat card <b>Foto display kategori</b> di atas.</p>
+  </div>
+
+  <h2 class="sect" id="sectAdd" style="display:none;">➕ TAMBAH BARU</h2>
+
+  <div class="card" id="addCard" style="display:none;">
+    <label>Tambah kategori baru</label>
+    <input type="text" id="addCatName" placeholder="misal KOTAK GULUNG UNTUK BRAINROT">
+    <label>Foto display kategori (opsional)</label>
+    <input type="file" id="addCatFile" accept="image/*">
+    <button id="addCatBtn" onclick="addCategory()">➕ Tambah Kategori</button>
+    <div id="statusAddCat"></div>
+    <label style="margin-top:18px;">Tambah produk baru</label>
+    <input type="text" id="addName" placeholder="nama lengkap produk">
+    <select id="addCatSel"><option>Memuat kategori...</option></select>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <input type="number" id="addPrice" placeholder="Harga IDR (Rp)" aria-label="Harga produk dalam IDR" style="flex:1">
+      <input type="number" id="addStock" placeholder="stok" style="flex:1">
+    </div>
+    <input type="number" id="addCoret" placeholder="harga coret / diskon (opsional)" style="margin-top:8px;">
+    <textarea id="addDesc" rows="2" placeholder="deskripsi produk (opsional)" style="margin-top:8px;"></textarea>
+    <label>Foto produk (opsional, bisa tambah lagi maks 20 via panel slide)</label>
+    <input type="file" id="addFile" accept="image/*">
+    <button id="addBtn" onclick="addProduct()">➕ Tambah Produk</button>
+    <div id="statusAdd"></div>
+    <p class="hint" style="margin-top:14px;">Harga yang dimasukkan di Admin Panel selalu dalam <b>IDR (Rp)</b> dan tetap menjadi harga utama di storefront. Jika pengunjung memilih mata uang lain, nilai konversinya tampil di bawah harga Rp. Konversi <b>MYR (RM)</b> mengikuti Kurs Malaysia yang disimpan di panel ini; produk baru dan perubahan harga otomatis ikut tersinkron tanpa deploy. Kategori baru otomatis punya baris <b>CAT:</b> yang disembunyikan dari daftar produk.</p>
+  </div>
+
+  <div class="card">
+    <p class="hint">Produk, harga dasar IDR, stok, kategori, dan foto tersimpan di katalog yang sama dengan storefront SSR. Harga MYR/RM dihitung otomatis dari harga IDR memakai Kurs Malaysia yang diatur di atas. Muat ulang storefront untuk melihat perubahan; data SSR di edge diperbarui paling lama sekitar 20 detik. Perubahan produk tidak perlu deploy—GitHub digunakan saat mengubah kode.</p>
+  </div>
+</div></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{}},"page":"/admin","query":{},"buildId":"Ax06xFQb-yLd0gAp_krZU","nextExport":true,"autoExport":true,"isFallback":false,"scriptLoader":[]}</script></body></html>
