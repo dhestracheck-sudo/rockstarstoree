@@ -218,13 +218,52 @@ function bnSync(){
   });
 }
 
-/* ===== panel menu atas (gaya exstore: ☰ buka/tutup, pindah pencarian ke menu di HP) ===== */
-function toggleMnav(){
-  const m = document.getElementById("mnav");
-  if(!m) return;
-  const open = !m.classList.contains("open");
-  m.classList.toggle("open", open);
-  document.body.style.overflow = open ? "hidden" : "";
+/* ===== panel menu atas (gaya exstore: ☰ buka/tutup, pindah pencarian ke menu di HP) ===== */
+let mnavSavedScrollY = 0;
+let mnavSavedBodyStyles = null;
+function lockPageScrollForMnav(){
+  const body = document.body;
+  if(body.classList.contains("mnav-scroll-locked")) return;
+  mnavSavedScrollY = window.scrollY || window.pageYOffset || 0;
+  mnavSavedBodyStyles = {
+    position: body.style.position,
+    top: body.style.top,
+    left: body.style.left,
+    right: body.style.right,
+    width: body.style.width,
+    overflow: body.style.overflow
+  };
+  document.documentElement.classList.add("mnav-scroll-locked");
+  body.classList.add("mnav-scroll-locked");
+  body.style.position = "fixed";
+  body.style.top = "-" + mnavSavedScrollY + "px";
+  body.style.left = "0";
+  body.style.right = "0";
+  body.style.width = "100%";
+  body.style.overflow = "hidden";
+}
+function unlockPageScrollForMnav(){
+  const body = document.body;
+  if(!body.classList.contains("mnav-scroll-locked")) return;
+  document.documentElement.classList.remove("mnav-scroll-locked");
+  body.classList.remove("mnav-scroll-locked");
+  const saved = mnavSavedBodyStyles || {};
+  body.style.position = saved.position || "";
+  body.style.top = saved.top || "";
+  body.style.left = saved.left || "";
+  body.style.right = saved.right || "";
+  body.style.width = saved.width || "";
+  body.style.overflow = saved.overflow || "";
+  window.scrollTo(0, mnavSavedScrollY);
+  mnavSavedBodyStyles = null;
+}
+function toggleMnav(){
+  const m = document.getElementById("mnav");
+  if(!m) return;
+  const open = !m.classList.contains("open");
+  m.classList.toggle("open", open);
+  if(open) lockPageScrollForMnav();
+  else unlockPageScrollForMnav();
   const b = document.getElementById("burgerBtn");
   if(b) b.textContent = open ? "✕" : "☰";
   if(open){
