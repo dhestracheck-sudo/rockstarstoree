@@ -11,7 +11,7 @@ export default function SiteFooter() {
   return (
     <footer className="site-footer">
       <a className="site-footer-brand" href="/" aria-label="Rockstar.Store beranda">
-        <img src="/ROCKSTARLOGO.webp" alt="" width="52" height="52" loading="lazy" />
+        <img src="/ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="52px" alt="" width="52" height="52" loading="lazy" />
         <span>ROCKSTAR.STORE</span>
       </a>
 

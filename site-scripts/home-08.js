@@ -7,13 +7,19 @@ const IMG = "";
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.webp";
 function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
 /* Thumbnail hemat: sisipkan thumb_ untuk file Storage (fallback ke full bila belum ada) */
-function thumbOf(u){
-  u = String(u || "");
-  if(!u || u.indexOf("/thumb_") !== -1) return u;
-  if(u.indexOf("/storage/v1/object/") === -1) return u;
-  const i = u.lastIndexOf("/");
-  return u.slice(0, i + 1) + "thumb_" + u.slice(i + 1);
-}
+function thumbOf(u){
+  u = String(u || "");
+  if(!u || u.indexOf("/thumb_") !== -1) return u;
+  if(u.indexOf("/storage/v1/object/") === -1) return u;
+  const i = u.lastIndexOf("/");
+  return u.slice(0, i + 1) + "thumb_" + u.slice(i + 1);
+}
+function tinyOf(u){
+  u = String(u || "");
+  const match = u.match(/^(.*\/storage\/v1\/object\/public\/foto\/)(?:thumb_|tiny_)?([^/?#]+)([?#].*)?$/i);
+  if(!match) return thumbOf(u);
+  return match[1] + "tiny_" + match[2] + (match[3] || "");
+}
 function thumbTag(full, attrs){
   full = fixImg(full);
   const t = thumbOf(full);
@@ -1496,20 +1502,25 @@ function paintHot(){
         card.addEventListener("click", function(){ openDetail(r.page, r.i, r.j); });
         const image = document.createElement("img");
         const fullImage = fixImg(item.img || (item.images && item.images[0]) || r.cat.img);
-        image.src = thumbOf(fullImage);
+        image.src = tinyOf(fullImage);
+        image.dataset.thumb = thumbOf(fullImage);
         image.dataset.full = fullImage;
         image.alt = "";
         image.loading = "lazy";
         image.decoding = "async";
         image.onerror = function(){
-          if(image.dataset.full && image.src !== image.dataset.full){
-            const fallback = image.dataset.full;
-            image.dataset.full = "";
-            image.src = fallback;
-          } else {
-            image.onerror = null;
-            image.src = FALLBACK_IMG;
-          }
+          const sameUrl = function(url){
+            try { return image.src === new URL(url, location.href).href; }
+            catch(e){ return image.src === url; }
+          };
+          let fallback = image.dataset.thumb;
+          image.dataset.thumb = "";
+          if(fallback && !sameUrl(fallback)){ image.src = fallback; return; }
+          fallback = image.dataset.full;
+          image.dataset.full = "";
+          if(fallback && !sameUrl(fallback)){ image.src = fallback; return; }
+          image.onerror = null;
+          image.src = FALLBACK_IMG;
         };
         const info = document.createElement("span");
         info.className = "hot-product-info";

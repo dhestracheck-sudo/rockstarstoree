@@ -33,6 +33,22 @@ const PUBLIC_SUPABASE_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
 const PUBLIC_SUPABASE_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
 const HOT_PRODUCT_TABLES = ["brainrot", "akun", "topup", "joki"];
 
+function getProductImageVariant(image, prefix) {
+  try {
+    const url = new URL(image);
+    const objectPrefix = "/storage/v1/object/public/foto/";
+    if (url.origin !== PUBLIC_SUPABASE_URL || !url.pathname.startsWith(objectPrefix)) return image;
+    const objectPath = url.pathname.slice(objectPrefix.length);
+    const slash = objectPath.lastIndexOf("/");
+    const directory = slash < 0 ? "" : objectPath.slice(0, slash + 1);
+    const filename = objectPath.slice(slash + 1).replace(/^(?:thumb_|tiny_)/, "");
+    url.pathname = `${objectPrefix}${directory}${prefix}_${filename}`;
+    return url.toString();
+  } catch {
+    return image;
+  }
+}
+
 async function getInitialHotProducts() {
   const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const headers = {
@@ -73,7 +89,7 @@ async function getInitialHotProducts() {
       const price = Number(row?.price) || 0;
       if (!name || name.startsWith("CAT:") || price <= 0 || seenProducts.has(name)) continue;
       seenProducts.add(name);
-      const rawImage = String(row?.image || "").trim();
+      const rawImage = String(row?.image || "").split("|")[0].trim();
       const image = rawImage
         ? (/^https?:\/\//i.test(rawImage)
           ? rawImage.replace(/^http:/i, "https:")
@@ -83,6 +99,8 @@ async function getInitialHotProducts() {
         name,
         price,
         image,
+        thumbnail: getProductImageVariant(image, "tiny"),
+        fallbackThumbnail: getProductImageVariant(image, "thumb"),
         clicks: clicks.get(name) || 0,
         views: Number(row?.dilihat) || 0,
         sold: Number(row?.sold) || 0,
@@ -278,7 +296,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
       </Head>
       {"\r\n\r\n"}
       <div id="loader">
-        <img src="ROCKSTARLOGO.webp" alt="Rockstar" width="110" height="110" />
+        <img src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-220.webp 220w, /optimized/ROCKSTARLOGO-400.webp 400w, /ROCKSTARLOGO.webp 500w" sizes="110px" alt="Rockstar" width="110" height="110" />
         <div className="spin" />
       </div>
       {"\r\n\r\n"}
@@ -301,7 +319,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
         <header>
           {"\r\n  "}
           <a className="brand" href="/" onClick={(event) => { goHome(); event.preventDefault(); return false; }} title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda">
-            <img src="ROCKSTARLOGO.webp" alt="Rockstar.Store" width="34" height="34" />
+            <img src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="34px" alt="Rockstar.Store" width="34" height="34" />
             {" "}
             <span className="brandshine">
               {"ROCKSTAR.STORE"}
@@ -573,7 +591,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
         </div>
       {"\r\n  "}
       <div className="hero-visual">
-        <img className="hero-logo" src="ROCKSTARLOGO.webp" alt="Rockstar.Store" width="500" height="500" fetchPriority="high" decoding="async" />
+        <img className="hero-logo" src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-220.webp 220w, /optimized/ROCKSTARLOGO-400.webp 400w, /ROCKSTARLOGO.webp 500w" sizes="200px" alt="Rockstar.Store" width="500" height="500" fetchPriority="high" decoding="async" />
       </div>
       </section>
       {"\r\n"}
@@ -758,15 +776,30 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
                     key={`${isClone ? "clone-" : ""}${product.name}-${index}`}
                   >
                     <img
-                      src={product.image}
+                      src={product.thumbnail || product.image}
+                      data-fallback={product.fallbackThumbnail !== product.thumbnail ? product.fallbackThumbnail : ""}
+                      data-full={product.image !== product.fallbackThumbnail ? product.image : ""}
                       alt=""
                       width={68}
                       height={68}
                       loading="lazy"
                       decoding="async"
                       onError={(event) => {
-                        event.currentTarget.onerror = null;
-                        event.currentTarget.src = "/ROCKSTARLOGO.webp";
+                        const image = event.currentTarget;
+                        const fallback = image.dataset.fallback;
+                        image.dataset.fallback = "";
+                        if (fallback && image.getAttribute("src") !== fallback) {
+                          image.src = fallback;
+                          return;
+                        }
+                        const fullImage = image.dataset.full;
+                        image.dataset.full = "";
+                        if (fullImage && image.getAttribute("src") !== fullImage) {
+                          image.src = fullImage;
+                          return;
+                        }
+                        image.onerror = null;
+                        image.src = "/ROCKSTARLOGO.webp";
                       }}
                     />
                     <span className="hot-product-info">
@@ -964,7 +997,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
           {"\r\n    "}
           <button className="rc-btn" id="waBtn" onClick={(event) => { openWaChat() }} aria-label="Chat WhatsApp Min Rock" title="Chat Min Rock di WhatsApp">
             {"\r\n      "}
-            <img src="figur-8064.webp" alt="Min Rock" width="110" height="110" loading="lazy" />
+            <img src="figur-8064.webp" srcSet="/optimized/figur-8064-220.webp 220w, /figur-8064.webp 524w" sizes="110px" alt="Min Rock" width="110" height="110" loading="lazy" />
             {"\r\n    "}
           </button>
           {"\r\n  "}
@@ -975,7 +1008,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
           <div className="wachead">
             {"\r\n      "}
             <span className="walogo">
-              <img src="figur-8064.webp" alt="Min Rock" width="110" height="110" loading="lazy" onError={(event) => { event.currentTarget.style.display='none';event.currentTarget.parentNode.classList.add('nolabel'); }} />
+              <img src="figur-8064.webp" srcSet="/optimized/figur-8064-220.webp 220w, /figur-8064.webp 524w" sizes="40px" alt="Min Rock" width="110" height="110" loading="lazy" onError={(event) => { event.currentTarget.style.display='none';event.currentTarget.parentNode.classList.add('nolabel'); }} />
             </span>
             {"\r\n      "}
             <div>
@@ -1129,7 +1162,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
       <section className="section server-cta" id="serverCta">
         {"\n  "}
         <a className="ava-big" href="#server" onClick={(event) => { openServerModal(); event.preventDefault(); return false; }} title="Lihat Link Server">
-          <img src="ROCKSTAR AVATAR.webp?v=2" alt="Rockstar Avatar - Link Server" width="581" height="583" loading="lazy" decoding="async" />
+          <img src="ROCKSTAR AVATAR.webp?v=2" srcSet="/optimized/ROCKSTAR AVATAR-280.webp 280w, /optimized/ROCKSTAR AVATAR-560.webp 560w, /ROCKSTAR AVATAR.webp?v=2 581w" sizes="(max-width: 600px) 110px, 278px" alt="Rockstar Avatar - Link Server" width="581" height="583" loading="lazy" decoding="async" />
         </a>
         {"\n  "}
         <div className="ava-caption">

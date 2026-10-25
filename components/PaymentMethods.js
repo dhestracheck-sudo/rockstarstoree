@@ -4,8 +4,8 @@ const methods = [
   { name: "DANA", image: "/optimized/payment-dana.webp?v=logos-20261026-2", width: 72, height: 96 },
   { name: "ShopeePay", image: "/optimized/payment-shopee.webp?v=logos-20261026-2", width: 110, height: 110 },
   { name: "OVO", image: "/optimized/payment-ovo.webp?v=logos-20261026-2", width: 64, height: 86 },
-  { name: "Transfer Bank", image: "/optimized/all-bank.webp?v=logos-20261026-2", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
-  { name: "Binance Pay", image: "/optimized/payment-binance.webp?v=logos-20261026-2", kind: "binance", alt: "BINANCE", width: 512, height: 107 },
+  { name: "Transfer Bank", image: "/optimized/all-bank.webp?v=logos-20261026-2", srcSet: "/optimized/all-bank-108.webp 108w, /optimized/all-bank.webp 160w", sizes: "54px", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
+  { name: "Binance Pay", image: "/optimized/payment-binance.webp?v=logos-20261026-2", srcSet: "/optimized/payment-binance-104.webp 104w, /optimized/payment-binance.webp 512w", sizes: "52px", kind: "binance", alt: "BINANCE", width: 512, height: 107 },
 ];
 
 export default function PaymentMethods() {
@@ -33,6 +33,8 @@ export default function PaymentMethods() {
               <div className={`payment-method-mark ${method.kind || ""}`}>
                 <img
                   src={method.image}
+                  srcSet={method.srcSet}
+                  sizes={method.sizes}
                   alt={method.alt || method.name}
                   width={method.width}
                   height={method.height}
