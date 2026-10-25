@@ -16,7 +16,7 @@ const staticExtensions = new Set([
 const specialFiles = new Set(['CNAME', '_headers']);
 
 await mkdir(publicDirectory, { recursive: true });
-await Promise.all(['package.json', 'package-lock.json'].map((name) =>
+await Promise.all(['package.json', 'package-lock.json', 'sitemap.xml'].map((name) =>
   rm(path.join(publicDirectory, name), { force: true }),
 ));
 await mkdir(publicSiteScriptsDirectory, { recursive: true });

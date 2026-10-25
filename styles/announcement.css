@@ -546,9 +546,8 @@ body .hot-product-meta {
   line-height: 1.35;
 }
 
-body .hot-product-track:hover,
-body .hot-product-track:focus-within {
-  animation-play-state: paused;
+@media (hover: hover) and (pointer: fine) {
+  body .hot-product-track:hover { animation-play-state: paused; }
 }
 
 body .hot-product-message {

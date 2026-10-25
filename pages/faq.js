@@ -19,7 +19,7 @@ const faqSchema = {
       name: 'Bagaimana cara membayar?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Pembayaran dilakukan melalui QRIS. Setelah membayar, kirim bukti pembayaran kepada admin agar pesanan dapat diproses.',
+        text: 'Pilih metode pembayaran yang tersedia pada halaman checkout dan ikuti instruksi yang ditampilkan. Hubungi admin melalui WhatsApp jika membutuhkan bantuan pembayaran.',
       },
     },
     {
@@ -48,7 +48,7 @@ export default function FaqPage({ ssrGeneratedAt }) {
         {"\n"}
         <meta name="theme-color" content="#060913" />
         {"\n"}
-        <meta name="description" content="Panduan cara membeli di Rockstar.Store dan jawaban atas pertanyaan umum tentang pemesanan, pembayaran, dan pengiriman item." />
+        <meta name="description" content="Panduan cara membeli di Rockstar.Store: pilih produk, lakukan pemesanan, bayar dengan metode yang tersedia, dan terima item Roblox." />
         <meta name="rs:ssr-rendered-at" content={ssrGeneratedAt} />
         {"\n"}
         <meta name="robots" content="index,follow" />
@@ -59,13 +59,17 @@ export default function FaqPage({ ssrGeneratedAt }) {
         {"\n"}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Rockstar.Store" />
+        <meta property="og:locale" content="id_ID" />
         <meta property="og:title" content="FAQ & Cara Beli | Rockstar.Store" />
-        <meta property="og:description" content="Panduan cara memesan, membayar, dan menerima item di Rockstar.Store." />
+        <meta property="og:description" content="Panduan cara membeli di Rockstar.Store: pilih produk, lakukan pemesanan, bayar dengan metode yang tersedia, dan terima item Roblox." />
         <meta property="og:url" content="https://rockstarstore.id/faq" />
         <meta property="og:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
+        <meta property="og:image:alt" content="Logo Rockstar.Store" />
+        <link rel="alternate" hrefLang="id" href="https://rockstarstore.id/faq" />
+        <link rel="alternate" hrefLang="x-default" href="https://rockstarstore.id/faq" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="FAQ & Cara Beli | Rockstar.Store" />
-        <meta name="twitter:description" content="Panduan cara memesan, membayar, dan menerima item di Rockstar.Store." />
+        <meta name="twitter:description" content="Panduan cara membeli di Rockstar.Store: pilih produk, lakukan pemesanan, bayar dengan metode yang tersedia, dan terima item Roblox." />
         <meta name="twitter:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
         <link rel="icon" type="image/png" href="ROCKSTARLOGO.png" />
         <script
@@ -181,7 +185,7 @@ export default function FaqPage({ ssrGeneratedAt }) {
             </h2>
           </div>
           <p>
-            {"Bayar melalui QRIS, lalu kirim bukti pembayaran kepada admin."}
+            {"Pilih metode pembayaran yang tersedia saat checkout, lalu ikuti instruksi pembayaran yang tampil."}
           </p>
         </article>
         {"\n    "}
@@ -224,7 +228,7 @@ export default function FaqPage({ ssrGeneratedAt }) {
               {"Bagaimana cara membayar?"}
             </summary>
             <p>
-              {"Pembayaran dilakukan melalui QRIS. Setelah membayar, kirim bukti pembayaran kepada admin agar pesanan dapat diproses."}
+              {"Pilih metode pembayaran yang tersedia pada halaman checkout dan ikuti instruksi yang ditampilkan. Hubungi admin melalui WhatsApp jika membutuhkan bantuan pembayaran."}
             </p>
           </details>
           {"\n      "}

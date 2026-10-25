@@ -1455,23 +1455,31 @@ function syncWishCount(){
 function paintHot(){
   const track = document.getElementById("hotProductTrack");
   if(!track) return;
+  if(paintHot.controller) paintHot.controller.abort();
+  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+  paintHot.controller = controller;
   const requestId = (paintHot.requestId || 0) + 1;
   paintHot.requestId = requestId;
-  track.innerHTML = '<div class="hot-product-message">Memuat produk pilihan…</div>';
-  let hasRendered = false;
+  const hasExistingCards = Boolean(track.querySelector(".hot-product-group"));
+  if(!hasExistingCards) track.innerHTML = '<div class="hot-product-message">Memuat produk pilihan…</div>';
+  let hasRendered = hasExistingCards;
   const fallbackTimer = window.setTimeout(function(){
     if(!hasRendered) renderProducts(catalogFallback());
   }, 2500);
 
-  function renderProducts(products){
+  function renderProducts(products, finished){
     if(requestId !== paintHot.requestId || !track.isConnected) return;
+    products = Array.isArray(products) ? products : [];
+    if(!products.length){
+      if(!track.querySelector(".hot-product-group") && finished){
+        track.innerHTML = '<div class="hot-product-message">Produk pilihan sedang dimuat dari katalog.</div>';
+        hasRendered = true;
+      }
+      return;
+    }
     hasRendered = true;
     window.clearTimeout(fallbackTimer);
     track.replaceChildren();
-    if(!products.length){
-      track.innerHTML = '<div class="hot-product-message">Belum ada produk yang tersedia saat ini.</div>';
-      return;
-    }
     function makeGroup(isClone){
       const group = document.createElement("div");
       group.className = "hot-product-group";
@@ -1540,7 +1548,6 @@ function paintHot(){
   }
 
   const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
-  const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
   const requestTimeout = window.setTimeout(function(){
     if(controller) controller.abort();
   }, 5000);
@@ -1560,11 +1567,12 @@ function paintHot(){
       const r = resolveWish(name);
       return r ? { r: r, clicks: frequency[name] } : null;
     }).filter(Boolean).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
-    renderProducts(popular.length ? popular : catalogFallback());
+    renderProducts(popular.length ? popular : catalogFallback(), true);
   }).catch(function(){
-    renderProducts(catalogFallback());
+    if(!hasRendered) renderProducts(catalogFallback(), true);
   }).finally(function(){
     window.clearTimeout(requestTimeout);
+    window.clearTimeout(fallbackTimer);
   });
 }
 
@@ -2027,7 +2035,12 @@ function loadLiveStock(){
   }).then(res => {
     const b = res[0] || [], t = res[1] || [], a = res[2] || [], jk = res[3] || [], info = res[4] || [];
     try {
-      if(!userMoved) applySnap(b, t, a, jk, info);
+      const catalogAlreadyLoaded = [brainrotCategories, topupCategories, akunCategories, jokiCategories]
+        .some(function(categories){ return categories.length > 0; });
+      // On a first visit there may be no cached catalog yet. Keep the fresh data in
+      // memory even if the visitor has started scrolling so Hot Product can resolve
+      // its cards without forcing a page-wide rerender or moving their scroll position.
+      if(!userMoved || !catalogAlreadyLoaded) applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
       if (t.length) saveCached("Topup", t);
       if (a.length) saveCached("Akun", a);
