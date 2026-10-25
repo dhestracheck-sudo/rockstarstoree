@@ -29,6 +29,72 @@ const SEO_PAGES = {
   },
 };
 
+const PUBLIC_SUPABASE_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
+const PUBLIC_SUPABASE_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
+const HOT_PRODUCT_TABLES = ["brainrot", "akun", "topup", "joki"];
+
+async function getInitialHotProducts() {
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const headers = {
+    apikey: PUBLIC_SUPABASE_KEY,
+    Authorization: `Bearer ${PUBLIC_SUPABASE_KEY}`,
+  };
+  const request = async (path) => {
+    try {
+      const response = await fetch(`${PUBLIC_SUPABASE_URL}/rest/v1/${path}`, {
+        headers,
+        signal: AbortSignal.timeout(1800),
+        cache: "no-store",
+      });
+      return response.ok ? await response.json() : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const [clickRows, ...catalogRows] = await Promise.all([
+    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte.${encodeURIComponent(since)}`),
+    ...HOT_PRODUCT_TABLES.map((table) =>
+      request(`${table}?select=name,price,image,sold,dilihat&order=urutan&limit=1000`),
+    ),
+  ]);
+
+  const clicks = new Map();
+  for (const row of Array.isArray(clickRows) ? clickRows : []) {
+    const name = String(row?.name || "").trim();
+    if (name) clicks.set(name, (clicks.get(name) || 0) + 1);
+  }
+
+  const products = [];
+  const seenProducts = new Set();
+  for (const rows of catalogRows) {
+    for (const row of Array.isArray(rows) ? rows : []) {
+      const name = String(row?.name || "").trim();
+      const price = Number(row?.price) || 0;
+      if (!name || name.startsWith("CAT:") || price <= 0 || seenProducts.has(name)) continue;
+      seenProducts.add(name);
+      const rawImage = String(row?.image || "").trim();
+      const image = rawImage
+        ? (/^https?:\/\//i.test(rawImage)
+          ? rawImage.replace(/^http:/i, "https:")
+          : rawImage.startsWith("/") ? rawImage : `/${rawImage}`)
+        : "/ROCKSTARLOGO.webp";
+      products.push({
+        name,
+        price,
+        image,
+        clicks: clicks.get(name) || 0,
+        views: Number(row?.dilihat) || 0,
+        sold: Number(row?.sold) || 0,
+      });
+    }
+  }
+
+  return products
+    .sort((a, b) => b.clicks - a.clicks || b.views - a.views || b.sold - a.sold)
+    .slice(0, 8);
+}
+
 const storeJsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -112,15 +178,20 @@ function getHomeSeo(query = {}) {
 }
 
 export async function getServerSideProps(context) {
+  const hotProducts = context.query.q ? [] : await getInitialHotProducts();
+  if (!context.query.q) {
+    context.res.setHeader("Cache-Control", "public, s-maxage=30, stale-while-revalidate=120");
+  }
   return {
     props: {
       ssrGeneratedAt: new Date().toISOString(),
       seo: getHomeSeo(context.query),
+      hotProducts,
     },
   };
 }
 
-export default function HomePage({ ssrGeneratedAt, seo }) {
+export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
   return (
     <>
       <Head>
@@ -675,7 +746,36 @@ export default function HomePage({ ssrGeneratedAt, seo }) {
         </div>
         <div className="hot-product-window" aria-label="Produk terpopuler">
           <div className="hot-product-track" id="hotProductTrack" aria-live="polite">
-            <div className="hot-product-message">{"Memuat produk populer…"}</div>
+            {hotProducts?.length ? [false, true].map((isClone) => (
+              <div className="hot-product-group" aria-hidden={isClone || undefined} key={isClone ? "clone" : "products"}>
+                {hotProducts.map((product, index) => (
+                  <a
+                    className="hot-product-card"
+                    href={`/?q=${encodeURIComponent(product.name)}`}
+                    aria-label={`${product.name}, Rp ${Number(product.price).toLocaleString("id-ID")}`}
+                    tabIndex={isClone ? -1 : 0}
+                    key={`${isClone ? "clone-" : ""}${product.name}-${index}`}
+                  >
+                    <img
+                      src={product.image}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = "/ROCKSTARLOGO.webp";
+                      }}
+                    />
+                    <span className="hot-product-info">
+                      <span className="hot-product-name">{product.name}</span>
+                      <span className="hot-product-meta">
+                        {product.clicks > 0 ? `🔥 ${product.clicks}x · ` : "🔥 Hot product · "}Rp {Number(product.price).toLocaleString("id-ID")}
+                      </span>
+                    </span>
+                  </a>
+                ))}
+              </div>
+            )) : <div className="hot-product-message">{"Memuat produk populer…"}</div>}
           </div>
         </div>
       </section>

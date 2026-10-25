@@ -502,6 +502,7 @@ body .hot-product-card {
   background: rgba(5, 8, 18, 0.76);
   color: #fff;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -572,11 +573,6 @@ body .hot-product-message {
   body .hot-product-heading span { font-size: 13px; }
   body .hot-product-card { width: 196px; min-height: 76px; gap: 8px; }
   body .hot-product-card img { width: 60px; height: 60px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body .hot-product-window { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
-  body .hot-product-track { animation: none; }
 }
 
 /* Testimonial gallery from the live Rockstar.Store home page. */
