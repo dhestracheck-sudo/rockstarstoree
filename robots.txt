@@ -2,5 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /analisis.html
+Disallow: /admin
+Disallow: /analisis
+Disallow: /kantor
 
 Sitemap: https://rockstarstore.id/sitemap.xml
