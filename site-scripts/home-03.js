@@ -1,5 +1,39 @@
-
-!function(w,d,t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[
-"page","track","identify","instances","debug","on","off","once","ready","alias",
-"group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){
-ttq.push([t].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};ttq.load('YOUR_TIKTOK_PIXEL_ID');ttq.page();}(window,document,'ttq');
+(function (window, document, name) {
+  const pixelId = String(window.ROCKSTAR_TIKTOK_PIXEL_ID || "").trim();
+  if (!pixelId || /YOUR_/i.test(pixelId)) return;
+
+  const ttq = (window[name] = window[name] || []);
+  ttq.methods = [
+    "page", "track", "identify", "instances", "debug", "on", "off", "once",
+    "ready", "alias", "group", "enableCookie", "disableCookie",
+  ];
+  ttq.setAndDefer = function (target, method) {
+    target[method] = function () {
+      target.push([target].concat(Array.prototype.slice.call(arguments, 0)));
+    };
+  };
+  for (let i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]);
+  ttq.instance = function (id) {
+    const instance = ttq._i[id] || [];
+    for (let i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(instance, ttq.methods[i]);
+    return instance;
+  };
+  ttq.load = function (id, options) {
+    const url = "https://analytics.tiktok.com/i18n/pixel/events.js";
+    ttq._i = ttq._i || {};
+    ttq._i[id] = [];
+    ttq._i[id]._u = url;
+    ttq._t = ttq._t || {};
+    ttq._t[id] = +new Date();
+    ttq._o = ttq._o || {};
+    ttq._o[id] = options || {};
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src = url + "?sdkid=" + id + "&lib=" + name;
+    const firstScript = document.getElementsByTagName("script")[0];
+    firstScript.parentNode.insertBefore(script, firstScript);
+  };
+  ttq.load(pixelId);
+  ttq.page();
+})(window, document, "ttq");

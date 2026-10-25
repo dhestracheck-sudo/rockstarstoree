@@ -17,8 +17,8 @@ function thumbOf(u){
 function thumbTag(full, attrs){
   full = fixImg(full);
   const t = thumbOf(full);
-  if(t === full) return `<img src="${full}" ${attrs} onerror="imgErr(this)">`;
-  return `<img src="${t}" data-full="${full}" ${attrs} onerror="thumbErr(this)">`;
+  if(t === full) return `<img src="${full}" decoding="async" ${attrs} onerror="imgErr(this)">`;
+  return `<img src="${t}" data-full="${full}" decoding="async" ${attrs} onerror="thumbErr(this)">`;
 }
 function thumbErr(el){
   try {
@@ -326,13 +326,7 @@ window.addEventListener("resize", function(){
   if(menu && menu.classList.contains("open")) positionMnavPanel();
 });
 window.addEventListener("orientationchange", function(){ setTimeout(positionMnavPanel, 200); });
-function preventMnavBackgroundScroll(event){
-  const menu = document.getElementById("mnav");
-  if(menu && menu.classList.contains("open") && !menu.contains(event.target)) event.preventDefault();
-}
-document.addEventListener("touchmove", preventMnavBackgroundScroll, { passive: false });
-document.addEventListener("wheel", preventMnavBackgroundScroll, { passive: false });
-/* bubble "Chat Min Rock" — dihapus */
+/* bubble "Chat Min Rock" — dihapus */
 
 /* ===== bahasa ID/EN ===== */
 const I18N = {

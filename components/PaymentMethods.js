@@ -1,11 +1,11 @@
 const methods = [
-  { name: "QRIS", image: "/qris.webp" },
-  { name: "GoPay", image: "/gopay.png" },
-  { name: "DANA", image: "/dana.webp" },
-  { name: "ShopeePay", image: "/shopee.png" },
-  { name: "OVO", image: "/ovo-payment.jpg" },
-  { name: "Transfer Bank", image: "/all-bank.jpg", kind: "bank", alt: "ALL BANK" },
-  { name: "Binance Pay", image: "/binance.png", kind: "binance", alt: "BINANCE" },
+  { name: "QRIS", image: "/qris.webp", width: 768, height: 1024 },
+  { name: "GoPay", image: "/optimized/gopay.webp", width: 160, height: 84 },
+  { name: "DANA", image: "/optimized/dana.webp", width: 128, height: 128 },
+  { name: "ShopeePay", image: "/optimized/shopee.webp", width: 160, height: 120 },
+  { name: "OVO", image: "/optimized/ovo-payment.webp", width: 160, height: 108 },
+  { name: "Transfer Bank", image: "/optimized/all-bank.webp", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
+  { name: "Binance Pay", image: "/binance.png", kind: "binance", alt: "BINANCE", width: 512, height: 512 },
 ];
 
 export default function PaymentMethods() {
@@ -31,7 +31,14 @@ export default function PaymentMethods() {
           {methods.map((method) => (
             <div className="payment-method" key={method.name}>
               <div className={`payment-method-mark ${method.kind || ""}`}>
-                <img src={method.image} alt={method.alt || method.name} loading="eager" decoding="async" />
+                <img
+                  src={method.image}
+                  alt={method.alt || method.name}
+                  width={method.width}
+                  height={method.height}
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <span>{method.name}</span>
             </div>

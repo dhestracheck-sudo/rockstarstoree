@@ -67,11 +67,6 @@ export default function FaqPage({ ssrGeneratedAt }) {
         <meta name="twitter:title" content="FAQ & Cara Beli | Rockstar.Store" />
         <meta name="twitter:description" content="Panduan cara memesan, membayar, dan menerima item di Rockstar.Store." />
         <meta name="twitter:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        {"\n"}
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        {"\n"}
-        {"\n"}
         <link rel="icon" type="image/png" href="ROCKSTARLOGO.png" />
         <script
           type="application/ld+json"

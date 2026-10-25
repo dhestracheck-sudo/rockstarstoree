@@ -6,6 +6,8 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const publicDirectory = path.join(projectRoot, 'public');
 const siteScriptsDirectory = path.join(projectRoot, 'site-scripts');
 const publicSiteScriptsDirectory = path.join(publicDirectory, 'site-scripts');
+const optimizedDirectory = path.join(projectRoot, 'optimized');
+const publicOptimizedDirectory = path.join(publicDirectory, 'optimized');
 const staticExtensions = new Set([
   '.avif', '.gif', '.ico', '.jpeg', '.jpg', '.png', '.svg', '.webp',
   '.woff', '.woff2', '.ttf', '.otf', '.mp3', '.mp4', '.webm', '.pdf',
@@ -41,4 +43,16 @@ for (const entry of siteScripts) {
   copiedScriptCount += 1;
 }
 
-console.log(`Copied ${copiedCount} static site files and ${copiedScriptCount} page scripts into public/.`);
+await mkdir(publicOptimizedDirectory, { recursive: true });
+const optimizedAssets = await readdir(optimizedDirectory, { withFileTypes: true });
+let copiedOptimizedCount = 0;
+for (const entry of optimizedAssets) {
+  if (!entry.isFile() || path.extname(entry.name).toLowerCase() !== '.webp') continue;
+  await copyFile(
+    path.join(optimizedDirectory, entry.name),
+    path.join(publicOptimizedDirectory, entry.name),
+  );
+  copiedOptimizedCount += 1;
+}
+
+console.log(`Copied ${copiedCount} static site files, ${copiedScriptCount} page scripts and ${copiedOptimizedCount} optimized assets into public/.`);

@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ANALYTICS_ID}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
           <Script id="rockstar-google-analytics" strategy="afterInteractive">
             {`window.dataLayer = window.dataLayer || [];

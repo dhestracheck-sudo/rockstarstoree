@@ -6,10 +6,10 @@
     "dev": "node scripts/prepare-public.mjs && next dev",
     "prebuild": "node scripts/prepare-public.mjs",
     "build": "next build",
-    "cf:build": "opennextjs-cloudflare build",
-    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf:upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload"
+    "cf:build": "node scripts/prepare-public.mjs && opennextjs-cloudflare build",
+    "cf:preview": "node scripts/prepare-public.mjs && opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "node scripts/prepare-public.mjs && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:upload": "node scripts/prepare-public.mjs && opennextjs-cloudflare build && opennextjs-cloudflare upload"
   },
   "dependencies": {
     "next": "16.4.3",

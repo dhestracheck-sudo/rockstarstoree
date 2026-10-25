@@ -2,12 +2,12 @@ export default function MegaSlider() {
   return (
     <div className="mega">
       <div className="mega-track" id="megaTrack">
-        <div className="mega-slide s0">
+        <div className="mega-slide s0 on">
           <div className="mega-fig left">
-            <img src="figur-8062.webp" alt="Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-8062.webp" alt="Rockstar" width="524" height="700" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-fig right">
-            <img src="figur-3.webp" alt="Roblox" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-3.webp" alt="Roblox" width="474" height="445" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-in">
             <div className="mega-brand">
@@ -49,12 +49,12 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide on">
+        <div className="mega-slide">
           <div className="mega-fig left">
-            <img src="figur-kiri.webp" alt="Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-kiri.webp" alt="Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-fig right">
-            <img src="figur-kanan1.webp" alt="Roblox" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-kanan1.webp" alt="Roblox" width="439" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-in">
             <div className="mega-brand">
@@ -112,10 +112,10 @@ export default function MegaSlider() {
         </div>
         <div className="mega-slide s2">
           <div className="mega-fig left">
-            <img src="figur-3.webp" alt="Roblox" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-3.webp" alt="Roblox" width="474" height="445" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-fig right">
-            <img src="figur-2.webp" alt="Robux" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-2.webp" alt="Robux" width="352" height="352" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-in">
             <div className="mega-brand">
@@ -165,10 +165,10 @@ export default function MegaSlider() {
         </div>
         <div className="mega-slide s3">
           <div className="mega-fig left">
-            <img src="figur-kiri.webp" alt="Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-kiri.webp" alt="Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-fig right">
-            <img src="figur-kanan.webp" alt="Roblox" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-kanan.webp" alt="Roblox" width="192" height="326" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-in">
             <div className="mega-brand" data-i18n="sl4_br">
@@ -241,7 +241,7 @@ export default function MegaSlider() {
               </div>
             </div>
             <div className="mega-char">
-              <img src="figur-8062.webp" alt="Mimin Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+              <img src="figur-8062.webp" alt="Mimin Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
             </div>
             <div className="mega-steps">
               <div className="mega-step">
@@ -361,10 +361,10 @@ export default function MegaSlider() {
               </div>
             </div>
             <div className="mega-char">
-              <img src="figur-8064.webp" alt="Mimin Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+              <img src="figur-8064.webp" alt="Mimin Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
             </div>
             <div className="mega-phone">
-              <img src="Screenshot%202026-10-08%20151006.webp" alt="Saluran Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+              <img src="Screenshot%202026-10-08%20151006.webp" alt="Saluran Rockstar" width="556" height="759" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
             </div>
           </div>
         </div>
@@ -396,7 +396,7 @@ export default function MegaSlider() {
               </p>
             </div>
             <div className="mega-phone">
-              <img src="Screenshot%202026-10-08%20135021.webp" alt="TikTok Rockstar" loading="lazy" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+              <img src="Screenshot%202026-10-08%20135021.webp" alt="TikTok Rockstar" width="634" height="840" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
             </div>
           </div>
         </div>

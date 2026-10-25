@@ -14,7 +14,7 @@ var megaIdx = 0, megaTimer = null;
 
       l.className = "mega-logo";
 
-      l.innerHTML = '<img src="ROCKSTARLOGO.webp?v=3" alt="Rockstar.Store">rockstar.store';
+      l.innerHTML = '<img src="ROCKSTARLOGO.webp" alt="Rockstar.Store" width="500" height="500" loading="lazy">rockstar.store';
 
       s.insertBefore(l, s.firstChild);
 
@@ -23,14 +23,6 @@ var megaIdx = 0, megaTimer = null;
   });
 
   const n = slides.length;
-
-  /* gambar banner dipaksa eager (memang di atas layar) supaya tinggi seragam sudah tepat sejak awal */
-
-  slides.forEach(function(s){
-
-    s.querySelectorAll("img[loading='lazy']").forEach(function(im){ try{ im.loading = "eager"; }catch(e){} });
-
-  });
 
   const box = document.getElementById("megaDots");
 
@@ -170,6 +162,22 @@ function megaPaint(){
 
   slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
 
+  const nextIdx = (megaIdx + 1) % slides.length;
+
+  slides.forEach((slide, i) => {
+
+    const shouldPreload = i === megaIdx || i === nextIdx;
+
+    slide.querySelectorAll("img").forEach(function(image){
+
+      image.loading = shouldPreload ? "eager" : "lazy";
+
+      image.fetchPriority = i === megaIdx ? "high" : "low";
+
+    });
+
+  });
+
   document.querySelectorAll("#megaDots i").forEach((d, i) => d.classList.toggle("on", i === megaIdx));
 
 }
@@ -204,17 +212,35 @@ function fitMega(){
 
     let max = 0;
 
-    slides.forEach(function(s){
+    const originalStyles = slides.map(function(slide){
 
-      const d = s.style.display;
+      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight };
 
-      s.style.display = "flex"; s.style.height = "auto"; s.style.minHeight = "0";
+    });
 
-      const h = Math.ceil(s.getBoundingClientRect().height); /* tinggi kotak asli; scrollHeight kepalsuan gara-gara ::before */
+    slides.forEach(function(slide){
 
-      s.style.display = d; s.style.height = ""; s.style.minHeight = "";
+      slide.style.display = "flex";
 
-      if(h > max) max = h;
+      slide.style.height = "auto";
+
+      slide.style.minHeight = "0";
+
+    });
+
+    slides.forEach(function(slide){
+
+      max = Math.max(max, Math.ceil(slide.getBoundingClientRect().height));
+
+    });
+
+    slides.forEach(function(slide, index){
+
+      slide.style.display = originalStyles[index].display;
+
+      slide.style.height = originalStyles[index].height;
+
+      slide.style.minHeight = originalStyles[index].minHeight;
 
     });
 
@@ -234,7 +260,7 @@ let megaFitT;
 
 window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT = setTimeout(fitMega, 150); });
 
-fitMega(); setTimeout(fitMega, 1200); setTimeout(fitMega, 3200);
+fitMega(); setTimeout(fitMega, 1200);
 
 if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ fitMega(); });
 
