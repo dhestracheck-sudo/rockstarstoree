@@ -469,6 +469,7 @@ body .hot-product-heading span {
 }
 
 body .hot-product-window {
+  min-height: 84px;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 2%, #000 98%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 2%, #000 98%, transparent);
@@ -552,6 +553,9 @@ body .hot-product-meta {
 }
 
 body .hot-product-message {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
   padding: 12px 4px;
   color: var(--mut);
   font-size: 13px;
@@ -571,6 +575,8 @@ body .hot-product-message {
 
   body .hot-product-heading h2 { font-size: 16px; }
   body .hot-product-heading span { font-size: 13px; }
+  body .hot-product-window,
+  body .hot-product-message { min-height: 76px; }
   body .hot-product-card { width: 196px; min-height: 76px; gap: 8px; }
   body .hot-product-card img { width: 60px; height: 60px; }
 }
@@ -588,7 +594,7 @@ body .testimoni-cta {
   background: rgba(255,255,255,.055);
   color: #c7d5ef;
   padding: 12px 24px;
-  font: 700 14px 'Poppins', sans-serif;
+  font: 700 14px var(--font-poppins), sans-serif;
   letter-spacing: .5px;
   cursor: pointer;
   transition: background .2s ease, border-color .2s ease, transform .2s ease;
@@ -626,7 +632,7 @@ body .testimoni-more {
   background: rgba(255,255,255,.04);
   color: var(--txt);
   padding: 9px 14px;
-  font: 600 13px 'Poppins', sans-serif;
+  font: 600 13px var(--font-poppins), sans-serif;
   cursor: pointer;
 }
 

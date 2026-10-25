@@ -2,8 +2,8 @@
    - Gambar: tampilkan cache instan + refresh di belakang -> foto baru dari admin
      tampil pada kunjungan berikutnya (tidak pernah jadi basi selamanya).
    - Naikkan CACHE setiap rilis agar HP membuang file lama yang tersimpan. */
-const CACHE = "rockstar-v10";
-const CORE = ["./", "faq/", "manifest.json", "ROCKSTARLOGO.png"];
+const CACHE = "rockstar-v11";
+const CORE = ["./", "faq/", "manifest.json", "ROCKSTARICON.png"];
 const IMG_MAX = 400; // batasi jumlah gambar cache biar storage HP tidak bengkak
 
 self.addEventListener("install", e => {

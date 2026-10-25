@@ -14,11 +14,12 @@ function thumbOf(u){
   const i = u.lastIndexOf("/");
   return u.slice(0, i + 1) + "thumb_" + u.slice(i + 1);
 }
-function thumbTag(full, attrs){
-  full = fixImg(full);
-  const t = thumbOf(full);
-  if(t === full) return `<img src="${full}" decoding="async" ${attrs} onerror="imgErr(this)">`;
-  return `<img src="${t}" data-full="${full}" decoding="async" ${attrs} onerror="thumbErr(this)">`;
+function thumbTag(full, attrs){
+  full = fixImg(full);
+  const t = thumbOf(full);
+  const dimensions = 'width="480" height="480"';
+  if(t === full) return `<img ${dimensions} src="${full}" decoding="async" ${attrs} onerror="imgErr(this)">`;
+  return `<img ${dimensions} src="${t}" data-full="${full}" decoding="async" ${attrs} onerror="thumbErr(this)">`;
 }
 function thumbErr(el){
   try {

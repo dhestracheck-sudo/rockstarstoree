@@ -66,8 +66,8 @@ function loadAnalisis(){
         return '<div style="height:8px;background:#1a2440;border-radius:99px;margin:4px 0 8px;"><i style="display:block;height:100%;width:' + p + '%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:99px;"></i></div>';
       }
       let h = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">' +
-        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + totLihat.toLocaleString("id-ID") + '</div><div style="color:var(--mut);font-size:12px;">Total dilihat</div></div>' +
-        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:Oswald,sans-serif;font-size:26px;">' + all.length + '</div><div style="color:var(--mut);font-size:12px;">Produk aktif</div></div></div>';
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:var(--font-oswald),sans-serif;font-size:26px;">' + totLihat.toLocaleString("id-ID") + '</div><div style="color:var(--mut);font-size:12px;">Total dilihat</div></div>' +
+        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:var(--font-oswald),sans-serif;font-size:26px;">' + all.length + '</div><div style="color:var(--mut);font-size:12px;">Produk aktif</div></div></div>';
       h += '<b>🔥 Paling sering dilihat</b>';
       if(!top.length || !maxV) h += '<p class="hint">Belum ada data (counter masih 0).</p>';
       top.forEach(function(o, i){
@@ -267,7 +267,7 @@ function loadRekap(){
       });
       function card(t, p){
         return '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;">' +
-          '<div style="font-family:Oswald,sans-serif;font-size:20px;color:var(--green);">Rp ' + p.rp.toLocaleString("id-ID") + '</div>' +
+          '<div style="font-family:var(--font-oswald),sans-serif;font-size:20px;color:var(--green);">Rp ' + p.rp.toLocaleString("id-ID") + '</div>' +
           '<div style="font-size:12.5px;">' + p.n + ' order</div>' +
           '<div style="color:var(--mut);font-size:12px;">' + t + '</div></div>';
       }

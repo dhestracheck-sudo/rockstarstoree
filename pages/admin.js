@@ -48,8 +48,8 @@ export default function AdminPage() {
         <title>Admin — Rockstar.Store</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="description" content="Panel admin Rockstar.Store (privat)." />
-        <link rel="icon" type="image/png" href="/ROCKSTARLOGO.png" />
-        <link rel="apple-touch-icon" href="/ROCKSTARLOGO.png" />
+        <link rel="icon" type="image/png" href="/ROCKSTARICON.png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/ROCKSTARICON.png" />
         <style dangerouslySetInnerHTML={{ __html: adminStyles + productEditorStyles }} />
       </Head>
       <div dangerouslySetInnerHTML={{ __html: adminMarkup }} />
