@@ -604,11 +604,12 @@ const RS_CURRENCY_INFO = { IDR:{flag:"🇮🇩",sym:"Rp",loc:"id-ID"}, USD:{flag
 fetch("https://open.er-api.com/v6/latest/IDR").then(r=>r.json()).then(d=>{ if(d&&d.rates){ Object.keys(RS_CURRENCIES).forEach(c=>{ if(d.rates[c]) RS_CURRENCIES[c]=d.rates[c]; }); } }).catch(()=>{});
 function currency(){ try { return localStorage.getItem("rs_currency") || "IDR"; } catch(e) { return "IDR"; } }
 function setCurrency(c){ try { localStorage.setItem("rs_currency", c); } catch(e) {} }
-function selectCurrency(c){
-  setCurrency(c);
-  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
-  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
-  try { render(); } catch(e) {}
+function selectCurrency(c){
+  if(!RS_CURRENCY_INFO[c]) c = "IDR";
+  setCurrency(c);
+  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
+  ["curBtn","mnavCur"].forEach(id=>{ const b=document.getElementById(id); if(b) b.textContent="Mata Uang "+info.flag; });
+  try { render(); } catch(e) {}
 }
 function closeCurLangMenus(){ const cm=document.getElementById("curMenu"); if(cm) cm.style.display="none"; const lm=document.getElementById("langMenu"); if(lm) lm.style.display="none"; }
 window.addEventListener("scroll", closeCurLangMenus, {passive:true});
@@ -624,12 +625,8 @@ function toggleCurrencyMenu(e){
   anchorMenu(m, (e && e.currentTarget) || document.getElementById("curBtn") || document.getElementById("mnavCur"));
   document.addEventListener("click", function hide(ev){ if(!m.contains(ev.target)){ m.style.display="none"; document.removeEventListener("click",hide);} }, {once:true});
 }
-function formatCurrency(idr){
-  const c = currency();
-  const info = RS_CURRENCY_INFO[c] || RS_CURRENCY_INFO.IDR;
-  const rate = RS_CURRENCIES[c] || 1;
-  const v = Math.round((idr||0)*rate);
-  return info.sym + " " + v.toLocaleString(info.loc);
+function formatCurrency(idr){
+  return "Rp " + Math.round(Number(idr) || 0).toLocaleString("id-ID");
 }
 function render(){
   try { syncHeroCta(); } catch(e) {}
@@ -1296,7 +1293,7 @@ function checkout(){
     previewHTML += `
       <div class="mrow">
         <img src="${itemImage}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}</div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}${rmFmt(item.price) ? `<br><small class="rm">${rmFmt(item.price)}</small>` : ``}</div>
       </div>`;
   });
   previewHTML += `<div class="mtotal">💰 TOTAL: Rp ${totalPrice.toLocaleString()}<br><span>📦 ${cart.length} item</span></div>`;
@@ -1374,7 +1371,7 @@ function openCartModal(){
     totalPrice += item.price;
     html += `
       <div class="mrow">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span></div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span>${rmFmt(item.price) ? `<br><small class="rm">${rmFmt(item.price)}</small>` : ``}</div>
         <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
       </div>`;
   });
@@ -1863,11 +1860,17 @@ function hasKatArr(arr){
 
 let infoTeksValue = "";
 let kursRM = 3600;
-function rmFmt(rp){
-  rp = Number(rp) || 0;
-  if(rp <= 0 || !(kursRM > 0)) return "";
-  return "≈ RM " + (rp / kursRM).toFixed(2);
-}
+function rmFmt(rp){
+  rp = Number(rp) || 0;
+  if(rp <= 0) return "";
+  const selected = currency();
+  const code = selected === "IDR" || !RS_CURRENCY_INFO[selected] ? "MYR" : selected;
+  const info = RS_CURRENCY_INFO[code];
+  const rate = code === "MYR" ? (kursRM > 0 ? 1 / kursRM : 0) : (RS_CURRENCIES[code] || 0);
+  if(!(rate > 0)) return "";
+  const value = rp * rate;
+  return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
   const hd = document.querySelector("header");

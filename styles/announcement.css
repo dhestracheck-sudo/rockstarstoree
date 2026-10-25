@@ -191,8 +191,8 @@ body .payment-method {
 
 body .payment-method-mark {
   display: grid;
-  width: 58px;
-  height: 52px;
+  width: 64px;
+  height: 56px;
   place-items: center;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -202,9 +202,14 @@ body .payment-method-mark {
 
 body .payment-method-mark img {
   display: block;
-  max-width: 86%;
-  max-height: 80%;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  padding: 5px;
   object-fit: contain;
+  object-position: center;
 }
 
 body .payment-method-mark.bank {
@@ -212,8 +217,7 @@ body .payment-method-mark.bank {
 }
 
 body .payment-method-mark.bank img {
-  max-width: 90%;
-  max-height: 82%;
+  padding: 4px;
 }
 
 body .payment-method-mark.binance {

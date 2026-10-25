@@ -1,11 +1,11 @@
 const methods = [
-  { name: "QRIS", image: "/qris.webp", width: 768, height: 1024 },
-  { name: "GoPay", image: "/optimized/gopay.webp", width: 160, height: 84 },
-  { name: "DANA", image: "/optimized/dana.webp", width: 128, height: 128 },
-  { name: "ShopeePay", image: "/optimized/shopee.webp", width: 160, height: 120 },
-  { name: "OVO", image: "/optimized/ovo-payment.webp", width: 160, height: 108 },
+  { name: "QRIS", image: "/optimized/payment-qris.webp", width: 474, height: 244 },
+  { name: "GoPay", image: "/optimized/payment-gopay.webp", width: 64, height: 64 },
+  { name: "DANA", image: "/optimized/payment-dana.webp", width: 72, height: 96 },
+  { name: "ShopeePay", image: "/optimized/payment-shopee.webp", width: 110, height: 110 },
+  { name: "OVO", image: "/optimized/payment-ovo.webp", width: 64, height: 86 },
   { name: "Transfer Bank", image: "/optimized/all-bank.webp", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
-  { name: "Binance Pay", image: "/binance.png", kind: "binance", alt: "BINANCE", width: 512, height: 512 },
+  { name: "Binance Pay", image: "/optimized/payment-binance.webp", kind: "binance", alt: "BINANCE", width: 512, height: 107 },
 ];
 
 export default function PaymentMethods() {

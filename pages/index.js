@@ -4,7 +4,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 import SiteFooter from '../components/SiteFooter';
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08.js?v=perf-20261026-fps1"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08.js?v=currency-20261026-1"];
 
 export async function getServerSideProps() {
   return { props: { ssrGeneratedAt: new Date().toISOString() } };
