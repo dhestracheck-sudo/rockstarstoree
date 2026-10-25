@@ -1,11 +1,11 @@
 const methods = [
-  { name: "QRIS", image: "/optimized/payment-qris.webp", width: 474, height: 244 },
-  { name: "GoPay", image: "/optimized/payment-gopay.webp", width: 64, height: 64 },
-  { name: "DANA", image: "/optimized/payment-dana.webp", width: 72, height: 96 },
-  { name: "ShopeePay", image: "/optimized/payment-shopee.webp", width: 110, height: 110 },
-  { name: "OVO", image: "/optimized/payment-ovo.webp", width: 64, height: 86 },
-  { name: "Transfer Bank", image: "/optimized/all-bank.webp", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
-  { name: "Binance Pay", image: "/optimized/payment-binance.webp", kind: "binance", alt: "BINANCE", width: 512, height: 107 },
+  { name: "QRIS", image: "/optimized/payment-qris.webp?v=logos-20261026-2", width: 474, height: 244 },
+  { name: "GoPay", image: "/optimized/payment-gopay.webp?v=logos-20261026-2", width: 64, height: 64 },
+  { name: "DANA", image: "/optimized/payment-dana.webp?v=logos-20261026-2", width: 72, height: 96 },
+  { name: "ShopeePay", image: "/optimized/payment-shopee.webp?v=logos-20261026-2", width: 110, height: 110 },
+  { name: "OVO", image: "/optimized/payment-ovo.webp?v=logos-20261026-2", width: 64, height: 86 },
+  { name: "Transfer Bank", image: "/optimized/all-bank.webp?v=logos-20261026-2", kind: "bank", alt: "ALL BANK", width: 160, height: 107 },
+  { name: "Binance Pay", image: "/optimized/payment-binance.webp?v=logos-20261026-2", kind: "binance", alt: "BINANCE", width: 512, height: 107 },
 ];
 
 export default function PaymentMethods() {
