@@ -108,6 +108,8 @@ async function getInitialHotProducts() {
         clicks: clicks.get(name) || 0,
         views: Number(row?.dilihat) || 0,
         sold: Number(row?.sold) || 0,
+        stock,
+        isMarkedSoldOut,
       });
     }
   }
@@ -128,7 +130,10 @@ function absImageUrl(raw) {
 async function getCategoryProducts(tab, category, limit = 24) {
   if (!tab || !category) return [];
   try {
-    const endpoint = `${PUBLIC_SUPABASE_URL}/rest/v1/${tab}?select=name,price,image&price=gt.0&kategori=${encodeURIComponent(`eq.${category}`)}&order=urutan&limit=${limit}`;
+    const categoryUrl = new URL("https://rockstarstore.id/");
+    categoryUrl.searchParams.set("tab", tab);
+    categoryUrl.searchParams.set("cat", category);
+    const endpoint = `${PUBLIC_SUPABASE_URL}/rest/v1/${tab}?select=name,price,image,stock,soldout&price=gt.0&kategori=${encodeURIComponent(`eq.${category}`)}&order=urutan&limit=${limit}`;
     const response = await fetch(endpoint, {
       headers: {
         apikey: PUBLIC_SUPABASE_KEY,
@@ -145,6 +150,9 @@ async function getCategoryProducts(tab, category, limit = 24) {
         tab,
         price: Number(row?.price) || 0,
         image: absImageUrl(String(row?.image || "").split("|")[0].trim() || "ROCKSTARLOGO.webp"),
+        stock: Number(row?.stock),
+        isMarkedSoldOut: /^(ya|y|yes|habis|sold)/i.test(String(row?.soldout || "").trim()),
+        url: categoryUrl.href,
       }))
       .filter((product) => product.name && product.price > 0);
   } catch {
@@ -168,8 +176,10 @@ function buildItemListJsonLd(products, listName) {
           "@type": "Offer",
           price: Number(product.price) || 0,
           priceCurrency: "IDR",
-          availability: "https://schema.org/InStock",
-          url: product.tab ? `https://rockstarstore.id/?tab=${product.tab}` : "https://rockstarstore.id/",
+          availability: Number.isFinite(product.stock) && product.stock > 0 && !product.isMarkedSoldOut
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+          url: product.url || (product.tab ? `https://rockstarstore.id/?tab=${product.tab}` : "https://rockstarstore.id/"),
         },
       },
     })),
@@ -265,10 +275,13 @@ export async function getServerSideProps(context) {
   if (!context.query.q) {
     context.res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=300");
   }
+  const pageSeo = seo.category && catProducts.length === 0
+    ? { ...seo, robots: "noindex,follow" }
+    : seo;
   return {
     props: {
       ssrGeneratedAt: new Date().toISOString(),
-      seo,
+      seo: pageSeo,
       hotProducts,
       catProducts,
     },
@@ -276,7 +289,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts }) {
-  const itemListSource = (catProducts && catProducts.length) ? catProducts : hotProducts;
+  const itemListSource = seo.category ? catProducts : hotProducts;
   const itemListJsonLd = buildItemListJsonLd(itemListSource, seo.category ? `Kategori ${seo.category}` : "Produk Populer Rockstar.Store");
   return (
     <>

@@ -749,9 +749,10 @@ function sugShow(q, rows){
     const cats = catsOf(r.page);
     const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
     const pr = (r.item.stock === 0) ? tr("habis") : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
-    const nm = String(r.item.name || "").replace(/</g, "&lt;");
+    const nm = String(r.item.name || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const imgAlt = nm.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     return `<div class="sug" onclick="sugPick('${r.page}',${r.i},${r.j})">` +
-      thumbTag(im, `alt="" loading="lazy" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#05080f;"`) +
+      thumbTag(im, `alt="${imgAlt}" loading="lazy" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;background:#05080f;"`) +
       `<div><b>${nm}</b><span>${String(r.cname || "").replace(/</g, "&lt;")}</span></div>` +
       `<div class="pr">${pr}</div></div>`;
   }).join("");

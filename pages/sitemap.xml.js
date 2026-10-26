@@ -17,15 +17,9 @@ function escapeXml(value) {
   })[character]);
 }
 
-function categoryFromRow(row) {
-  const name = String(row.name || "").trim();
-  if (name.startsWith("CAT:")) return String(row.kategori || name.slice(4)).trim();
-  return String(row.kategori || "Lainnya").trim();
-}
-
 async function categoryUrls({ tab, table }) {
   try {
-    const endpoint = `${SUPABASE_URL}/rest/v1/${table}?select=name,kategori&order=urutan&limit=1000`;
+    const endpoint = `${SUPABASE_URL}/rest/v1/${table}?select=name,kategori,price&order=urutan&limit=1000`;
     const response = await fetch(endpoint, {
       headers: {
         apikey: SUPABASE_PUBLISHABLE_KEY,
@@ -38,9 +32,12 @@ async function categoryUrls({ tab, table }) {
 
     const rows = await response.json();
     if (!Array.isArray(rows)) return [];
-    const categories = new Set(rows.map(categoryFromRow).filter((category) =>
-      category && category.length <= 80 && /^[\p{L}\p{N}\s.'&(),+/-]+$/u.test(category),
-    ));
+    const categories = new Set(rows
+      .filter((row) => String(row?.name || "").trim() && !String(row.name).trim().startsWith("CAT:") && Number(row?.price) > 0)
+      .map((row) => String(row?.kategori || "").trim())
+      .filter((category) =>
+        category && category.length <= 80 && /^[\p{L}\p{N}\s.'&(),+/-]+$/u.test(category),
+      ));
     return Array.from(categories, (category) => {
       const url = new URL("https://rockstarstore.id/");
       url.searchParams.set("tab", tab);

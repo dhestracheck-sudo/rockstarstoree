@@ -56,7 +56,8 @@ const faqSchema = {
   })),
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ res }) {
+  res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
   return { props: { ssrGeneratedAt: new Date().toISOString() } };
 }
 
@@ -88,6 +89,9 @@ export default function FaqPage({ ssrGeneratedAt }) {
         <meta property="og:url" content="https://rockstarstore.id/faq" />
         <meta property="og:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
         <meta property="og:image:alt" content="Logo Rockstar.Store" />
+        <meta property="og:image:width" content="500" />
+        <meta property="og:image:height" content="500" />
+        <meta property="og:image:type" content="image/png" />
         <link rel="alternate" hrefLang="id" href="https://rockstarstore.id/faq" />
         <link rel="alternate" hrefLang="x-default" href="https://rockstarstore.id/faq" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -107,7 +111,7 @@ export default function FaqPage({ ssrGeneratedAt }) {
       <header>
         {"\n  "}
         <a className="brand" href="/" aria-label="Rockstar.Store beranda">
-          <img src="ROCKSTARLOGO.webp" alt="" />
+          <img src="ROCKSTARLOGO.webp" alt="Rockstar.Store" />
           <span>
             {"ROCKSTAR.STORE"}
           </span>
