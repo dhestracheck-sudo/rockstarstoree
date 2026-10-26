@@ -4,7 +4,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 import SiteFooter from '../components/SiteFooter';
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08.js?v=seo-hot-20261026-2"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08.js?v=seo-hot-20261026-3"];
 
 const SEO_PAGES = {
   home: {
@@ -71,7 +71,7 @@ async function getInitialHotProducts() {
   const [clickRows, ...catalogRows] = await Promise.all([
     request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte.${encodeURIComponent(since)}`),
     ...HOT_PRODUCT_TABLES.map((table) =>
-      request(`${table}?select=name,price,image,sold,dilihat&order=urutan&limit=1000`),
+      request(`${table}?select=name,price,image,stock,soldout,sold,dilihat&order=urutan&limit=1000`),
     ),
   ]);
 
@@ -87,7 +87,9 @@ async function getInitialHotProducts() {
     for (const row of Array.isArray(rows) ? rows : []) {
       const name = String(row?.name || "").trim();
       const price = Number(row?.price) || 0;
-      if (!name || name.startsWith("CAT:") || price <= 0 || seenProducts.has(name)) continue;
+      const stock = Number(row?.stock);
+      const isMarkedSoldOut = /^(ya|y|yes|habis|sold)/i.test(String(row?.soldout || "").trim());
+      if (!name || name.startsWith("CAT:") || price <= 0 || !Number.isFinite(stock) || stock <= 0 || isMarkedSoldOut || seenProducts.has(name)) continue;
       seenProducts.add(name);
       const rawImage = String(row?.image || "").split("|")[0].trim();
       const image = rawImage

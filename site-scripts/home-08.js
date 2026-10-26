@@ -1475,12 +1475,21 @@ function paintHot(){
     if(!hasRendered) renderProducts(catalogFallback());
   }, 2500);
 
+  function isAvailable(item){
+    if(!item || !item.name) return false;
+    const markedSoldOut = /^(ya|y|yes|habis|sold)/i.test(String(item.soldout || "").trim());
+    const stock = Number(item.stock);
+    return Number.isFinite(stock) && stock > 0 && !markedSoldOut;
+  }
+
   function renderProducts(products, finished){
     if(requestId !== paintHot.requestId || !track.isConnected) return;
-    products = Array.isArray(products) ? products : [];
+    products = Array.isArray(products) ? products.filter(function(entry){
+      return entry && entry.r && isAvailable(entry.r.item);
+    }) : [];
     if(!products.length){
-      if(!track.querySelector(".hot-product-group") && finished){
-        track.innerHTML = '<div class="hot-product-message">Produk pilihan sedang dimuat dari katalog.</div>';
+      if(finished){
+        track.innerHTML = '<div class="hot-product-message">Belum ada produk tersedia saat ini.</div>';
         hasRendered = true;
       }
       return;
@@ -1546,7 +1555,7 @@ function paintHot(){
     ["brainrot", "akun", "topup", "joki"].forEach(function(page){
       catsOf(page).forEach(function(cat, i){
         (cat.items || []).forEach(function(item, j){
-          if(!item || !item.name) return;
+          if(!isAvailable(item)) return;
           candidates.push({
             r: { page: page, i: i, j: j, item: item, cat: cat },
             clicks: 0,
@@ -1579,10 +1588,12 @@ function paintHot(){
     const popular = Object.keys(frequency).map(function(name){
       const r = resolveWish(name);
       return r ? { r: r, clicks: frequency[name] } : null;
-    }).filter(Boolean).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
+    }).filter(function(entry){
+      return entry && isAvailable(entry.r.item);
+    }).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
     renderProducts(popular.length ? popular : catalogFallback(), true);
   }).catch(function(){
-    if(!hasRendered) renderProducts(catalogFallback(), true);
+    renderProducts(catalogFallback(), true);
   }).finally(function(){
     window.clearTimeout(requestTimeout);
     window.clearTimeout(fallbackTimer);
