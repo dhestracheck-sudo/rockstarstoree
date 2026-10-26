@@ -108,11 +108,10 @@ export default function FaqPage({ ssrGeneratedAt }) {
             {"FAQ & Cara Beli 🎮"}
           </h1>
           {"\n    "}
+          <p>
+            {"Ikuti lima langkah berikut untuk memesan item di Rockstar.Store. Kalau masih ada yang ingin ditanyakan, hubungi admin melalui WhatsApp."}
+          </p>
         </div>
-      </main>
-      <p>
-        {"Ikuti lima langkah berikut untuk memesan item di Rockstar.Store. Kalau masih ada yang ingin ditanyakan, hubungi admin melalui WhatsApp."}
-      </p>
       {"\n  "}
       {"\n  "}
       <section className="steps" aria-label="Langkah cara membeli">
@@ -243,15 +242,20 @@ export default function FaqPage({ ssrGeneratedAt }) {
           {"\n    "}
         </div>
         {"\n    "}
-        <div className="contact" />
+        <div className="contact">
+          {"\n      "}
+          <p>
+            {"Masih butuh bantuan terkait pesanan?"}
+          </p>
+          {"\n      "}
+          <a href="https://wa.me/6289664299571" target="_blank" rel="noopener">
+            {"Chat Admin WhatsApp"}
+          </a>
+          {"\n    "}
+        </div>
       </section>
-      <p>
-        {"Masih butuh bantuan terkait pesanan?"}
-      </p>
-      <a href="https://wa.me/6289664299571" target="_blank" rel="noopener">
-        {"Chat Admin WhatsApp"}
-      </a>
       {"\n  "}
+      </main>
       {"\n"}
       {"\n"}
       <footer>
