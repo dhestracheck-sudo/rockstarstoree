@@ -1,6 +1,7 @@
 
 
 var megaIdx = 0, megaTimer = null;
+var megaMotionPreference = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
 
 (function megaInit(){
 
@@ -28,7 +29,13 @@ var megaIdx = 0, megaTimer = null;
 
   for(let i = 0; i < n; i++){
 
-    const d = document.createElement("i");
+    const d = document.createElement("button");
+
+    d.type = "button";
+
+    d.className = "mega-dot";
+
+    d.setAttribute("aria-label", "Tampilkan slide " + (i + 1));
 
     d.onclick = function(){ megaGo(i, true); };
 
@@ -37,6 +44,22 @@ var megaIdx = 0, megaTimer = null;
   }
 
   megaPaint(); megaAuto();
+
+  if (megaMotionPreference) {
+
+    const onMotionPreferenceChange = function(){ megaAuto(); };
+
+    if (typeof megaMotionPreference.addEventListener === "function") {
+
+      megaMotionPreference.addEventListener("change", onMotionPreferenceChange);
+
+    } else if (typeof megaMotionPreference.addListener === "function") {
+
+      megaMotionPreference.addListener(onMotionPreferenceChange);
+
+    }
+
+  }
 
   const track = document.getElementById("megaTrack");
 
@@ -178,7 +201,16 @@ function megaPaint(){
 
   });
 
-  document.querySelectorAll("#megaDots i").forEach((d, i) => d.classList.toggle("on", i === megaIdx));
+  document.querySelectorAll("#megaDots .mega-dot").forEach((d, i) => {
+
+    const active = i === megaIdx;
+
+    d.classList.toggle("on", active);
+
+    if (active) d.setAttribute("aria-current", "true");
+    else d.removeAttribute("aria-current");
+
+  });
 
 }
 
@@ -194,7 +226,17 @@ function megaGo(i, manual){
 
 }
 
-function megaAuto(){ megaTimer = setInterval(function(){ megaGo(megaIdx + 1); }, 5000); }
+function megaAuto(){
+
+  if (megaTimer) clearInterval(megaTimer);
+
+  megaTimer = null;
+
+  if (megaMotionPreference && megaMotionPreference.matches) return;
+
+  megaTimer = setInterval(function(){ megaGo(megaIdx + 1); }, 5000);
+
+}
 
 /* Semua slide dikasih tinggi SAMA PERSIS supaya banner auto-slide tidak loncat ukurannya tiap ganti (HP & PC) */
 

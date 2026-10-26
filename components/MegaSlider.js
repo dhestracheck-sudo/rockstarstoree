@@ -1,8 +1,8 @@
 export default function MegaSlider() {
   return (
-    <div className="mega">
-      <div className="mega-track" id="megaTrack">
-        <div className="mega-slide s0 on">
+    <section className="mega" role="region" aria-roledescription="carousel" aria-label="Promosi Rockstar.Store">
+      <div className="mega-track" id="megaTrack" aria-live="off">
+        <div className="mega-slide s0 on" role="group" aria-roledescription="slide" aria-label="Slide 1 dari 8">
           <div className="mega-fig left">
             <img src="figur-8062.webp" srcSet="/optimized/figur-8062-260.webp 260w, /optimized/figur-8062-400.webp 400w, /figur-8062.webp 524w" sizes="(max-width: 768px) 130px, 300px" alt="Rockstar" width="524" height="700" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
@@ -49,7 +49,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide">
+        <div className="mega-slide" role="group" aria-roledescription="slide" aria-label="Slide 2 dari 8">
           <div className="mega-fig left">
             <img src="figur-kiri.webp" alt="Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
@@ -110,7 +110,7 @@ export default function MegaSlider() {
             </p>
           </div>
         </div>
-        <div className="mega-slide s2">
+        <div className="mega-slide s2" role="group" aria-roledescription="slide" aria-label="Slide 3 dari 8">
           <div className="mega-fig left">
             <img src="figur-3.webp" srcSet="/optimized/figur-3-240.webp 240w, /optimized/figur-3-400.webp 400w, /figur-3.webp 474w" sizes="(max-width: 768px) 130px, 240px" alt="Roblox" width="474" height="445" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
@@ -163,7 +163,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s3">
+        <div className="mega-slide s3" role="group" aria-roledescription="slide" aria-label="Slide 4 dari 8">
           <div className="mega-fig left">
             <img src="figur-kiri.webp" alt="Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
@@ -219,7 +219,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s4">
+        <div className="mega-slide s4" role="group" aria-roledescription="slide" aria-label="Slide 5 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl5_br">
@@ -271,7 +271,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s5">
+        <div className="mega-slide s5" role="group" aria-roledescription="slide" aria-label="Slide 6 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox" style={{ textAlign: "center", alignItems: "center", marginLeft: "auto", marginRight: "auto" }}>
               <div className="mega-brand" data-i18n="sl6_br">
@@ -329,7 +329,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s6">
+        <div className="mega-slide s6" role="group" aria-roledescription="slide" aria-label="Slide 7 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl7_br">
@@ -368,7 +368,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s7">
+        <div className="mega-slide s7" role="group" aria-roledescription="slide" aria-label="Slide 8 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl8_br">
@@ -400,14 +400,44 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <button className="mega-nav l" onClick={(event) => { megaGo(megaIdx-1,true); }} aria-label="prev">
+        <button className="mega-nav l" onClick={(event) => { megaGo(megaIdx-1,true); }} aria-label="Slide sebelumnya" aria-controls="megaTrack">
           {"❮"}
         </button>
-        <button className="mega-nav r" onClick={(event) => { megaGo(megaIdx+1,true); }} aria-label="next">
+        <button className="mega-nav r" onClick={(event) => { megaGo(megaIdx+1,true); }} aria-label="Slide berikutnya" aria-controls="megaTrack">
           {"❯"}
         </button>
-        <div className="mega-dots" id="megaDots" />
+        <div className="mega-dots" id="megaDots" role="group" aria-label="Pilih slide promosi" />
       </div>
-    </div>
+      <style jsx global>{`
+        .mega-dots .mega-dot {
+          width: 9px;
+          height: 9px;
+          padding: 0;
+          border: 0;
+          border-radius: 99px;
+          background: rgba(255, 255, 255, 0.35);
+          cursor: pointer;
+          transition: all 0.25s;
+        }
+        .mega-dots .mega-dot.on {
+          width: 26px;
+          background: #5a78ff;
+          box-shadow: 0 0 12px #5a78ff;
+        }
+        .mega-dots .mega-dot:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .mega *,
+          .mega *::before,
+          .mega *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+          }
+        }
+      `}</style>
+    </section>
   );
 }
