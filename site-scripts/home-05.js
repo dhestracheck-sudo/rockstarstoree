@@ -14,7 +14,7 @@ var megaIdx = 0, megaTimer = null;
 
       l.className = "mega-logo";
 
-      l.innerHTML = '<img src="ROCKSTARLOGO.webp" alt="Rockstar.Store" width="500" height="500" loading="lazy">rockstar.store';
+      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="26px" alt="Rockstar.Store" width="500" height="500" loading="lazy">rockstar.store';
 
       s.insertBefore(l, s.firstChild);
 
