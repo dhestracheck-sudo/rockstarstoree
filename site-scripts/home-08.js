@@ -218,6 +218,7 @@ function bnGo(page){
   else if(page === 'akun') goToAkun();
   else if(page === 'topup') goToTopUp();
   else if(page === 'joki') goToJoki();
+  else if(page === 'faq') window.location.assign('/faq');
 }
 function bnSync(){
   document.querySelectorAll('#botnav .bnitem').forEach(function(b){
