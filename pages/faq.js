@@ -2,35 +2,58 @@ import Head from 'next/head';
 import PageScripts from '../components/PageScripts';
 
 const pageScripts = [];
+const faqItems = [
+  {
+    question: 'Di mana saya bisa melihat testimoni customer?',
+    answer: 'Testimoni customer dan update terbaru bisa dilihat di ',
+    linkText: 'Saluran WhatsApp Rockstar.Store',
+    linkHref: 'https://whatsapp.com/channel/0029VbC0kyR0wajl0r4MVa1Q',
+  },
+  {
+    question: 'Apa saja yang bisa dibeli di Rockstar.Store?',
+    answer: 'Tersedia Top Up Robux, item dan pet Brainrot, akun Roblox, serta jasa joki untuk berbagai map.',
+  },
+  {
+    question: 'Kenapa harus beli di Rockstar.Store?',
+    answer: 'Rockstar.Store menyediakan Top Up Robux, akun Roblox, item Brainrot/pet, serta jasa joki di satu tempat. Kamu bisa melihat detail, harga, dan ketersediaan produk sebelum memesan. Pesanan dikonfirmasi admin melalui WhatsApp sebelum pembayaran.',
+  },
+  {
+    question: 'Bagaimana cara memesan?',
+    answer: 'Pilih produk, tambahkan ke keranjang, tekan Checkout, periksa ringkasan pesanan, lalu pilih Kirim ke Admin. Pesanan akan diteruskan ke WhatsApp untuk dikonfirmasi.',
+  },
+  {
+    question: 'Bagaimana cara cek status pesanan saya?',
+    answer: 'Balas chat WhatsApp yang digunakan untuk mengirim pesanan. Sertakan nama item atau ringkasan order agar admin lebih mudah memeriksa statusnya.',
+  },
+  {
+    question: 'Bagaimana cara membayar?',
+    answer: 'Pilih metode pembayaran yang tersedia saat checkout dan ikuti instruksi yang tampil. Jika bingung, konfirmasikan metode dan jumlah pembayaran kepada admin melalui WhatsApp.',
+  },
+  {
+    question: 'Apa saja metode pembayarannya?',
+    answer: 'Pembayaran tersedia melalui QRIS, GoPay, DANA, ShopeePay, OVO, All Bank, dan Binance Pay. Konfirmasikan metode serta jumlah akhir kepada admin sebelum membayar, lalu kirim bukti pembayaran melalui WhatsApp.',
+  },
+  {
+    question: 'Kenapa total pembayaran bisa berbeda dari harga produk?',
+    answer: 'Keranjang menjumlahkan harga produk yang dipilih. Jika ada biaya dari metode pembayaran, admin akan mengonfirmasi jumlah akhir sebelum pembayaran dilakukan.',
+  },
+  {
+    question: 'Kapan item dikirim?',
+    answer: 'Setelah pembayaran dikonfirmasi, admin akan mengirim item di dalam game dan memberi petunjuk bila diperlukan.',
+  },
+];
+
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Bagaimana cara memesan?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Pilih produk, masukkan ke keranjang, periksa pesanan, lalu tekan Checkout dan teruskan pesanan ke admin melalui WhatsApp.',
-      },
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: `${item.answer}${item.linkText ? `${item.linkText}.` : ''}`,
     },
-    {
-      '@type': 'Question',
-      name: 'Bagaimana cara membayar?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Pilih metode pembayaran yang tersedia pada halaman checkout dan ikuti instruksi yang ditampilkan. Hubungi admin melalui WhatsApp jika membutuhkan bantuan pembayaran.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Kapan item dikirim?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Setelah pembayaran dikonfirmasi, admin mengirim item di dalam game. Untuk bantuan pesanan, hubungi admin melalui WhatsApp.',
-      },
-    },
-  ],
+  })),
 };
 
 export async function getServerSideProps() {
@@ -212,34 +235,22 @@ export default function FaqPage({ ssrGeneratedAt }) {
         </h2>
         {"\n    "}
         <div className="faq-list">
-          {"\n      "}
-          <details>
-            <summary>
-              {"Bagaimana cara memesan?"}
-            </summary>
-            <p>
-              {"Pilih produk, masukkan ke keranjang, periksa pesanan, lalu tekan Checkout dan teruskan pesanan ke admin melalui WhatsApp."}
-            </p>
-          </details>
-          {"\n      "}
-          <details>
-            <summary>
-              {"Bagaimana cara membayar?"}
-            </summary>
-            <p>
-              {"Pilih metode pembayaran yang tersedia pada halaman checkout dan ikuti instruksi yang ditampilkan. Hubungi admin melalui WhatsApp jika membutuhkan bantuan pembayaran."}
-            </p>
-          </details>
-          {"\n      "}
-          <details>
-            <summary>
-              {"Kapan item dikirim?"}
-            </summary>
-            <p>
-              {"Setelah pembayaran dikonfirmasi, admin mengirim item di dalam game. Untuk bantuan pesanan, hubungi admin melalui WhatsApp."}
-            </p>
-          </details>
-          {"\n    "}
+          {faqItems.map((item) => (
+            <details key={item.question}>
+              <summary>{item.question}</summary>
+              <p>
+                {item.answer}
+                {item.linkText ? (
+                  <>
+                    <a href={item.linkHref} target="_blank" rel="noopener noreferrer">
+                      {item.linkText}
+                    </a>
+                    {"."}
+                  </>
+                ) : null}
+              </p>
+            </details>
+          ))}
         </div>
         {"\n    "}
         <div className="contact">
