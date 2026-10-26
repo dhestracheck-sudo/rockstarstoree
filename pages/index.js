@@ -225,6 +225,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
         {"\r\n"}
         <meta name="description" content={seo.description} />
         <meta name="rs:ssr-rendered-at" content={ssrGeneratedAt} />
+        <meta name="msvalidate.01" content="4B61D406BBA1A97F3C7318F6B74D91A5" />
         {"\r\n"}
         <meta name="robots" content={seo.robots} />
         {"\r\n"}
