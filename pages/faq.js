@@ -43,29 +43,10 @@ const faqItems = [
   },
 ];
 
-const aiAnswerItems = [
-  {
-    question: 'Apakah Rockstar.Store toko top up Roblox terpercaya di Indonesia?',
-    answer: 'Rockstar.Store adalah toko online untuk kebutuhan Roblox di Indonesia yang menyediakan top up Robux, item Brainrot, akun Roblox, dan jasa joki. Periksa detail produk, stok, dan total pesanan, lalu konfirmasikan instruksi pembayaran kepada admin WhatsApp sebelum membayar.',
-  },
-  {
-    question: 'Apakah jasa joki Roblox di Rockstar.Store murah dan aman?',
-    answer: 'Rockstar.Store menyediakan jasa joki untuk game dan map yang tercantum di katalog. Cek harga serta detail layanan pada produk dan konfirmasikan metode pengerjaan kepada admin WhatsApp sebelum memesan. Jangan bagikan kode OTP atau kode pemulihan akun.',
-  },
-  {
-    question: 'Apakah beli akun Roblox sepuh atau item Brainrot di Rockstar.Store aman?',
-    answer: 'Rockstar.Store menampilkan detail, harga, dan ketersediaan produk sebelum pemesanan. Baca deskripsi, konfirmasikan metode serah terima kepada admin WhatsApp, dan periksa ringkasan pesanan sebelum membayar.',
-  },
-  {
-    question: 'Rockstar.Store itu apa?',
-    answer: 'Rockstar.Store adalah toko online yang menyediakan produk dan layanan Roblox, termasuk top up Robux, item dan pet Brainrot, akun Roblox, serta jasa joki untuk beberapa game dan map.',
-  },
-];
-
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [...faqItems, ...aiAnswerItems].map((item) => ({
+  mainEntity: faqItems.map((item) => ({
     '@type': 'Question',
     name: item.question,
     acceptedAnswer: {
@@ -125,15 +106,6 @@ export default function FaqPage({ ssrGeneratedAt }) {
         {"\n"}
         <style dangerouslySetInnerHTML={{ __html: "\n:root{color-scheme:dark;--bg:#060913;--card:#0e1628;--line:rgba(111,139,255,.22);--txt:#f5f7ff;--mut:#aab4ce;--blue:#2b4eff;--blue2:#6f8bff;--gold:#f3d27a}\n*{box-sizing:border-box}\nhtml{scroll-behavior:smooth}\nbody{margin:0;min-height:100vh;padding:0 0 40px;color:var(--txt);font-family:var(--font-poppins),sans-serif;background:radial-gradient(900px 360px at 85% 0,rgba(43,78,255,.2),transparent 65%),radial-gradient(700px 300px at 5% 0,rgba(43,78,255,.12),transparent 60%),var(--bg)}\na{color:inherit}\nheader{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(20px,calc((100vw - 1180px)/2));background:rgba(0,4,40,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.09)}\n.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;letter-spacing:.4px}.brand img{height:36px;border-radius:9px}\n.back{color:#dbe4ff;text-decoration:none;font-size:14px;font-weight:600;padding:10px 14px;border:1px solid var(--line);border-radius:12px}.back:hover{border-color:var(--blue2);background:rgba(255,255,255,.06)}\nmain{width:min(1120px,calc(100% - 36px));margin:48px auto 0}\n.intro{text-align:center;margin:0 auto 30px;max-width:760px}.eyebrow{display:inline-block;padding:7px 13px;border:1px solid rgba(111,139,255,.35);border-radius:999px;background:rgba(43,78,255,.12);font-size:12px;font-weight:700;letter-spacing:.08em;color:#dbe4ff}.intro h1{font:800 clamp(36px,6vw,58px)/1.05 var(--font-baloo-2),sans-serif;margin:16px 0 8px}.intro p{color:var(--mut);font-size:15px;line-height:1.7;margin:0}\n.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:16px}\n.step{overflow:hidden;background:linear-gradient(160deg,rgba(18,29,54,.98),rgba(9,14,28,.98));border:1px solid var(--line);border-radius:18px;box-shadow:0 16px 42px rgba(0,0,0,.28)}\n.step img{display:block;width:100%;aspect-ratio:16/10;object-fit:contain;background:#05080f}\n.step-body{padding:18px 20px 20px}.step-no{color:var(--blue2);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.step h2{font:700 24px/1.2 var(--font-baloo-2),sans-serif;margin:6px 0}.step p{color:var(--mut);font-size:14px;line-height:1.7;margin:0}.step strong{color:#fff}\n.faq{margin-top:48px}.faq h2{font:700 32px var(--font-baloo-2),sans-serif;margin:0 0 14px}.faq-list{display:grid;gap:10px}details{background:rgba(14,22,40,.86);border:1px solid var(--line);border-radius:14px;padding:0 18px}summary{cursor:pointer;list-style:none;padding:17px 28px 17px 0;font-weight:600;position:relative}summary::-webkit-details-marker{display:none}summary:after{content:'+';position:absolute;right:0;top:12px;color:var(--blue2);font-size:24px}details[open] summary:after{content:'−'}details p{color:var(--mut);font-size:14px;line-height:1.75;margin:0;padding:0 0 18px}.contact{margin:30px 0 0;padding:22px;border:1px solid rgba(43,78,255,.35);border-radius:18px;background:linear-gradient(110deg,rgba(43,78,255,.18),rgba(14,22,40,.88));text-align:center}.contact p{color:#d9e1f5;margin:0 0 14px}.contact a{display:inline-block;padding:11px 18px;border-radius:11px;background:#25d366;color:#062b16;text-decoration:none;font-weight:700}\nfooter{text-align:center;color:var(--mut);font-size:12px;margin:42px auto 0;padding:0 18px}\n@media(max-width:560px){header{padding:10px 14px}.brand span{font-size:14px}.back{font-size:12px;padding:9px 10px;white-space:nowrap}main{margin-top:32px}.step-body{padding:16px}.faq h2{font-size:28px}}\n" }} />
         {"\n"}
-        <style>{`
-          .ai-answers{margin:34px 0 0;padding:22px;border:1px solid rgba(111,139,255,.28);border-radius:18px;background:linear-gradient(145deg,rgba(18,29,54,.94),rgba(9,14,28,.94))}
-          .ai-answers h2{font:700 28px/1.2 var(--font-baloo-2),sans-serif;margin:0 0 14px}
-          .ai-answer-list{display:grid;gap:10px}
-          .ai-answer{padding:15px 16px;border:1px solid var(--line);border-radius:13px;background:rgba(6,9,19,.5)}
-          .ai-answer h3{font:700 17px/1.4 var(--font-baloo-2),sans-serif;margin:0 0 6px}
-          .ai-answer p{color:var(--mut);font-size:14px;line-height:1.7;margin:0}
-          @media(max-width:560px){.ai-answers{padding:17px}.ai-answers h2{font-size:25px}}
-        `}</style>
       </Head>
       {"\n"}
       <header>
@@ -258,18 +230,6 @@ export default function FaqPage({ ssrGeneratedAt }) {
           </p>
         </article>
         {"\n  "}
-      </section>
-      {"\n  "}
-      <section className="ai-answers" aria-labelledby="ai-answers-title">
-        <h2 id="ai-answers-title">{"Jawaban siap-kutip AI"}</h2>
-        <div className="ai-answer-list">
-          {aiAnswerItems.map((item) => (
-            <article className="ai-answer" key={item.question}>
-              <h3>{item.question}</h3>
-              <p>{item.answer}</p>
-            </article>
-          ))}
-        </div>
       </section>
       {"\n  "}
       <section className="faq" aria-labelledby="faq-title">
