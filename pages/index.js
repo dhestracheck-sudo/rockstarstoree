@@ -83,7 +83,8 @@ async function getInitialHotProducts() {
 
   const products = [];
   const seenProducts = new Set();
-  for (const rows of catalogRows) {
+  for (const [catalogIndex, rows] of catalogRows.entries()) {
+    const tab = HOT_PRODUCT_TABLES[catalogIndex] || "home";
     for (const row of Array.isArray(rows) ? rows : []) {
       const name = String(row?.name || "").trim();
       const price = Number(row?.price) || 0;
@@ -97,6 +98,7 @@ async function getInitialHotProducts() {
         : "/ROCKSTARLOGO.webp";
       products.push({
         name,
+        tab,
         price,
         image,
         thumbnail: getProductImageVariant(image, "tiny"),
@@ -111,6 +113,65 @@ async function getInitialHotProducts() {
   return products
     .sort((a, b) => b.clicks - a.clicks || b.views - a.views || b.sold - a.sold)
     .slice(0, 8);
+}
+
+function absImageUrl(raw) {
+  if (/^https?:\/\//i.test(raw)) return raw.replace(/^http:/i, "https:");
+  if (raw.startsWith("/")) return `https://rockstarstore.id${raw}`;
+  return `https://rockstarstore.id/${raw}`;
+}
+
+/* SSR kategori: ambil produk nyata dari Supabase supaya halaman kategori
+   membawa nama/harga produk di HTML (bukan halaman tipis untuk Google). */
+async function getCategoryProducts(tab, category, limit = 24) {
+  if (!tab || !category) return [];
+  try {
+    const endpoint = `${PUBLIC_SUPABASE_URL}/rest/v1/${tab}?select=name,price,image&price=gt.0&kategori=${encodeURIComponent(`eq.${category}`)}&order=urutan&limit=${limit}`;
+    const response = await fetch(endpoint, {
+      headers: {
+        apikey: PUBLIC_SUPABASE_KEY,
+        Authorization: `Bearer ${PUBLIC_SUPABASE_KEY}`,
+      },
+      signal: AbortSignal.timeout(1800),
+      cache: "no-store",
+    });
+    if (!response.ok) return [];
+    const rows = await response.json();
+    return (Array.isArray(rows) ? rows : [])
+      .map((row) => ({
+        name: String(row?.name || "").trim(),
+        tab,
+        price: Number(row?.price) || 0,
+        image: absImageUrl(String(row?.image || "").split("|")[0].trim() || "ROCKSTARLOGO.webp"),
+      }))
+      .filter((product) => product.name && product.price > 0);
+  } catch {
+    return [];
+  }
+}
+
+function buildItemListJsonLd(products, listName) {
+  if (!Array.isArray(products) || !products.length) return null;
+  return {
+    "@type": "ItemList",
+    name: listName,
+    itemListElement: products.slice(0, 24).map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Product",
+        name: product.name,
+        image: product.image,
+        offers: {
+          "@type": "Offer",
+          price: Number(product.price) || 0,
+          priceCurrency: "IDR",
+          availability: "https://schema.org/InStock",
+          url: product.tab ? `https://rockstarstore.id/?tab=${product.tab}` : "https://rockstarstore.id/",
+        },
+      },
+    })),
+  };
 }
 
 const storeJsonLd = {
@@ -192,24 +253,29 @@ function getHomeSeo(query = {}) {
     isPartOf: { "@id": "https://rockstarstore.id/#website" },
   };
 
-  return { title, description, canonical, robots, webPageJsonLd };
+  return { title, description, canonical, robots, webPageJsonLd, tab: tab !== "home" ? tab : "", category };
 }
 
 export async function getServerSideProps(context) {
+  const seo = getHomeSeo(context.query);
   const hotProducts = context.query.q ? [] : await getInitialHotProducts();
+  const catProducts = (context.query.q || !seo.category) ? [] : await getCategoryProducts(seo.tab, seo.category);
   if (!context.query.q) {
-    context.res.setHeader("Cache-Control", "public, s-maxage=30, stale-while-revalidate=120");
+    context.res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=300");
   }
   return {
     props: {
       ssrGeneratedAt: new Date().toISOString(),
-      seo: getHomeSeo(context.query),
+      seo,
       hotProducts,
+      catProducts,
     },
   };
 }
 
-export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
+export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts }) {
+  const itemListSource = (catProducts && catProducts.length) ? catProducts : hotProducts;
+  const itemListJsonLd = buildItemListJsonLd(itemListSource, seo.category ? `Kategori ${seo.category}` : "Produk Populer Rockstar.Store");
   return (
     <>
       <Head>
@@ -263,6 +329,12 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
         {"\r\n"}
         <meta property="og:image:alt" content="Logo Rockstar.Store" />
         {"\r\n"}
+        <meta property="og:image:width" content="500" />
+        {"\r\n"}
+        <meta property="og:image:height" content="500" />
+        {"\r\n"}
+        <meta property="og:image:type" content="image/png" />
+        {"\r\n"}
         <meta name="twitter:card" content="summary_large_image" />
         {"\r\n"}
         <meta name="twitter:title" content={seo.title} />
@@ -275,7 +347,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
         {"\r\n"}
         <link rel="apple-touch-icon" href="/ROCKSTARICON.png" />
         {"\r\n\r\n"}
-<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ ...storeJsonLd, "@graph": [...storeJsonLd["@graph"], ...(seo.webPageJsonLd ? [seo.webPageJsonLd] : [])] }).replace(/</g, String.fromCharCode(92) + "u003c") }} />
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ ...storeJsonLd, "@graph": [...storeJsonLd["@graph"], ...(seo.webPageJsonLd ? [seo.webPageJsonLd] : []), ...(itemListJsonLd ? [itemListJsonLd] : [])] }).replace(/</g, String.fromCharCode(92) + "u003c") }} />
         {"\r\n\r\n"}
         {"\r\n\r\n"}
         {"\r\n"}
@@ -780,7 +852,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts }) {
                       src={product.thumbnail || product.image}
                       data-fallback={product.fallbackThumbnail !== product.thumbnail ? product.fallbackThumbnail : ""}
                       data-full={product.image !== product.fallbackThumbnail ? product.image : ""}
-                      alt=""
+                      alt={product.name}
                       width={68}
                       height={68}
                       loading="lazy"

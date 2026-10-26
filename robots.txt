@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /analisis
+Disallow: /kantor
 
 Sitemap: https://rockstarstore.id/sitemap.xml

@@ -63,8 +63,9 @@ export async function getServerSideProps({ res }) {
   ];
   const categories = (await Promise.all(PUBLIC_CATALOGS.map(categoryUrls))).flat();
   const urls = Array.from(new Set([...pages, ...categories]));
+  const lastmod = new Date().toISOString().slice(0, 10);
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
-    .map((url) => `  <url><loc>${escapeXml(url)}</loc></url>`)
+    .map((url) => `  <url><loc>${escapeXml(url)}</loc><lastmod>${lastmod}</lastmod></url>`)
     .join("\n")}\n</urlset>`;
 
   res.setHeader("Content-Type", "application/xml; charset=utf-8");
