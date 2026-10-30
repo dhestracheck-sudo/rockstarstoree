@@ -1,0 +1,52 @@
+/* Bunga jatuh ringan: CSS murni, transform + opacity saja (tidak pakai JS).
+   Lapisan fixed di atas background tapi di bawah interaksi (pointer-events: none).
+   Tidak mengubah layout / tampilan elemen yang sudah ada. */
+.petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.petals i {
+  position: absolute;
+  top: -6%;
+  width: var(--s, 12px);
+  height: var(--s, 12px);
+  left: var(--x, 50%);
+  opacity: 0;
+  background: linear-gradient(135deg, #ffd3e8 0%, #ff9ec7 55%, #ff7ab3 100%);
+  border-radius: 100% 4% 100% 4%;
+  animation: petal-fall var(--d, 11s) linear var(--dl, 0s) infinite;
+  will-change: transform, opacity;
+}
+@keyframes petal-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  8% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(var(--sw, 34px), 52vh, 0) rotate(185deg);
+  }
+  92% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--sw, 34px) * -0.6), 108vh, 0) rotate(360deg);
+  }
+}
+/* HP: lebih sedikit & lebih kecil biar enteng */
+@media (max-width: 768px) {
+  .petals i:nth-child(n + 7) {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .petals {
+    display: none;
+  }
+}
