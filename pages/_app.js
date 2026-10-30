@@ -33,9 +33,12 @@ export default function App({ Component, pageProps }) {
     <>
       <div className={`${poppins.className} ${poppins.variable} ${baloo.variable} ${oswald.variable}`}>
         <div className="meteors" aria-hidden="true">
-          <i className="meteor" style={{ "--y": "8%", "--d": "9s", "--dl": "1s" }} />
-          <i className="meteor" style={{ "--y": "22%", "--d": "12s", "--dl": "5.5s" }} />
-          <i className="meteor" style={{ "--y": "38%", "--d": "10s", "--dl": "9s" }} />
+          <i className="meteor" style={{ "--y": "6%", "--d": "7s", "--dl": "0s" }} />
+          <i className="meteor" style={{ "--y": "16%", "--d": "7s", "--dl": "1.2s" }} />
+          <i className="meteor" style={{ "--y": "26%", "--d": "7s", "--dl": "2.4s" }} />
+          <i className="meteor" style={{ "--y": "36%", "--d": "7s", "--dl": "3.6s" }} />
+          <i className="meteor" style={{ "--y": "46%", "--d": "7s", "--dl": "4.8s" }} />
+          <i className="meteor" style={{ "--y": "56%", "--d": "7s", "--dl": "6s" }} />
         </div>
         <div className="stars-back" aria-hidden="true">
           <i style={{ "--x": "4%", "--y": "10%", "--s": "2px", "--d": "3.2s", "--dl": "0s" }} />
