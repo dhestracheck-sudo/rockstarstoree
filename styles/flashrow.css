@@ -17,8 +17,8 @@
 .flashsec .itemgrid.flashrow .item > .thumb {
   width: 122px;
   min-width: 122px;
-  aspect-ratio: auto;
-  align-self: stretch;
+  aspect-ratio: 3 / 4;
+  align-self: center;
 }
 .flashsec .itemgrid.flashrow .item > .thumb .catemoji {
   display: none;
@@ -56,7 +56,7 @@
 }
 @media (max-width: 760px) {
   .flashsec .itemgrid.flashrow .item { flex-basis: 300px; }
-  .flashsec .itemgrid.flashrow .item > .thumb { width: 104px; min-width: 104px; }
+  .flashsec .itemgrid.flashrow .item > .thumb { width: 104px; min-width: 104px; aspect-ratio: 3 / 4; }
   .flashsec .flashhead::after { font-size: 11.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
