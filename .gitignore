@@ -18,6 +18,16 @@ auto-push.log
 /public
 .dev.vars*
 
+# Static export output yang pernah kepush ke main - jangan commit lagi.
+# Source route ada di pages/, folder ini output build saja.
+/_next/
+/404.html
+/admin/
+/analisis/
+/faq/
+/kantor/
+/functions/
+
 /backups/
 /.vscode/
 /AGENTS.md
