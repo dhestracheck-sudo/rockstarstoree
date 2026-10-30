@@ -37,6 +37,25 @@
   display: flex;
   flex-direction: column;
 }
+.flashsec .itemgrid.flashrow .item > .ibody h3 {
+  font-size: 14px;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+.flashsec .itemgrid.flashrow .item > .ibody .price .now {
+  font-size: 19px;
+}
+.flashsec .itemgrid.flashrow .item > .ibody .price .was,
+.flashsec .itemgrid.flashrow .item > .ibody .price .rm {
+  font-size: 11.5px;
+}
+.flashsec .itemgrid.flashrow .item > .ibody .stocklow {
+  font-size: 11.5px;
+}
 .flashsec .itemgrid.flashrow .item > .ibody .btn {
   margin-top: auto;
   padding: 9px 10px;
