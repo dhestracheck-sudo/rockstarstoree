@@ -20,7 +20,9 @@
   aspect-ratio: 3 / 4;
   align-self: center;
 }
-.flashsec .itemgrid.flashrow .item > .thumb .catemoji {
+.flashsec .itemgrid.flashrow .item > .thumb .catemoji,
+.flashsec .itemgrid.flashrow .item > .thumb .viewpill,
+.flashsec .itemgrid.flashrow .item > .ibody .kilat {
   display: none;
 }
 .flashsec .itemgrid.flashrow .item > .thumb img {
@@ -37,6 +39,8 @@
 }
 .flashsec .itemgrid.flashrow .item > .ibody .btn {
   margin-top: auto;
+  padding: 9px 10px;
+  font-size: 12.5px;
 }
 .flashsec .flashhead::after {
   content: "Geser 👉";
