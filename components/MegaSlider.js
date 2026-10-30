@@ -110,60 +110,7 @@ export default function MegaSlider() {
             </p>
           </div>
         </div>
-        <div className="mega-slide s2" role="group" aria-roledescription="slide" aria-label="Slide 3 dari 8">
-          <div className="mega-fig left">
-            <img src="figur-3.webp" srcSet="/optimized/figur-3-240.webp 240w, /optimized/figur-3-400.webp 400w, /figur-3.webp 474w" sizes="(max-width: 768px) 130px, 240px" alt="Roblox" width="474" height="445" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
-          </div>
-          <div className="mega-fig right">
-            <img src="figur-2.webp" alt="Robux" width="352" height="352" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
-          </div>
-          <div className="mega-in">
-            <div className="mega-brand">
-              {"★ TOP UP ROBUX ★"}
-            </div>
-            <p className="mega-title-w" data-i18n="sl3_t">
-              {"ROBUX INSTAN"}
-            </p>
-            <p className="mega-title-g" data-i18n="sl3_g">
-              {"PALING MURAH"}
-            </p>
-            <p className="mega-sub" data-i18n="sl3_sub">
-              {"VIA ID • GAMEPASS • GIFT CARD"}
-            </p>
-            <div className="mega-badges">
-              <span className="mega-badge">
-                <span className="ck">
-                  {"✓"}
-                </span>
-                <span data-i18n="sl3_b1">
-                  {"Proses Kilat"}
-                </span>
-              </span>
-              <span className="mega-badge">
-                <span className="ck">
-                  {"✓"}
-                </span>
-                <span data-i18n="sl3_b2">
-                  {"Payment Lengkap"}
-                </span>
-              </span>
-              <span className="mega-badge">
-                <span className="ck">
-                  {"✓"}
-                </span>
-                <span data-i18n="sl3_b3">
-                  {"Garansi 100%"}
-                </span>
-              </span>
-            </div>
-            <div className="mega-cta">
-              <button className="btn-primary" onClick={(event) => { goToTopUp(); }} data-i18n="sl3_cta">
-                {"Top Up Sekarang 💰"}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="mega-slide s3" role="group" aria-roledescription="slide" aria-label="Slide 4 dari 8">
+        <div className="mega-slide s3" role="group" aria-roledescription="slide" aria-label="Slide 3 dari 8">
           <div className="mega-fig left">
             <img src="figur-kiri.webp" alt="Rockstar" width="524" height="700" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
@@ -219,7 +166,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s4" role="group" aria-roledescription="slide" aria-label="Slide 5 dari 8">
+        <div className="mega-slide s4" role="group" aria-roledescription="slide" aria-label="Slide 4 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl5_br">
@@ -271,7 +218,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s5" role="group" aria-roledescription="slide" aria-label="Slide 6 dari 8">
+        <div className="mega-slide s5" role="group" aria-roledescription="slide" aria-label="Slide 5 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox" style={{ textAlign: "center", alignItems: "center", marginLeft: "auto", marginRight: "auto" }}>
               <div className="mega-brand" data-i18n="sl6_br">
@@ -329,7 +276,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s6" role="group" aria-roledescription="slide" aria-label="Slide 7 dari 8">
+        <div className="mega-slide s6" role="group" aria-roledescription="slide" aria-label="Slide 6 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl7_br">
@@ -368,7 +315,7 @@ export default function MegaSlider() {
             </div>
           </div>
         </div>
-        <div className="mega-slide s7" role="group" aria-roledescription="slide" aria-label="Slide 8 dari 8">
+        <div className="mega-slide s7" role="group" aria-roledescription="slide" aria-label="Slide 7 dari 8">
           <div className="mega-in mega-flex">
             <div className="mega-titlebox">
               <div className="mega-brand" data-i18n="sl8_br">
@@ -397,6 +344,59 @@ export default function MegaSlider() {
             </div>
             <div className="mega-phone">
               <img src="Screenshot%202026-10-08%20135021.webp" alt="TikTok Rockstar" width="634" height="840" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            </div>
+          </div>
+        </div>
+        <div className="mega-slide s2" role="group" aria-roledescription="slide" aria-label="Slide 8 dari 8">
+          <div className="mega-fig left">
+            <img src="figur-3.webp" srcSet="/optimized/figur-3-240.webp 240w, /optimized/figur-3-400.webp 400w, /figur-3.webp 474w" sizes="(max-width: 768px) 130px, 240px" alt="Roblox" width="474" height="445" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+          </div>
+          <div className="mega-fig right">
+            <img src="figur-2.webp" alt="Robux" width="352" height="352" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+          </div>
+          <div className="mega-in">
+            <div className="mega-brand">
+              {"★ TOP UP ROBUX ★"}
+            </div>
+            <p className="mega-title-w" data-i18n="sl3_t">
+              {"ROBUX INSTAN"}
+            </p>
+            <p className="mega-title-g" data-i18n="sl3_g">
+              {"PALING MURAH"}
+            </p>
+            <p className="mega-sub" data-i18n="sl3_sub">
+              {"VIA ID • GAMEPASS • GIFT CARD"}
+            </p>
+            <div className="mega-badges">
+              <span className="mega-badge">
+                <span className="ck">
+                  {"✓"}
+                </span>
+                <span data-i18n="sl3_b1">
+                  {"Proses Kilat"}
+                </span>
+              </span>
+              <span className="mega-badge">
+                <span className="ck">
+                  {"✓"}
+                </span>
+                <span data-i18n="sl3_b2">
+                  {"Payment Lengkap"}
+                </span>
+              </span>
+              <span className="mega-badge">
+                <span className="ck">
+                  {"✓"}
+                </span>
+                <span data-i18n="sl3_b3">
+                  {"Garansi 100%"}
+                </span>
+              </span>
+            </div>
+            <div className="mega-cta">
+              <button className="btn-primary" onClick={(event) => { goToTopUp(); }} data-i18n="sl3_cta">
+                {"Top Up Sekarang 💰"}
+              </button>
             </div>
           </div>
         </div>
