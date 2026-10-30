@@ -1,0 +1,90 @@
+/* Sakura + kelopak berguguran + gelembung pecah. CSS ringan, JS hanya untuk pecah gelembung. */
+.sakura-tree {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: min(200px, 34vw);
+  pointer-events: none;
+  z-index: 1;
+  transform-origin: bottom center;
+  animation: sakura-sway 7s ease-in-out infinite;
+}
+@keyframes sakura-sway {
+  0%, 100% { transform: rotate(-0.8deg); }
+  50% { transform: rotate(0.8deg); }
+}
+
+.sakura-petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.sakura-petals i {
+  position: absolute;
+  top: -6%;
+  width: var(--s, 12px);
+  height: var(--s, 12px);
+  left: var(--x, 50%);
+  opacity: 0;
+  background: linear-gradient(135deg, #ffd9e8 0%, #ffb1cd 55%, #f78fb3 100%);
+  border-radius: 100% 4% 100% 4%;
+  animation: sakura-fall var(--d, 11s) linear var(--dl, 0s) infinite;
+  will-change: transform, opacity;
+}
+@keyframes sakura-fall {
+  0% { opacity: 0; transform: translate3d(0, -5vh, 0) rotate(0deg); }
+  8% { opacity: 0.9; }
+  50% { transform: translate3d(var(--sw, 34px), 52vh, 0) rotate(185deg); }
+  92% { opacity: 0.75; }
+  100% { opacity: 0; transform: translate3d(calc(var(--sw, 34px) * -0.6), 108vh, 0) rotate(360deg); }
+}
+
+.sakura-bubbles {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.sakura-bubbles .bubble {
+  position: absolute;
+  bottom: -8%;
+  left: var(--x, 50%);
+  width: var(--s, 34px);
+  height: var(--s, 34px);
+  border-radius: 50%;
+  pointer-events: auto;
+  cursor: pointer;
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.08) 32%, rgba(255, 182, 213, 0.12) 60%, rgba(255, 158, 199, 0.3) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset -3px -4px 8px rgba(255, 255, 255, 0.15), 0 0 12px rgba(255, 158, 199, 0.18);
+  animation: bubble-rise var(--d, 12s) linear var(--dl, 0s) infinite;
+  -webkit-tap-highlight-color: transparent;
+}
+@keyframes bubble-rise {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.7); }
+  10% { opacity: 0.9; transform: translate3d(0, -12vh, 0) scale(1); }
+  50% { transform: translate3d(var(--sw, 24px), -55vh, 0) scale(1.05); }
+  90% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate3d(calc(var(--sw, 24px) * -0.5), -112vh, 0) scale(1); }
+}
+.sakura-bubbles .bubble.pop {
+  animation: bubble-pop 0.28s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes bubble-pop {
+  0% { opacity: 0.95; transform: scale(1); }
+  40% { opacity: 1; transform: scale(1.45); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+@media (max-width: 768px) {
+  .sakura-tree { width: 122px; }
+  .sakura-petals i:nth-child(n + 7) { display: none; }
+  .sakura-bubbles .bubble:nth-child(n + 4) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sakura-tree, .sakura-petals, .sakura-bubbles { display: none; }
+}
