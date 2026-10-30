@@ -53,13 +53,15 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <div className={`${poppins.className} ${poppins.variable} ${baloo.variable} ${oswald.variable}`}>
-        <div className="sakura-bubbles" aria-hidden="true">
+        {shouldTrack && (
+          <div className="sakura-bubbles" aria-hidden="true">
           <i className="bubble" style={{ "--x": "12%", "--s": "30px", "--d": "13s", "--dl": "0s", "--sw": "22px" }} />
           <i className="bubble" style={{ "--x": "30%", "--s": "40px", "--d": "11s", "--dl": "2.5s", "--sw": "-26px" }} />
           <i className="bubble" style={{ "--x": "52%", "--s": "26px", "--d": "14s", "--dl": "1.2s", "--sw": "28px" }} />
           <i className="bubble" style={{ "--x": "70%", "--s": "36px", "--d": "12s", "--dl": "3.8s", "--sw": "-24px" }} />
           <i className="bubble" style={{ "--x": "88%", "--s": "30px", "--d": "13.5s", "--dl": "5s", "--sw": "20px" }} />
-        </div>
+          </div>
+        )}
         {shouldTrack && (
           <>
             <Script
