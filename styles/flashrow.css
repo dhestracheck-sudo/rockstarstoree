@@ -36,6 +36,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 .flashsec .itemgrid.flashrow .item > .ibody h3 {
   font-size: 14px;
@@ -57,9 +58,7 @@
   font-size: 11.5px;
 }
 .flashsec .itemgrid.flashrow .item > .ibody .btn {
-  margin-top: auto;
-  padding: 9px 10px;
-  font-size: 12.5px;
+  display: none;
 }
 .flashsec .flashhead::after {
   content: "Geser 👉";
