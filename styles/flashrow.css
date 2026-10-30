@@ -10,8 +10,33 @@
 }
 .flashsec .itemgrid.flashrow::-webkit-scrollbar { display: none; }
 .flashsec .itemgrid.flashrow .item {
-  flex: 0 0 300px;
+  flex: 0 0 330px;
+  flex-direction: row;
   scroll-snap-align: start;
+}
+.flashsec .itemgrid.flashrow .item > .thumb {
+  width: 122px;
+  min-width: 122px;
+  aspect-ratio: auto;
+  align-self: stretch;
+}
+.flashsec .itemgrid.flashrow .item > .thumb .catemoji {
+  display: none;
+}
+.flashsec .itemgrid.flashrow .item > .thumb img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+}
+.flashsec .itemgrid.flashrow .item > .ibody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.flashsec .itemgrid.flashrow .item > .ibody .btn {
+  margin-top: auto;
 }
 .flashsec .flashhead::after {
   content: "Geser 👉";
@@ -30,7 +55,8 @@
   .flashsec .itemgrid.flashrow .item { flex-basis: 320px; }
 }
 @media (max-width: 760px) {
-  .flashsec .itemgrid.flashrow .item { flex-basis: 220px; }
+  .flashsec .itemgrid.flashrow .item { flex-basis: 300px; }
+  .flashsec .itemgrid.flashrow .item > .thumb { width: 104px; min-width: 104px; }
   .flashsec .flashhead::after { font-size: 11.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
