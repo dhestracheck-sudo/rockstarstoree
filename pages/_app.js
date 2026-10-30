@@ -1,4 +1,5 @@
 import "../styles/announcement.css";
+import "../styles/hd.css";
 import "../styles/sakura.css";
 import Script from "next/script";
 import { useEffect } from "react";

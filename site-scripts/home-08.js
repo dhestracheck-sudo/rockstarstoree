@@ -950,7 +950,7 @@ function renderDetail(){
 
   document.getElementById("detailBox").innerHTML = `
     <div style="position:relative;">
-      <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" onerror="imgErr(this)">
+      <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" loading="lazy" decoding="async" onerror="imgErr(this)">
       <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
       ${files.length > 1 ? `
@@ -1372,7 +1372,7 @@ function checkout(){
     let itemImage = fixImg(item.img || item.categoryImg);
     previewHTML += `
       <div class="mrow">
-        <img src="${itemImage}" alt="${item.name}" loading="lazy" onerror="imgErr(this)">
+        <img src="${itemImage}" alt="${item.name}" width="56" height="56" loading="lazy" decoding="async" onerror="imgErr(this)">
         <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}${rmFmt(item.price) ? `<br><small class="rm">${rmFmt(item.price)}</small>` : ``}</div>
       </div>`;
   });

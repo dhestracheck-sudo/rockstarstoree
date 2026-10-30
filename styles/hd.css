@@ -1,0 +1,9 @@
+/* HD ringan: teks lebih tajam, gambar tetap hemat. Tanpa ubah layout. */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+img {
+  image-rendering: auto;
+}
