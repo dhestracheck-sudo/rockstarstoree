@@ -43,6 +43,9 @@ export default function App({ Component, pageProps }) {
           <i style={{ "--x": "74%", "--s": "12px", "--d": "11.5s", "--dl": "2.9s", "--sw": "-28px" }} />
           <i style={{ "--x": "84%", "--s": "13px", "--d": "12.8s", "--dl": "0.4s", "--sw": "32px" }} />
           <i style={{ "--x": "93%", "--s": "11px", "--d": "10.8s", "--dl": "3.6s", "--sw": "-34px" }} />
+          <i className="deco deco-pumpkin" style={{ "--x": "9%", "--s": "26px", "--d": "14s", "--dl": "2s", "--sw": "24px" }} />
+          <i className="deco deco-skull" style={{ "--x": "49%", "--s": "24px", "--d": "15s", "--dl": "5s", "--sw": "-22px" }} />
+          <i className="deco deco-bat" style={{ "--x": "79%", "--s": "28px", "--d": "13s", "--dl": "3.4s", "--sw": "26px" }} />
         </div>
         {shouldTrack && (
           <>

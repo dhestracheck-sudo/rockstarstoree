@@ -39,9 +39,13 @@
     transform: translate3d(calc(var(--sw, 34px) * -0.6), 108vh, 0) rotate(360deg);
   }
 }
-/* HP: lebih sedikit & lebih kecil biar enteng */
+/* HP: lebih sedikit & lebih kecil biar enteng (tampilkan 6 daun + labu) */
 @media (max-width: 768px) {
-  .petals i:nth-child(n + 7) {
+  .petals i:nth-child(n + 7):not(.deco) {
+    display: none;
+  }
+  .petals i.deco-skull,
+  .petals i.deco-bat {
     display: none;
   }
 }
