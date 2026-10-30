@@ -112,7 +112,7 @@ function flashItems(){
     });
   });
   out.sort((a, b) => b.off - a.off);
-  return out.slice(0, 4);
+  return out;
 }
 
 function flashAdd(page, i, j){
