@@ -1,19 +1,27 @@
-/* Judul halaman katalog (Katalog Brainrot / Akun / Top Up / Joki) dengan gambar latar. */
+/* Judul halaman katalog dengan wajah Rockstar. */
 .cattitle {
   position: relative;
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid var(--line);
-  padding: 34px 22px;
+  padding: 34px 150px 34px 22px;
   margin: 14px 0 6px;
-  background-size: cover;
-  background-position: center 30%;
+  background:
+    radial-gradient(420px 200px at 88% 20%, rgba(43, 120, 255, 0.35), transparent 65%),
+    radial-gradient(300px 200px at 95% 90%, rgba(255, 123, 28, 0.22), transparent 60%),
+    linear-gradient(115deg, #0a1440 0%, #10206b 55%, #0b2f7a 100%);
 }
-.cattitle::before {
-  content: "";
+.cattitle-face {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(6, 9, 19, 0.52), rgba(6, 9, 19, 0.85));
+  right: -14px;
+  bottom: -18px;
+  width: 168px;
+  height: 168px;
+  object-fit: cover;
+  border-radius: 50%;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 26px rgba(80, 140, 255, 0.55));
+  pointer-events: none;
 }
 .cattitle h2,
 .cattitle p {
@@ -35,5 +43,6 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 @media (max-width: 760px) {
-  .cattitle { padding: 26px 16px; border-radius: 14px; }
+  .cattitle { padding: 24px 108px 24px 16px; border-radius: 14px; }
+  .cattitle-face { width: 112px; height: 112px; right: -10px; bottom: -12px; }
 }
