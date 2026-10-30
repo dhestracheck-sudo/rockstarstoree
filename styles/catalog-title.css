@@ -1,0 +1,39 @@
+/* Judul halaman katalog (Katalog Brainrot / Akun / Top Up / Joki) dengan gambar latar. */
+.cattitle {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  padding: 34px 22px;
+  margin: 14px 0 6px;
+  background-size: cover;
+  background-position: center 30%;
+}
+.cattitle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 9, 19, 0.52), rgba(6, 9, 19, 0.85));
+}
+.cattitle h2,
+.cattitle p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+.cattitle h2 {
+  font-family: var(--font-baloo-2), sans-serif;
+  font-size: clamp(26px, 4.6vw, 44px);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+.cattitle p {
+  margin-top: 6px;
+  color: #dbe4ff;
+  font-size: 14px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+@media (max-width: 760px) {
+  .cattitle { padding: 26px 16px; border-radius: 14px; }
+}

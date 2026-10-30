@@ -689,8 +689,8 @@ function render(){
   const heroFn = isJoki ? jokiHeroHTML : (isAkun ? akunHeroHTML : (isBrainrot ? brainrotHeroHTML : null));
   const catHeroHTML = (typeof heroFn === "function") ? heroFn() : ``;
   title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + catHeroHTML + `
-    <h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
-    <p>${categories.length} ${tr("cat_sub")}</p>`;
+    <div class="cattitle" style="background-image:url('${fixImg((categories.find(c=>c.img)||{}).img)}')"><h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
+    <p>${categories.length} ${tr("cat_sub")}</p></div>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
       <div class="catimgwrap"><span class="catemoji">${catEmoji(c.name)}</span>${thumbTag(c.img, `alt="${c.name}" loading="lazy"`)}</div>
