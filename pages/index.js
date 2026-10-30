@@ -1144,8 +1144,6 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
           <h2 data-i18n="server_t">
             {"🔗 Link Server Rock Star"}
           </h2>
-          {"\r\n    "}
-        </div>
         <p style={{ color: "var(--mut)", fontSize: "13.5px", margin: "0 0 14px" }} data-i18n="server_sub">
           {"Klik server untuk join langsung dari Roblox"}
         </p>
@@ -1195,6 +1193,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         </div>
         {"\r\n  "}
       </div>
+        </div>
       {"\r\n"}
       {"\r\n\r\n"}
       <div className="overlay" id="cartModal">
