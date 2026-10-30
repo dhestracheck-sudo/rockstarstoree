@@ -13,7 +13,7 @@
   position: absolute;
   inset: -40%;
   pointer-events: none;
-  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(120, 170, 255, 0.09) 60px 92px, transparent 92px 190px);
+  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(70, 150, 255, 0.09) 60px 92px, transparent 92px 190px);
   animation: cattitle-streak 16s linear infinite;
 }
 @keyframes cattitle-streak {
@@ -23,8 +23,8 @@
   position: absolute;
   z-index: 1;
   border-radius: 2px;
-  background: #bcd4ff;
-  box-shadow: 0 0 10px 2px rgba(110, 168, 255, 0.65);
+  background: #d6ecff;
+  box-shadow: 0 0 10px 2px rgba(50, 140, 255, 0.7);
   transform: rotate(45deg);
   animation: cattitle-spark-float 5s ease-in-out infinite;
   pointer-events: none;
