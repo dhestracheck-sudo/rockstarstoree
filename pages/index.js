@@ -59,7 +59,7 @@ async function getInitialHotProducts() {
     try {
       const response = await fetch(`${PUBLIC_SUPABASE_URL}/rest/v1/${path}`, {
         headers,
-        signal: AbortSignal.timeout(1800),
+        signal: AbortSignal.timeout(3000),
         cache: "no-store",
       });
       return response.ok ? await response.json() : [];
@@ -69,9 +69,9 @@ async function getInitialHotProducts() {
   };
 
   const [clickRows, ...catalogRows] = await Promise.all([
-    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte.${encodeURIComponent(since)}`),
+    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=500&waktu=gte.${encodeURIComponent(since)}`),
     ...HOT_PRODUCT_TABLES.map((table) =>
-      request(`${table}?select=name,price,image,stock,soldout,sold,dilihat&order=urutan&limit=1000`),
+      request(`${table}?select=name,price,image,stock,soldout,sold,dilihat&price=gt.0&stock=gt.0&order=sold.desc,dilihat.desc&limit=150`),
     ),
   ]);
 
@@ -139,7 +139,7 @@ async function getCategoryProducts(tab, category, limit = 24) {
         apikey: PUBLIC_SUPABASE_KEY,
         Authorization: `Bearer ${PUBLIC_SUPABASE_KEY}`,
       },
-      signal: AbortSignal.timeout(1800),
+      signal: AbortSignal.timeout(3000),
       cache: "no-store",
     });
     if (!response.ok) return [];
@@ -270,8 +270,12 @@ function getHomeSeo(query = {}) {
 
 export async function getServerSideProps(context) {
   const seo = getHomeSeo(context.query);
-  const hotProducts = context.query.q ? [] : await getInitialHotProducts();
-  const catProducts = (context.query.q || !seo.category) ? [] : await getCategoryProducts(seo.tab, seo.category);
+  const needHot = !context.query.q;
+  const needCat = Boolean(!context.query.q && seo.category);
+  const [hotProducts, catProducts] = await Promise.all([
+    needHot ? getInitialHotProducts() : Promise.resolve([]),
+    needCat ? getCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
+  ]);
   if (!context.query.q) {
     context.res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=300");
   }
