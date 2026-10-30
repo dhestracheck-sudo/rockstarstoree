@@ -40,6 +40,17 @@ Alternatif dashboard:
 - Build command: `npm run cf:build`
 - Deploy command: `npx wrangler deploy`
 
+## Auto-deploy via GitHub Actions
+
+Workflow: `.github/workflows/deploy.yml`.
+Trigger: push ke `cloudflare-nextjs` atau `main`.
+
+Secrets yang harus diisi di GitHub repo Settings > Secrets:
+- `CLOUDFLARE_API_TOKEN` (Workers deploy token)
+- `CLOUDFLARE_ACCOUNT_ID`
+
+Setelah secrets ada, tiap push otomatis build + deploy.
+
 ## Mengganti main yang lama (hati-hati)
 
 `origin/main` saat ini = output build lama. Setelah `cloudflare-nextjs` stabil:
