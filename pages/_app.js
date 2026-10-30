@@ -1,6 +1,6 @@
 import "../styles/announcement.css";
 import "../styles/hd.css";
-import "../styles/meteor.css";
+import "../styles/sky.css";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { Baloo_2, Oswald, Poppins } from "next/font/google";
@@ -32,13 +32,22 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <div className={`${poppins.className} ${poppins.variable} ${baloo.variable} ${oswald.variable}`}>
-        <div className="meteors" aria-hidden="true">
-          <i className="meteor" style={{ "--y": "6%", "--d": "7s", "--dl": "0s" }} />
-          <i className="meteor" style={{ "--y": "16%", "--d": "7s", "--dl": "1.2s" }} />
-          <i className="meteor" style={{ "--y": "26%", "--d": "7s", "--dl": "2.4s" }} />
-          <i className="meteor" style={{ "--y": "36%", "--d": "7s", "--dl": "3.6s" }} />
-          <i className="meteor" style={{ "--y": "46%", "--d": "7s", "--dl": "4.8s" }} />
-          <i className="meteor" style={{ "--y": "56%", "--d": "7s", "--dl": "6s" }} />
+        <div className="bubbles-back" aria-hidden="true">
+          <i className="bubble" style={{ "--x": "10%", "--s": "30px", "--d": "13s", "--dl": "0s", "--sw": "22px" }} />
+          <i className="bubble" style={{ "--x": "32%", "--s": "40px", "--d": "11s", "--dl": "2.5s", "--sw": "-26px" }} />
+          <i className="bubble" style={{ "--x": "55%", "--s": "26px", "--d": "14s", "--dl": "1.2s", "--sw": "28px" }} />
+          <i className="bubble" style={{ "--x": "74%", "--s": "36px", "--d": "12s", "--dl": "3.8s", "--sw": "-24px" }} />
+          <i className="bubble" style={{ "--x": "90%", "--s": "30px", "--d": "13.5s", "--dl": "5s", "--sw": "20px" }} />
+        </div>
+        <div className="spl-petals" aria-hidden="true">
+          <i style={{ "--x": "7%", "--s": "9px", "--d": "12s", "--dl": "0.5s", "--sw": "30px" }} />
+          <i style={{ "--x": "19%", "--s": "11px", "--d": "10s", "--dl": "2s", "--sw": "-26px" }} />
+          <i style={{ "--x": "31%", "--s": "8px", "--d": "13s", "--dl": "3.4s", "--sw": "38px" }} />
+          <i style={{ "--x": "43%", "--s": "10px", "--d": "11s", "--dl": "1.1s", "--sw": "-32px" }} />
+          <i style={{ "--x": "57%", "--s": "9px", "--d": "12.5s", "--dl": "2.7s", "--sw": "28px" }} />
+          <i style={{ "--x": "69%", "--s": "11px", "--d": "10.5s", "--dl": "4.2s", "--sw": "-30px" }} />
+          <i style={{ "--x": "81%", "--s": "8px", "--d": "13.5s", "--dl": "0.9s", "--sw": "36px" }} />
+          <i style={{ "--x": "92%", "--s": "10px", "--d": "11.5s", "--dl": "5.1s", "--sw": "-28px" }} />
         </div>
         <div className="stars-back" aria-hidden="true">
           <i style={{ "--x": "4%", "--y": "10%", "--s": "2px", "--d": "3.2s", "--dl": "0s" }} />
