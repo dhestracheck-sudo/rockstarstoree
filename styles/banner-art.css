@@ -1,30 +1,46 @@
-/* Hiasan banner homepage: gradasi + watermark ikon tiap kartu. Ringan, tanpa gambar baru. */
+/* Banner homepage: biru semua + kilau bergerak + gambar kecil. Ringan, tanpa file baru. */
 .banners .banner { position: relative; overflow: hidden; }
+.banners .banner::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(120, 180, 255, 0.1) 60px 92px, transparent 92px 190px);
+  animation: banner-streak 13s linear infinite;
+}
+@keyframes banner-streak {
+  to { transform: translateX(190px); }
+}
 .banners .banner::after {
   position: absolute;
-  right: -8px;
-  bottom: -22px;
-  font-size: 110px;
+  right: -6px;
+  bottom: -20px;
+  font-size: 96px;
   line-height: 1;
-  opacity: 0.14;
+  opacity: 0.2;
   transform: rotate(-10deg);
   pointer-events: none;
-  filter: saturate(1.2);
+  filter: saturate(1.2) drop-shadow(0 0 14px rgba(80, 140, 255, 0.5));
+  animation: banner-float 5s ease-in-out infinite;
+}
+@keyframes banner-float {
+  0%, 100% { transform: rotate(-10deg) translateY(0); }
+  50% { transform: rotate(-10deg) translateY(-9px); }
 }
 .banners .banner:nth-child(1) {
-  background: linear-gradient(135deg, #101b3d 0%, #12306e 60%, #0e4d3c 100%);
+  background: linear-gradient(135deg, #0a1440 0%, #123a8f 60%, #0b2f7a 100%);
 }
 .banners .banner:nth-child(1)::after { content: "🧠"; }
 .banners .banner:nth-child(2) {
-  background: linear-gradient(135deg, #101b3d 0%, #5b3406 60%, #8a5a00 100%);
+  background: linear-gradient(135deg, #081026 0%, #0e2a6e 60%, #1550c0 100%);
 }
 .banners .banner:nth-child(2)::after { content: "💰"; }
 .banners .banner:nth-child(3) {
-  background: linear-gradient(135deg, #101b3d 0%, #3b1470 60%, #6d28d9 100%);
+  background: linear-gradient(135deg, #0a1440 0%, #0f2c7d 60%, #1a4fc4 100%);
 }
 .banners .banner:nth-child(3)::after { content: "👤"; }
 .banners .banner:nth-child(4) {
-  background: linear-gradient(135deg, #101b3d 0%, #7a1040 60%, #c2185b 100%);
+  background: linear-gradient(135deg, #060a24 0%, #0c2060 60%, #0e3aa0 100%);
 }
 .banners .banner:nth-child(4)::after { content: "🎮"; }
 .banners .banner small,
@@ -36,5 +52,6 @@
   .banners .banner::after { font-size: 72px; bottom: -14px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .banners .banner::before, .banners .banner::after { animation: none; }
   .banners .banner:hover { transform: none; }
 }
