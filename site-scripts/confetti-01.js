@@ -87,12 +87,14 @@
     if (window.flashAdd.__rsConfettiHooked) return;
     const orig = window.flashAdd;
     const wrapped = function (page, i, j) {
-      let before = 0;
-      try { before = (window.cart || []).length; } catch (e) {}
+      let inStock = true;
+      try {
+        const cats = window.catsOf(page);
+        const item = cats[i].items[j];
+        inStock = Number(item.stock) !== 0;
+      } catch (e) {}
       const out = orig.apply(this, arguments);
-      let after = before;
-      try { after = (window.cart || []).length; } catch (e) {}
-      if (after > before) burst(lastX, lastY);
+      if (inStock) burst(lastX, lastY);
       return out;
     };
     wrapped.__rsConfettiHooked = true;
