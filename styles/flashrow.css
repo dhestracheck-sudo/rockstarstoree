@@ -106,8 +106,11 @@
   .flashsec .itemgrid.flashrow .item { flex-basis: 320px; }
 }
 @media (max-width: 760px) {
-  .flashsec .itemgrid.flashrow .item { flex-basis: 288px; }
-  .flashsec .itemgrid.flashrow .item > .thumb { width: 96px; min-width: 96px; aspect-ratio: 3 / 4; }
+  .flashsec .itemgrid.flashrow { gap: 10px; }
+  .flashsec .itemgrid.flashrow .item { flex-basis: 258px; }
+  .flashsec .itemgrid.flashrow .item > .thumb { width: 88px; min-width: 88px; aspect-ratio: 3 / 4; }
+  .flashsec .itemgrid.flashrow .item > .ibody h3 { font-size: 13px; min-height: 35px; }
+  .flashsec .itemgrid.flashrow .item > .ibody .price .now { font-size: 17px; }
   .flashsec .flashhead::after { font-size: 11.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
