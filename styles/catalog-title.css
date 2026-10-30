@@ -1,27 +1,40 @@
-/* Judul halaman katalog dengan wajah Rockstar. */
+/* Judul halaman katalog: biru khas + kilau bergerak + gambar kecil. */
 .cattitle {
   position: relative;
   overflow: hidden;
   border-radius: 18px;
   border: 1px solid var(--line);
-  padding: 34px 150px 34px 22px;
+  padding: 34px 22px;
   margin: 14px 0 6px;
-  background:
-    radial-gradient(420px 200px at 88% 20%, rgba(43, 120, 255, 0.35), transparent 65%),
-    radial-gradient(300px 200px at 95% 90%, rgba(255, 123, 28, 0.22), transparent 60%),
-    linear-gradient(115deg, #0a1440 0%, #10206b 55%, #0b2f7a 100%);
+  background: linear-gradient(115deg, #05091a 0%, #0a1440 45%, #0b2f7a 70%, #05091a 100%);
 }
-.cattitle-face {
+.cattitle::before {
+  content: "";
   position: absolute;
-  right: -14px;
-  bottom: -18px;
-  width: 168px;
-  height: 168px;
-  object-fit: cover;
-  border-radius: 50%;
-  opacity: 0.95;
-  filter: drop-shadow(0 0 26px rgba(80, 140, 255, 0.55));
+  inset: -40%;
   pointer-events: none;
+  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(120, 170, 255, 0.09) 60px 92px, transparent 92px 190px);
+  animation: cattitle-streak 16s linear infinite;
+}
+@keyframes cattitle-streak {
+  to { transform: translateX(190px); }
+}
+.cattitle-spark {
+  position: absolute;
+  z-index: 1;
+  border-radius: 2px;
+  background: #bcd4ff;
+  box-shadow: 0 0 10px 2px rgba(110, 168, 255, 0.65);
+  transform: rotate(45deg);
+  animation: cattitle-spark-float 5s ease-in-out infinite;
+  pointer-events: none;
+}
+.cattitle-spark.s1 { width: 10px; height: 10px; right: 12%; top: 24%; }
+.cattitle-spark.s2 { width: 7px; height: 7px; right: 22%; top: 62%; animation-delay: 1.4s; }
+.cattitle-spark.s3 { width: 8px; height: 8px; right: 6%; top: 58%; animation-delay: 2.6s; }
+@keyframes cattitle-spark-float {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.65; }
+  50% { transform: rotate(45deg) translateY(-9px); opacity: 1; }
 }
 .cattitle h2,
 .cattitle p {
@@ -43,6 +56,8 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }
 @media (max-width: 760px) {
-  .cattitle { padding: 24px 108px 24px 16px; border-radius: 14px; }
-  .cattitle-face { width: 112px; height: 112px; right: -10px; bottom: -12px; }
+  .cattitle { padding: 24px 16px; border-radius: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cattitle::before, .cattitle-spark { animation: none; }
 }

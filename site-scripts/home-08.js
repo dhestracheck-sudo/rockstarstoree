@@ -689,7 +689,7 @@ function render(){
   const heroFn = isJoki ? jokiHeroHTML : (isAkun ? akunHeroHTML : (isBrainrot ? brainrotHeroHTML : null));
   const catHeroHTML = (typeof heroFn === "function") ? heroFn() : ``;
   title.innerHTML = `<button class="backbtn" onclick="goHome()">${tr("back_home")}</button>` + catHeroHTML + `
-    <div class="cattitle"><img class="cattitle-face" src="ROCKSTARICON.png" alt=""><h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
+    <div class="cattitle"><i class="cattitle-spark s1"></i><i class="cattitle-spark s2"></i><i class="cattitle-spark s3"></i><h2>${currentPage === 'brainrot' ? tr("cat_brainrot") : (currentPage === 'akun' ? tr("cat_akun") : (currentPage === 'joki' ? tr("cat_joki") : tr("cat_topup")))}</h2>
     <p>${categories.length} ${tr("cat_sub")}</p></div>`;
   el.innerHTML = `<div class="catgrid">` + categories.map((c,i)=>`
     <div class="catcard" onclick="showItems(${i})">
