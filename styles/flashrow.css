@@ -1,0 +1,21 @@
+/* Flash sale geser samping (swipe), hemat scroll. */
+.flashsec .itemgrid.flashrow {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.flashsec .itemgrid.flashrow::-webkit-scrollbar { display: none; }
+.flashsec .itemgrid.flashrow .item {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+@media (min-width: 901px) {
+  .flashsec .itemgrid.flashrow .item { flex-basis: 260px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flashsec .itemgrid.flashrow { scroll-snap-type: none; }
+}
