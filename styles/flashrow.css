@@ -60,6 +60,35 @@
 .flashsec .itemgrid.flashrow .item > .ibody .btn {
   display: none;
 }
+.flashsec .flashbody {
+  position: relative;
+}
+.flashsec .fnav {
+  display: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(6, 9, 19, 0.85);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.flashsec .fnav:hover {
+  border-color: var(--blue2);
+}
+.flashsec .fnav.fl { left: 4px; }
+.flashsec .fnav.fr { right: 4px; }
+@media (min-width: 901px) {
+  .flashsec .fnav { display: flex; }
+  .flashsec .itemgrid.flashrow { padding-left: 52px; padding-right: 52px; }
+}
 .flashsec .flashhead::after {
   content: "Geser 👉";
   margin-left: auto;
@@ -77,8 +106,8 @@
   .flashsec .itemgrid.flashrow .item { flex-basis: 320px; }
 }
 @media (max-width: 760px) {
-  .flashsec .itemgrid.flashrow .item { flex-basis: 300px; }
-  .flashsec .itemgrid.flashrow .item > .thumb { width: 104px; min-width: 104px; aspect-ratio: 3 / 4; }
+  .flashsec .itemgrid.flashrow .item { flex-basis: 288px; }
+  .flashsec .itemgrid.flashrow .item > .thumb { width: 96px; min-width: 96px; aspect-ratio: 3 / 4; }
   .flashsec .flashhead::after { font-size: 11.5px; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -169,7 +169,7 @@ function flashHTML(){
   return `
   <div class="flashsec">
     <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▼</span><span>${tr("flash_click")}</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
-    <div class="flashbody" id="flashbody" style="display:none;"><div class="itemgrid flashrow">${cards}</div></div>
+    <div class="flashbody" id="flashbody" style="display:none;"><button class="fnav fl" aria-label="Geser kiri" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:-350,behavior:'smooth'})">&#10094;</button><div class="itemgrid flashrow">${cards}</div><button class="fnav fr" aria-label="Geser kanan" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:350,behavior:'smooth'})">&#10095;</button></div>
   </div>`;
 }
 
