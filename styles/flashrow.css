@@ -1,68 +1,169 @@
-/* Flash sale geser samping (swipe), hemat scroll. */
+/* Flash sale horizontal swipe (carousel) */
 .flashsec .itemgrid.flashrow {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 10px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  display: flex !important;
+  gap: 12px !important;
+  overflow-x: auto !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  padding: 4px 16px 12px !important;
+  margin: 0 -16px !important;
+  scroll-padding-left: 16px !important;
+  scroll-padding-right: 16px !important;
+  box-sizing: border-box !important;
 }
-.flashsec .itemgrid.flashrow::-webkit-scrollbar { display: none; }
+
+.flashsec .itemgrid.flashrow::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Override base .item styling to eliminate huge vertical empty space and fix compact row layout */
 .flashsec .itemgrid.flashrow .item {
-  flex: 0 0 330px;
-  flex-direction: row;
-  scroll-snap-align: start;
+  flex: 0 0 280px !important;
+  max-width: 82vw !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  content-visibility: visible !important;
+  contain-intrinsic-size: none !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 10px !important;
+  gap: 12px !important;
+  scroll-snap-align: start !important;
+  box-sizing: border-box !important;
+  border-radius: 16px !important;
+  background: var(--card) !important;
+  border: 1px solid var(--line) !important;
 }
+
+/* Matikan padding-top: 100% dari CSS global agar thumbnail tidak raksasa */
+.flashsec .itemgrid.flashrow .item > .thumb::before,
+.flashsec .itemgrid.flashrow .item > .thumb::after {
+  display: none !important;
+}
+
 .flashsec .itemgrid.flashrow .item > .thumb {
-  width: 122px;
-  min-width: 122px;
-  aspect-ratio: 3 / 4;
-  align-self: center;
+  position: relative !important;
+  width: 86px !important;
+  min-width: 86px !important;
+  height: 86px !important;
+  max-width: 86px !important;
+  max-height: 86px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  align-self: center !important;
+  flex-shrink: 0 !important;
+  background: #05080f !important;
 }
-.flashsec .itemgrid.flashrow .item > .thumb .catemoji,
-.flashsec .itemgrid.flashrow .item > .thumb .viewpill,
-.flashsec .itemgrid.flashrow .item > .ibody .kilat {
-  display: none;
-}
+
 .flashsec .itemgrid.flashrow .item > .thumb img {
-  width: 100%;
-  height: 100%;
-  aspect-ratio: auto;
-  object-fit: cover;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 12px !important;
 }
+
+.flashsec .itemgrid.flashrow .item > .thumb .badge-off {
+  position: absolute !important;
+  top: 4px !important;
+  left: 4px !important;
+  z-index: 3 !important;
+  padding: 2px 6px !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  border-radius: 6px !important;
+  background: #ff3355 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4) !important;
+}
+
+.flashsec .itemgrid.flashrow .item > .thumb .catemoji,
+.flashsec .itemgrid.flashrow .item > .thumb .viewpill {
+  display: none !important;
+}
+
+/* Bagian teks produk */
 .flashsec .itemgrid.flashrow .item > .ibody {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  gap: 3px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
+
 .flashsec .itemgrid.flashrow .item > .ibody h3 {
-  font-size: 14px;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 38px;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  color: var(--txt, #f2f5ff) !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
 }
+
+.flashsec .itemgrid.flashrow .item > .ibody .stars {
+  display: none !important;
+}
+
+.flashsec .itemgrid.flashrow .item > .ibody .statrow {
+  font-size: 10.5px !important;
+  margin: 0 !important;
+}
+
+.flashsec .itemgrid.flashrow .item > .ibody .price {
+  margin: 2px 0 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: baseline !important;
+  column-gap: 6px !important;
+  row-gap: 0 !important;
+}
+
 .flashsec .itemgrid.flashrow .item > .ibody .price .now {
-  font-size: 19px;
+  font-size: 16.5px !important;
+  font-weight: 800 !important;
+  color: #ffd166 !important;
 }
-.flashsec .itemgrid.flashrow .item > .ibody .price .was,
+
+.flashsec .itemgrid.flashrow .item > .ibody .price .was {
+  font-size: 11px !important;
+  color: #8b96b3 !important;
+  text-decoration: line-through !important;
+}
+
 .flashsec .itemgrid.flashrow .item > .ibody .price .rm {
-  font-size: 11.5px;
+  font-size: 11px !important;
+  color: #8b96b3 !important;
+  width: 100% !important;
+  margin-top: -2px !important;
 }
+
 .flashsec .itemgrid.flashrow .item > .ibody .stocklow {
-  font-size: 11.5px;
+  font-size: 11px !important;
 }
+
+.flashsec .itemgrid.flashrow .item > .ibody .kilat,
 .flashsec .itemgrid.flashrow .item > .ibody .btn {
-  display: none;
+  display: none !important;
 }
+
+/* Navigasi panah di desktop */
 .flashsec .flashbody {
-  position: relative;
+  position: relative !important;
 }
+
 .flashsec .fnav {
   display: none;
   position: absolute;
@@ -73,47 +174,82 @@
   height: 44px;
   border-radius: 50%;
   border: 1px solid var(--line);
-  background: rgba(6, 9, 19, 0.85);
+  background: rgba(6, 9, 19, 0.88);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(8px);
 }
+
 .flashsec .fnav:hover {
   border-color: var(--blue2);
 }
+
 .flashsec .fnav.fl { left: 4px; }
 .flashsec .fnav.fr { right: 4px; }
-@media (min-width: 901px) {
-  .flashsec .fnav { display: flex; }
-  .flashsec .itemgrid.flashrow { padding-left: 52px; padding-right: 52px; }
-}
+
 .flashsec .flashhead::after {
   content: "Geser 👉";
   margin-left: auto;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   color: #9fc4ff;
   white-space: nowrap;
   animation: swipe-hint 1.8s ease-in-out infinite;
 }
+
 @keyframes swipe-hint {
   0%, 100% { transform: translateX(0); opacity: 0.85; }
-  50% { transform: translateX(7px); opacity: 1; }
+  50% { transform: translateX(6px); opacity: 1; }
 }
+
 @media (min-width: 901px) {
-  .flashsec .itemgrid.flashrow .item { flex-basis: 320px; }
+  .flashsec .fnav {
+    display: flex;
+  }
+  .flashsec .itemgrid.flashrow {
+    margin: 0 !important;
+    padding: 6px 52px 14px !important;
+  }
+  .flashsec .itemgrid.flashrow .item {
+    flex: 0 0 320px !important;
+    max-width: none !important;
+  }
 }
+
 @media (max-width: 760px) {
-  .flashsec .itemgrid.flashrow { gap: 10px; }
-  .flashsec .itemgrid.flashrow .item { flex-basis: 258px; }
-  .flashsec .itemgrid.flashrow .item > .thumb { width: 88px; min-width: 88px; aspect-ratio: 3 / 4; }
-  .flashsec .itemgrid.flashrow .item > .ibody h3 { font-size: 13px; min-height: 35px; }
-  .flashsec .itemgrid.flashrow .item > .ibody .price .now { font-size: 17px; }
-  .flashsec .flashhead::after { font-size: 11.5px; }
+  .flashsec .itemgrid.flashrow {
+    gap: 10px !important;
+    padding: 4px 16px 12px !important;
+    margin: 0 -16px !important;
+  }
+  .flashsec .itemgrid.flashrow .item {
+    flex: 0 0 calc(100vw - 92px) !important;
+    max-width: 300px !important;
+    min-width: 250px !important;
+    padding: 9px 10px !important;
+  }
+  .flashsec .itemgrid.flashrow .item > .thumb {
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 80px !important;
+    max-width: 80px !important;
+    max-height: 80px !important;
+  }
+  .flashsec .itemgrid.flashrow .item > .ibody h3 {
+    font-size: 13px !important;
+  }
+  .flashsec .itemgrid.flashrow .item > .ibody .price .now {
+    font-size: 16px !important;
+  }
+  .flashsec .flashhead::after {
+    font-size: 11px;
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .flashsec .itemgrid.flashrow { scroll-snap-type: none; }
-  .flashsec .flashhead::after { animation: none; }
+  .flashsec .itemgrid.flashrow { scroll-snap-type: none !important; }
+  .flashsec .flashhead::after { animation: none !important; }
 }
