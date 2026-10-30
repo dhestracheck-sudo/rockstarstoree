@@ -33,21 +33,21 @@ export default function App({ Component, pageProps }) {
     <>
       <div className={`${poppins.className} ${poppins.variable} ${baloo.variable} ${oswald.variable}`}>
         <div className="bubbles-back" aria-hidden="true">
-          <i className="bubble" style={{ "--x": "10%", "--s": "30px", "--d": "13s", "--dl": "0s", "--sw": "22px" }} />
-          <i className="bubble" style={{ "--x": "32%", "--s": "40px", "--d": "11s", "--dl": "2.5s", "--sw": "-26px" }} />
-          <i className="bubble" style={{ "--x": "55%", "--s": "26px", "--d": "14s", "--dl": "1.2s", "--sw": "28px" }} />
-          <i className="bubble" style={{ "--x": "74%", "--s": "36px", "--d": "12s", "--dl": "3.8s", "--sw": "-24px" }} />
-          <i className="bubble" style={{ "--x": "90%", "--s": "30px", "--d": "13.5s", "--dl": "5s", "--sw": "20px" }} />
+          <i className="bubble" style={{ "--x": "8%", "--s": "34px", "--d": "14s", "--dl": "1.4s", "--sw": "-20px" }} />
+          <i className="bubble" style={{ "--x": "27%", "--s": "26px", "--d": "11s", "--dl": "4.1s", "--sw": "30px" }} />
+          <i className="bubble" style={{ "--x": "49%", "--s": "42px", "--d": "12.5s", "--dl": "0.3s", "--sw": "-28px" }} />
+          <i className="bubble" style={{ "--x": "68%", "--s": "30px", "--d": "13.2s", "--dl": "5.6s", "--sw": "24px" }} />
+          <i className="bubble" style={{ "--x": "91%", "--s": "36px", "--d": "11.6s", "--dl": "2.9s", "--sw": "-22px" }} />
         </div>
-        <div className="spl-petals" aria-hidden="true">
-          <i style={{ "--x": "7%", "--s": "9px", "--d": "12s", "--dl": "0.5s", "--sw": "30px" }} />
-          <i style={{ "--x": "19%", "--s": "11px", "--d": "10s", "--dl": "2s", "--sw": "-26px" }} />
-          <i style={{ "--x": "31%", "--s": "8px", "--d": "13s", "--dl": "3.4s", "--sw": "38px" }} />
-          <i style={{ "--x": "43%", "--s": "10px", "--d": "11s", "--dl": "1.1s", "--sw": "-32px" }} />
-          <i style={{ "--x": "57%", "--s": "9px", "--d": "12.5s", "--dl": "2.7s", "--sw": "28px" }} />
-          <i style={{ "--x": "69%", "--s": "11px", "--d": "10.5s", "--dl": "4.2s", "--sw": "-30px" }} />
-          <i style={{ "--x": "81%", "--s": "8px", "--d": "13.5s", "--dl": "0.9s", "--sw": "36px" }} />
-          <i style={{ "--x": "92%", "--s": "10px", "--d": "11.5s", "--dl": "5.1s", "--sw": "-28px" }} />
+        <div className="sakura-petals" aria-hidden="true">
+          <i style={{ "--x": "3%", "--s": "10px", "--d": "12.6s", "--dl": "2.2s", "--sw": "-34px" }} />
+          <i style={{ "--x": "17%", "--s": "13px", "--d": "10.2s", "--dl": "5s", "--sw": "28px" }} />
+          <i style={{ "--x": "29%", "--s": "9px", "--d": "13.1s", "--dl": "0.7s", "--sw": "-40px" }} />
+          <i style={{ "--x": "38%", "--s": "12px", "--d": "11.3s", "--dl": "3.8s", "--sw": "30px" }} />
+          <i style={{ "--x": "51%", "--s": "10px", "--d": "12.1s", "--dl": "1.5s", "--sw": "-28px" }} />
+          <i style={{ "--x": "63%", "--s": "14px", "--d": "10.7s", "--dl": "4.6s", "--sw": "36px" }} />
+          <i style={{ "--x": "72%", "--s": "9px", "--d": "13.4s", "--dl": "0.2s", "--sw": "-36px" }} />
+          <i style={{ "--x": "86%", "--s": "12px", "--d": "11.8s", "--dl": "3.1s", "--sw": "26px" }} />
         </div>
         <div className="stars-back" aria-hidden="true">
           <i style={{ "--x": "4%", "--y": "10%", "--s": "2px", "--d": "3.2s", "--dl": "0s" }} />

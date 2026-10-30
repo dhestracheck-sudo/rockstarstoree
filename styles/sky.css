@@ -30,27 +30,27 @@
   100% { opacity: 0; transform: translate3d(calc(var(--sw, 24px) * -0.5), -112vh, 0) scale(1); }
 }
 
-/* Daun spider lily merah berguguran */
-.spl-petals {
+/* Kelopak sakura berguguran */
+.sakura-petals {
   position: fixed;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: -1;
 }
-.spl-petals i {
+.sakura-petals i {
   position: absolute;
   top: -6%;
-  width: var(--s, 9px);
-  height: calc(var(--s, 9px) * 1.6);
+  width: var(--s, 11px);
+  height: var(--s, 11px);
   left: var(--x, 50%);
   opacity: 0;
-  background: linear-gradient(135deg, #ff8a8a 0%, #e63946 55%, #9d0208 100%);
-  border-radius: 50% 4% 50% 4%;
-  animation: spl-fall var(--d, 11s) linear var(--dl, 0s) infinite;
+  background: linear-gradient(135deg, #ffd9e8 0%, #ffb1cd 55%, #f78fb3 100%);
+  border-radius: 100% 4% 100% 4%;
+  animation: sakura-fall var(--d, 11s) linear var(--dl, 0s) infinite;
   will-change: transform, opacity;
 }
-@keyframes spl-fall {
+@keyframes sakura-fall {
   0% { opacity: 0; transform: translate3d(0, -5vh, 0) rotate(0deg); }
   8% { opacity: 0.85; }
   50% { transform: translate3d(var(--sw, 34px), 52vh, 0) rotate(185deg); }
@@ -83,7 +83,7 @@
 }
 
 @media (max-width: 768px) {
-  .spl-petals i:nth-child(n + 7) { display: none; }
+  .sakura-petals i:nth-child(n + 7) { display: none; }
   .bubbles-back .bubble:nth-child(n + 4) { display: none; }
   .stars-back i:nth-child(n + 11) { display: none; }
 }
