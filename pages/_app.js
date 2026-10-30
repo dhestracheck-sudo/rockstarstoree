@@ -1,5 +1,6 @@
 import "../styles/announcement.css";
 import "../styles/petals.css";
+import "../styles/halloween.css";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { Baloo_2, Oswald, Poppins } from "next/font/google";

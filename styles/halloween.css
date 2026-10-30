@@ -1,0 +1,40 @@
+/* TEMA HALLOWEEN sementara — satu file, gampang dilepas.
+   Hanya override variabel + dekorasi. Hapus import-nya di _app.js untuk balik normal. */
+:root {
+  --blue: #ff7b1c !important;
+  --blue2: #c084fc !important;
+  --line: rgba(255, 150, 60, 0.22) !important;
+}
+
+/* Vignette ungu-oranye tipis di seluruh halaman */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(600px 300px at 12% -40px, rgba(255, 123, 28, 0.16), transparent 65%),
+    radial-gradient(700px 340px at 88% -30px, rgba(147, 51, 234, 0.16), transparent 65%),
+    radial-gradient(120% 90% at 50% 110%, rgba(76, 29, 149, 0.22), transparent 60%);
+}
+
+/* Kelopak jadi dedaunan Halloween: oranye & ungu bergantian */
+.petals i {
+  background: linear-gradient(135deg, #ffd9a0 0%, #ff9a3c 55%, #e2571d 100%);
+}
+.petals i:nth-child(even) {
+  background: linear-gradient(135deg, #e3c6ff 0%, #a855f7 55%, #6d28d9 100%);
+  border-radius: 4% 100% 4% 100%;
+}
+
+/* Glow labu di judul slider */
+.mega-title-g {
+  text-shadow: 0 0 26px rgba(255, 123, 28, 0.45) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    display: none;
+  }
+}
