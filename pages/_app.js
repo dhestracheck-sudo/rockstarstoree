@@ -2,6 +2,7 @@ import "../styles/announcement.css";
 import "../styles/hd.css";
 import "../styles/sky.css";
 import "../styles/catalog-title.css";
+import "../styles/banner-art.css";
 import Script from "next/script";
 import { useRouter } from "next/router";
 import { Baloo_2, Oswald, Poppins } from "next/font/google";

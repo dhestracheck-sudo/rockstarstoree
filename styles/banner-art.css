@@ -1,0 +1,40 @@
+/* Hiasan banner homepage: gradasi + watermark ikon tiap kartu. Ringan, tanpa gambar baru. */
+.banners .banner { position: relative; overflow: hidden; }
+.banners .banner::after {
+  position: absolute;
+  right: -8px;
+  bottom: -22px;
+  font-size: 110px;
+  line-height: 1;
+  opacity: 0.14;
+  transform: rotate(-10deg);
+  pointer-events: none;
+  filter: saturate(1.2);
+}
+.banners .banner:nth-child(1) {
+  background: linear-gradient(135deg, #101b3d 0%, #12306e 60%, #0e4d3c 100%);
+}
+.banners .banner:nth-child(1)::after { content: "🧠"; }
+.banners .banner:nth-child(2) {
+  background: linear-gradient(135deg, #101b3d 0%, #5b3406 60%, #8a5a00 100%);
+}
+.banners .banner:nth-child(2)::after { content: "💰"; }
+.banners .banner:nth-child(3) {
+  background: linear-gradient(135deg, #101b3d 0%, #3b1470 60%, #6d28d9 100%);
+}
+.banners .banner:nth-child(3)::after { content: "👤"; }
+.banners .banner:nth-child(4) {
+  background: linear-gradient(135deg, #101b3d 0%, #7a1040 60%, #c2185b 100%);
+}
+.banners .banner:nth-child(4)::after { content: "🎮"; }
+.banners .banner small,
+.banners .banner h3,
+.banners .banner p { position: relative; z-index: 1; }
+.banners .banner { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.banners .banner:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); }
+@media (max-width: 760px) {
+  .banners .banner::after { font-size: 72px; bottom: -14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .banners .banner:hover { transform: none; }
+}
