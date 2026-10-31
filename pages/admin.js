@@ -11,8 +11,8 @@ const oswald = Oswald({
 });
 
 const pageScripts = [
-  '/site-scripts/admin-01.js?v=product-editor-20261026-1',
-  '/site-scripts/admin-02.js?v=admin-sticky-prev-20261031-1',
+  '/site-scripts/admin-01.js?v=admin-v20261031-1',
+  '/site-scripts/admin-02.js?v=admin-quick-switch-20261031-final',
 ];
 
 const productEditorStyles = `
@@ -61,7 +61,7 @@ const productEditorStyles = `
   }
   #productEditorCard #prevCard > div { gap:14px; }
   #productEditorCard #prevImg { width:82px; height:82px; object-fit:cover; border-radius:12px; background:#080f1d; }
-  #productEditorCard #prevCard .hint { margin:8px 0 0; }
+  #productEditorCard #prevCard .hint { display: none !important; }
   #productEditorCard #statusAll { grid-column:1 / -1; }
   #productEditorCard .product-editor-actions { display:grid; grid-template-columns:minmax(0,1fr); gap:10px; margin-top:18px; padding-top:16px; border-top:1px solid rgba(153,178,255,.18); }
   #productEditorCard .product-editor-actions #saveAllBtn { margin:0; min-height:50px; }
