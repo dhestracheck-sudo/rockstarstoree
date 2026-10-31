@@ -49,8 +49,70 @@ function getProductImageVariant(image, prefix) {
   }
 }
 
+let hotProductsCache = {
+  data: null,
+  timestamp: 0,
+};
+let isFetchingHot = false;
+
+async function getCachedHotProducts() {
+  const now = Date.now();
+  // 1. Fresh cache (< 90s): layani instan dari memori Worker (0ms wait)
+  if (hotProductsCache.data && (now - hotProductsCache.timestamp < 90_000)) {
+    return hotProductsCache.data;
+  }
+  // 2. Stale cache (< 10m): kirim data lama langsung, perbarui di latar belakang
+  if (hotProductsCache.data && (now - hotProductsCache.timestamp < 600_000)) {
+    if (!isFetchingHot) {
+      isFetchingHot = true;
+      getInitialHotProducts()
+        .then((fresh) => {
+          if (Array.isArray(fresh) && fresh.length) {
+            hotProductsCache = { data: fresh, timestamp: Date.now() };
+          }
+        })
+        .catch(() => {})
+        .finally(() => { isFetchingHot = false; });
+    }
+    return hotProductsCache.data;
+  }
+  // 3. Cold start: ambil data segar dan simpan ke memori
+  try {
+    const fresh = await getInitialHotProducts();
+    if (Array.isArray(fresh) && fresh.length) {
+      hotProductsCache = { data: fresh, timestamp: Date.now() };
+    }
+    return hotProductsCache.data || fresh;
+  } catch {
+    return hotProductsCache.data || [];
+  }
+}
+
+const categoryProductsCache = new Map();
+
+async function getCachedCategoryProducts(tab, category, limit = 24) {
+  const key = `${tab}:${category}:${limit}`;
+  const cached = categoryProductsCache.get(key);
+  const now = Date.now();
+  if (cached && (now - cached.timestamp < 90_000)) {
+    return cached.data;
+  }
+  if (cached && (now - cached.timestamp < 600_000)) {
+    getCategoryProducts(tab, category, limit).then((fresh) => {
+      if (Array.isArray(fresh) && fresh.length) {
+        categoryProductsCache.set(key, { data: fresh, timestamp: Date.now() });
+      }
+    }).catch(() => {});
+    return cached.data;
+  }
+  const fresh = await getCategoryProducts(tab, category, limit);
+  if (Array.isArray(fresh) && fresh.length) {
+    categoryProductsCache.set(key, { data: fresh, timestamp: Date.now() });
+  }
+  return cached?.data || fresh;
+}
+
 async function getInitialHotProducts() {
-  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
   const headers = {
     apikey: PUBLIC_SUPABASE_KEY,
     Authorization: `Bearer ${PUBLIC_SUPABASE_KEY}`,
@@ -60,7 +122,6 @@ async function getInitialHotProducts() {
       const response = await fetch(`${PUBLIC_SUPABASE_URL}/rest/v1/${path}`, {
         headers,
         signal: AbortSignal.timeout(3000),
-        cache: "no-store",
       });
       return response.ok ? await response.json() : [];
     } catch {
@@ -68,9 +129,9 @@ async function getInitialHotProducts() {
     }
   };
 
-  const [aggRows, clickRows, ...catalogRows] = await Promise.all([
+  // Ambil langsung agregat klik (133 baris cepat) + katalog (tanpa query berat ke tabel klik mentah)
+  const [aggRows, ...catalogRows] = await Promise.all([
     request(`klik_agregat?select=name,total&order=total.desc&limit=200`),
-    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=200&waktu=gte.${encodeURIComponent(since)}`),
     ...HOT_PRODUCT_TABLES.map((table) =>
       request(`${table}?select=name,price,image,stock,soldout,sold,dilihat&price=gt.0&stock=gt.0&order=sold.desc,dilihat.desc&limit=150`),
     ),
@@ -82,11 +143,6 @@ async function getInitialHotProducts() {
       const name = String(row?.name || "").trim();
       const total = Number(row?.total) || 0;
       if (name && total > 0) clicks.set(name, total);
-    }
-  } else {
-    for (const row of Array.isArray(clickRows) ? clickRows : []) {
-      const name = String(row?.name || "").trim();
-      if (name) clicks.set(name, (clicks.get(name) || 0) + 1);
     }
   }
 
@@ -149,7 +205,6 @@ async function getCategoryProducts(tab, category, limit = 24) {
         Authorization: `Bearer ${PUBLIC_SUPABASE_KEY}`,
       },
       signal: AbortSignal.timeout(3000),
-      cache: "no-store",
     });
     if (!response.ok) return [];
     const rows = await response.json();
@@ -244,7 +299,7 @@ function getHomeSeo(query = {}) {
   const requestedTab = String(firstQueryValue(query.tab) || "home").trim().toLowerCase();
   const tab = Object.prototype.hasOwnProperty.call(SEO_PAGES, requestedTab) ? requestedTab : "home";
   const rawCategory = String(firstQueryValue(query.cat) || "")
-    .replace(/[<>\u0000-\u001f]/g, "")
+    .replace(/[<> -]/g, "")
     .trim()
     .slice(0, 80);
   const category = tab !== "home" && /^[\p{L}\p{N}\s.'&(),+/-]+$/u.test(rawCategory) ? rawCategory : "";
@@ -282,11 +337,11 @@ export async function getServerSideProps(context) {
   const needHot = !context.query.q;
   const needCat = Boolean(!context.query.q && seo.category);
   const [hotProducts, catProducts] = await Promise.all([
-    needHot ? getInitialHotProducts() : Promise.resolve([]),
-    needCat ? getCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
+    needHot ? getCachedHotProducts() : Promise.resolve([]),
+    needCat ? getCachedCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
   ]);
   if (!context.query.q) {
-    context.res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=300");
+    context.res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
   }
   const pageSeo = seo.category && catProducts.length === 0
     ? { ...seo, robots: "noindex,follow" }
@@ -312,7 +367,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\r\n"}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {"\r\n"}
-        <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
+        <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
         {"\r\n"}
         <title>{seo.title}</title>
