@@ -18,7 +18,6 @@ const pageScripts = [
 const productEditorStyles = `
   .wrap > #productEditorCard { grid-column: 1 / -1; }
   #productEditorCard { display:none; border-color:rgba(114,151,255,.34); }
-  #productEditorCard #prevCard { position:sticky; top:70px; z-index:40; box-shadow:0 14px 34px rgba(0,0,0,.45); }
   #productEditorCard .product-editor-heading { margin-bottom:14px; }
   #productEditorCard .product-editor-heading h2 { margin:0; color:#dce5ff; font-size:19px; }
   #productEditorCard .product-editor-heading p { margin:4px 0 0; color:var(--mut); font-size:12.5px; }
