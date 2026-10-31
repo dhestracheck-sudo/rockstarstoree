@@ -49,20 +49,128 @@ function getProductImageVariant(image, prefix) {
   }
 }
 
+const SEED_HOT_PRODUCTS = [
+  {
+    name: "AKUN SEPUH BREAK AND STEAL AN EGG 002",
+    tab: "akun",
+    price: 139000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792486812931_340227_Screenshot_2026-10-20_155816.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792486812931_340227_Screenshot_2026-10-20_155816.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792486812931_340227_Screenshot_2026-10-20_155816.webp",
+    clicks: 125,
+    views: 246,
+    sold: 0,
+    stock: 1,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "AKUN SEPUH STEAL AN EGG 058",
+    tab: "akun",
+    price: 100000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792339090613_704356_Screenshot_2026-10-18_225632.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792339090613_704356_Screenshot_2026-10-18_225632.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792339090613_704356_Screenshot_2026-10-18_225632.webp",
+    clicks: 78,
+    views: 464,
+    sold: 0,
+    stock: 1,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "AKUN SEPUH STEAL AN EGG 059",
+    tab: "akun",
+    price: 189000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792395560518_599682_Screenshot_2026-10-19_143308.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792395560518_599682_Screenshot_2026-10-19_143308.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792395560518_599682_Screenshot_2026-10-19_143308.webp",
+    clicks: 77,
+    views: 399,
+    sold: 0,
+    stock: 1,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "1 PET RAINBOW VOLCANIC DEVIL 3,5M/S+",
+    tab: "brainrot",
+    price: 10000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792588699534_Screenshot_2026-10-21_201543.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792588699534_Screenshot_2026-10-21_201543.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792588699534_Screenshot_2026-10-21_201543.webp",
+    clicks: 45,
+    views: 90,
+    sold: 0,
+    stock: 10,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "Game pass ALL GAME- 1 ROBUX (CONTOH BELI GAMEPAS 86 ROBUX BERARTI 86 X 150RP)",
+    tab: "topup",
+    price: 150,
+    image: "/ROBUX.webp",
+    thumbnail: "/ROBUX.webp",
+    fallbackThumbnail: "/ROBUX.webp",
+    clicks: 39,
+    views: 0,
+    sold: 0,
+    stock: 999,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "DADU ANIME - 1 UNIT ANIME 4,2 QI/S+",
+    tab: "brainrot",
+    price: 20000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792585055304_Screenshot_2026-10-21_191657.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792585055304_Screenshot_2026-10-21_191657.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792585055304_Screenshot_2026-10-21_191657.webp",
+    clicks: 32,
+    views: 686,
+    sold: 14,
+    stock: 5,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "AKUN SEPUH STEAL AN EGG 060",
+    tab: "akun",
+    price: 159000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792423452355_137999_Screenshot_2026-10-19_222141.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792423452355_137999_Screenshot_2026-10-19_222141.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1792423452355_137999_Screenshot_2026-10-19_222141.webp",
+    clicks: 27,
+    views: 293,
+    sold: 0,
+    stock: 1,
+    isMarkedSoldOut: false
+  },
+  {
+    name: "JOKI AMBILIN PET PALING UJUNG MINIMAL 100B/S+",
+    tab: "joki",
+    price: 20000,
+    image: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1793167490788_Screenshot_2026-10-20_220530.webp",
+    thumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1793167490788_Screenshot_2026-10-20_220530.webp",
+    fallbackThumbnail: "https://mvzlmjgfctdxnjxveuoo.supabase.co/storage/v1/object/public/foto/1793167490788_Screenshot_2026-10-20_220530.webp",
+    clicks: 19,
+    views: 57,
+    sold: 247,
+    stock: 999,
+    isMarkedSoldOut: false
+  }
+];
+
 let hotProductsCache = {
-  data: null,
+  data: SEED_HOT_PRODUCTS,
   timestamp: 0,
 };
 let isFetchingHot = false;
 
 async function getCachedHotProducts() {
   const now = Date.now();
-  // 1. Fresh cache (< 90s): layani instan dari memori Worker (0ms wait)
-  if (hotProductsCache.data && (now - hotProductsCache.timestamp < 90_000)) {
+  // 1. Fresh cache (< 90 detik): langsung kembalikan dari memori Worker (0ms)
+  if (now - hotProductsCache.timestamp < 90_000) {
     return hotProductsCache.data;
   }
-  // 2. Stale cache (< 10m): kirim data lama langsung, perbarui di latar belakang
-  if (hotProductsCache.data && (now - hotProductsCache.timestamp < 600_000)) {
+  // 2. Data tersedia (termasuk snapshot awal): langsung kirim ke user (0ms wait)
+  // dan perbarui data paling segar dari Supabase di latar belakang
+  if (hotProductsCache.data && hotProductsCache.data.length > 0) {
     if (!isFetchingHot) {
       isFetchingHot = true;
       getInitialHotProducts()
@@ -76,7 +184,7 @@ async function getCachedHotProducts() {
     }
     return hotProductsCache.data;
   }
-  // 3. Cold start: ambil data segar dan simpan ke memori
+  // 3. Cadangan ekstrem jika data kosong
   try {
     const fresh = await getInitialHotProducts();
     if (Array.isArray(fresh) && fresh.length) {
@@ -84,7 +192,7 @@ async function getCachedHotProducts() {
     }
     return hotProductsCache.data || fresh;
   } catch {
-    return hotProductsCache.data || [];
+    return hotProductsCache.data || SEED_HOT_PRODUCTS;
   }
 }
 
@@ -367,7 +475,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\r\n"}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {"\r\n"}
-        <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" crossOrigin="anonymous" />
+
         <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
         {"\r\n"}
