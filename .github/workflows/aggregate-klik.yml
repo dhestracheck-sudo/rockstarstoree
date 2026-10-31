@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: fix/deploy-structure
-          sparse-checkout: scripts/aggregate-klik.mjs
+          sparse-checkout: scripts
       - uses: actions/setup-node@v4
         with:
           node-version: 20
