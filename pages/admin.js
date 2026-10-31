@@ -12,7 +12,7 @@ const oswald = Oswald({
 
 const pageScripts = [
   '/site-scripts/admin-01.js?v=admin-v20261031-1',
-  '/site-scripts/admin-02.js?v=admin-quick-switch-20261031-final',
+  '/site-scripts/admin-02.js?v=admin-quick-switch-20261031-price-bottom',
 ];
 
 const productEditorStyles = `

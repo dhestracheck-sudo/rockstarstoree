@@ -264,10 +264,10 @@
         row.style.cssText = "display:flex; align-items:center; gap:8px; padding:6px 9px; border-radius:8px; background:" + (isSelected ? "rgba(43,78,255,0.32)" : "rgba(16,26,49,0.7)") + "; border:1px solid " + (isSelected ? "#5876ff" : "rgba(153,178,255,0.14)") + "; cursor:pointer; transition:background 0.12s, border-color 0.12s;";
 
         row.innerHTML = `
-          <img src="${thumb}" alt="" style="width:28px; height:28px; border-radius:6px; object-fit:cover; background:#080f1d; flex-shrink:0;">
-          <div style="flex:1; min-width:0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <div style="font-size:12px; font-weight:600; color:#e6edff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">${nm}</div>
-            <div style="font-size:11.5px; font-weight:700; color:#f3d27a; white-space:nowrap; font-family:var(--font-oswald),sans-serif;">Rp ${price.toLocaleString("id-ID")}</div>
+          <img src="${thumb}" alt="" style="width:32px; height:32px; border-radius:6px; object-fit:cover; background:#080f1d; flex-shrink:0;">
+          <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:2px;">
+            <div style="font-size:12px; font-weight:600; color:#e6edff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nm}</div>
+            <div style="font-size:11px; font-weight:700; color:#f3d27a; font-family:var(--font-oswald),sans-serif; letter-spacing:0.3px;">Rp ${price.toLocaleString("id-ID")}</div>
           </div>
         `;
 
