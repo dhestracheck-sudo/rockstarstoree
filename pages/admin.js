@@ -1,6 +1,14 @@
 import Head from 'next/head';
 import PageScripts from '../components/PageScripts';
+import { Oswald } from "next/font/google";
 import { adminMarkup, adminStyles } from '../content/adminLatest';
+
+const oswald = Oswald({
+  weight: ["600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-oswald",
+});
 
 const pageScripts = [
   '/site-scripts/admin-01.js?v=product-editor-20261026-1',
@@ -52,7 +60,7 @@ export default function AdminPage() {
         <link rel="apple-touch-icon" href="/ROCKSTARICON.png" />
         <style dangerouslySetInnerHTML={{ __html: adminStyles + productEditorStyles }} />
       </Head>
-      <div dangerouslySetInnerHTML={{ __html: adminMarkup }} />
+      <div className={oswald.variable} dangerouslySetInnerHTML={{ __html: adminMarkup }} />
       <PageScripts sources={pageScripts} />
     </>
   );

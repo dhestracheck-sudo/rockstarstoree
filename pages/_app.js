@@ -6,7 +6,7 @@ import "../styles/banner-art.css";
 import "../styles/flashrow.css";
 import Script from "next/script";
 import { useRouter } from "next/router";
-import { Baloo_2, Oswald, Poppins } from "next/font/google";
+import { Baloo_2, Poppins } from "next/font/google";
 
 const GOOGLE_ANALYTICS_ID = "G-8CKBS3MNXH";
 const poppins = Poppins({
@@ -21,21 +21,13 @@ const baloo = Baloo_2({
   display: "swap",
   variable: "--font-baloo-2",
 });
-const oswald = Oswald({
-  weight: ["600", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-oswald",
-});
-
 export default function App({ Component, pageProps }) {
   const { pathname } = useRouter();
   const shouldTrack = !["/admin", "/analisis", "/kantor"].includes(pathname);
-  const needOswald = ["/admin", "/analisis", "/kantor"].includes(pathname);
 
   return (
     <>
-      <div className={`${poppins.className} ${poppins.variable} ${baloo.variable}${needOswald ? ` ${oswald.variable}` : ""}`}>
+      <div className={`${poppins.className} ${poppins.variable} ${baloo.variable}`}>
         <div className="bubbles-back" aria-hidden="true">
           <i className="bubble" style={{ "--x": "8%", "--s": "34px", "--d": "14s", "--dl": "1.4s", "--sw": "-20px" }} />
           <i className="bubble" style={{ "--x": "27%", "--s": "26px", "--d": "11s", "--dl": "4.1s", "--sw": "30px" }} />
