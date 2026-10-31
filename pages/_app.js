@@ -31,10 +31,11 @@ const oswald = Oswald({
 export default function App({ Component, pageProps }) {
   const { pathname } = useRouter();
   const shouldTrack = !["/admin", "/analisis", "/kantor"].includes(pathname);
+  const needOswald = ["/admin", "/analisis", "/kantor"].includes(pathname);
 
   return (
     <>
-      <div className={`${poppins.className} ${poppins.variable} ${baloo.variable} ${oswald.variable}`}>
+      <div className={`${poppins.className} ${poppins.variable} ${baloo.variable}${needOswald ? ` ${oswald.variable}` : ""}`}>
         <div className="bubbles-back" aria-hidden="true">
           <i className="bubble" style={{ "--x": "8%", "--s": "34px", "--d": "14s", "--dl": "1.4s", "--sw": "-20px" }} />
           <i className="bubble" style={{ "--x": "27%", "--s": "26px", "--d": "11s", "--dl": "4.1s", "--sw": "30px" }} />

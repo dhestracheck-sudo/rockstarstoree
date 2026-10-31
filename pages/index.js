@@ -4,7 +4,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 import SiteFooter from '../components/SiteFooter';
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08.js?v=ga20261031c", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=ga20261031d", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
 
 const SEO_PAGES = {
   home: {
@@ -68,17 +68,26 @@ async function getInitialHotProducts() {
     }
   };
 
-  const [clickRows, ...catalogRows] = await Promise.all([
-    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=500&waktu=gte.${encodeURIComponent(since)}`),
+  const [aggRows, clickRows, ...catalogRows] = await Promise.all([
+    request(`klik_agregat?select=name,total&order=total.desc&limit=200`),
+    request(`klik?select=name&aksi=eq.klik&order=waktu.desc&limit=200&waktu=gte.${encodeURIComponent(since)}`),
     ...HOT_PRODUCT_TABLES.map((table) =>
       request(`${table}?select=name,price,image,stock,soldout,sold,dilihat&price=gt.0&stock=gt.0&order=sold.desc,dilihat.desc&limit=150`),
     ),
   ]);
 
   const clicks = new Map();
-  for (const row of Array.isArray(clickRows) ? clickRows : []) {
-    const name = String(row?.name || "").trim();
-    if (name) clicks.set(name, (clicks.get(name) || 0) + 1);
+  if (Array.isArray(aggRows) && aggRows.length) {
+    for (const row of aggRows) {
+      const name = String(row?.name || "").trim();
+      const total = Number(row?.total) || 0;
+      if (name && total > 0) clicks.set(name, total);
+    }
+  } else {
+    for (const row of Array.isArray(clickRows) ? clickRows : []) {
+      const name = String(row?.name || "").trim();
+      if (name) clicks.set(name, (clicks.get(name) || 0) + 1);
+    }
   }
 
   const products = [];
@@ -277,7 +286,7 @@ export async function getServerSideProps(context) {
     needCat ? getCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
   ]);
   if (!context.query.q) {
-    context.res.setHeader("Cache-Control", "public, s-maxage=120, stale-while-revalidate=300");
+    context.res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=300");
   }
   const pageSeo = seo.category && catProducts.length === 0
     ? { ...seo, robots: "noindex,follow" }

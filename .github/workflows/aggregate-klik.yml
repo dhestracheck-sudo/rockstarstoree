@@ -1,0 +1,22 @@
+name: Agregat klik harian
+
+on:
+  schedule:
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/deploy-structure
+          sparse-checkout: scripts/aggregate-klik.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/aggregate-klik.mjs
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
