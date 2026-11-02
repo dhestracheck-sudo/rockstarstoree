@@ -29,14 +29,14 @@
   100% { opacity: 0; transform: translate3d(calc(var(--sw, 24px) * -0.5), -112vh, 0) scale(1); }
 }
 
-/* Efek salju kristal (Crystal Snowflakes) - Tampak Jelas, Tajam & Estetik */
+/* Efek salju kristal (Crystal Snowflakes) - Di lapisan paling belakang (background) agar tidak menutupi produk */
 .snow-flakes,
 .sakura-petals {
   position: fixed;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: 90;
+  z-index: -1;
 }
 .snow-flakes i,
 .sakura-petals i {
