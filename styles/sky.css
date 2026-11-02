@@ -1,4 +1,4 @@
-/* Langit belakang: gelembung naik + daun spider lily berguguran + bintang.
+/* Langit belakang: gelembung kristal es + butiran salju turun + bintang.
    Semua di lapisan paling belakang (z-index -1), pointer-events none,
    jadi tidak ganggu buka produk. Tanpa JS. */
 .bubbles-back {
@@ -15,9 +15,9 @@
   width: var(--s, 34px);
   height: var(--s, 34px);
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.06) 32%, rgba(255, 182, 213, 0.1) 60%, rgba(255, 158, 199, 0.25) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: inset -3px -4px 8px rgba(255, 255, 255, 0.12), 0 0 12px rgba(255, 158, 199, 0.14);
+  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.08) 32%, rgba(180, 215, 255, 0.15) 60%, rgba(130, 185, 255, 0.25) 100%);
+  border: 1px solid rgba(200, 230, 255, 0.3);
+  box-shadow: inset -3px -4px 8px rgba(255, 255, 255, 0.15), 0 0 12px rgba(130, 185, 255, 0.2);
   opacity: 0;
   animation: bubble-rise var(--d, 12s) linear var(--dl, 0s) infinite;
   will-change: transform, opacity;
@@ -30,7 +30,8 @@
   100% { opacity: 0; transform: translate3d(calc(var(--sw, 24px) * -0.5), -112vh, 0) scale(1); }
 }
 
-/* Kelopak sakura berguguran */
+/* Efek salju turun (Snowfall) menggantikan bunga */
+.snow-flakes,
 .sakura-petals {
   position: fixed;
   inset: 0;
@@ -38,24 +39,46 @@
   pointer-events: none;
   z-index: -1;
 }
+.snow-flakes i,
 .sakura-petals i {
   position: absolute;
   top: -6%;
-  width: var(--s, 11px);
-  height: var(--s, 11px);
+  width: var(--s, 7px);
+  height: var(--s, 7px);
   left: var(--x, 50%);
   opacity: 0;
-  background: linear-gradient(135deg, #ffd9e8 0%, #ffb1cd 55%, #f78fb3 100%);
-  border-radius: 100% 4% 100% 4%;
-  animation: sakura-fall var(--d, 11s) linear var(--dl, 0s) infinite;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 40%, rgba(225, 240, 255, 0.9) 70%, rgba(190, 220, 255, 0) 100%);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(140, 200, 255, 0.55);
+  animation: snow-fall var(--d, 9.5s) linear var(--dl, 0s) infinite;
   will-change: transform, opacity;
 }
-@keyframes sakura-fall {
-  0% { opacity: 0; transform: translate3d(0, -5vh, 0) rotate(0deg); }
-  8% { opacity: 0.85; }
-  50% { transform: translate3d(var(--sw, 34px), 52vh, 0) rotate(185deg); }
-  92% { opacity: 0.7; }
-  100% { opacity: 0; transform: translate3d(calc(var(--sw, 34px) * -0.6), 108vh, 0) rotate(360deg); }
+.snow-flakes i:nth-child(3n),
+.sakura-petals i:nth-child(3n) {
+  filter: blur(1px);
+}
+.snow-flakes i:nth-child(4n),
+.sakura-petals i:nth-child(4n) {
+  box-shadow: 0 0 8px rgba(255, 255, 255, 1), 0 0 16px rgba(150, 210, 255, 0.75);
+}
+@keyframes snow-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -5vh, 0);
+  }
+  8% {
+    opacity: var(--op, 0.9);
+  }
+  50% {
+    transform: translate3d(var(--sw, 24px), 52vh, 0);
+  }
+  92% {
+    opacity: var(--op, 0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--sw, 24px) * -0.5), 108vh, 0);
+  }
 }
 
 /* Bintang berkelip, lapisan paling belakang juga */
@@ -83,10 +106,11 @@
 }
 
 @media (max-width: 768px) {
-  .sakura-petals i:nth-child(n + 7) { display: none; }
+  .snow-flakes i:nth-child(n + 9),
+  .sakura-petals i:nth-child(n + 9) { display: none; }
   .bubbles-back .bubble:nth-child(n + 4) { display: none; }
   .stars-back i:nth-child(n + 11) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bubbles-back, .spl-petals, .stars-back { display: none; }
+  .bubbles-back, .snow-flakes, .sakura-petals, .spl-petals, .stars-back { display: none; }
 }
