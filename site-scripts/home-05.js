@@ -288,7 +288,16 @@ function fitMega(){
 
     if(!max) return;
 
-    const H = Math.max(max, window.innerWidth <= 760 ? 340 : 380);
+    if(window.innerWidth <= 760){
+      slides.forEach(function(s){
+        s.style.height = "180px";
+        s.style.minHeight = "180px";
+        s.style.maxHeight = "180px";
+      });
+      return;
+    }
+
+    const H = Math.max(max, 380);
 
     slides.forEach(function(s){ s.style.height = H + "px"; });
 

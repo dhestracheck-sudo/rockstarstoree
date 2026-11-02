@@ -346,14 +346,154 @@ body .site-footer-copy strong {
     max-width: 100%;
     margin-left: 0;
     margin-right: 0;
-    padding-right: 14px;
-    padding-left: 14px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  body .mega-track {
+    border-radius: 18px;
   }
 
   body .mega-slide {
-    height: auto;
-    min-height: 360px;
-    padding: 32px 14px 48px;
+    height: 180px !important;
+    min-height: 180px !important;
+    max-height: 180px !important;
+    padding: 8px 10px 22px !important;
+    overflow: hidden !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body .mega-slide.on {
+    display: flex !important;
+  }
+
+  body .mega-fig {
+    width: 28% !important;
+    max-width: 105px !important;
+    opacity: 1 !important;
+    height: 100% !important;
+    bottom: 0 !important;
+    top: 0 !important;
+    pointer-events: none;
+  }
+
+  body .mega-fig.left {
+    left: 2px !important;
+  }
+
+  body .mega-fig.right {
+    right: 2px !important;
+  }
+
+  body .mega-fig img {
+    height: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    object-fit: contain !important;
+    animation: none !important;
+  }
+
+  body .mega-in {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: calc(100% - 100px) !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  body .mega-brand {
+    font-size: 8px !important;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #9fb4ff;
+    margin-bottom: 2px !important;
+    line-height: 1;
+  }
+
+  body .mega-title-w {
+    font-size: clamp(12px, 3.6vw, 15px) !important;
+    line-height: 1.1 !important;
+    margin: 0 !important;
+    letter-spacing: 0.3px;
+  }
+
+  body .mega-title-g {
+    font-size: clamp(18px, 5.2vw, 25px) !important;
+    line-height: 1.05 !important;
+    margin: 1px 0 2px !important;
+  }
+
+  body .mega-sub {
+    font-size: clamp(8.5px, 2.3vw, 10.5px) !important;
+    letter-spacing: 0.4px;
+    margin: 1px 0 0 !important;
+    line-height: 1.2;
+  }
+
+  body .mega-tag {
+    font-size: clamp(8px, 2.2vw, 10px) !important;
+    margin: 2px 0 0 !important;
+    line-height: 1.2;
+  }
+
+  body .mega-badges {
+    display: flex !important;
+    margin: 4px 0 0 !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  body .mega-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    font-size: 8.5px !important;
+    padding: 2px 6px !important;
+    border-radius: 5px !important;
+    white-space: nowrap !important;
+  }
+
+  body .mega-badge .ck {
+    width: 12px !important;
+    height: 12px !important;
+    font-size: 8px !important;
+  }
+
+  body .mega-cta {
+    display: none !important;
+  }
+
+  body .mega-nav {
+    display: none !important;
+  }
+
+  body .mega-dots {
+    bottom: 5px !important;
+    gap: 4px !important;
+  }
+
+  body .mega-dots i,
+  body .mega-dots .mega-dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  body .mega-dots i.on,
+  body .mega-dots .mega-dot.on {
+    width: 18px !important;
+    border-radius: 999px !important;
   }
 
   body .hero {
