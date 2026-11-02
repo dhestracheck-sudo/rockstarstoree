@@ -597,6 +597,60 @@ body .site-footer-copy strong {
   }
 }
 
+/* Desktop: Kembalikan seperti semula (tidak terpotong), min-height 380px, max-height none */
+@media (min-width: 761px) {
+  body .mega {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 0;
+  }
+
+  body .mega-slide {
+    min-height: 380px !important;
+    max-height: none !important;
+    padding: 20px 30px 40px !important;
+    overflow: hidden;
+  }
+
+  body .mega-logo {
+    top: 12px !important;
+    left: 14px !important;
+    gap: 8px !important;
+    font-size: 13px !important;
+    letter-spacing: 1.5px !important;
+    font-weight: 700 !important;
+  }
+
+  body .mega-logo img {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  body .mega-logo span {
+    font-size: 13px !important;
+  }
+
+  body .mega-fig {
+    width: 30% !important;
+    max-width: none !important;
+    opacity: 1 !important;
+  }
+
+  body .mega-in {
+    max-width: 100% !important;
+  }
+
+  body .mega-cta {
+    display: flex !important;
+  }
+
+  body .mega-nav {
+    display: flex !important;
+  }
+}
+
 /* Hot product cards match the live Rockstar.Store home page. */
 body .hot-product-banner {
   display: block;

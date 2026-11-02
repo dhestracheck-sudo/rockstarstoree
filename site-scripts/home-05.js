@@ -252,11 +252,20 @@ function fitMega(){
 
     if(!slides.length) return;
 
+    if(window.innerWidth <= 760){
+      slides.forEach(function(s){
+        s.style.height = "";
+        s.style.minHeight = "";
+        s.style.maxHeight = "";
+      });
+      return;
+    }
+
     let max = 0;
 
     const originalStyles = slides.map(function(slide){
 
-      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight };
+      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight, maxHeight: slide.style.maxHeight };
 
     });
 
@@ -267,6 +276,8 @@ function fitMega(){
       slide.style.height = "auto";
 
       slide.style.minHeight = "0";
+
+      slide.style.maxHeight = "none";
 
     });
 
@@ -284,22 +295,19 @@ function fitMega(){
 
       slide.style.minHeight = originalStyles[index].minHeight;
 
+      slide.style.maxHeight = originalStyles[index].maxHeight;
+
     });
 
     if(!max) return;
 
-    if(window.innerWidth <= 760){
-      slides.forEach(function(s){
-        s.style.height = "180px";
-        s.style.minHeight = "180px";
-        s.style.maxHeight = "180px";
-      });
-      return;
-    }
-
     const H = Math.max(max, 380);
 
-    slides.forEach(function(s){ s.style.height = H + "px"; });
+    slides.forEach(function(s){
+      s.style.height = H + "px";
+      s.style.minHeight = "380px";
+      s.style.maxHeight = "none";
+    });
 
   }catch(e){}
 
