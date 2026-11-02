@@ -1,11 +1,22 @@
 
 
-/* ===== PWA: install ke HP ===== */
+/* ===== PWA: install ke HP + auto update ===== */
 
 if("serviceWorker" in navigator){
+  let hadController = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", function(){
+    if(hadController){
+      window.location.reload();
+    }
+    hadController = true;
+  });
+
   const registerSiteServiceWorker = function(){
     navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
-      .then(function(reg){ return reg.update(); })
+      .then(function(reg){
+        setInterval(function(){ reg.update().catch(function(){}); }, 60 * 1000);
+        return reg.update();
+      })
       .catch(function(){});
   };
   if(document.readyState === "complete") registerSiteServiceWorker();

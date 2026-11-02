@@ -1191,8 +1191,11 @@ function sbTableOf(sheet){
   if(sheet === "joki") return "joki";
   return "brainrot";
 }
-function sbGet(path){
-  return fetch(SB_URL + "/rest/v1/" + path, {
+function sbGet(path){
+
+  return fetch(SB_URL + "/rest/v1/" + path, {
+
+    cache: "no-store",
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
   }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
 }
@@ -1650,7 +1653,7 @@ function loadCached(sheet){
     const raw = localStorage.getItem("rs_" + sheet);
     if(!raw) return [];
     const o = JSON.parse(raw);
-    if(!o || !o.t || (Date.now() - o.t) > 7 * 24 * 3600 * 1000) return [];
+    if(!o || !o.t || (Date.now() - o.t) > 15 * 60 * 1000) return [];
     return Array.isArray(o.data) ? o.data : [];
   } catch(e){ return []; }
 }
@@ -1837,7 +1840,7 @@ function loadLiveStock(){
       // On a first visit there may be no cached catalog yet. Keep the fresh data in
       // memory even if the visitor has started scrolling so Hot Product can resolve
       // its cards without forcing a page-wide rerender or moving their scroll position.
-      if(!userMoved || !catalogAlreadyLoaded) applySnap(b, t, a, jk, info);
+      applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
       if (t.length) saveCached("Topup", t);
       if (a.length) saveCached("Akun", a);
@@ -1863,15 +1866,18 @@ try {
 /* Tulisan berjalan TETAP ikut saat scroll (permintaan owner): seluruh bar atas
    (marquee + header) selalu menempel (sticky) dan tidak pernah disembunyikan. */
 
-loadLiveStock().then(() => {
-  /* Deep link sudah diterapkan bersama cache sebelum permintaan jaringan berjalan.
-     Setelah ada interaksi, jangan render ulang seluruh halaman: perubahan tinggi konten
-     dapat membuat browser mengunci posisi scroll ke footer. */
-  if(!userMoved){
-    try { applyLang(); } catch(e) {}
-    try { render(); } catch(e) {}
+loadLiveStock().then(() => {
+  try {
+    const savedY = window.scrollY;
+    applyLang();
+    if(shownCat !== -1){
+      try { paintItems(true); } catch(e) {}
+    } else {
+      try { render(); } catch(e) {}
+      if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
+    }
     try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
-  }
+  } catch(e) {}
   try { paintHot(); } catch(e) {}
   try { syncWishCount(); } catch(e) {}
   try { let searchTimer = null;
@@ -1900,4 +1906,26 @@ function searchType(){
 }
 document.getElementById("searchInput").addEventListener("input", searchType); } catch(e) {}
   hideLoader();
-});
+});
+
+// Sinkronisasi otomatis saat tab dibuka kembali di HP/PC
+let lastLiveFetch = Date.now();
+document.addEventListener("visibilitychange", function(){
+  if(document.visibilityState === "visible"){
+    if(Date.now() - lastLiveFetch > 45000){
+      lastLiveFetch = Date.now();
+      loadLiveStock().then(function(){
+        try {
+          const savedY = window.scrollY;
+          if(shownCat !== -1){
+            paintItems(true);
+          } else {
+            render();
+            if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
+          }
+          paintHot();
+        } catch(e){}
+      });
+    }
+  }
+});

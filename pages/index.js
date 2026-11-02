@@ -4,7 +4,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 import SiteFooter from '../components/SiteFooter';
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=ga20261031d", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=perf-20261026", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=live-20261102", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
 
 const SEO_PAGES = {
   home: {
@@ -449,7 +449,7 @@ export async function getServerSideProps(context) {
     needCat ? getCachedCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
   ]);
   if (!context.query.q) {
-    context.res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300, stale-while-revalidate=600");
+    context.res.setHeader("Cache-Control", "public, max-age=0, must-revalidate, s-maxage=30, stale-while-revalidate=60");
   }
   const pageSeo = seo.category && catProducts.length === 0
     ? { ...seo, robots: "noindex,follow" }
