@@ -15,7 +15,7 @@ var megaMotionPreference = window.matchMedia ? window.matchMedia("(prefers-reduc
 
       l.className = "mega-logo";
 
-      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="26px" alt="Rockstar.Store" width="500" height="500" loading="lazy">rockstar.store';
+      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="18px" alt="Rockstar.Store" width="500" height="500" loading="lazy"><span>rockstar.store</span>';
 
       s.insertBefore(l, s.firstChild);
 

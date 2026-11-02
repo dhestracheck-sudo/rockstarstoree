@@ -356,6 +356,28 @@ body .site-footer-copy strong {
     border-radius: 18px;
   }
 
+  body .mega-logo {
+    top: 8px !important;
+    left: 10px !important;
+    gap: 4px !important;
+    font-size: 8px !important;
+    letter-spacing: 0.4px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    z-index: 4 !important;
+    opacity: 0.95 !important;
+  }
+
+  body .mega-logo img {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  body .mega-logo span {
+    font-size: 8px !important;
+    letter-spacing: 0.4px !important;
+  }
+
   body .mega-slide {
     height: 180px !important;
     min-height: 180px !important;
