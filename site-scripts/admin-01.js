@@ -631,7 +631,9 @@ function fillProductOptions(filter){
     if (filter && nm.toLowerCase().indexOf(filter) === -1) return;
     const op = document.createElement("option");
     op.value = nm;
-    op.textContent = nm.slice(0, 70);
+    const stockNum = Number(o.stock);
+    const isSold = (Number.isFinite(stockNum) && stockNum <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+    op.textContent = nm.slice(0, 70) + (isSold ? " [SOLD]" : "");
     sel.appendChild(op);
   });
   if(cur && Array.from(sel.options).some(p => p.value === cur)) sel.value = cur;
@@ -1077,21 +1079,36 @@ document.getElementById("catFileInput").addEventListener("change", e => {
 
 function renderPreview(name, o){
   const img = document.getElementById("prevImg");
-  document.getElementById("prevName").textContent = name || "-";
+  const prevNameEl = document.getElementById("prevName");
+  if(prevNameEl) prevNameEl.textContent = name || "-";
+
+  const soldBadge = document.getElementById("prevSoldBadge");
+  const imgSold = document.getElementById("prevImgSold");
+
   if(!o){
-    img.removeAttribute("src");
+    if(img) img.removeAttribute("src");
     document.getElementById("prevMeta").textContent = "-";
     document.getElementById("prevPrice").textContent = "-";
+    if(soldBadge) soldBadge.style.display = "none";
+    if(imgSold) imgSold.style.display = "none";
     return;
   }
   const first = imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean)[0] || "";
-  if(first) img.src = first; else img.removeAttribute("src");
+  if(first && img) img.src = first; else if(img) img.removeAttribute("src");
   const n = v => (v === 0 || v) ? Number(v).toLocaleString("id-ID") : "-";
-  document.getElementById("prevMeta").textContent =
-    (String(o.kategori || "-").trim() || "-") + " • Stok: " + n(o.stock) + " • Terjual: " + n(o.sold) +
+
+  const stockNum = Number(o.stock);
+  const isSold = (Number.isFinite(stockNum) && stockNum <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+
+  if(soldBadge) soldBadge.style.display = isSold ? "inline-block" : "none";
+  if(imgSold) imgSold.style.display = isSold ? "flex" : "none";
+
+  document.getElementById("prevMeta").innerHTML =
+    (String(o.kategori || "-").trim() || "-") + " • Stok: " + (isSold ? '<b style="color:#ff5d5d;">0 (HABIS / SOLD)</b>' : n(o.stock)) + " • Terjual: " + n(o.sold) +
     (String(o.deskripsi || "").trim() ? " • " + String(o.deskripsi).trim().slice(0, 80) : "");
   document.getElementById("prevPrice").innerHTML = "Rp " + n(o.price) +
-    ((Number(o.coret) > Number(o.price)) ? ' <span style="font-size:13px;color:var(--mut);text-decoration:line-through;">Rp ' + Number(o.coret).toLocaleString("id-ID") + '</span>' : '');
+    ((Number(o.coret) > Number(o.price)) ? ' <span style="font-size:13px;color:var(--mut);text-decoration:line-through;">Rp ' + Number(o.coret).toLocaleString("id-ID") + '</span>' : '') +
+    (isSold ? ' <span style="font-size:11px;font-weight:800;color:#ff4d4d;background:rgba(255,77,77,0.14);border:1px solid rgba(255,77,77,0.35);padding:2px 8px;border-radius:5px;vertical-align:middle;margin-left:6px;">HABIS / SOLD</span>' : '');
 }
 
 function imgRawOf(name){

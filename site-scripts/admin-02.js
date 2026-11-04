@@ -246,6 +246,9 @@
         const price = Number(item.price) || 0;
         const isSelected = (nm === currentSelected);
 
+        const stockNum = Number(item.stock);
+        const isSold = (Number.isFinite(stockNum) && stockNum <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(item.soldout || "").trim());
+
         let thumb = "";
         try {
           if (typeof imgRawOf === "function") {
@@ -264,10 +267,16 @@
         row.style.cssText = "display:flex; align-items:center; gap:8px; padding:6px 9px; border-radius:8px; background:" + (isSelected ? "rgba(43,78,255,0.32)" : "rgba(16,26,49,0.7)") + "; border:1px solid " + (isSelected ? "#5876ff" : "rgba(153,178,255,0.14)") + "; cursor:pointer; transition:background 0.12s, border-color 0.12s;";
 
         row.innerHTML = `
-          <img src="${thumb}" alt="" style="width:32px; height:32px; border-radius:6px; object-fit:cover; background:#080f1d; flex-shrink:0;">
+          <div style="position:relative; width:32px; height:32px; flex-shrink:0;">
+            <img src="${thumb}" alt="" style="width:32px; height:32px; border-radius:6px; object-fit:cover; background:#080f1d; flex-shrink:0; ${isSold ? "filter:grayscale(60%) brightness(0.8);" : ""}">
+            ${isSold ? '<span style="position:absolute; bottom:0; left:0; right:0; background:rgba(231,76,60,0.95); color:#fff; font-size:7.5px; font-weight:900; text-align:center; border-radius:0 0 6px 6px; line-height:11px; letter-spacing:0.3px;">SOLD</span>' : ''}
+          </div>
           <div style="flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; gap:2px;">
             <div style="font-size:12px; font-weight:600; color:#e6edff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${nm}</div>
-            <div style="font-size:11px; font-weight:700; color:#f3d27a; font-family:var(--font-oswald),sans-serif; letter-spacing:0.3px;">Rp ${price.toLocaleString("id-ID")}</div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:11px; font-weight:700; color:#f3d27a; font-family:var(--font-oswald),sans-serif; letter-spacing:0.3px;">Rp ${price.toLocaleString("id-ID")}</span>
+              ${isSold ? '<span style="font-size:9px; font-weight:800; background:#e74c3c; color:#fff; padding:1px 5px; border-radius:4px; letter-spacing:0.5px; line-height:1.2;">SOLD</span>' : ''}
+            </div>
           </div>
         `;
 
@@ -461,33 +470,29 @@
       const descriptionInput = document.getElementById("descInput");
 
       const description = descriptionInput ? descriptionInput.value.trim() : String(product.deskripsi || "");
+      const isSold = (Number.isFinite(stock) && stock <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(product.soldout || "").trim());
 
+      const soldBadge = document.getElementById("prevSoldBadge");
+      const imgSold = document.getElementById("prevImgSold");
+      if (soldBadge) soldBadge.style.display = isSold ? "inline-block" : "none";
+      if (imgSold) imgSold.style.display = isSold ? "flex" : "none";
 
+      const prevNameEl = document.getElementById("prevName");
+      if (prevNameEl) prevNameEl.textContent = editedName || selectedName;
 
-      document.getElementById("prevName").textContent = editedName || selectedName;
-
-      document.getElementById("prevMeta").textContent =
-
-        (String(product.kategori || "-").trim() || "-") + " • Stok: " + stock.toLocaleString("id-ID") +
-
-        " • Terjual: " + sold.toLocaleString("id-ID") + (description ? " • " + description.slice(0, 80) : "");
-
-
+      const prevMetaEl = document.getElementById("prevMeta");
+      if (prevMetaEl) {
+        prevMetaEl.innerHTML =
+          (String(product.kategori || "-").trim() || "-") + " • Stok: " +
+          (isSold ? '<b style="color:#ff5d5d;">' + stock.toLocaleString("id-ID") + ' (HABIS / SOLD)</b>' : stock.toLocaleString("id-ID")) +
+          " • Terjual: " + sold.toLocaleString("id-ID") + (description ? " • " + description.slice(0, 80) : "");
+      }
 
       const pricePreview = document.getElementById("prevPrice");
-
-      pricePreview.replaceChildren(document.createTextNode("Rp " + price.toLocaleString("id-ID")));
-
-      if (originalPrice > price) {
-
-        const oldPrice = document.createElement("span");
-
-        oldPrice.style.cssText = "font-size:13px;color:var(--mut);text-decoration:line-through;margin-left:8px;";
-
-        oldPrice.textContent = "Rp " + originalPrice.toLocaleString("id-ID");
-
-        pricePreview.appendChild(oldPrice);
-
+      if (pricePreview) {
+        pricePreview.innerHTML = "Rp " + price.toLocaleString("id-ID") +
+          ((originalPrice > price) ? ' <span style="font-size:13px;color:var(--mut);text-decoration:line-through;margin-left:8px;">Rp ' + originalPrice.toLocaleString("id-ID") + '</span>' : '') +
+          (isSold ? ' <span style="font-size:11px;font-weight:800;color:#ff4d4d;background:rgba(255,77,77,0.14);border:1px solid rgba(255,77,77,0.35);padding:2px 8px;border-radius:5px;vertical-align:middle;margin-left:6px;">HABIS / SOLD</span>' : '');
       }
 
     } catch (_) {

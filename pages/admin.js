@@ -11,8 +11,8 @@ const oswald = Oswald({
 });
 
 const pageScripts = [
-  '/site-scripts/admin-01.js?v=admin-v20261031-1',
-  '/site-scripts/admin-02.js?v=admin-quick-switch-20261031-price-bottom',
+  '/site-scripts/admin-01.js?v=admin-sold-20261104',
+  '/site-scripts/admin-02.js?v=admin-sold-20261104',
 ];
 
 const productEditorStyles = `
