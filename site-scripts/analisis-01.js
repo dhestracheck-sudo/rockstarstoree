@@ -353,7 +353,7 @@ function orderSet(id, st){
     const o = (rows && rows[0]) || null;
     if(!o) return;
     fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
-      method: "PATCH", headers: sbH(), body: JSON.stringify({ status: st })
+      method: "PATCH", headers: sbH(), body: JSON.stringify((function(){ try { var d = JSON.parse(o.items) || []; if(st === "lunas" && d[0]){ d[0].autotrade_ts = Date.now(); return { status: st, items: JSON.stringify(d) }; } } catch(e){} return { status: st }; })())
     }).then(function(){
       let det = [];
       try { det = JSON.parse(o.items) || []; } catch(e) {}

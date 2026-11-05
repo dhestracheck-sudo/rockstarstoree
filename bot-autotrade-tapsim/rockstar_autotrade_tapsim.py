@@ -413,6 +413,7 @@ class RockstarAutoTradeApp:
         self.orders_data = []
         self.known_top_order_id = None
         self.processed_autotrade_ts = set()
+        self.known_order_status = {}
         self.initial_poll_done = False
 
         self.build_ui()
@@ -1139,6 +1140,18 @@ class RockstarAutoTradeApp:
             rbx_user = first.get("u") or "-"
             autotrade_ts = first.get("autotrade_ts")
 
+            # 1. Deteksi otomatis saat tombol [✅ Lunas] ditekan di halaman /analisis!
+            prev_st = self.known_order_status.get(oid)
+            if not self.initial_poll_done:
+                self.known_order_status[oid] = status
+            else:
+                if status == "LUNAS" and prev_st != "LUNAS":
+                    self.known_order_status[oid] = status
+                    triggered_row = row
+                else:
+                    self.known_order_status[oid] = status
+
+            # 2. Deteksi saat tombol [🤖 Auto-Trade] ditekan di halaman /analisis
             if autotrade_ts:
                 key_ts = f"{oid}_{autotrade_ts}"
                 if not self.initial_poll_done:
@@ -1155,7 +1168,7 @@ class RockstarAutoTradeApp:
 
         if triggered_row is not None and not self.is_running_trade:
             self.load_order_row_into_form(triggered_row)
-            self.log(f"🌐 Tombol [🤖 Auto-Trade] ditekan di halaman /analisis untuk Order #{triggered_row.get('id')}!")
+            self.log(f"🚀 Order #{triggered_row.get('id')} ditekan [✅ LUNAS / Auto-Trade] di /analisis! Langsung menjalankan Auto-Trade...")
             self.trigger_trade_async()
             return
 
