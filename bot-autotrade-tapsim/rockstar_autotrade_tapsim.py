@@ -3,8 +3,7 @@
 """
 ====================================================================
   ROCKSTAR.STORE — BOT AUTO-TRADE TAP SIMULATOR REBORN (PC EDITION)
-  Terhubung Real-Time ke Tombol [🤖 Auto-Trade] di Halaman /analisis
-  100% Aman Tanpa Inject / Executor (Menggunakan Native Windows UI)
+  Engine Klik Khusus Roblox (SendInput + Hover Wiggle + Auto-Focus)
 ====================================================================
 """
 
@@ -41,9 +40,56 @@ SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth"
 
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tapsim_coords.json")
 
+# Struktur SendInput 64-bit / 32-bit Windows untuk Klik Hardware Roblox
+ULONG_PTR = wintypes.WPARAM
+
+
+class MOUSEINPUT(ctypes.Structure):
+    _fields_ = [
+        ("dx", wintypes.LONG),
+        ("dy", wintypes.LONG),
+        ("mouseData", wintypes.DWORD),
+        ("dwFlags", wintypes.DWORD),
+        ("time", wintypes.DWORD),
+        ("dwExtraInfo", ULONG_PTR),
+    ]
+
+
+class KEYBDINPUT(ctypes.Structure):
+    _fields_ = [
+        ("wVk", wintypes.WORD),
+        ("wScan", wintypes.WORD),
+        ("dwFlags", wintypes.DWORD),
+        ("time", wintypes.DWORD),
+        ("dwExtraInfo", ULONG_PTR),
+    ]
+
+
+class _INPUTunion(ctypes.Union):
+    _fields_ = [
+        ("mi", MOUSEINPUT),
+        ("ki", KEYBDINPUT),
+    ]
+
+
+class INPUT(ctypes.Structure):
+    _fields_ = [
+        ("type", wintypes.DWORD),
+        ("union", _INPUTunion),
+    ]
+
+
+INPUT_MOUSE = 0
+INPUT_KEYBOARD = 1
+
 MOUSEEVENTF_MOVE = 0x0001
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
+MOUSEEVENTF_VIRTUALDESK = 0x4000
+MOUSEEVENTF_ABSOLUTE = 0x8000
+
+KEYEVENTF_KEYUP = 0x0002
+KEYEVENTF_SCANCODE = 0x0008
 
 VK_BACK = 0x08
 VK_RETURN = 0x0D
@@ -57,10 +103,8 @@ VK_V = 0x56
 VK_F2 = 0x71
 VK_F8 = 0x77
 VK_F9 = 0x78
-KEYEVENTF_KEYUP = 0x0002
 SW_RESTORE = 9
 
-# Koordinat Akurat Layar 1920x1080 dari Screenshot Tap Simulator Reborn Anda
 DEFAULT_COORDS = {
     "btn_trade_menu": [61, 605],      # 1. Ikon Trade biru di kiri layar
     "btn_player_row1": [1135, 455],   # 2. Tombol Trade pemain baris ke-1
@@ -86,10 +130,44 @@ COORD_LABELS = [
 ]
 
 
+def send_mouse_input(flags, dx=0, dy=0):
+    inp = INPUT(
+        type=INPUT_MOUSE,
+        union=_INPUTunion(
+            mi=MOUSEINPUT(
+                dx=int(dx),
+                dy=int(dy),
+                mouseData=0,
+                dwFlags=int(flags),
+                time=0,
+                dwExtraInfo=0,
+            )
+        ),
+    )
+    user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT))
+
+
+def send_vk_scancode(vk, up=False):
+    scan = user32.MapVirtualKeyW(int(vk), 0)
+    flags = KEYEVENTF_KEYUP if up else 0
+    inp = INPUT(
+        type=INPUT_KEYBOARD,
+        union=_INPUTunion(
+            ki=KEYBDINPUT(
+                wVk=int(vk),
+                wScan=int(scan),
+                dwFlags=flags,
+                time=0,
+                dwExtraInfo=0,
+            )
+        ),
+    )
+    user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT))
+
+
 def focus_roblox_window():
     """
-    Mencari jendela aplikasi Roblox dan membawanya ke paling depan (di atas Browser),
-    supaya klik otomatis mengenai game Roblox dan bukan mengklik Browser.
+    Membawa jendela Roblox ke paling depan dan mengaktifkannya.
     """
     hwnd = user32.FindWindowW(None, "Roblox")
     if not hwnd:
@@ -97,15 +175,117 @@ def focus_roblox_window():
     try:
         if user32.IsIconic(hwnd):
             user32.ShowWindow(hwnd, SW_RESTORE)
-        # Trik tombol Alt agar Windows mengizinkan pindah fokus dari Browser ke Roblox
+            time.sleep(0.25)
         user32.keybd_event(VK_MENU, 0, 0, 0)
         user32.SetForegroundWindow(hwnd)
         user32.BringWindowToTop(hwnd)
+        user32.SetFocus(hwnd)
         user32.keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
-        time.sleep(0.45)
+        time.sleep(0.35)
         return True
     except Exception:
         return False
+
+
+def roblox_move_smooth(x, y):
+    """
+    Menggerakkan mouse secara bertahap (Absolute + Relative Wiggle)
+    agar engine GUI Roblox mendeteksi event MouseEnter / Hover pada tombol.
+    """
+    x, y = int(x), int(y)
+    # 1. Pindahkan ke dekat titik (x-6, y-6) dengan Absolute SendInput + SetCursorPos
+    start_x = max(0, x - 6)
+    start_y = max(0, y - 6)
+    abs_x = int(start_x * 65535 / max(1, SCREEN_W - 1))
+    abs_y = int(start_y * 65535 / max(1, SCREEN_H - 1))
+    send_mouse_input(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK, abs_x, abs_y)
+    user32.SetCursorPos(start_x, start_y)
+    time.sleep(0.03)
+
+    # 2. Gerakkan perlahan 6 langkah (+1px, +1px) menuju tepat (x, y) supaya RawInput Roblox membaca gerakan mouse
+    for step in range(1, 7):
+        cur_x = start_x + step
+        cur_y = start_y + step
+        abs_cx = int(cur_x * 65535 / max(1, SCREEN_W - 1))
+        abs_cy = int(cur_y * 65535 / max(1, SCREEN_H - 1))
+        send_mouse_input(MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_VIRTUALDESK, abs_cx, abs_cy)
+        send_mouse_input(MOUSEEVENTF_MOVE, 1, 1)
+        user32.SetCursorPos(cur_x, cur_y)
+        time.sleep(0.015)
+
+    # 3. Goyang mikro (-1, +1) tepat di atas tombol dan tahan hover 120ms
+    send_mouse_input(MOUSEEVENTF_MOVE, -1, 0)
+    time.sleep(0.02)
+    send_mouse_input(MOUSEEVENTF_MOVE, 1, 0)
+    user32.SetCursorPos(x, y)
+    time.sleep(0.12)
+
+
+def roblox_click(x, y, wake_up_first=False):
+    """
+    Menekan tombol GUI di dalam Roblox dengan sempurna:
+    - Melakukan gerakan hover halus (roblox_move_smooth)
+    - Jika wake_up_first=True (baru pindah dari jendela lain), klik pertama mengaktifkan jendela Roblox,
+      lalu klik kedua menekan tombol di dalam game.
+    """
+    x, y = int(x), int(y)
+    roblox_move_smooth(x, y)
+
+    if wake_up_first:
+        send_mouse_input(MOUSEEVENTF_LEFTDOWN)
+        time.sleep(0.08)
+        send_mouse_input(MOUSEEVENTF_LEFTUP)
+        time.sleep(0.22)
+        roblox_move_smooth(x, y)
+
+    # Tekan tahan 100ms (6 frame @ 60fps) lalu lepas agar Roblox GUI 100% mendeteksi klik
+    send_mouse_input(MOUSEEVENTF_LEFTDOWN)
+    time.sleep(0.10)
+    send_mouse_input(MOUSEEVENTF_LEFTUP)
+    time.sleep(0.15)
+
+
+def press_vk(vk, hold=0.05):
+    send_vk_scancode(vk, up=False)
+    time.sleep(hold)
+    send_vk_scancode(vk, up=True)
+    time.sleep(0.04)
+
+
+def clear_and_type_text(root_tk, text):
+    """
+    Menghapus teks lama di kotak Search Roblox dan mengetikkan nama Pet karakter demi karakter
+    menggunakan Hardware ScanCode + Clipboard Paste.
+    """
+    text = str(text or "").strip()
+    # Select All (Ctrl+A) + Backspace няколко kali
+    send_vk_scancode(VK_CONTROL, up=False)
+    time.sleep(0.04)
+    press_vk(VK_A, 0.05)
+    send_vk_scancode(VK_CONTROL, up=True)
+    time.sleep(0.05)
+    for _ in range(3):
+        press_vk(VK_BACK, 0.03)
+    time.sleep(0.08)
+
+    if not text:
+        return
+
+    # Ketik per karakter menggunakan Hardware ScanCode agar Roblox TextBox merespons event ketikan
+    for ch in text:
+        vk_scan = user32.VkKeyScanW(ord(ch))
+        if vk_scan == -1:
+            continue
+        vk_code = vk_scan & 0xFF
+        shift_state = (vk_scan >> 8) & 0xFF
+        if shift_state & 1:
+            send_vk_scancode(VK_SHIFT, up=False)
+            time.sleep(0.02)
+        press_vk(vk_code, 0.035)
+        if shift_state & 1:
+            send_vk_scancode(VK_SHIFT, up=True)
+            time.sleep(0.02)
+    time.sleep(0.15)
 
 
 def extract_pet_search_and_qty(raw_product_name, order_qty=1):
@@ -157,75 +337,13 @@ def is_lime_green_button(x, y):
     return green_hits >= 1
 
 
-def roblox_click(x, y, double=False):
-    x, y = int(x), int(y)
-    user32.SetCursorPos(x, y)
-    time.sleep(0.05)
-    user32.mouse_event(MOUSEEVENTF_MOVE, 1, 1, 0, 0)
-    time.sleep(0.05)
-    user32.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-    time.sleep(0.06)
-    user32.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
-    if double:
-        time.sleep(0.08)
-        user32.mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
-        time.sleep(0.06)
-        user32.mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, 0)
-    time.sleep(0.08)
-
-
-def press_vk(vk, hold=0.04):
-    user32.keybd_event(vk, 0, 0, 0)
-    time.sleep(hold)
-    user32.keybd_event(vk, 0, KEYEVENTF_KEYUP, 0)
-    time.sleep(0.03)
-
-
-def clear_and_type_text(root_tk, text):
-    text = str(text or "").strip()
-    user32.keybd_event(VK_CONTROL, 0, 0, 0)
-    time.sleep(0.03)
-    press_vk(VK_A, 0.04)
-    user32.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
-    time.sleep(0.04)
-    press_vk(VK_BACK, 0.04)
-    time.sleep(0.06)
-
-    if not text:
-        return
-
-    try:
-        root_tk.clipboard_clear()
-        root_tk.clipboard_append(text)
-        root_tk.update()
-        time.sleep(0.05)
-        user32.keybd_event(VK_CONTROL, 0, 0, 0)
-        time.sleep(0.03)
-        press_vk(VK_V, 0.05)
-        user32.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
-        time.sleep(0.12)
-    except Exception:
-        for ch in text:
-            vk_scan = user32.VkKeyScanW(ord(ch))
-            if vk_scan == -1:
-                continue
-            vk_code = vk_scan & 0xFF
-            shift_state = (vk_scan >> 8) & 0xFF
-            if shift_state & 1:
-                user32.keybd_event(VK_SHIFT, 0, 0, 0)
-            press_vk(vk_code, 0.02)
-            if shift_state & 1:
-                user32.keybd_event(VK_SHIFT, 0, KEYEVENTF_KEYUP, 0)
-
-
 class RockstarAutoTradeApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Rockstar.Store — Bot Auto-Trade Tap Simulator Reborn")
+        self.root.title("Rockstar.Store — Bot Auto-Trade Tap Simulator Reborn (v2 Klik Hardware)")
         w, h = 840, 700
-        sx = max(0, (SCREEN_W - w) // 2)
-        sy = max(0, (SCREEN_H - h) // 2)
-        self.root.geometry(f"{w}x{h}+{sx}+{sy}")
+        # Posisikan di kiri atas agar tidak menutupi tengah layar
+        self.root.geometry(f"{w}x{h}+20+20")
         self.root.configure(bg="#080e1c")
         self.root.attributes("-topmost", True)
         self.root.deiconify()
@@ -277,8 +395,8 @@ class RockstarAutoTradeApp:
 
         tk.Label(
             hdr,
-            text="⚡ ROCKSTAR.STORE — AUTO-TRADE BOT (TAP SIMULATOR REBORN)",
-            font=("Segoe UI", 12, "bold"),
+            text="⚡ ROCKSTAR.STORE — AUTO-TRADE BOT v2 (ENGINE KLIK HARDWARE ROBLOX)",
+            font=("Segoe UI", 11, "bold"),
             fg="#f5f8ff",
             bg="#101c38"
         ).pack(side="left")
@@ -301,7 +419,7 @@ class RockstarAutoTradeApp:
 
         self.lbl_status = tk.Label(
             status_frame,
-            text="🟢 STATUS: STANDBY (Siap Menerima Tombol Auto-Trade dari /analisis)",
+            text="🟢 STATUS: STANDBY (Tekan F8 di Dalam Game atau Klik Tombol Hijau)",
             font=("Segoe UI", 10, "bold"),
             fg="#2ecc71",
             bg="#0d162b"
@@ -310,7 +428,7 @@ class RockstarAutoTradeApp:
 
         self.lbl_cursor = tk.Label(
             status_frame,
-            text="Mouse: (0, 0) | Pintasan: [F8] Mulai Trade  [F9/ESC] Stop",
+            text="Mouse: (0, 0) | [F8] Mulai  [F9/ESC] Stop",
             font=("Consolas", 9),
             fg="#8fa3cc",
             bg="#0d162b"
@@ -330,7 +448,7 @@ class RockstarAutoTradeApp:
         self.tab_calib = tk.Frame(self.notebook, bg="#0b1326")
 
         self.notebook.add(self.tab_main, text="🚀 Panel Auto-Trade & Order Web")
-        self.notebook.add(self.tab_calib, text="📍 Kalibrasi Titik Klik Layar (F2)")
+        self.notebook.add(self.tab_calib, text="📍 Kalibrasi & Tes Klik (F2)")
 
         self.build_main_tab()
         self.build_calib_tab()
@@ -357,7 +475,7 @@ class RockstarAutoTradeApp:
             pady=6
         )
         self.txt_log.pack(fill="x", pady=(2, 0))
-        self.log("Bot Auto-Trade siap! Klik tombol [🤖 Auto-Trade] di halaman /analisis atau tekan [F8] untuk memulai.")
+        self.log("Engine Klik v2 Aktif! Saat mulai trade, jendela Bot otomatis mengecil agar tidak menghalangi klik di Roblox.")
 
     def build_main_tab(self):
         form_card = tk.LabelFrame(
@@ -486,7 +604,7 @@ class RockstarAutoTradeApp:
 
         tk.Label(
             top_ord,
-            text="Klik pesanan di bawah atau tekan tombol [🤖 Auto-Trade] langsung dari halaman /analisis:",
+            text="Klik pesanan di bawah atau tekan tombol [🤖 Auto-Trade] dari halaman /analisis:",
             fg="#8fa3cc",
             bg="#0b1326",
             font=("Segoe UI", 9)
@@ -522,10 +640,9 @@ class RockstarAutoTradeApp:
         info = tk.Label(
             self.tab_calib,
             text=(
-                "CARA KALIBRASI TITIK KLIK (JIKA INGIN MENYESUAIKAN ULANG POSISI TOMBOL):\n"
-                "1. Klik tombol 'Pilih & Tekan F2' pada baris tombol yang ingin diatur.\n"
-                "2. Arahkan kursor mouse Anda ke tombol tersebut di dalam game Roblox (tanpa perlu klik).\n"
-                "3. Tekan tombol [F2] di keyboard Anda — akan terdengar bunyi Beep dan koordinat langsung tersimpan!"
+                "CARA KALIBRASI & TES KLIK DI DALAM ROBLOX:\n"
+                "1. Klik '📍 Pilih & Tekan F2', arahkan mouse ke tombol di Roblox, lalu tekan [F2] di keyboard.\n"
+                "2. Klik tombol hijau '🔥 Tes Klik di Roblox' di sebelahnya untuk mencoba mengklik tombol tersebut di dalam game!"
             ),
             justify="left",
             fg="#f3d27a",
@@ -552,7 +669,7 @@ class RockstarAutoTradeApp:
                 fg="#e6edff",
                 bg="#0b1326",
                 font=("Segoe UI", 9),
-                width=38,
+                width=36,
                 anchor="w"
             ).pack(side="left")
 
@@ -566,9 +683,9 @@ class RockstarAutoTradeApp:
                 fg="#2ecc71",
                 bg="#101d36",
                 font=("Consolas", 9, "bold"),
-                width=18,
+                width=16,
                 pady=3
-            ).pack(side="left", padx=8)
+            ).pack(side="left", padx=6)
 
             btn_rec = tk.Button(
                 row_f,
@@ -587,13 +704,13 @@ class RockstarAutoTradeApp:
 
             tk.Button(
                 row_f,
-                text="🎯 Tes Posisi Mouse",
-                command=lambda k=key: self.test_move_cursor(k),
-                bg="#1b2b4e",
-                fg="#c0cbe4",
-                font=("Segoe UI", 8),
+                text="🔥 Tes Klik di Roblox",
+                command=lambda k=key: self.test_click_in_roblox(k),
+                bg="#20b96c",
+                fg="#ffffff",
+                font=("Segoe UI", 8, "bold"),
                 relief="flat",
-                padx=8,
+                padx=10,
                 pady=3,
                 cursor="hand2"
             ).pack(side="left", padx=4)
@@ -619,10 +736,17 @@ class RockstarAutoTradeApp:
                 btn.configure(bg="#2b4eff", text="📍 Pilih & Tekan F2")
         self.log(f"Mode Kalibrasi: Arahkan mouse ke '{key}' di game lalu tekan tombol [F2]!")
 
-    def test_move_cursor(self, key):
-        x, y = self.coords.get(key, [500, 500])
-        user32.SetCursorPos(int(x), int(y))
-        self.log(f"Kursor diarahkan ke {key}: ({x}, {y})")
+    def test_click_in_roblox(self, key):
+        def _run():
+            x, y = self.coords.get(key, [500, 500])
+            self.root.after(0, lambda: self.root.iconify())
+            time.sleep(0.35)
+            focus_roblox_window()
+            roblox_click(x, y, wake_up_first=True)
+            time.sleep(0.4)
+            self.root.after(0, lambda: self.root.deiconify())
+            self.root.after(0, lambda: self.log(f"🔥 Tes Klik berhasil dikirim ke '{key}' pada ({x}, {y})!"))
+        threading.Thread(target=_run, daemon=True).start()
 
     def start_background_monitors(self):
         def monitor_loop():
@@ -663,12 +787,10 @@ class RockstarAutoTradeApp:
                         self.root.after(0, lambda: self.log("🛑 STOP DARURAT DITEKAN! Menghentikan proses Auto-Trade..."))
                     stop_was_down = stop_down
 
-                    # Poll Supabase setiap 2 detik untuk sinyal tombol [🤖 Auto-Trade] dari /analisis
                     if time.time() - last_poll > 2.0:
                         last_poll = time.time()
                         self.fetch_orders_async(auto_select_top=False)
 
-                    # Anti-AFK setiap 8 menit
                     if self.anti_afk_enabled.get() and not self.is_running_trade:
                         if time.time() - self.last_afk_time > 480:
                             self.last_afk_time = time.time()
@@ -740,21 +862,18 @@ class RockstarAutoTradeApp:
             except Exception:
                 pass
 
-            # Sembunyikan jendela Bot sementara & fokuskan jendela Roblox agar tidak tertutup Browser/Bot
+            # PENTING: Kecilkan jendela Bot & aktifkan jendela Roblox agar Bot tidak menutupi tombol Roblox!
             self.root.after(0, lambda: self.root.iconify())
-            time.sleep(0.35)
-            focused = focus_roblox_window()
-            if focused:
-                self.log("🎮 Jendela Roblox berhasil dibawa ke paling depan!")
-            else:
-                self.log("⚠️ Jendela aplikasi Roblox belum terdeteksi terbuka, tetap menjalankan klik...")
+            time.sleep(0.40)
+            focus_roblox_window()
 
             self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Tab: {inv_tab}, Token: {tokens})")
-            self.smart_sleep(0.6)
+            first_click_needed = True
 
             if mode == "full_menu":
                 self.log("Langkah 1: Mengklik tombol Trade di kiri layar...")
-                roblox_click(*self.coords["btn_trade_menu"])
+                roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
+                first_click_needed = False
                 self.smart_sleep(1.0)
 
                 self.log("Langkah 2: Mengklik tombol Trade pada pemain baris ke-1...")
@@ -765,49 +884,37 @@ class RockstarAutoTradeApp:
             if qty > 0 and pet_name:
                 if inv_tab == "Items":
                     self.log("Mengklik tab 'Items'...")
-                    roblox_click(*self.coords["tab_items"])
+                    roblox_click(*self.coords["tab_items"], wake_up_first=first_click_needed)
                 else:
                     self.log("Mengklik tab 'Pets'...")
-                    roblox_click(*self.coords["tab_pets"])
-                self.smart_sleep(0.45)
+                    roblox_click(*self.coords["tab_pets"], wake_up_first=first_click_needed)
+                first_click_needed = False
+                self.smart_sleep(0.50)
 
-                self.log(f"Mencari '{pet_name}' di kotak Search...")
+                self.log(f"Mengklik kotak Search & mengetik '{pet_name}'...")
                 sx, sy = self.coords["search_box"]
-                roblox_click(sx, sy)
-                self.smart_sleep(0.25)
+                roblox_click(sx, sy, wake_up_first=True)
+                self.smart_sleep(0.30)
 
-                done_evt = threading.Event()
-                def _do_type():
-                    try:
-                        clear_and_type_text(self.root, pet_name)
-                    finally:
-                        done_evt.set()
-                self.root.after(0, _do_type)
-                done_evt.wait(timeout=3.0)
-                self.smart_sleep(0.65)
+                clear_and_type_text(self.root, pet_name)
+                self.smart_sleep(0.70)
 
                 px, py = self.coords["pet_slot_1"]
                 for i in range(qty):
                     self.check_stop()
                     self.log(f"Memilih '{pet_name}' ke-{i+1} dari {qty}...")
                     roblox_click(px, py)
-                    self.smart_sleep(0.35)
+                    self.smart_sleep(0.40)
 
             if tokens > 0:
                 self.log(f"Memasukkan jumlah Token: {tokens}...")
                 tx, ty = self.coords["token_plus_btn"]
-                roblox_click(tx, ty)
-                self.smart_sleep(0.35)
-                done_tok = threading.Event()
-                def _do_tok():
-                    try:
-                        clear_and_type_text(self.root, str(tokens))
-                        press_vk(VK_RETURN, 0.05)
-                    finally:
-                        done_tok.set()
-                self.root.after(0, _do_tok)
-                done_tok.wait(timeout=3.0)
-                self.smart_sleep(0.5)
+                roblox_click(tx, ty, wake_up_first=first_click_needed)
+                first_click_needed = False
+                self.smart_sleep(0.40)
+                clear_and_type_text(self.root, str(tokens))
+                press_vk(VK_RETURN, 0.06)
+                self.smart_sleep(0.50)
 
             self.log("Mengklik tombol READY! Menunggu pembeli klik READY...")
             rx, ry = self.coords["btn_ready"]
@@ -826,7 +933,7 @@ class RockstarAutoTradeApp:
                 time.sleep(0.25)
 
             if confirmed_stage:
-                self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Mengklik Confirm dalam 0.6 detik...")
+                self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Mengklik Confirm...")
                 self.smart_sleep(0.6)
                 roblox_click(cx, cy)
                 self.smart_sleep(0.5)
@@ -860,7 +967,7 @@ class RockstarAutoTradeApp:
         except Exception:
             pass
         self.btn_start.configure(state="normal", bg="#20b96c", text="🚀 JALANKAN AUTO-TRADE SEKARANG (F8)")
-        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Siap Menerima Tombol Auto-Trade dari /analisis)", fg="#2ecc71")
+        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Tekan F8 di Dalam Game atau Klik Tombol Hijau)", fg="#2ecc71")
 
     def fetch_orders_async(self, auto_select_top=False):
         def _fetch():
