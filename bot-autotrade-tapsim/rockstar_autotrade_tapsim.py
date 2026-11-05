@@ -252,40 +252,75 @@ def press_vk(vk, hold=0.05):
     time.sleep(0.04)
 
 
+def send_unicode_char(ch):
+    """
+    Mengirim karakter Unicode langsung via SendInput KEYEVENTF_UNICODE (0x0004)
+    sebagai cadangan apabila VkKeyScanW tidak memetakan karakter.
+    """
+    code = ord(ch)
+    for flags in (0x0004, 0x0004 | KEYEVENTF_KEYUP):
+        inp = INPUT(
+            type=INPUT_KEYBOARD,
+            union=_INPUTunion(
+                ki=KEYBDINPUT(
+                    wVk=0,
+                    wScan=code,
+                    dwFlags=flags,
+                    time=0,
+                    dwExtraInfo=0,
+                )
+            ),
+        )
+        user32.SendInput(1, ctypes.byref(inp), ctypes.sizeof(INPUT))
+        time.sleep(0.02)
+
+
 def clear_and_type_text(root_tk, text):
     """
-    Menghapus teks lama di kotak Search Roblox dan mengetikkan nama Pet karakter demi karakter
-    menggunakan Hardware ScanCode + Clipboard Paste.
+    Menghapus teks lama di kotak 'Search pets...' Roblox dan mengetikkan nama Pet
+    secara otomatis huruf demi huruf TANPA menekan tombol Shift (huruf kecil),
+    sehingga fitur Shift-Lock Roblox tidak pernah aktif/mengganggu kursor!
     """
-    text = str(text or "").strip()
-    # Select All (Ctrl+A) + Backspace няколко kali
-    send_vk_scancode(VK_CONTROL, up=False)
-    time.sleep(0.04)
-    press_vk(VK_A, 0.05)
-    send_vk_scancode(VK_CONTROL, up=True)
-    time.sleep(0.05)
-    for _ in range(3):
-        press_vk(VK_BACK, 0.03)
-    time.sleep(0.08)
+    # Gunakan huruf kecil (lowercase) agar TIDAK menekan tombol SHIFT di Roblox (mencegah Shift-Lock)
+    clean_text = str(text or "").strip().lower()
 
-    if not text:
+    # Tekan Backspace 18 kali untuk memastikan kotak Search benar-benar bersih
+    for _ in range(18):
+        press_vk(VK_BACK, 0.025)
+    time.sleep(0.15)
+
+    if not clean_text:
         return
 
-    # Ketik per karakter menggunakan Hardware ScanCode agar Roblox TextBox merespons event ketikan
-    for ch in text:
-        vk_scan = user32.VkKeyScanW(ord(ch))
-        if vk_scan == -1:
+    # Ketik karakter satu per satu dengan jeda manusiawi (55ms per huruf)
+    for ch in clean_text:
+        if ch == " ":
+            press_vk(VK_SPACE, 0.05)
+            time.sleep(0.04)
             continue
-        vk_code = vk_scan & 0xFF
-        shift_state = (vk_scan >> 8) & 0xFF
-        if shift_state & 1:
-            send_vk_scancode(VK_SHIFT, up=False)
-            time.sleep(0.02)
-        press_vk(vk_code, 0.035)
-        if shift_state & 1:
-            send_vk_scancode(VK_SHIFT, up=True)
-            time.sleep(0.02)
-    time.sleep(0.15)
+
+        vk_scan = user32.VkKeyScanW(ord(ch))
+        if vk_scan != -1:
+            vk_code = vk_scan & 0xFF
+            press_vk(vk_code, 0.05)
+            time.sleep(0.04)
+        else:
+            send_unicode_char(ch)
+            time.sleep(0.04)
+
+    time.sleep(0.25)
+
+
+def auto_search_in_roblox_box(sx, sy, search_text):
+    """
+    Mengklik kolom 'Search pets...' di Roblox 2x untuk memastikan fokus kursor aktif,
+    lalu menghapus isi lama dan mengetikkan nama Pet secara otomatis.
+    """
+    roblox_click(sx, sy, wake_up_first=True)
+    time.sleep(0.35)
+    roblox_click(sx, sy, wake_up_first=False)
+    time.sleep(0.35)
+    clear_and_type_text(None, search_text)
 
 
 def extract_pet_search_and_qty(raw_product_name, order_qty=1):
@@ -357,7 +392,7 @@ class RockstarAutoTradeApp:
         self.stop_requested = False
         self.anti_afk_enabled = tk.BooleanVar(value=True)
         self.always_on_top = tk.BooleanVar(value=True)
-        self.start_mode = tk.StringVar(value="window_open")
+        self.start_mode = tk.StringVar(value="full_menu")
         self.item_tab_mode = tk.StringVar(value="Pets")
 
         self.calibrating_key = None
@@ -512,18 +547,37 @@ class RockstarAutoTradeApp:
         r2.pack(fill="x", pady=4)
 
         tk.Label(r2, text="Nama Pet di Game (Search):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
-        self.ent_pet_name = tk.Entry(r2, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=22)
-        self.ent_pet_name.pack(side="left", padx=(0, 14))
+        self.ent_pet_name = tk.Entry(r2, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=18)
+        self.ent_pet_name.pack(side="left", padx=(0, 6))
         self.ent_pet_name.insert(0, "VOLCANIC DEVIL")
 
-        tk.Label(r2, text="Jumlah Pet (Klik):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(4, 6))
-        self.spin_qty = tk.Spinbox(r2, from_=0, to=40, width=6, bg="#101d36", fg="#ffffff", font=("Segoe UI", 10, "bold"))
+        tk.Button(
+            r2,
+            text="🔍 Tes Search",
+            command=self.test_search_in_roblox,
+            bg="#e67e22",
+            fg="#ffffff",
+            font=("Segoe UI", 8, "bold"),
+            relief="flat",
+            padx=8,
+            pady=2,
+            cursor="hand2"
+        ).pack(side="left", padx=(0, 10))
+
+        tk.Label(r2, text="Jumlah Pet:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(2, 4))
+        self.spin_qty = tk.Spinbox(r2, from_=0, to=40, width=4, bg="#101d36", fg="#ffffff", font=("Segoe UI", 10, "bold"))
         self.spin_qty.delete(0, "end")
         self.spin_qty.insert(0, "1")
         self.spin_qty.pack(side="left")
 
-        tk.Label(r2, text="Token (+):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(14, 6))
-        self.ent_tokens = tk.Entry(r2, bg="#101d36", fg="#ffffff", insertbackground="#ffffff", font=("Segoe UI", 10), width=10)
+        tk.Label(r2, text="⏱️ Jeda (Detik):", fg="#2ecc71", bg="#0b1326", font=("Segoe UI", 9, "bold")).pack(side="left", padx=(10, 4))
+        self.spin_delay = tk.Spinbox(r2, from_=1, to=30, width=4, bg="#101d36", fg="#2ecc71", font=("Segoe UI", 10, "bold"))
+        self.spin_delay.delete(0, "end")
+        self.spin_delay.insert(0, "5")
+        self.spin_delay.pack(side="left")
+
+        tk.Label(r2, text="Token (+):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(10, 4))
+        self.ent_tokens = tk.Entry(r2, bg="#101d36", fg="#ffffff", insertbackground="#ffffff", font=("Segoe UI", 10), width=7)
         self.ent_tokens.insert(0, "0")
         self.ent_tokens.pack(side="left")
 
@@ -533,16 +587,16 @@ class RockstarAutoTradeApp:
         tk.Label(r3, text="Cara Mulai Trade:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
         tk.Radiobutton(
             r3,
-            text="Mulai Saat Jendela Trade Sudah Terbuka (Rekomendasi)",
+            text="Otomatis Penuh (Menu Trade Kiri -> Pemain 1 -> Search Pet -> Ready)",
             variable=self.start_mode,
-            value="window_open",
-            bg="#0b1326", fg="#a9bcff", selectcolor="#080e1c", font=("Segoe UI", 9)
+            value="full_menu",
+            bg="#0b1326", fg="#2ecc71", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
         ).pack(side="left")
         tk.Radiobutton(
             r3,
-            text="Buka Menu Trade Kiri + Klik Pemain ke-1",
+            text="Jendela Trade Sudah Terbuka",
             variable=self.start_mode,
-            value="full_menu",
+            value="window_open",
             bg="#0b1326", fg="#a9bcff", selectcolor="#080e1c", font=("Segoe UI", 9)
         ).pack(side="left", padx=10)
 
@@ -819,11 +873,35 @@ class RockstarAutoTradeApp:
         if self.stop_requested:
             raise InterruptedError("Dihentikan oleh pengguna")
 
+    def test_search_in_roblox(self):
+        pet_kw = self.ent_pet_name.get().strip() or "volcanic"
+        def _run():
+            sx, sy = self.coords.get("search_box", [356, 292])
+            self.root.after(0, lambda: self.root.iconify())
+            time.sleep(0.40)
+            focus_roblox_window()
+            auto_search_in_roblox_box(sx, sy, pet_kw)
+            time.sleep(0.5)
+            self.root.after(0, lambda: self.root.deiconify())
+            self.root.after(0, lambda: self.log(f"🔍 Tes Search Otomatis selesai: mengetik '{pet_kw.lower()}' di ({sx}, {sy})!"))
+        threading.Thread(target=_run, daemon=True).start()
+
     def smart_sleep(self, seconds):
         end_t = time.time() + seconds
         while time.time() < end_t:
             self.check_stop()
             time.sleep(0.05)
+
+    def wait_step_delay(self, seconds, next_label=""):
+        total = max(1, int(round(float(seconds))))
+        self.log(f"⏱️ Jeda {total} detik {('sebelum ' + next_label) if next_label else ''}...")
+        for rem in range(total, 0, -1):
+            self.check_stop()
+            self.root.after(0, lambda r=rem, lbl=next_label: self.lbl_status.configure(
+                text=f"⏳ JEDA {r} DETIK... {('-> ' + lbl) if lbl else ''}",
+                fg="#f3d27a"
+            ))
+            self.smart_sleep(1.0)
 
     def trigger_trade_async(self):
         if self.is_running_trade:
@@ -835,6 +913,10 @@ class RockstarAutoTradeApp:
             qty = int(self.spin_qty.get())
         except Exception:
             qty = 1
+        try:
+            step_delay = float(self.spin_delay.get())
+        except Exception:
+            step_delay = 5.0
         try:
             tokens = int(str(self.ent_tokens.get()).replace(".", "").replace(",", "").strip() or "0")
         except Exception:
@@ -851,11 +933,11 @@ class RockstarAutoTradeApp:
 
         threading.Thread(
             target=self.execute_trade_sequence,
-            args=(buyer, pet_name, qty, tokens, mode, inv_tab),
+            args=(buyer, pet_name, qty, tokens, mode, inv_tab, step_delay),
             daemon=True
         ).start()
 
-    def execute_trade_sequence(self, buyer, pet_name, qty, tokens, mode, inv_tab):
+    def execute_trade_sequence(self, buyer, pet_name, qty, tokens, mode, inv_tab, step_delay=5.0):
         try:
             try:
                 winsound.Beep(900, 120)
@@ -864,65 +946,61 @@ class RockstarAutoTradeApp:
 
             # PENTING: Kecilkan jendela Bot & aktifkan jendela Roblox agar Bot tidak menutupi tombol Roblox!
             self.root.after(0, lambda: self.root.iconify())
-            time.sleep(0.40)
+            time.sleep(0.50)
             focus_roblox_window()
 
-            self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Tab: {inv_tab}, Token: {tokens})")
+            self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Jeda: {int(step_delay)} detik/tindakan)")
             first_click_needed = True
 
             if mode == "full_menu":
-                self.log("Langkah 1: Mengklik tombol Trade di kiri layar...")
+                self.log("Langkah 1: Mengklik tombol Menu Trade di kiri layar...")
                 roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
                 first_click_needed = False
-                self.smart_sleep(1.0)
+                self.wait_step_delay(step_delay, "Klik Trade Pemain Baris 1")
 
                 self.log("Langkah 2: Mengklik tombol Trade pada pemain baris ke-1...")
                 roblox_click(*self.coords["btn_player_row1"])
-                self.log("Menunggu pembeli menerima permintaan Trade (4.5 detik)...")
-                self.smart_sleep(4.5)
+                self.wait_step_delay(step_delay, "Search Pet Otomatis di Jendela Trade")
 
             if qty > 0 and pet_name:
+                # Catatan: Jendela Trade Tap Simulator Reborn otomatis terbuka di tab 'Pets'.
+                # Hanya klik tab 'Items' apabila pengguna memilih pengiriman 'Items'.
                 if inv_tab == "Items":
                     self.log("Mengklik tab 'Items'...")
                     roblox_click(*self.coords["tab_items"], wake_up_first=first_click_needed)
-                else:
-                    self.log("Mengklik tab 'Pets'...")
-                    roblox_click(*self.coords["tab_pets"], wake_up_first=first_click_needed)
-                first_click_needed = False
-                self.smart_sleep(0.50)
+                    first_click_needed = False
+                    self.wait_step_delay(step_delay, "Klik Kolom Search")
 
-                self.log(f"Mengklik kotak Search & mengetik '{pet_name}'...")
                 sx, sy = self.coords["search_box"]
-                roblox_click(sx, sy, wake_up_first=True)
-                self.smart_sleep(0.30)
-
-                clear_and_type_text(self.root, pet_name)
-                self.smart_sleep(0.70)
+                self.log(f"Langkah 3 (Search Otomatis): Mengklik kotak Search ({sx}, {sy}) & mengetik '{pet_name.lower()}'...")
+                auto_search_in_roblox_box(sx, sy, pet_name)
+                first_click_needed = False
+                self.wait_step_delay(step_delay, f"Pilih Pet '{pet_name}' di Kotak Pertama")
 
                 px, py = self.coords["pet_slot_1"]
                 for i in range(qty):
                     self.check_stop()
-                    self.log(f"Memilih '{pet_name}' ke-{i+1} dari {qty}...")
+                    self.log(f"Langkah 4: Memilih Pet hasil Search ke-{i+1} dari {qty} pada ({px}, {py})...")
                     roblox_click(px, py)
-                    self.smart_sleep(0.40)
+                    self.wait_step_delay(step_delay, "Langkah Berikutnya")
 
             if tokens > 0:
                 self.log(f"Memasukkan jumlah Token: {tokens}...")
                 tx, ty = self.coords["token_plus_btn"]
                 roblox_click(tx, ty, wake_up_first=first_click_needed)
                 first_click_needed = False
-                self.smart_sleep(0.40)
+                time.sleep(0.50)
                 clear_and_type_text(self.root, str(tokens))
                 press_vk(VK_RETURN, 0.06)
-                self.smart_sleep(0.50)
+                self.wait_step_delay(step_delay, "Klik Tombol READY")
 
-            self.log("Mengklik tombol READY! Menunggu pembeli klik READY...")
+            self.log("Langkah 5: Mengklik tombol READY! Menunggu pembeli klik READY...")
             rx, ry = self.coords["btn_ready"]
             roblox_click(rx, ry)
-            self.smart_sleep(1.0)
+            self.wait_step_delay(step_delay, "Deteksi Tombol Hijau Confirm")
 
             cx, cy = self.coords["btn_confirm"]
-            self.log("👀 Memantau layar: menunggu tombol 'Confirm' menyala HIJAU (Maks 60 detik)...")
+            self.log("Langkah 6: 👀 Memantau layar — menunggu tombol 'Confirm' menyala HIJAU (Maks 60 detik)...")
             confirmed_stage = False
             wait_start = time.time()
             while time.time() - wait_start < 60.0:
@@ -933,15 +1011,15 @@ class RockstarAutoTradeApp:
                 time.sleep(0.25)
 
             if confirmed_stage:
-                self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Mengklik Confirm...")
-                self.smart_sleep(0.6)
+                self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Menunggu jeda 5 detik lalu mengklik Confirm...")
+                self.wait_step_delay(step_delay, "Klik Tombol Hijau Confirm")
                 roblox_click(cx, cy)
-                self.smart_sleep(0.5)
+                time.sleep(0.6)
                 if is_lime_green_button(cx, cy):
                     roblox_click(cx, cy)
 
-                self.log("⏳ Menunggu hitung mundur 3.. 2.. 1.. selesai...")
-                self.smart_sleep(4.2)
+                self.log("⏳ Menunggu hitung mundur 3.. 2.. 1.. selesai (5 detik)...")
+                self.wait_step_delay(step_delay, "Selesai Trade")
                 try:
                     winsound.Beep(1400, 180)
                     winsound.Beep(1700, 220)
