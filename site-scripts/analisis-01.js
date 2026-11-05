@@ -454,18 +454,24 @@ function triggerAutoTrade(id){
     if(!o){ alert("Order tidak ditemukan."); return; }
     let det = [];
     try { det = JSON.parse(o.items) || []; } catch(e) {}
-    const first = (det && det[0]) || {};
-    const buyer = String(first.u || "").trim();
-    const item = String(first.n || "").trim();
-    const qty = Number(first.q) || 1;
-    const url = "http://127.0.0.1:17888/trade?order_id=" + encodeURIComponent(id) +
-      "&buyer=" + encodeURIComponent(buyer) +
-      "&item=" + encodeURIComponent(item) +
-      "&qty=" + encodeURIComponent(qty);
-    fetch(url, { mode: "no-cors" }).then(function(){
-      alert("🚀 Perintah Auto-Trade untuk Order #" + id + " (" + (buyer || "Pembeli") + " — " + item + " x" + qty + ") telah dikirim ke Aplikasi Bot PC Anda!");
+    if(!Array.isArray(det) || !det.length){ alert("Data item order kosong."); return; }
+    const nowTs = Date.now();
+    det[0].autotrade_ts = nowTs;
+    const buyer = String(det[0].u || "").trim() || "Pembeli";
+    const item = String(det[0].n || "").trim();
+    const qty = Number(det[0].q) || 1;
+    fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
+      method: "PATCH",
+      headers: sbH(),
+      body: JSON.stringify({ items: JSON.stringify(det) })
+    }).then(function(res){
+      if(res.ok){
+        alert("🚀 Sinyal Auto-Trade untuk Order #" + id + " (" + buyer + " — " + item + " x" + qty + ") berhasil dikirim!\n\nPastikan Anda sudah membuka 'Jalankan-Bot-AutoTrade.bat' dan jendela game Roblox sedang terbuka di PC Anda.");
+      } else {
+        alert("Gagal mengirim sinyal Auto-Trade ke database.");
+      }
     }).catch(function(){
-      alert("⚠️ Aplikasi Bot Auto-Trade di PC belum aktif. Silakan klik 2x file 'Jalankan-Bot-AutoTrade.bat' di folder bot-autotrade-tapsim terlebih dahulu!");
+      alert("Gagal koneksi saat mengirim sinyal Auto-Trade.");
     });
   }).catch(function(){ alert("Gagal mengambil detail order."); });
 }

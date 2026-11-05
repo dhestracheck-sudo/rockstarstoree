@@ -3,27 +3,25 @@
 """
 ====================================================================
   ROCKSTAR.STORE — BOT AUTO-TRADE TAP SIMULATOR REBORN (PC EDITION)
-  Terhubung langsung ke Database Order Supabase & Halaman /analisis
+  Terhubung Real-Time ke Tombol [🤖 Auto-Trade] di Halaman /analisis
   100% Aman Tanpa Inject / Executor (Menggunakan Native Windows UI)
 ====================================================================
 """
 
 import ctypes
 from ctypes import wintypes
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os
 import re
 import sys
 import threading
 import time
-import urllib.parse
 import urllib.request
 import winsound
 import tkinter as tk
 from tkinter import ttk
 
-# Pastikan DPI Awareness aktif agar koordinat layar 100% akurat (misal 1920x1080)
+# Pastikan DPI Awareness aktif agar koordinat layar 100% akurat (1920x1080)
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(2)
 except Exception:
@@ -38,13 +36,11 @@ gdi32 = ctypes.windll.gdi32
 SCREEN_W = user32.GetSystemMetrics(0)
 SCREEN_H = user32.GetSystemMetrics(1)
 
-# Konfigurasi Supabase Rockstar.Store
 SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co"
 SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth"
 
 CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tapsim_coords.json")
 
-# Konstanta Windows Input
 MOUSEEVENTF_MOVE = 0x0001
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
@@ -53,6 +49,7 @@ VK_BACK = 0x08
 VK_RETURN = 0x0D
 VK_SHIFT = 0x10
 VK_CONTROL = 0x11
+VK_MENU = 0x12
 VK_ESCAPE = 0x1B
 VK_SPACE = 0x20
 VK_A = 0x41
@@ -61,18 +58,19 @@ VK_F2 = 0x71
 VK_F8 = 0x77
 VK_F9 = 0x78
 KEYEVENTF_KEYUP = 0x0002
+SW_RESTORE = 9
 
-# Default Koordinat Proporsional untuk Layar 1920x1080 (Tap Simulator Reborn)
+# Koordinat Akurat Layar 1920x1080 dari Screenshot Tap Simulator Reborn Anda
 DEFAULT_COORDS = {
-    "btn_trade_menu": [int(SCREEN_W * 0.032), int(SCREEN_H * 0.560)],     # 1. Ikon Trade biru di kiri layar
-    "btn_player_row1": [int(SCREEN_W * 0.625), int(SCREEN_H * 0.420)],    # 2. Tombol Trade pemain baris ke-1
-    "tab_pets": [int(SCREEN_W * 0.365), int(SCREEN_H * 0.255)],           # 3. Tab hijau 'Pets' di dalam Trade
-    "tab_items": [int(SCREEN_W * 0.425), int(SCREEN_H * 0.255)],          # 4. Tab abu 'Items' di dalam Trade
-    "search_box": [int(SCREEN_W * 0.285), int(SCREEN_H * 0.315)],         # 5. Kotak 'Search pets...'
-    "pet_slot_1": [int(SCREEN_W * 0.235), int(SCREEN_H * 0.415)],         # 6. Kotak Pet ke-1 (Kiri Atas)
-    "token_plus_btn": [int(SCREEN_W * 0.565), int(SCREEN_H * 0.760)],     # 7. Tombol hijau '+' Token
-    "btn_ready": [int(SCREEN_W * 0.670), int(SCREEN_H * 0.865)],          # 8. Tombol READY (Kanan Bawah)
-    "btn_confirm": [int(SCREEN_W * 0.605), int(SCREEN_H * 0.865)],        # 9. Tombol Hijau Confirm (Saat Check Offer)
+    "btn_trade_menu": [61, 605],      # 1. Ikon Trade biru di kiri layar
+    "btn_player_row1": [1135, 455],   # 2. Tombol Trade pemain baris ke-1
+    "tab_pets": [636, 315],           # 3. Tab hijau 'Pets' di dalam Trade
+    "tab_items": [741, 315],          # 4. Tab abu 'Items' di dalam Trade
+    "search_box": [502, 371],         # 5. Kotak 'Search pets...'
+    "pet_slot_1": [428, 466],         # 6. Kotak Pet ke-1 (Kiri Atas)
+    "token_plus_btn": [1129, 728],    # 7. Tombol hijau '+' Token
+    "btn_ready": [1284, 820],         # 8. Tombol READY (Kanan Bawah)
+    "btn_confirm": [1162, 820],       # 9. Tombol Hijau Confirm (Saat Check Offer)
 }
 
 COORD_LABELS = [
@@ -88,31 +86,41 @@ COORD_LABELS = [
 ]
 
 
+def focus_roblox_window():
+    """
+    Mencari jendela aplikasi Roblox dan membawanya ke paling depan (di atas Browser),
+    supaya klik otomatis mengenai game Roblox dan bukan mengklik Browser.
+    """
+    hwnd = user32.FindWindowW(None, "Roblox")
+    if not hwnd:
+        return False
+    try:
+        if user32.IsIconic(hwnd):
+            user32.ShowWindow(hwnd, SW_RESTORE)
+        # Trik tombol Alt agar Windows mengizinkan pindah fokus dari Browser ke Roblox
+        user32.keybd_event(VK_MENU, 0, 0, 0)
+        user32.SetForegroundWindow(hwnd)
+        user32.BringWindowToTop(hwnd)
+        user32.keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0)
+        time.sleep(0.45)
+        return True
+    except Exception:
+        return False
+
+
 def extract_pet_search_and_qty(raw_product_name, order_qty=1):
-    """
-    Mengubah nama produk katalog website menjadi kata kunci Search di dalam game.
-    Contoh:
-      "1 PET RAINBOW VOLCANIC DEVIL 3,5M/S+" -> ("Volcanic Devil", 1)
-      "5 PET RAINBOW VOLCANIC ANGEL 4,1M/S+" -> ("Volcanic Angel", 5)
-    """
     s = str(raw_product_name or "").strip()
     if not s:
         return ("", max(1, int(order_qty or 1)))
 
-    # Cek angka di depan nama produk (misal "1 PET ...")
     m_num = re.match(r"^(\d+)\s+(?:PET|PETS|ITEM|ITEMS)\b", s, flags=re.IGNORECASE)
     mult = int(m_num.group(1)) if m_num else 1
     total_qty = max(1, min(40, mult * max(1, int(order_qty or 1))))
 
-    # Hapus prefix seperti "Grow A Garden 2 - DAPAT 1 PET " atau "1 PET RAINBOW "
     s = re.sub(r"^.*?\bDAPAT\s+\d*\s*(?:PET|PETS|ITEM|ITEMS)?\s*", "", s, flags=re.IGNORECASE)
     s = re.sub(r"^\d+\s*(?:PET|PETS|ITEM|ITEMS)?\s*", "", s, flags=re.IGNORECASE)
     s = re.sub(r"^(?:RAINBOW|GOLDEN|GOLD|SHINY|VOID|MYTHIC|MYTIC|SECRET|EKSKLUSIF)\s+", "", s, flags=re.IGNORECASE)
-
-    # Hapus keterangan di dalam kurung "(WAJUB DUNIA 2)" atau "(MYTIC)"
     s = re.sub(r"\s*\([^)]*\)", "", s)
-
-    # Hapus angka stat power di belakang seperti "3,5M/S+" atau "26 QA+/S"
     s = re.sub(r"\s+\d+[.,]?\d*\s*[A-Za-z+]*\s*/\s*S\+?\b.*$", "", s, flags=re.IGNORECASE)
 
     cleaned = s.strip()
@@ -238,10 +246,11 @@ class RockstarAutoTradeApp:
         self.last_afk_time = time.time()
         self.orders_data = []
         self.known_top_order_id = None
+        self.processed_autotrade_ts = set()
+        self.initial_poll_done = False
 
         self.build_ui()
         self.start_background_monitors()
-        self.start_local_bridge_server()
         self.fetch_orders_async(auto_select_top=True)
 
     def load_config(self):
@@ -292,7 +301,7 @@ class RockstarAutoTradeApp:
 
         self.lbl_status = tk.Label(
             status_frame,
-            text="🟢 STATUS: STANDBY (Terhubung ke Website & Halaman /analisis)",
+            text="🟢 STATUS: STANDBY (Siap Menerima Tombol Auto-Trade dari /analisis)",
             font=("Segoe UI", 10, "bold"),
             fg="#2ecc71",
             bg="#0d162b"
@@ -301,7 +310,7 @@ class RockstarAutoTradeApp:
 
         self.lbl_cursor = tk.Label(
             status_frame,
-            text="Mouse: (0, 0) | Pintasan: [F8] Mulai Trade  [F9/ESC] Stop Darurat",
+            text="Mouse: (0, 0) | Pintasan: [F8] Mulai Trade  [F9/ESC] Stop",
             font=("Consolas", 9),
             fg="#8fa3cc",
             bg="#0d162b"
@@ -348,7 +357,7 @@ class RockstarAutoTradeApp:
             pady=6
         )
         self.txt_log.pack(fill="x", pady=(2, 0))
-        self.log("Bot Auto-Trade Tap Simulator Reborn aktif! Anda juga bisa memicu trade dari halaman /analisis di web.")
+        self.log("Bot Auto-Trade siap! Klik tombol [🤖 Auto-Trade] di halaman /analisis atau tekan [F8] untuk memulai.")
 
     def build_main_tab(self):
         form_card = tk.LabelFrame(
@@ -387,7 +396,7 @@ class RockstarAutoTradeApp:
         tk.Label(r2, text="Nama Pet di Game (Search):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
         self.ent_pet_name = tk.Entry(r2, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=22)
         self.ent_pet_name.pack(side="left", padx=(0, 14))
-        self.ent_pet_name.insert(0, "Volcanic Devil")
+        self.ent_pet_name.insert(0, "VOLCANIC DEVIL")
 
         tk.Label(r2, text="Jumlah Pet (Klik):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(4, 6))
         self.spin_qty = tk.Spinbox(r2, from_=0, to=40, width=6, bg="#101d36", fg="#ffffff", font=("Segoe UI", 10, "bold"))
@@ -462,7 +471,7 @@ class RockstarAutoTradeApp:
 
         orders_card = tk.LabelFrame(
             self.tab_main,
-            text=" 📦 Daftar Pesanan Terbaru dari Website Rockstar.Store (Auto-Refresh Tiap 5 Detik) ",
+            text=" 📦 Daftar Pesanan Terbaru dari Website Rockstar.Store (Auto-Sync Real-Time) ",
             font=("Segoe UI", 10, "bold"),
             fg="#9bb5ff",
             bg="#0b1326",
@@ -477,7 +486,7 @@ class RockstarAutoTradeApp:
 
         tk.Label(
             top_ord,
-            text="Klik baris pesanan di bawah untuk memuat nama pembeli & nama Pet secara otomatis:",
+            text="Klik pesanan di bawah atau tekan tombol [🤖 Auto-Trade] langsung dari halaman /analisis:",
             fg="#8fa3cc",
             bg="#0b1326",
             font=("Segoe UI", 9)
@@ -513,10 +522,10 @@ class RockstarAutoTradeApp:
         info = tk.Label(
             self.tab_calib,
             text=(
-                "CARA KALIBRASI TITIK KLIK (HANYA PERLU 1X SETTING):\n"
+                "CARA KALIBRASI TITIK KLIK (JIKA INGIN MENYESUAIKAN ULANG POSISI TOMBOL):\n"
                 "1. Klik tombol 'Pilih & Tekan F2' pada baris tombol yang ingin diatur.\n"
                 "2. Arahkan kursor mouse Anda ke tombol tersebut di dalam game Roblox (tanpa perlu klik).\n"
-                "3. Tekan tombol [F2] di keyboard Anda — akan terdengar bunyi Beep dan koordinat langsung tersimpan otomatis!"
+                "3. Tekan tombol [F2] di keyboard Anda — akan terdengar bunyi Beep dan koordinat langsung tersimpan!"
             ),
             justify="left",
             fg="#f3d27a",
@@ -615,54 +624,6 @@ class RockstarAutoTradeApp:
         user32.SetCursorPos(int(x), int(y))
         self.log(f"Kursor diarahkan ke {key}: ({x}, {y})")
 
-    def start_local_bridge_server(self):
-        app_ref = self
-
-        class BridgeHandler(BaseHTTPRequestHandler):
-            def do_GET(self):
-                parsed = urllib.parse.urlparse(self.path)
-                if parsed.path == "/trade":
-                    qs = urllib.parse.parse_qs(parsed.query)
-                    buyer = (qs.get("buyer", [""])[0] or "").strip()
-                    raw_item = (qs.get("item", [""])[0] or "").strip()
-                    qty_raw = int(qs.get("qty", ["1"])[0] or "1")
-                    pet_kw, total_qty = extract_pet_search_and_qty(raw_item, qty_raw)
-
-                    def _load_and_run():
-                        if buyer:
-                            app_ref.ent_buyer.delete(0, "end")
-                            app_ref.ent_buyer.insert(0, buyer)
-                        if pet_kw:
-                            app_ref.ent_pet_name.delete(0, "end")
-                            app_ref.ent_pet_name.insert(0, pet_kw)
-                        app_ref.spin_qty.delete(0, "end")
-                        app_ref.spin_qty.insert(0, str(total_qty))
-                        app_ref.log(f"🌐 Perintah dari Web /analisis diterima: Pembeli={buyer}, Pet='{pet_kw}' x{total_qty}")
-                        app_ref.trigger_trade_async()
-
-                    app_ref.root.after(0, _load_and_run)
-                    self.send_response(200)
-                    self.send_header("Access-Control-Allow-Origin", "*")
-                    self.end_headers()
-                    self.wfile.write(b"OK")
-                else:
-                    self.send_response(200)
-                    self.send_header("Access-Control-Allow-Origin", "*")
-                    self.end_headers()
-                    self.wfile.write(b"Rockstar AutoTrade Bridge Active")
-
-            def log_message(self, format, *args):
-                return
-
-        def _serve():
-            try:
-                srv = HTTPServer(("127.0.0.1", 17888), BridgeHandler)
-                srv.serve_forever()
-            except Exception:
-                pass
-
-        threading.Thread(target=_serve, daemon=True).start()
-
     def start_background_monitors(self):
         def monitor_loop():
             f2_was_down = False
@@ -702,8 +663,8 @@ class RockstarAutoTradeApp:
                         self.root.after(0, lambda: self.log("🛑 STOP DARURAT DITEKAN! Menghentikan proses Auto-Trade..."))
                     stop_was_down = stop_down
 
-                    # Auto-refresh order setiap 5 detik
-                    if time.time() - last_poll > 5.0:
+                    # Poll Supabase setiap 2 detik untuk sinyal tombol [🤖 Auto-Trade] dari /analisis
+                    if time.time() - last_poll > 2.0:
                         last_poll = time.time()
                         self.fetch_orders_async(auto_select_top=False)
 
@@ -779,8 +740,17 @@ class RockstarAutoTradeApp:
             except Exception:
                 pass
 
+            # Sembunyikan jendela Bot sementara & fokuskan jendela Roblox agar tidak tertutup Browser/Bot
+            self.root.after(0, lambda: self.root.iconify())
+            time.sleep(0.35)
+            focused = focus_roblox_window()
+            if focused:
+                self.log("🎮 Jendela Roblox berhasil dibawa ke paling depan!")
+            else:
+                self.log("⚠️ Jendela aplikasi Roblox belum terdeteksi terbuka, tetap menjalankan klik...")
+
             self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Tab: {inv_tab}, Token: {tokens})")
-            self.smart_sleep(0.8)
+            self.smart_sleep(0.6)
 
             if mode == "full_menu":
                 self.log("Langkah 1: Mengklik tombol Trade di kiri layar...")
@@ -858,7 +828,7 @@ class RockstarAutoTradeApp:
             if confirmed_stage:
                 self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Mengklik Confirm dalam 0.6 detik...")
                 self.smart_sleep(0.6)
-                roblox_click(cx, ry if cy == 0 else cy)
+                roblox_click(cx, cy)
                 self.smart_sleep(0.5)
                 if is_lime_green_button(cx, cy):
                     roblox_click(cx, cy)
@@ -882,11 +852,15 @@ class RockstarAutoTradeApp:
         finally:
             self.is_running_trade = False
             self.stop_requested = False
-            self.root.after(0, self.reset_trade_button_ui)
+            self.root.after(0, self.restore_after_trade)
 
-    def reset_trade_button_ui(self):
+    def restore_after_trade(self):
+        try:
+            self.root.deiconify()
+        except Exception:
+            pass
         self.btn_start.configure(state="normal", bg="#20b96c", text="🚀 JALANKAN AUTO-TRADE SEKARANG (F8)")
-        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Terhubung ke Website & Halaman /analisis)", fg="#2ecc71")
+        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Siap Menerima Tombol Auto-Trade dari /analisis)", fg="#2ecc71")
 
     def fetch_orders_async(self, auto_select_top=False):
         def _fetch():
@@ -912,6 +886,8 @@ class RockstarAutoTradeApp:
         selected_idx = cur_sel[0] if cur_sel else None
 
         self.orders_listbox.delete(0, "end")
+        triggered_row = None
+
         for row in self.orders_data:
             oid = row.get("id", "?")
             status = str(row.get("status", "baru")).upper()
@@ -927,9 +903,27 @@ class RockstarAutoTradeApp:
 
             first = items[0] if isinstance(items[0], dict) else {}
             rbx_user = first.get("u") or "-"
+            autotrade_ts = first.get("autotrade_ts")
+
+            if autotrade_ts:
+                key_ts = f"{oid}_{autotrade_ts}"
+                if not self.initial_poll_done:
+                    self.processed_autotrade_ts.add(key_ts)
+                elif key_ts not in self.processed_autotrade_ts:
+                    self.processed_autotrade_ts.add(key_ts)
+                    triggered_row = row
+
             summary = ", ".join([f"{it.get('n', '?')} (x{it.get('q', 1)})" for it in items if isinstance(it, dict)])
             display = f"#{oid:<4} [{status:<5}] 👤 {rbx_user:<14} | 📦 {summary} — Rp {total:,}"
             self.orders_listbox.insert("end", display)
+
+        self.initial_poll_done = True
+
+        if triggered_row is not None and not self.is_running_trade:
+            self.load_order_row_into_form(triggered_row)
+            self.log(f"🌐 Tombol [🤖 Auto-Trade] ditekan di halaman /analisis untuk Order #{triggered_row.get('id')}!")
+            self.trigger_trade_async()
+            return
 
         if self.orders_data:
             top_id = self.orders_data[0].get("id")
