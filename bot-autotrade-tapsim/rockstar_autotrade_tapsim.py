@@ -133,8 +133,8 @@ DEFAULT_COORDS = {
     "rbx_btn_kirim_top": [1542, 109],     # R2. Tombol [↑ Kirim] di Halaman Saldo Robux
     "rbx_search_friend": [919, 392],      # R3. Kolom '🔍 Cari' di Popup Kirim Robux
     "rbx_friend_row1": [881, 495],        # R4. Baris Teman ke-1 Hasil Pencarian
-    "rbx_btn_edit_amount": [1065, 688],   # R5. Tombol [Edit] Nominal Robux (Jika != 10)
-    "rbx_input_amount": [960, 560],       # R5B. Kolom Angka Nominal Robux (Setelah Klik Edit)
+    "rbx_btn_edit_amount": [1065, 688],   # R5A. Tombol [Edit] Nominal Robux (Di Kanan Tombol Kirim)
+    "rbx_input_amount": [980, 536],       # R5B. Kolom Ketik Angka Robux (Di Tengah Popup)
     "rbx_btn_kirim_confirm": [857, 688],  # R6. Tombol Biru [Kirim] Konfirmasi Robux
     "rbx_btn_oke": [960, 617],            # R7. Tombol Biru [OKE] Selesai Kirim Robux
 }
@@ -157,8 +157,8 @@ ROBUX_COORD_LABELS = [
     ("rbx_btn_kirim_top", "2. Tombol [↑ Kirim] (Halaman Saldo Robux)"),
     ("rbx_search_friend", "3. Kolom '🔍 Cari' (Popup Kirim Robux)"),
     ("rbx_friend_row1", "4. Baris Teman ke-1 (Hasil Cari USN)"),
-    ("rbx_btn_edit_amount", "5A. Tombol [Edit] Nominal (Jika != 10 Robux)"),
-    ("rbx_input_amount", "5B. Kolom Ketik Angka Robux (Setelah Klik Edit)"),
+    ("rbx_btn_edit_amount", "5A. Tombol [Edit] Nominal (Sebelah Kanan Kirim)"),
+    ("rbx_input_amount", "5B. Kotak Angka Robux (Tempat Mengetik Jumlah)"),
     ("rbx_btn_kirim_confirm", "6. Tombol Biru [Kirim] (Konfirmasi Kirim)"),
     ("rbx_btn_oke", "7. Tombol Biru [OKE] (Selesai Terkirim)"),
 ]
@@ -344,6 +344,40 @@ def clear_and_type_text(root_tk, text):
             time.sleep(0.04)
 
     time.sleep(0.25)
+
+
+def clear_and_type_robux_amount(amount_val):
+    """
+    Menghapus angka lama di kotak nominal Robux secara menyeluruh (Ctrl+A + Backspace + End + Backspace + Delete)
+    lalu mengetikkan angka Robux baru satu per satu dan menekan Enter.
+    """
+    digits = "".join(ch for ch in str(amount_val or "10") if ch.isdigit()) or "10"
+
+    # 1. Blok semua angka lama dengan Ctrl+A lalu hapus dengan Backspace
+    send_vk_scancode(VK_CONTROL, up=False)
+    time.sleep(0.03)
+    press_vk(VK_A, 0.04)
+    send_vk_scancode(VK_CONTROL, up=True)
+    time.sleep(0.04)
+    press_vk(VK_BACK, 0.04)
+
+    # 2. Pastikan sisa karakter terhapus dari kanan & kiri (End + Backspace + Delete)
+    press_vk(VK_END, 0.03)
+    for _ in range(12):
+        press_vk(VK_BACK, 0.02)
+    for _ in range(6):
+        press_vk(VK_DELETE, 0.02)
+    time.sleep(0.15)
+
+    # 3. Ketik setiap digit angka Robux (0-9) dengan jeda stabil
+    for d in digits:
+        vk_num = 0x30 + int(d)
+        press_vk(vk_num, 0.06)
+        time.sleep(0.05)
+
+    time.sleep(0.20)
+    press_vk(VK_RETURN, 0.06)
+    time.sleep(0.20)
 
 
 def auto_search_in_roblox_box(sx, sy, search_text):
@@ -1194,9 +1228,22 @@ class RockstarAutoTradeApp:
         self.ent_robux_user.insert(0, "ROCKSTARSTORE")
 
         tk.Label(rr1, text="Nominal Robux:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(2, 4))
-        self.ent_robux_amount = tk.Entry(rr1, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=8)
-        self.ent_robux_amount.pack(side="left", padx=(0, 12))
+        self.ent_robux_amount = tk.Entry(rr1, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=7)
+        self.ent_robux_amount.pack(side="left", padx=(0, 6))
         self.ent_robux_amount.insert(0, "10")
+
+        tk.Button(
+            rr1,
+            text="🔢 Tes Edit & Ketik",
+            command=self.test_type_robux_amount,
+            bg="#e67e22",
+            fg="#ffffff",
+            font=("Segoe UI", 8, "bold"),
+            relief="flat",
+            padx=8,
+            pady=2,
+            cursor="hand2"
+        ).pack(side="left", padx=(0, 8))
 
         tk.Label(rr1, text="⏱️ Jeda (Detik):", fg="#2ecc71", bg="#0b1326", font=("Segoe UI", 9, "bold")).pack(side="left", padx=(4, 4))
         self.spin_robux_delay = tk.Spinbox(rr1, from_=1, to=20, width=4, bg="#101d36", fg="#2ecc71", font=("Segoe UI", 10, "bold"))
@@ -1987,6 +2034,24 @@ class RockstarAutoTradeApp:
             fg="#2ecc71"
         )
 
+    def test_type_robux_amount(self):
+        amt = self.ent_robux_amount.get().strip() or "10"
+        def _run():
+            ex, ey = self.coords.get("rbx_btn_edit_amount", [1065, 688])
+            ax, ay = self.coords.get("rbx_input_amount", [980, 536])
+            self.root.after(0, lambda: self.root.iconify())
+            time.sleep(0.40)
+            focus_roblox_window()
+            roblox_click(ex, ey, wake_up_first=False)
+            time.sleep(0.85)
+            roblox_click(ax, ay, wake_up_first=False)
+            time.sleep(0.35)
+            clear_and_type_robux_amount(amt)
+            time.sleep(0.40)
+            self.root.after(0, lambda: self.root.deiconify())
+            self.root.after(0, lambda: self.log(f"🔢 Tes Edit & Ketik selesai: klik Edit ({ex},{ey}) -> klik kotak ({ax},{ay}) -> ketik '{amt}'!"))
+        threading.Thread(target=_run, daemon=True).start()
+
     def trigger_robux_usn_async(self, override_mode=None):
         if self.is_running_trade:
             self.log("⚠️ Bot sedang menjalankan proses pengiriman!")
@@ -2074,28 +2139,32 @@ class RockstarAutoTradeApp:
             roblox_click(fx, fy, wake_up_first=False)
             self.wait_step_delay(step_delay, "Konfirmasi Nominal & Klik Tombol [Kirim]")
 
-            # LANGKAH 5: Jika nominal != 10 Robux, klik tombol [Edit], klik kolom angka, ketik nominal, lalu tekan Enter
-            if int(robux_amount) != 10:
-                ex, ey = self.coords.get("rbx_btn_edit_amount", [1065, 688])
-                ax, ay = self.coords.get("rbx_input_amount", [960, 560])
-                self.log(f"Langkah 5A: Nominal {robux_amount} != 10 Robux -> Mengklik tombol [Edit] pada ({ex}, {ey})...")
-                roblox_click(ex, ey, wake_up_first=False)
-                time.sleep(0.80)
-                self.log(f"Langkah 5B: Mengklik kolom angka Robux pada ({ax}, {ay}) & mengetik '{robux_amount}'...")
-                roblox_click(ax, ay, wake_up_first=False)
-                time.sleep(0.35)
-                clear_and_type_text(self.root, str(robux_amount))
-                press_vk(VK_RETURN, 0.06)
-                self.wait_step_delay(step_delay, "Klik Tombol Biru [Kirim]")
+            # LANGKAH 5: SELALU klik tombol [Edit], klik kotak angka Robux, hapus angka lama, ketik nominal Robux, lalu tekan Enter!
+            ex, ey = self.coords.get("rbx_btn_edit_amount", [1065, 688])
+            ax, ay = self.coords.get("rbx_input_amount", [980, 536])
+            self.log(f"Langkah 5A: Mengklik 1x tombol [Edit] pada ({ex}, {ey})...")
+            roblox_click(ex, ey, wake_up_first=False)
+            time.sleep(0.85)
+            self.log(f"Langkah 5B: Mengklik 1x kotak angka Robux pada ({ax}, {ay}) & mengetik nominal '{robux_amount}'...")
+            roblox_click(ax, ay, wake_up_first=False)
+            time.sleep(0.35)
+            clear_and_type_robux_amount(str(robux_amount))
+            self.wait_step_delay(step_delay, "Klik Tombol Biru [Kirim]")
 
             # LANGKAH 6: Klik Tombol Biru [Kirim] untuk Mengirim Robux ke Pembeli
             cx, cy = self.coords.get("rbx_btn_kirim_confirm", [857, 688])
-            self.log(f"Langkah 5: Mengklik tombol biru [Kirim] pada ({cx}, {cy})...")
-            roblox_click(cx, cy)
-            self.wait_step_delay(step_delay, "Klik Tombol Biru [OKE]")
+            ox, oy = self.coords.get("rbx_btn_oke", [960, 617])
+            self.log(f"Langkah 6: Mengklik tombol biru [Kirim] pada ({cx}, {cy})...")
+            roblox_click(cx, cy, wake_up_first=False)
+            self.wait_step_delay(step_delay, "Verifikasi Pengiriman / Klik [OKE]")
+
+            # Jika klik pertama pada (cx, cy) adalah tombol Simpan Edit dan sekarang muncul tombol biru [Kirim] lagi:
+            if is_roblox_blue_button(cx, cy) and not is_roblox_blue_button(ox, oy):
+                self.log(f"Langkah 6B: Mengklik konfirmasi akhir tombol biru [Kirim] pada ({cx}, {cy})...")
+                roblox_click(cx, cy, wake_up_first=False)
+                self.wait_step_delay(step_delay, "Klik Tombol Biru [OKE]")
 
             # LANGKAH 7: Tunggu & Klik Tombol Biru [OKE] ('Kamu mengirim X Robux')
-            ox, oy = self.coords.get("rbx_btn_oke", [960, 617])
             wait_oke_start = time.time()
             while time.time() - wait_oke_start < 12.0:
                 self.check_stop()
@@ -2103,8 +2172,8 @@ class RockstarAutoTradeApp:
                     break
                 time.sleep(0.3)
 
-            self.log(f"Langkah 6: Mengklik tombol biru [OKE] pada ({ox}, {oy})...")
-            roblox_click(ox, oy)
+            self.log(f"Langkah 7: Mengklik tombol biru [OKE] pada ({ox}, {oy})...")
+            roblox_click(ox, oy, wake_up_first=False)
             time.sleep(0.5)
 
             try:
