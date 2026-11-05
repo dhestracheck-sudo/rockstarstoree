@@ -131,8 +131,8 @@ DEFAULT_COORDS = {
     # Koordinat Auto-Delivery Robux via USN (Aplikasi Roblox Windows 1920x1080):
     "rbx_icon_top": [1796, 47],           # R1. Ikon Robux Kanan Atas (Beranda Roblox)
     "rbx_btn_kirim_top": [1542, 109],     # R2. Tombol [↑ Kirim] di Halaman Saldo Robux
-    "rbx_search_friend": [919, 405],      # R3. Kolom '🔍 Cari' di Popup Kirim Robux
-    "rbx_friend_row1": [881, 508],        # R4. Baris Teman ke-1 Hasil Pencarian
+    "rbx_search_friend": [919, 392],      # R3. Kolom '🔍 Cari' di Popup Kirim Robux
+    "rbx_friend_row1": [881, 495],        # R4. Baris Teman ke-1 Hasil Pencarian
     "rbx_btn_edit_amount": [1065, 688],   # R5. Tombol [Edit] Nominal Robux (Jika != 10)
     "rbx_btn_kirim_confirm": [857, 688],  # R6. Tombol Biru [Kirim] Konfirmasi Robux
     "rbx_btn_oke": [960, 617],            # R7. Tombol Biru [OKE] Selesai Kirim Robux
@@ -255,22 +255,20 @@ def roblox_move_smooth(x, y):
 
 def roblox_click(x, y, wake_up_first=False):
     """
-    Menekan tombol GUI di dalam Roblox dengan sempurna:
-    - Melakukan gerakan hover halus (roblox_move_smooth)
-    - Jika wake_up_first=True (baru pindah dari jendela lain), klik pertama mengaktifkan jendela Roblox,
-      lalu klik kedua menekan tombol di dalam game.
+    Menekan tombol GUI di dalam Roblox tepat 1 KALI (Single Click) tanpa pernah double-click:
+    - Jika wake_up_first=True dan jendela Roblox belum aktif, mengaktifkan jendela via Windows API
+      (SetForegroundWindow) TANPA mengirim klik mouse ganda yang bisa menutup popup (auto-close)!
+    - Melakukan gerakan hover halus (roblox_move_smooth) lalu 1x klik presisi.
     """
     x, y = int(x), int(y)
+    if wake_up_first:
+        rbx_hwnd = user32.FindWindowW(None, "Roblox")
+        if rbx_hwnd and user32.GetForegroundWindow() != rbx_hwnd:
+            focus_roblox_window()
+
     roblox_move_smooth(x, y)
 
-    if wake_up_first:
-        send_mouse_input(MOUSEEVENTF_LEFTDOWN)
-        time.sleep(0.08)
-        send_mouse_input(MOUSEEVENTF_LEFTUP)
-        time.sleep(0.22)
-        roblox_move_smooth(x, y)
-
-    # Tekan tahan 100ms (6 frame @ 60fps) lalu lepas agar Roblox GUI 100% mendeteksi klik
+    # Tekan tahan 100ms (6 frame @ 60fps) lalu lepas tepat 1 KALI agar tombol tidak ter-klik 2x!
     send_mouse_input(MOUSEEVENTF_LEFTDOWN)
     time.sleep(0.10)
     send_mouse_input(MOUSEEVENTF_LEFTUP)
@@ -2043,33 +2041,35 @@ class RockstarAutoTradeApp:
             # LANGKAH 1: Klik Ikon Robux di Kanan Atas Beranda Aplikasi Roblox (Jika mulai dari Beranda)
             if rbx_mode == "from_home":
                 ix, iy = self.coords.get("rbx_icon_top", [1796, 47])
-                self.log(f"Langkah 1: Mengklik Ikon Robux Kanan Atas di Beranda Roblox pada ({ix}, {iy})...")
-                roblox_click(ix, iy, wake_up_first=first_click)
-                first_click = False
+                self.log(f"Langkah 1: Mengklik 1x Ikon Robux Kanan Atas di Beranda Roblox pada ({ix}, {iy})...")
+                roblox_click(ix, iy, wake_up_first=False)
                 self.wait_step_delay(step_delay, "Klik Tombol [↑ Kirim] di Halaman Saldo")
 
-            # LANGKAH 2: Klik Tombol [↑ Kirim] di Halaman Saldo Robux (Jika mulai dari Beranda atau Halaman Saldo)
+            # LANGKAH 2: Klik 1x Tombol [↑ Kirim] di Halaman Saldo Robux (HANYA jika popup Kirim Robux belum terbuka!)
             if rbx_mode in ("from_home", "from_saldo"):
                 kx, ky = self.coords.get("rbx_btn_kirim_top", [1542, 109])
-                self.log(f"Langkah 2: Mengklik tombol [↑ Kirim] pada ({kx}, {ky})...")
-                roblox_click(kx, ky, wake_up_first=first_click)
-                first_click = False
-                self.wait_step_delay(step_delay, f"Cari Username '{buyer}' di Popup Kirim Robux")
+                rk, gk, bk = get_pixel_rgb(kx, ky)
+                # Jika bk <= 32, berarti layar di titik (1542, 109) sudah redup tertutup popup 'Kirim Robux'
+                if bk <= 32 and rbx_mode == "from_home":
+                    self.log("ℹ️ Popup 'Kirim Robux' terdeteksi sudah terbuka! Melewati klik tombol [↑ Kirim] agar tidak auto-close.")
+                else:
+                    self.log(f"Langkah 2: Mengklik 1x tombol [↑ Kirim] pada ({kx}, {ky})...")
+                    roblox_click(kx, ky, wake_up_first=False)
+                    self.wait_step_delay(step_delay, f"Cari Username '{buyer}' di Popup Kirim Robux")
 
             # LANGKAH 3: Klik Kolom '🔍 Cari' di Popup Kirim Robux & Ketik Username (USN) Pembeli
-            sx, sy = self.coords.get("rbx_search_friend", [919, 405])
-            self.log(f"Langkah 3: Mengklik kolom '🔍 Cari' ({sx}, {sy}) & mengetik USN '{buyer.lower()}'...")
-            roblox_click(sx, sy, wake_up_first=first_click)
-            first_click = False
+            sx, sy = self.coords.get("rbx_search_friend", [919, 392])
+            self.log(f"Langkah 3: Mengklik 1x kolom '🔍 Cari' ({sx}, {sy}) & mengetik USN '{buyer.lower()}'...")
+            roblox_click(sx, sy, wake_up_first=False)
             time.sleep(0.30)
             clear_and_type_text(self.root, buyer)
             press_vk(VK_RETURN, 0.06)
             self.wait_step_delay(step_delay, f"Pilih Teman Baris ke-1 ('{buyer}')")
 
             # LANGKAH 4: Klik Baris Teman ke-1 Hasil Pencarian USN
-            fx, fy = self.coords.get("rbx_friend_row1", [881, 508])
-            self.log(f"Langkah 4: Mengklik baris teman ke-1 hasil pencarian ('{buyer}') pada ({fx}, {fy})...")
-            roblox_click(fx, fy)
+            fx, fy = self.coords.get("rbx_friend_row1", [881, 495])
+            self.log(f"Langkah 4: Mengklik 1x baris teman ke-1 hasil pencarian ('{buyer}') pada ({fx}, {fy})...")
+            roblox_click(fx, fy, wake_up_first=False)
             self.wait_step_delay(step_delay, "Konfirmasi Nominal & Klik Tombol [Kirim]")
 
             # LANGKAH 5: Jika nominal != 10 Robux, klik tombol [Edit], ketik nominal Robux, lalu tekan Enter
