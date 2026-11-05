@@ -107,6 +107,8 @@ VK_CONTROL = 0x11
 VK_MENU = 0x12
 VK_ESCAPE = 0x1B
 VK_SPACE = 0x20
+VK_END = 0x23
+VK_DELETE = 0x2E
 VK_A = 0x41
 VK_V = 0x56
 VK_F2 = 0x71
@@ -288,16 +290,19 @@ def send_unicode_char(ch):
 
 def clear_and_type_text(root_tk, text):
     """
-    Menghapus teks lama di kotak 'Search pets...' Roblox dan mengetikkan nama Pet
-    secara otomatis huruf demi huruf TANPA menekan tombol Shift (huruf kecil),
+    Menghapus teks lama di kotak 'Search pets...' Roblox secara menyeluruh (End + Backspace + Delete)
+    dan mengetikkan nama Pet secara otomatis huruf demi huruf TANPA menekan tombol Shift (huruf kecil),
     sehingga fitur Shift-Lock Roblox tidak pernah aktif/mengganggu kursor!
     """
     # Gunakan huruf kecil (lowercase) agar TIDAK menekan tombol SHIFT di Roblox (mencegah Shift-Lock)
     clean_text = str(text or "").strip().lower()
 
-    # Tekan Backspace 18 kali untuk memastikan kotak Search benar-benar bersih
-    for _ in range(18):
-        press_vk(VK_BACK, 0.025)
+    # Pindahkan kursor teks ke paling kanan (End), lalu hapus ke kiri (Backspace 24x) dan ke kanan (Delete 12x)
+    press_vk(VK_END, 0.03)
+    for _ in range(24):
+        press_vk(VK_BACK, 0.02)
+    for _ in range(12):
+        press_vk(VK_DELETE, 0.02)
     time.sleep(0.15)
 
     if not clean_text:
@@ -324,14 +329,19 @@ def clear_and_type_text(root_tk, text):
 
 def auto_search_in_roblox_box(sx, sy, search_text):
     """
-    Mengklik kolom 'Search pets...' di Roblox 2x untuk memastikan fokus kursor aktif,
-    lalu menghapus isi lama dan mengetikkan nama Pet secara otomatis.
+    Mengklik kolom 'Search pets...' di Roblox, menghapus isi lama, mengetikkan nama Pet,
+    lalu menekan [ENTER] agar fokus TextBox dilepas (sehingga klik berikutnya pada Pet TIDAK MELESET!)
+    dan memarkir mouse di atas kotak Search agar Tooltip tidak menutupi kotak Pet.
     """
-    roblox_click(sx, sy, wake_up_first=True)
-    time.sleep(0.35)
-    roblox_click(sx, sy, wake_up_first=False)
-    time.sleep(0.35)
+    # Klik sedikit di sisi kanan tengah kotak Search agar kursor berada di ujung teks lama
+    roblox_click(sx + 25, sy, wake_up_first=True)
+    time.sleep(0.30)
     clear_and_type_text(None, search_text)
+    # PENTING: Tekan ENTER untuk mengunci hasil filter & melepas fokus TextBox Roblox!
+    press_vk(VK_RETURN, 0.06)
+    time.sleep(0.25)
+    # Parkir kursor sedikit di atas kotak Search agar tidak memicu popup Tooltip di atas Pet
+    roblox_move_smooth(sx, max(80, sy - 42))
 
 
 def extract_pet_search_and_qty(raw_product_name, order_qty=1):
@@ -513,6 +523,109 @@ def refresh_trade_list_tabs(coords):
     roblox_click(p1x - 50, p1y - 67)
     time.sleep(0.45)
     roblox_click(p1x - 292, p1y - 67)
+
+
+def is_pet_slot_occupied(x, y):
+    """
+    Mendeteksi apakah pada koordinat kotak Pet (x, y) di 'Your Pets' benar-benar terdapat kartu Pet
+    (bukan latar belakang putih kosong akibat hasil Search 0 Pet).
+    """
+    offsets = [(0, 0), (-15, -15), (15, -15), (-15, 15), (15, 15), (0, -20), (0, 20)]
+    white_bg = 0
+    for dx, dy in offsets:
+        r, g, b = get_pixel_rgb(int(x + dx), int(y + dy))
+        if r >= 225 and g >= 228 and b >= 232 and (max(r, g, b) - min(r, g, b)) <= 20:
+            white_bg += 1
+    return white_bg <= 3
+
+
+def is_you_give_slot_filled(coords, slot_idx=0):
+    """
+    Mendeteksi secara langsung dari layar game apakah Pet ke-(slot_idx+1) BENAR-BENAR sudah masuk
+    ke dalam kotak 'You give' (atau tanda centang hijau '✓' pada slot Pet menyala):
+    - Kotak kosong di bawah 'You give' berwarna Biru Langit Polos (R: 15..75, G: 150..205, B: 220..255).
+    - Begitu Pet masuk ke 'You give', kotak tersebut berubah menjadi gambar Pet warna-warni!
+    """
+    px, py = coords.get("pet_slot_1", [284, 415])
+    col = int(slot_idx) % 4
+    row = int(slot_idx) // 4
+
+    # 1. Cek tanda centang hijau (✓) di pojok kanan atas kotak Pet yang diklik:
+    slot_x = int(px + col * 120)
+    slot_y = int(py + row * 122)
+    for cdx, cdy in ((32, -32), (28, -28), (36, -34)):
+        r, g, b = get_pixel_rgb(slot_x + cdx, slot_y + cdy)
+        if g > 195 and (g - b) > 80 and r > 80:
+            return True
+
+    # 2. Cek apakah kotak di bawah 'You give' sudah terisi ikon Pet (bukan biru langit kosong):
+    yg_x = int(px + 485 + col * 102)
+    yg_y = int(py - 14 + row * 102)
+    sample_pts = [(0, 0), (-12, 0), (12, 0), (0, -12), (0, 12), (-10, -10), (10, 10)]
+    empty_blue_hits = 0
+    for dx, dy in sample_pts:
+        r, g, b = get_pixel_rgb(yg_x + dx, yg_y + dy)
+        if 15 <= r <= 75 and 148 <= g <= 205 and b >= 218 and (b - r) >= 155:
+            empty_blue_hits += 1
+    return empty_blue_hits <= 2
+
+
+def read_hovered_pet_tooltip_ocr(slot_x, slot_y):
+    """
+    Membaca Nama & Power Pet langsung dari Tooltip kartu Pet di dalam game menggunakan Windows OCR
+    saat mouse diarahkan ke atas kotak Pet (slot_x, slot_y).
+    """
+    if not HAS_VISION:
+        return ""
+    try:
+        roblox_move_smooth(slot_x, slot_y)
+        time.sleep(0.35)
+        x1 = max(0, int(slot_x - 40))
+        y1 = max(0, int(slot_y - 90))
+        x2 = min(SCREEN_W, int(slot_x + 340))
+        y2 = min(SCREEN_H, int(slot_y + 260))
+        grab = ImageGrab.grab(bbox=(x1, y1, x2, y2)).convert("RGB")
+        tmp_img = os.path.join(tempfile.gettempdir(), "rockstar_pet_tooltip_ocr.png")
+        grab.resize((grab.width * 2, grab.height * 2)).save(tmp_img)
+
+        ps_cmd = r"""
+Add-Type -AssemblyName System.Runtime.WindowsRuntime
+$null = [Windows.Media.Ocr.OcrEngine, Windows.Foundation, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.BitmapDecoder, Windows.Graphics, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.SoftwareBitmap, Windows.Graphics, ContentType = WindowsRuntime]
+$asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
+    $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -like 'IAsyncOperation*'
+})[0]
+function Await($WinRtTask, $ResultType) {
+    $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
+    $netTask = $asTask.Invoke($null, @($WinRtTask))
+    $netTask.Wait(-1) | Out-Null
+    $netTask.Result
+}
+$fs = [System.IO.File]::OpenRead($env:OCR_IMG_PATH)
+$stream = [System.IO.WindowsRuntimeStreamExtensions]::AsRandomAccessStream($fs)
+$decoder = Await ([Windows.Graphics.Imaging.BitmapDecoder]::CreateAsync($stream)) ([Windows.Graphics.Imaging.BitmapDecoder])
+$bitmap = Await ($decoder.GetSoftwareBitmapAsync()) ([Windows.Graphics.Imaging.SoftwareBitmap])
+$engine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromUserProfileLanguages()
+$result = Await ($engine.RecognizeAsync($bitmap)) ([Windows.Media.Ocr.OcrResult])
+foreach ($line in $result.Lines) { Write-Output $line.Text }
+$stream.Dispose()
+$fs.Dispose()
+"""
+        env = dict(os.environ, OCR_IMG_PATH=tmp_img)
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        out = subprocess.check_output(
+            ["powershell", "-NoProfile", "-Command", ps_cmd],
+            text=True,
+            env=env,
+            timeout=3.0,
+            startupinfo=startupinfo,
+        )
+        lines = [re.sub(r"[^A-Za-z0-9.,+xX% ]+", "", ln).strip() for ln in out.splitlines() if ln.strip()]
+        return " | ".join(lines[:4])
+    except Exception:
+        return ""
 
 
 def detect_players_in_room_ocr(p1x, p1y):
@@ -1465,16 +1578,52 @@ class RockstarAutoTradeApp:
 
                         self.ensure_trade_window_open()
                         sx, sy = self.coords["search_box"]
+                        px, py = self.coords["pet_slot_1"]
                         self.log(f"Langkah 3 (Search Otomatis): Mengklik kotak Search ({sx}, {sy}) & mengetik '{pet_name.lower()}'...")
                         auto_search_in_roblox_box(sx, sy, pet_name)
                         first_click_needed = False
                         self.wait_step_delay(step_delay, f"Pilih Pet '{pet_name}' di Kotak Pertama")
 
-                        px, py = self.coords["pet_slot_1"]
+                        # Jika kata kunci panjang (misal 'volcanic devil') menghasilkan 0 Pet di kotak pertama,
+                        # otomatis coba kata pertama saja (misal 'volcanic') agar Pet tetap ditemukan!
+                        if not is_pet_slot_occupied(px, py) and " " in pet_name.strip():
+                            first_kw = pet_name.strip().split()[0]
+                            self.log(
+                                f"⚠️ Hasil Search '{pet_name.lower()}' kosong di kotak pertama. "
+                                f"Otomatis mencoba kata kunci utama '{first_kw.lower()}'..."
+                            )
+                            auto_search_in_roblox_box(sx, sy, first_kw)
+                            self.wait_step_delay(step_delay, f"Pilih Pet '{first_kw}' di Kotak Pertama")
+
+                        # Baca Tooltip Pet di kotak pertama dengan Windows OCR agar tercatat akurat di Log
+                        tooltip_info = read_hovered_pet_tooltip_ocr(px, py)
+                        if tooltip_info:
+                            self.log(f"🎯 Data Pet Terbaca dari Game (OCR): {tooltip_info}")
+
                         for i in range(qty):
                             self.ensure_trade_window_open()
-                            self.log(f"Langkah 4: Memilih Pet hasil Search ke-{i+1} dari {qty} pada ({px}, {py})...")
-                            roblox_click(px, py)
+                            col = i % 4
+                            row_idx = i // 4
+                            slot_x = int(px + col * 120)
+                            slot_y = int(py + row_idx * 122)
+                            if i > 0 and not is_pet_slot_occupied(slot_x, slot_y):
+                                slot_x, slot_y = px, py
+
+                            self.log(f"Langkah 4: Memilih Pet ke-{i+1} dari {qty} pada ({slot_x}, {slot_y})...")
+                            for click_try in range(1, 5):
+                                self.ensure_trade_window_open()
+                                offset_x = 0 if click_try == 1 else ((-8) if click_try % 2 == 0 else 8)
+                                roblox_click(slot_x + offset_x, slot_y, wake_up_first=(click_try > 1))
+                                # Parkir kursor ke atas kotak Search agar Tooltip hilang & sensor bisa mengecek kotak 'You give'
+                                roblox_move_smooth(sx, max(80, sy - 42))
+                                time.sleep(0.45)
+                                if is_you_give_slot_filled(self.coords, i):
+                                    self.log(f"✅ Terverifikasi: Pet ke-{i+1} SUDAH MASUK ke kotak 'You give'!")
+                                    break
+                                self.log(
+                                    f"⚠️ Pet ke-{i+1} belum masuk ke 'You give' (klik meleset/fokus Search). "
+                                    f"Mengulangi klik [{click_try}/4]..."
+                                )
                             self.wait_step_delay(step_delay, "Langkah Berikutnya")
 
                     if tokens > 0:
