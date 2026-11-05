@@ -112,6 +112,7 @@ VK_DELETE = 0x2E
 VK_A = 0x41
 VK_V = 0x56
 VK_F2 = 0x71
+VK_F7 = 0x76
 VK_F8 = 0x77
 VK_F9 = 0x78
 SW_RESTORE = 9
@@ -127,6 +128,14 @@ DEFAULT_COORDS = {
     "token_plus_btn": [1129, 728],    # 7. Tombol hijau '+' Token
     "btn_ready": [1284, 820],         # 8. Tombol READY (Kanan Bawah)
     "btn_confirm": [1162, 820],       # 9. Tombol Hijau Confirm (Saat Check Offer)
+    # Koordinat Auto-Delivery Robux via USN (Aplikasi Roblox Windows 1920x1080):
+    "rbx_icon_top": [1796, 47],           # R1. Ikon Robux Kanan Atas (Beranda Roblox)
+    "rbx_btn_kirim_top": [1542, 109],     # R2. Tombol [↑ Kirim] di Halaman Saldo Robux
+    "rbx_search_friend": [919, 405],      # R3. Kolom '🔍 Cari' di Popup Kirim Robux
+    "rbx_friend_row1": [881, 508],        # R4. Baris Teman ke-1 Hasil Pencarian
+    "rbx_btn_edit_amount": [1065, 688],   # R5. Tombol [Edit] Nominal Robux (Jika != 10)
+    "rbx_btn_kirim_confirm": [857, 688],  # R6. Tombol Biru [Kirim] Konfirmasi Robux
+    "rbx_btn_oke": [960, 617],            # R7. Tombol Biru [OKE] Selesai Kirim Robux
 }
 
 COORD_LABELS = [
@@ -140,6 +149,16 @@ COORD_LABELS = [
     ("token_plus_btn", "7. Tombol Hijau (+) Input Token"),
     ("btn_ready", "8. Tombol 'READY' (Kanan Bawah)"),
     ("btn_confirm", "9. Tombol Hijau 'Confirm' (Check Offer)"),
+]
+
+ROBUX_COORD_LABELS = [
+    ("rbx_icon_top", "1. Ikon Robux Kanan Atas (Beranda Roblox)"),
+    ("rbx_btn_kirim_top", "2. Tombol [↑ Kirim] (Halaman Saldo Robux)"),
+    ("rbx_search_friend", "3. Kolom '🔍 Cari' (Popup Kirim Robux)"),
+    ("rbx_friend_row1", "4. Baris Teman ke-1 (Hasil Cari USN)"),
+    ("rbx_btn_edit_amount", "5. Tombol [Edit] Nominal (Jika != 10 Robux)"),
+    ("rbx_btn_kirim_confirm", "6. Tombol Biru [Kirim] (Konfirmasi Kirim)"),
+    ("rbx_btn_oke", "7. Tombol Biru [OKE] (Selesai Terkirim)"),
 ]
 
 
@@ -361,6 +380,48 @@ def extract_pet_search_and_qty(raw_product_name, order_qty=1):
 
     cleaned = s.strip()
     return (cleaned or raw_product_name.strip(), total_qty)
+
+
+def is_robux_order(raw_product_name, raw_page=""):
+    """Mendeteksi apakah pesanan dari website adalah pesanan Robux / Top Up."""
+    p = str(raw_page or "").strip().lower()
+    nm = str(raw_product_name or "").strip().upper()
+    if p in ("robux", "topup", "rbx"):
+        return True
+    if "ROBUX" in nm or "RBX" in nm or "VIA USN" in nm:
+        return True
+    return False
+
+
+def extract_robux_amount(raw_product_name, order_qty=1):
+    """Mengekstrak nominal Robux dari nama produk (contoh: '100 ROBUX VIA USN' x2 -> 200)."""
+    s = str(raw_product_name or "").strip()
+    qty = max(1, int(order_qty or 1))
+    m = re.search(r"(\d[\d.,]*)\s*(?:ROBUX|RBX)\b", s, flags=re.IGNORECASE)
+    if not m:
+        m = re.search(r"\b(\d[\d.,]*)\b", s)
+    if m:
+        num_str = m.group(1).replace(".", "").replace(",", "")
+        try:
+            base_amt = max(1, int(num_str))
+            return base_amt * qty
+        except Exception:
+            pass
+    return 10 * qty
+
+
+def is_roblox_blue_button(x, y):
+    """
+    Mendeteksi apakah tombol biru khas aplikasi Roblox ('Kirim' / 'OKE' dengan RGB ~ 51, 95, 255)
+    sedang tampil pada koordinat (x, y).
+    """
+    offsets = [(0, 0), (-35, 0), (35, 0), (-75, 0), (75, 0), (0, -10), (0, 10)]
+    blue_hits = 0
+    for dx, dy in offsets:
+        r, g, b = get_pixel_rgb(x + dx, y + dy)
+        if r < 95 and 60 <= g <= 145 and b > 205 and (b - r) > 130:
+            blue_hits += 1
+    return blue_hits >= 2
 
 
 def get_cursor_pos():
@@ -767,6 +828,9 @@ class RockstarAutoTradeApp:
         self.always_on_top = tk.BooleanVar(value=True)
         self.start_mode = tk.StringVar(value="full_menu")
         self.item_tab_mode = tk.StringVar(value="Pets")
+        self.robux_start_mode = tk.StringVar(value="from_home")
+        self.coord_vars = {}
+        self.calib_buttons = {}
 
         self.calibrating_key = None
         self.last_afk_time = time.time()
@@ -854,12 +918,15 @@ class RockstarAutoTradeApp:
         self.notebook.pack(fill="both", expand=True, padx=10, pady=4)
 
         self.tab_main = tk.Frame(self.notebook, bg="#0b1326")
+        self.tab_robux = tk.Frame(self.notebook, bg="#0b1326")
         self.tab_calib = tk.Frame(self.notebook, bg="#0b1326")
 
         self.notebook.add(self.tab_main, text="🚀 Panel Auto-Trade & Order Web")
+        self.notebook.add(self.tab_robux, text="💎 Auto-Kirim Robux via USN (F7)")
         self.notebook.add(self.tab_calib, text="📍 Kalibrasi & Tes Klik (F2)")
 
         self.build_main_tab()
+        self.build_robux_tab()
         self.build_calib_tab()
 
         log_frame = tk.Frame(self.root, bg="#080e1c", padx=10, pady=6)
@@ -1007,17 +1074,30 @@ class RockstarAutoTradeApp:
 
         self.btn_start = tk.Button(
             btn_row,
-            text="🚀 JALANKAN AUTO-TRADE SEKARANG (F8)",
+            text="🚀 JALANKAN AUTO-TRADE PET (F8)",
             command=self.trigger_trade_async,
             bg="#20b96c",
             fg="#ffffff",
             font=("Segoe UI", 10, "bold"),
             relief="flat",
-            padx=16,
+            padx=12,
             pady=8,
             cursor="hand2"
         )
         self.btn_start.pack(side="left", expand=True, fill="x", padx=(0, 6))
+
+        tk.Button(
+            btn_row,
+            text="💎 KIRIM ROBUX USN (F7)",
+            command=self.trigger_robux_usn_async,
+            bg="#335fff",
+            fg="#ffffff",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            padx=12,
+            pady=8,
+            cursor="hand2"
+        ).pack(side="left", padx=4)
 
         self.btn_stop = tk.Button(
             btn_row,
@@ -1092,6 +1172,162 @@ class RockstarAutoTradeApp:
         self.orders_listbox.pack(fill="both", expand=True)
         self.orders_listbox.bind("<<ListboxSelect>>", self.on_select_order)
 
+    def build_robux_tab(self):
+        rbx_card = tk.LabelFrame(
+            self.tab_robux,
+            text=" 💎 Pengaturan Auto-Delivery Robux via Username (USN) — Aplikasi Roblox Windows ",
+            font=("Segoe UI", 10, "bold"),
+            fg="#70e1ff",
+            bg="#0b1326",
+            bd=1,
+            padx=12,
+            pady=8
+        )
+        rbx_card.pack(fill="x", padx=10, pady=(8, 4))
+
+        rr1 = tk.Frame(rbx_card, bg="#0b1326")
+        rr1.pack(fill="x", pady=4)
+
+        tk.Label(rr1, text="Username Roblox (USN):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
+        self.ent_robux_user = tk.Entry(rr1, bg="#101d36", fg="#70e1ff", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=22)
+        self.ent_robux_user.pack(side="left", padx=(0, 14))
+        self.ent_robux_user.insert(0, "ROCKSTARSTORE")
+
+        tk.Label(rr1, text="Nominal Robux:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(2, 4))
+        self.ent_robux_amount = tk.Entry(rr1, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=8)
+        self.ent_robux_amount.pack(side="left", padx=(0, 12))
+        self.ent_robux_amount.insert(0, "10")
+
+        tk.Label(rr1, text="⏱️ Jeda (Detik):", fg="#2ecc71", bg="#0b1326", font=("Segoe UI", 9, "bold")).pack(side="left", padx=(4, 4))
+        self.spin_robux_delay = tk.Spinbox(rr1, from_=1, to=20, width=4, bg="#101d36", fg="#2ecc71", font=("Segoe UI", 10, "bold"))
+        self.spin_robux_delay.delete(0, "end")
+        self.spin_robux_delay.insert(0, "3")
+        self.spin_robux_delay.pack(side="left")
+
+        rr2 = tk.Frame(rbx_card, bg="#0b1326")
+        rr2.pack(fill="x", pady=4)
+
+        tk.Label(rr2, text="Mulai Dari Layar:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
+        tk.Radiobutton(
+            rr2,
+            text="🏠 Beranda Roblox (Klik Ikon Robux -> Kirim)",
+            variable=self.robux_start_mode,
+            value="from_home",
+            bg="#0b1326", fg="#2ecc71", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
+        ).pack(side="left")
+        tk.Radiobutton(
+            rr2,
+            text="💰 Halaman Saldo (Klik [↑ Kirim])",
+            variable=self.robux_start_mode,
+            value="from_saldo",
+            bg="#0b1326", fg="#70e1ff", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
+        ).pack(side="left", padx=8)
+        tk.Radiobutton(
+            rr2,
+            text="🔍 Popup 'Kirim Robux' Sudah Terbuka",
+            variable=self.robux_start_mode,
+            value="from_modal",
+            bg="#0b1326", fg="#f3d27a", selectcolor="#080e1c", font=("Segoe UI", 9)
+        ).pack(side="left", padx=4)
+
+        rr3 = tk.Frame(rbx_card, bg="#0b1326")
+        rr3.pack(fill="x", pady=(8, 2))
+
+        self.btn_start_robux = tk.Button(
+            rr3,
+            text="💎 JALANKAN AUTO-DELIVERY ROBUX VIA USN SEKARANG (F7)",
+            command=self.trigger_robux_usn_async,
+            bg="#335fff",
+            fg="#ffffff",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            padx=16,
+            pady=8,
+            cursor="hand2"
+        )
+        self.btn_start_robux.pack(side="left", expand=True, fill="x", padx=(0, 6))
+
+        tk.Button(
+            rr3,
+            text="🛑 STOP DARURAT (F9 / ESC)",
+            command=self.request_stop,
+            bg="#d94350",
+            fg="#ffffff",
+            font=("Segoe UI", 10, "bold"),
+            relief="flat",
+            padx=14,
+            pady=8,
+            cursor="hand2"
+        ).pack(side="left", padx=4)
+
+        calib_rbx = tk.LabelFrame(
+            self.tab_robux,
+            text=" 📍 Kalibrasi 7 Titik Kirim Robux via USN (Sudah Dikalibrasi 1920x1080 — Bisa Diubah dengan F2) ",
+            font=("Segoe UI", 9, "bold"),
+            fg="#f3d27a",
+            bg="#0b1326",
+            bd=1,
+            padx=12,
+            pady=6
+        )
+        calib_rbx.pack(fill="both", expand=True, padx=10, pady=(4, 8))
+
+        for key, label_text in ROBUX_COORD_LABELS:
+            row_f = tk.Frame(calib_rbx, bg="#0b1326", pady=2)
+            row_f.pack(fill="x")
+
+            tk.Label(
+                row_f,
+                text=label_text,
+                fg="#e6edff",
+                bg="#0b1326",
+                font=("Segoe UI", 9),
+                width=40,
+                anchor="w"
+            ).pack(side="left")
+
+            xy = self.coords.get(key, [0, 0])
+            var = tk.StringVar(value=f"X: {xy[0]} , Y: {xy[1]}")
+            self.coord_vars[key] = var
+
+            tk.Label(
+                row_f,
+                textvariable=var,
+                fg="#70e1ff",
+                bg="#101d36",
+                font=("Consolas", 9, "bold"),
+                width=16,
+                pady=2
+            ).pack(side="left", padx=6)
+
+            btn_rec = tk.Button(
+                row_f,
+                text="📍 Pilih & Tekan F2",
+                command=lambda k=key: self.start_calibrating(k),
+                bg="#2b4eff",
+                fg="#ffffff",
+                font=("Segoe UI", 8, "bold"),
+                relief="flat",
+                padx=10,
+                pady=2,
+                cursor="hand2"
+            )
+            btn_rec.pack(side="left", padx=4)
+            self.calib_buttons[key] = btn_rec
+
+            tk.Button(
+                row_f,
+                text="🔥 Tes Klik di Roblox",
+                command=lambda k=key: self.test_click_in_roblox(k),
+                bg="#20b96c",
+                fg="#ffffff",
+                font=("Segoe UI", 8, "bold"),
+                relief="flat",
+                padx=10,
+                pady=2,
+                cursor="hand2"
+            ).pack(side="left", padx=4)
+
     def build_calib_tab(self):
         info = tk.Label(
             self.tab_calib,
@@ -1111,9 +1347,6 @@ class RockstarAutoTradeApp:
 
         grid_frame = tk.Frame(self.tab_calib, bg="#0b1326")
         grid_frame.pack(fill="both", expand=True, padx=12, pady=4)
-
-        self.coord_vars = {}
-        self.calib_buttons = {}
 
         for key, label_text in COORD_LABELS:
             row_f = tk.Frame(grid_frame, bg="#0b1326", pady=3)
@@ -1207,6 +1440,7 @@ class RockstarAutoTradeApp:
     def start_background_monitors(self):
         def monitor_loop():
             f2_was_down = False
+            f7_was_down = False
             f8_was_down = False
             stop_was_down = False
             last_poll = time.time()
@@ -1216,7 +1450,7 @@ class RockstarAutoTradeApp:
                     x, y = get_cursor_pos()
                     r, g, b = get_pixel_rgb(x, y)
                     self.root.after(0, lambda x=x, y=y, r=r, g=g, b=b: self.lbl_cursor.configure(
-                        text=f"Mouse: ({x}, {y}) RGB:({r},{g},{b}) | [F8] Mulai  [F9/ESC] Stop"
+                        text=f"Mouse: ({x}, {y}) RGB:({r},{g},{b}) | [F7] Robux  [F8] Trade  [F9/ESC] Stop"
                     ))
 
                     f2_down = bool(user32.GetAsyncKeyState(VK_F2) & 0x8000)
@@ -1231,6 +1465,11 @@ class RockstarAutoTradeApp:
                             pass
                         self.root.after(0, lambda k=k, x=x, y=y: self.finish_calibration_ui(k, x, y))
                     f2_was_down = f2_down
+
+                    f7_down = bool(user32.GetAsyncKeyState(VK_F7) & 0x8000)
+                    if f7_down and not f7_was_down and not self.is_running_trade:
+                        self.root.after(0, self.trigger_robux_usn_async)
+                    f7_was_down = f7_down
 
                     f8_down = bool(user32.GetAsyncKeyState(VK_F8) & 0x8000)
                     if f8_down and not f8_was_down and not self.is_running_trade:
@@ -1737,7 +1976,147 @@ class RockstarAutoTradeApp:
         except Exception:
             pass
         self.btn_start.configure(state="normal", bg="#20b96c", text="🚀 JALANKAN AUTO-TRADE SEKARANG (F8)")
-        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Tekan F8 di Dalam Game atau Klik Tombol Hijau)", fg="#2ecc71")
+        if hasattr(self, "btn_start_robux"):
+            self.btn_start_robux.configure(
+                state="normal",
+                bg="#335fff",
+                text="💎 JALANKAN AUTO-DELIVERY ROBUX VIA USN SEKARANG (F7)"
+            )
+        self.lbl_status.configure(
+            text="🟢 STATUS: STANDBY (Tekan F8 untuk Auto-Trade Pet atau F7 untuk Auto-Kirim Robux USN)",
+            fg="#2ecc71"
+        )
+
+    def trigger_robux_usn_async(self, override_mode=None):
+        if self.is_running_trade:
+            self.log("⚠️ Bot sedang menjalankan proses pengiriman!")
+            return
+
+        buyer = self.ent_robux_user.get().strip() or self.ent_buyer.get().strip()
+        if not buyer:
+            self.log("⚠️ Username Roblox (USN) penerima belum diisi!")
+            return
+
+        try:
+            robux_amount = int(str(self.ent_robux_amount.get()).replace(".", "").replace(",", "").strip() or "10")
+        except Exception:
+            robux_amount = 10
+        robux_amount = max(1, robux_amount)
+
+        try:
+            step_delay = float(self.spin_robux_delay.get())
+        except Exception:
+            step_delay = 3.0
+
+        rbx_mode = override_mode or self.robux_start_mode.get()
+
+        self.is_running_trade = True
+        self.stop_requested = False
+        self.btn_start.configure(state="disabled", bg="#556078", text="⏳ SEDANG MENGIRIM ROBUX VIA USN...")
+        if hasattr(self, "btn_start_robux"):
+            self.btn_start_robux.configure(state="disabled", bg="#556078", text="⏳ SEDANG MENGIRIM ROBUX VIA USN...")
+        self.lbl_status.configure(text=f"💎 SEDANG AUTO-KIRIM {robux_amount} ROBUX KE @{buyer}...", fg="#70e1ff")
+
+        threading.Thread(
+            target=self.execute_robux_usn_sequence,
+            args=(buyer, robux_amount, rbx_mode, step_delay),
+            daemon=True
+        ).start()
+
+    def execute_robux_usn_sequence(self, buyer, robux_amount, rbx_mode="from_home", step_delay=3.0):
+        try:
+            try:
+                winsound.Beep(1000, 120)
+            except Exception:
+                pass
+
+            self.root.after(0, lambda: self.root.iconify())
+            time.sleep(0.45)
+            focus_roblox_window()
+
+            self.log(
+                f"💎 Memulai Auto-Delivery Robux via USN: {robux_amount} Robux -> '@{buyer}' "
+                f"(Mode: {rbx_mode}, Jeda: {int(step_delay)} dtk)"
+            )
+            first_click = True
+
+            # LANGKAH 1: Klik Ikon Robux di Kanan Atas Beranda Aplikasi Roblox (Jika mulai dari Beranda)
+            if rbx_mode == "from_home":
+                ix, iy = self.coords.get("rbx_icon_top", [1796, 47])
+                self.log(f"Langkah 1: Mengklik Ikon Robux Kanan Atas di Beranda Roblox pada ({ix}, {iy})...")
+                roblox_click(ix, iy, wake_up_first=first_click)
+                first_click = False
+                self.wait_step_delay(step_delay, "Klik Tombol [↑ Kirim] di Halaman Saldo")
+
+            # LANGKAH 2: Klik Tombol [↑ Kirim] di Halaman Saldo Robux (Jika mulai dari Beranda atau Halaman Saldo)
+            if rbx_mode in ("from_home", "from_saldo"):
+                kx, ky = self.coords.get("rbx_btn_kirim_top", [1542, 109])
+                self.log(f"Langkah 2: Mengklik tombol [↑ Kirim] pada ({kx}, {ky})...")
+                roblox_click(kx, ky, wake_up_first=first_click)
+                first_click = False
+                self.wait_step_delay(step_delay, f"Cari Username '{buyer}' di Popup Kirim Robux")
+
+            # LANGKAH 3: Klik Kolom '🔍 Cari' di Popup Kirim Robux & Ketik Username (USN) Pembeli
+            sx, sy = self.coords.get("rbx_search_friend", [919, 405])
+            self.log(f"Langkah 3: Mengklik kolom '🔍 Cari' ({sx}, {sy}) & mengetik USN '{buyer.lower()}'...")
+            roblox_click(sx, sy, wake_up_first=first_click)
+            first_click = False
+            time.sleep(0.30)
+            clear_and_type_text(self.root, buyer)
+            press_vk(VK_RETURN, 0.06)
+            self.wait_step_delay(step_delay, f"Pilih Teman Baris ke-1 ('{buyer}')")
+
+            # LANGKAH 4: Klik Baris Teman ke-1 Hasil Pencarian USN
+            fx, fy = self.coords.get("rbx_friend_row1", [881, 508])
+            self.log(f"Langkah 4: Mengklik baris teman ke-1 hasil pencarian ('{buyer}') pada ({fx}, {fy})...")
+            roblox_click(fx, fy)
+            self.wait_step_delay(step_delay, "Konfirmasi Nominal & Klik Tombol [Kirim]")
+
+            # LANGKAH 5: Jika nominal != 10 Robux, klik tombol [Edit], ketik nominal Robux, lalu tekan Enter
+            if int(robux_amount) != 10:
+                ex, ey = self.coords.get("rbx_btn_edit_amount", [1065, 688])
+                self.log(f"Langkah 5A: Nominal {robux_amount} != 10 Robux -> Mengklik tombol [Edit] pada ({ex}, {ey})...")
+                roblox_click(ex, ey)
+                time.sleep(0.45)
+                clear_and_type_text(self.root, str(robux_amount))
+                press_vk(VK_RETURN, 0.06)
+                self.wait_step_delay(step_delay, "Klik Tombol Biru [Kirim]")
+
+            # LANGKAH 6: Klik Tombol Biru [Kirim] untuk Mengirim Robux ke Pembeli
+            cx, cy = self.coords.get("rbx_btn_kirim_confirm", [857, 688])
+            self.log(f"Langkah 5: Mengklik tombol biru [Kirim] pada ({cx}, {cy})...")
+            roblox_click(cx, cy)
+            self.wait_step_delay(step_delay, "Klik Tombol Biru [OKE]")
+
+            # LANGKAH 7: Tunggu & Klik Tombol Biru [OKE] ('Kamu mengirim X Robux')
+            ox, oy = self.coords.get("rbx_btn_oke", [960, 617])
+            wait_oke_start = time.time()
+            while time.time() - wait_oke_start < 12.0:
+                self.check_stop()
+                if is_roblox_blue_button(ox, oy):
+                    break
+                time.sleep(0.3)
+
+            self.log(f"Langkah 6: Mengklik tombol biru [OKE] pada ({ox}, {oy})...")
+            roblox_click(ox, oy)
+            time.sleep(0.5)
+
+            try:
+                winsound.Beep(1450, 180)
+                winsound.Beep(1750, 220)
+            except Exception:
+                pass
+            self.log(f"✅ AUTO-DELIVERY ROBUX SELESAI! {robux_amount} Robux berhasil dikirim ke @{buyer}!")
+            self.last_afk_time = time.time()
+
+        except InterruptedError:
+            self.log("🛑 Proses Auto-Delivery Robux dibatalkan oleh pengguna.")
+        except Exception as e:
+            self.log(f"❌ Error saat Auto-Delivery Robux via USN: {e}")
+        finally:
+            self.is_running_trade = False
+            self.stop_requested = False
+            self.root.after(0, self.restore_after_trade)
 
     def fetch_orders_async(self, auto_select_top=False):
         def _fetch():
@@ -1809,9 +2188,21 @@ class RockstarAutoTradeApp:
         self.initial_poll_done = True
 
         if triggered_row is not None and not self.is_running_trade:
-            self.load_order_row_into_form(triggered_row)
-            self.log(f"🚀 Order #{triggered_row.get('id')} ditekan [✅ LUNAS / Auto-Trade] di /analisis! Langsung menjalankan Auto-Trade...")
-            self.trigger_trade_async()
+            is_rbx = self.load_order_row_into_form(triggered_row)
+            if is_rbx:
+                self.log(
+                    f"💎 Order Robux #{triggered_row.get('id')} ditekan [✅ LUNAS / Auto-Trade] di /analisis! "
+                    f"Langsung menjalankan Auto-Delivery Robux via USN..."
+                )
+                self.notebook.select(self.tab_robux)
+                self.trigger_robux_usn_async()
+            else:
+                self.log(
+                    f"🚀 Order #{triggered_row.get('id')} ditekan [✅ LUNAS / Auto-Trade] di /analisis! "
+                    f"Langsung menjalankan Auto-Trade..."
+                )
+                self.notebook.select(self.tab_main)
+                self.trigger_trade_async()
             return
 
         if self.orders_data:
@@ -1834,21 +2225,42 @@ class RockstarAutoTradeApp:
             if items and isinstance(items[0], dict):
                 first = items[0]
                 raw_nm = str(first.get("n") or "").strip()
+                raw_page = str(first.get("p") or "").strip()
                 raw_qty = int(first.get("q") or 1)
                 user = str(first.get("u") or "").strip()
+
+                if is_robux_order(raw_nm, raw_page):
+                    rbx_amt = extract_robux_amount(raw_nm, raw_qty)
+                    if user:
+                        self.ent_buyer.delete(0, "end")
+                        self.ent_buyer.insert(0, user)
+                        if hasattr(self, "ent_robux_user"):
+                            self.ent_robux_user.delete(0, "end")
+                            self.ent_robux_user.insert(0, user)
+                    if hasattr(self, "ent_robux_amount"):
+                        self.ent_robux_amount.delete(0, "end")
+                        self.ent_robux_amount.insert(0, str(rbx_amt))
+                    self.log(f"💎 Order Robux #{row.get('id')} dimuat: USN='{user or '-'}', Nominal={rbx_amt} Robux")
+                    return True
+
                 pet_kw, total_qty = extract_pet_search_and_qty(raw_nm, raw_qty)
 
                 if user:
                     self.ent_buyer.delete(0, "end")
                     self.ent_buyer.insert(0, user)
+                    if hasattr(self, "ent_robux_user"):
+                        self.ent_robux_user.delete(0, "end")
+                        self.ent_robux_user.insert(0, user)
                 if pet_kw:
                     self.ent_pet_name.delete(0, "end")
                     self.ent_pet_name.insert(0, pet_kw)
                 self.spin_qty.delete(0, "end")
                 self.spin_qty.insert(0, str(total_qty))
                 self.log(f"📥 Order #{row.get('id')} dimuat: Pembeli='{user or '-'}', Search Game='{pet_kw}' x{total_qty}")
+                return False
         except Exception:
             pass
+        return False
 
     def on_select_order(self, event):
         sel = self.orders_listbox.curselection()
