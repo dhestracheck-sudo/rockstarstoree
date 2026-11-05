@@ -958,9 +958,28 @@ class RockstarAutoTradeApp:
                 first_click_needed = False
                 self.wait_step_delay(step_delay, "Klik Trade Pemain Baris 1")
 
-                self.log("Langkah 2: Mengklik tombol Trade pada pemain baris ke-1...")
-                roblox_click(*self.coords["btn_player_row1"])
-                self.wait_step_delay(step_delay, "Search Pet Otomatis di Jendela Trade")
+                p1x, p1y = self.coords["btn_player_row1"]
+                self.log("Langkah 2: Mengklik tombol [Trade] pada pemain baris ke-1...")
+                roblox_click(p1x, p1y)
+                self.wait_step_delay(step_delay, "Cek apakah Jendela Trade sudah terbuka / Cooldown 30 Detik")
+
+                # DETEKSI OTOMATIS JEDA COOLDOWN 30 DETIK ("You need to wait X seconds to trade"):
+                # Selama tombol hijau [Trade] masih terlihat di layar, artinya masih kena jeda 30 detik
+                # atau pembeli belum klik Accept. Bot akan mengklik ulang [Trade] setiap 5 detik sampai terbuka!
+                retry_count = 0
+                max_retries = 9  # Maksimal 9 x 5 detik = 45 detik (cukup untuk melewati cooldown 30 detik penuh)
+                while retry_count < max_retries and is_lime_green_button(p1x, p1y):
+                    self.check_stop()
+                    retry_count += 1
+                    self.log(
+                        f"⏳ Terdeteksi Cooldown Trade 30 Detik / menunggu pembeli terima "
+                        f"(Percobaan ulang ke-{retry_count}/{max_retries}): Mengklik [Trade] lagi..."
+                    )
+                    roblox_click(p1x, p1y)
+                    self.wait_step_delay(step_delay, f"Menunggu Cooldown 30 Detik Selesai ({retry_count}/{max_retries})")
+
+                self.log("✅ Jendela Trade Utama sudah terbuka! Menyiapkan Search Pet Otomatis...")
+                self.smart_sleep(1.5)
 
             if qty > 0 and pet_name:
                 # Catatan: Jendela Trade Tap Simulator Reborn otomatis terbuka di tab 'Pets'.
