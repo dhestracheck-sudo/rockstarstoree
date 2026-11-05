@@ -970,27 +970,57 @@ class RockstarAutoTradeApp:
                 self.log("Langkah 1: Mengklik tombol Menu Trade di kiri layar...")
                 roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
                 first_click_needed = False
-                self.wait_step_delay(step_delay, "Klik Trade Pemain Baris 1")
+                self.wait_step_delay(step_delay, "Cek Kehadiran Pembeli di Menu Trade")
 
                 p1x, p1y = self.coords["btn_player_row1"]
+
+                # FASE 2A: TUNGGU SAMPAI PEMBELI MASUK KE SERVER (Tombol Hijau [Trade] Muncul)
+                # Jika pembeli belum masuk server, area (p1x, p1y) masih berwarna biru kosong (bukan hijau).
+                # Bot akan sabar menunggu (hingga 15 menit) sampai pembeli benar-benar masuk ke server!
+                if not is_lime_green_button(p1x, p1y):
+                    self.log(f"👀 Pembeli '{buyer}' belum terlihat di menu Trade. Bot STANDBY menunggu pembeli masuk server (Maks 15 menit)...")
+                    join_wait_start = time.time()
+                    last_afk_ping = time.time()
+                    buyer_joined = False
+                    while time.time() - join_wait_start < 900.0:  # 15 menit
+                        self.check_stop()
+                        if is_lime_green_button(p1x, p1y):
+                            buyer_joined = True
+                            break
+                        elapsed = int(time.time() - join_wait_start)
+                        self.root.after(0, lambda el=elapsed, b=buyer: self.lbl_status.configure(
+                            text=f"👀 MENUNGGU PEMBELI ({b}) MASUK SERVER... ({el} dtk)",
+                            fg="#70e1ff"
+                        ))
+                        # Anti-AFK ringan setiap 3 menit selama menunggu pembeli masuk
+                        if time.time() - last_afk_ping > 180.0:
+                            last_afk_ping = time.time()
+                            roblox_move_smooth(p1x - 80, p1y)
+                        self.smart_sleep(1.0)
+
+                    if not buyer_joined:
+                        self.log(f"⚠️ Pembeli '{buyer}' belum masuk ke server setelah 15 menit. Auto-Trade dihentikan.")
+                        return
+
+                    self.log(f"🟢 Pembeli '{buyer}' TERDETEKSI MASUK SERVER! Memulai pengiriman permintaan Trade...")
+                    self.smart_sleep(1.0)
+
+                # FASE 2B: PEMBELI SUDAH DI SERVER -> KLIK [Trade] SETIAP 5 DETIK SAMPAI COOLDOWN 30 DETIK HABIS & PEMBELI KLIK ACCEPT
                 self.log("Langkah 2: Mengklik tombol [Trade] pada pemain baris ke-1...")
                 roblox_click(p1x, p1y)
-                self.wait_step_delay(step_delay, "Cek apakah Jendela Trade sudah terbuka / Cooldown 30 Detik")
+                self.wait_step_delay(step_delay, "Menunggu Cooldown 30 Detik / Pembeli Klik Accept")
 
-                # DETEKSI OTOMATIS JEDA COOLDOWN 30 DETIK ("You need to wait X seconds to trade"):
-                # Selama tombol hijau [Trade] masih terlihat di layar, artinya masih kena jeda 30 detik
-                # atau pembeli belum klik Accept. Bot akan mengklik ulang [Trade] setiap 5 detik sampai terbuka!
                 retry_count = 0
-                max_retries = 9  # Maksimal 9 x 5 detik = 45 detik (cukup untuk melewati cooldown 30 detik penuh)
+                max_retries = 36  # Maksimal 36 x 5 detik = 3 menit menunggu pembeli klik Accept & melewati cooldown 30 detik
                 while retry_count < max_retries and is_lime_green_button(p1x, p1y):
                     self.check_stop()
                     retry_count += 1
                     self.log(
-                        f"⏳ Terdeteksi Cooldown Trade 30 Detik / menunggu pembeli terima "
-                        f"(Percobaan ulang ke-{retry_count}/{max_retries}): Mengklik [Trade] lagi..."
+                        f"⏳ Menunggu Cooldown 30 Detik / Pembeli klik Accept "
+                        f"(Kirim ulang Trade ke-{retry_count}/{max_retries}): Mengklik [Trade] lagi..."
                     )
                     roblox_click(p1x, p1y)
-                    self.wait_step_delay(step_delay, f"Menunggu Cooldown 30 Detik Selesai ({retry_count}/{max_retries})")
+                    self.wait_step_delay(step_delay, f"Menunggu Jendela Trade Terbuka ({retry_count}/{max_retries})")
 
                 self.log("✅ Jendela Trade Utama sudah terbuka! Menyiapkan Search Pet Otomatis...")
                 self.smart_sleep(1.5)
@@ -1038,18 +1068,19 @@ class RockstarAutoTradeApp:
             roblox_move_smooth(cx, park_y)
             self.wait_step_delay(step_delay, "Deteksi & Klik Tombol Hijau Confirm")
 
-            self.log("Langkah 6: 👀 Memantau layar — menunggu tombol 'Confirm' menyala HIJAU...")
+            self.log("Langkah 6: 👀 Memantau layar — menunggu pembeli klik READY & tombol 'Confirm' menyala HIJAU (Maks 3 menit)...")
             confirmed_stage = False
             wait_start = time.time()
-            while time.time() - wait_start < 45.0:
+            while time.time() - wait_start < 180.0:
                 self.check_stop()
                 if is_lime_green_button(cx, cy):
                     confirmed_stage = True
                     break
-                # Fallback: Jika sudah menunggu 10 detik dan pembeli sudah klik READY
-                if time.time() - wait_start > 10.0:
-                    confirmed_stage = True
-                    break
+                el = int(time.time() - wait_start)
+                self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
+                    text=f"👀 MENUNGGU PEMBELI ({b}) KLIK READY... ({e} dtk)",
+                    fg="#70e1ff"
+                ))
                 time.sleep(0.25)
 
             if confirmed_stage:
