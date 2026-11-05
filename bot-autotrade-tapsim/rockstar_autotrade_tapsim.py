@@ -134,6 +134,7 @@ DEFAULT_COORDS = {
     "rbx_search_friend": [919, 392],      # R3. Kolom '🔍 Cari' di Popup Kirim Robux
     "rbx_friend_row1": [881, 495],        # R4. Baris Teman ke-1 Hasil Pencarian
     "rbx_btn_edit_amount": [1065, 688],   # R5. Tombol [Edit] Nominal Robux (Jika != 10)
+    "rbx_input_amount": [960, 560],       # R5B. Kolom Angka Nominal Robux (Setelah Klik Edit)
     "rbx_btn_kirim_confirm": [857, 688],  # R6. Tombol Biru [Kirim] Konfirmasi Robux
     "rbx_btn_oke": [960, 617],            # R7. Tombol Biru [OKE] Selesai Kirim Robux
 }
@@ -156,7 +157,8 @@ ROBUX_COORD_LABELS = [
     ("rbx_btn_kirim_top", "2. Tombol [↑ Kirim] (Halaman Saldo Robux)"),
     ("rbx_search_friend", "3. Kolom '🔍 Cari' (Popup Kirim Robux)"),
     ("rbx_friend_row1", "4. Baris Teman ke-1 (Hasil Cari USN)"),
-    ("rbx_btn_edit_amount", "5. Tombol [Edit] Nominal (Jika != 10 Robux)"),
+    ("rbx_btn_edit_amount", "5A. Tombol [Edit] Nominal (Jika != 10 Robux)"),
+    ("rbx_input_amount", "5B. Kolom Ketik Angka Robux (Setelah Klik Edit)"),
     ("rbx_btn_kirim_confirm", "6. Tombol Biru [Kirim] (Konfirmasi Kirim)"),
     ("rbx_btn_oke", "7. Tombol Biru [OKE] (Selesai Terkirim)"),
 ]
@@ -2072,12 +2074,16 @@ class RockstarAutoTradeApp:
             roblox_click(fx, fy, wake_up_first=False)
             self.wait_step_delay(step_delay, "Konfirmasi Nominal & Klik Tombol [Kirim]")
 
-            # LANGKAH 5: Jika nominal != 10 Robux, klik tombol [Edit], ketik nominal Robux, lalu tekan Enter
+            # LANGKAH 5: Jika nominal != 10 Robux, klik tombol [Edit], klik kolom angka, ketik nominal, lalu tekan Enter
             if int(robux_amount) != 10:
                 ex, ey = self.coords.get("rbx_btn_edit_amount", [1065, 688])
+                ax, ay = self.coords.get("rbx_input_amount", [960, 560])
                 self.log(f"Langkah 5A: Nominal {robux_amount} != 10 Robux -> Mengklik tombol [Edit] pada ({ex}, {ey})...")
-                roblox_click(ex, ey)
-                time.sleep(0.45)
+                roblox_click(ex, ey, wake_up_first=False)
+                time.sleep(0.80)
+                self.log(f"Langkah 5B: Mengklik kolom angka Robux pada ({ax}, {ay}) & mengetik '{robux_amount}'...")
+                roblox_click(ax, ay, wake_up_first=False)
+                time.sleep(0.35)
                 clear_and_type_text(self.root, str(robux_amount))
                 press_vk(VK_RETURN, 0.06)
                 self.wait_step_delay(step_delay, "Klik Tombol Biru [Kirim]")
