@@ -4,7 +4,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 import SiteFooter from '../components/SiteFooter';
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=live-20261102", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=rbx-20261105", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
 
 const SEO_PAGES = {
   home: {
