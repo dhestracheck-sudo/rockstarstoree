@@ -3,22 +3,25 @@
 """
 ====================================================================
   ROCKSTAR.STORE — BOT AUTO-TRADE TAP SIMULATOR REBORN (PC EDITION)
-  Terhubung langsung ke Database Order Supabase Rockstar.Store
+  Terhubung langsung ke Database Order Supabase & Halaman /analisis
   100% Aman Tanpa Inject / Executor (Menggunakan Native Windows UI)
 ====================================================================
 """
 
 import ctypes
 from ctypes import wintypes
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os
+import re
 import sys
 import threading
 import time
+import urllib.parse
 import urllib.request
 import winsound
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 
 # Pastikan DPI Awareness aktif agar koordinat layar 100% akurat (misal 1920x1080)
 try:
@@ -45,7 +48,6 @@ CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tapsim_c
 MOUSEEVENTF_MOVE = 0x0001
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
-MOUSEEVENTF_WHEEL = 0x0800
 
 VK_BACK = 0x08
 VK_RETURN = 0x0D
@@ -86,6 +88,37 @@ COORD_LABELS = [
 ]
 
 
+def extract_pet_search_and_qty(raw_product_name, order_qty=1):
+    """
+    Mengubah nama produk katalog website menjadi kata kunci Search di dalam game.
+    Contoh:
+      "1 PET RAINBOW VOLCANIC DEVIL 3,5M/S+" -> ("Volcanic Devil", 1)
+      "5 PET RAINBOW VOLCANIC ANGEL 4,1M/S+" -> ("Volcanic Angel", 5)
+    """
+    s = str(raw_product_name or "").strip()
+    if not s:
+        return ("", max(1, int(order_qty or 1)))
+
+    # Cek angka di depan nama produk (misal "1 PET ...")
+    m_num = re.match(r"^(\d+)\s+(?:PET|PETS|ITEM|ITEMS)\b", s, flags=re.IGNORECASE)
+    mult = int(m_num.group(1)) if m_num else 1
+    total_qty = max(1, min(40, mult * max(1, int(order_qty or 1))))
+
+    # Hapus prefix seperti "Grow A Garden 2 - DAPAT 1 PET " atau "1 PET RAINBOW "
+    s = re.sub(r"^.*?\bDAPAT\s+\d*\s*(?:PET|PETS|ITEM|ITEMS)?\s*", "", s, flags=re.IGNORECASE)
+    s = re.sub(r"^\d+\s*(?:PET|PETS|ITEM|ITEMS)?\s*", "", s, flags=re.IGNORECASE)
+    s = re.sub(r"^(?:RAINBOW|GOLDEN|GOLD|SHINY|VOID|MYTHIC|MYTIC|SECRET|EKSKLUSIF)\s+", "", s, flags=re.IGNORECASE)
+
+    # Hapus keterangan di dalam kurung "(WAJUB DUNIA 2)" atau "(MYTIC)"
+    s = re.sub(r"\s*\([^)]*\)", "", s)
+
+    # Hapus angka stat power di belakang seperti "3,5M/S+" atau "26 QA+/S"
+    s = re.sub(r"\s+\d+[.,]?\d*\s*[A-Za-z+]*\s*/\s*S\+?\b.*$", "", s, flags=re.IGNORECASE)
+
+    cleaned = s.strip()
+    return (cleaned or raw_product_name.strip(), total_qty)
+
+
 def get_cursor_pos():
     pt = wintypes.POINT()
     user32.GetCursorPos(ctypes.byref(pt))
@@ -107,25 +140,16 @@ def get_pixel_rgb(x, y):
 
 
 def is_lime_green_button(x, y):
-    """
-    Mendeteksi apakah tombol di koordinat (x, y) sudah berubah menjadi
-    tombol HIJAU 'Confirm' (RGB sekitar 176, 246, 56 pada Tap Simulator Reborn).
-    """
     offsets = [(0, 0), (-25, 0), (25, 0), (0, -10), (0, 10)]
     green_hits = 0
     for dx, dy in offsets:
         r, g, b = get_pixel_rgb(x + dx, y + dy)
-        # Warna hijau cerah tombol Confirm memiliki G tinggi (> 185) dan B rendah (< 130)
         if g > 185 and (g - b) > 75 and r > 90:
             green_hits += 1
     return green_hits >= 1
 
 
 def roblox_click(x, y, double=False):
-    """
-    Klik mouse khusus untuk Roblox Windows Client:
-    Menggerakkan kursor + delta move 1px agar event hover GUI Roblox terpanggil.
-    """
     x, y = int(x), int(y)
     user32.SetCursorPos(x, y)
     time.sleep(0.05)
@@ -150,12 +174,7 @@ def press_vk(vk, hold=0.04):
 
 
 def clear_and_type_text(root_tk, text):
-    """
-    Menghapus isi kotak pencarian Roblox (Ctrl+A -> Backspace),
-    lalu menempelkan/mengetikkan nama Pet/Item dengan cepat dan akurat.
-    """
     text = str(text or "").strip()
-    # Select All (Ctrl+A) lalu Backspace
     user32.keybd_event(VK_CONTROL, 0, 0, 0)
     time.sleep(0.03)
     press_vk(VK_A, 0.04)
@@ -167,7 +186,6 @@ def clear_and_type_text(root_tk, text):
     if not text:
         return
 
-    # Salin ke clipboard & tempel (Ctrl+V)
     try:
         root_tk.clipboard_clear()
         root_tk.clipboard_append(text)
@@ -179,7 +197,6 @@ def clear_and_type_text(root_tk, text):
         user32.keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0)
         time.sleep(0.12)
     except Exception:
-        # Fallback ketik per karakter jika clipboard gagal
         for ch in text:
             vk_scan = user32.VkKeyScanW(ord(ch))
             if vk_scan == -1:
@@ -197,9 +214,15 @@ class RockstarAutoTradeApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Rockstar.Store — Bot Auto-Trade Tap Simulator Reborn")
-        self.root.geometry("820x680")
+        w, h = 840, 700
+        sx = max(0, (SCREEN_W - w) // 2)
+        sy = max(0, (SCREEN_H - h) // 2)
+        self.root.geometry(f"{w}x{h}+{sx}+{sy}")
         self.root.configure(bg="#080e1c")
         self.root.attributes("-topmost", True)
+        self.root.deiconify()
+        self.root.lift()
+        self.root.focus_force()
 
         self.coords = dict(DEFAULT_COORDS)
         self.load_config()
@@ -208,17 +231,18 @@ class RockstarAutoTradeApp:
         self.stop_requested = False
         self.anti_afk_enabled = tk.BooleanVar(value=True)
         self.always_on_top = tk.BooleanVar(value=True)
-        self.start_mode = tk.StringVar(value="window_open")  # "window_open" atau "full_menu"
-        self.item_tab_mode = tk.StringVar(value="Pets")       # "Pets" atau "Items"
+        self.start_mode = tk.StringVar(value="window_open")
+        self.item_tab_mode = tk.StringVar(value="Pets")
 
         self.calibrating_key = None
-        self.cooldown_remaining = 0
         self.last_afk_time = time.time()
         self.orders_data = []
+        self.known_top_order_id = None
 
         self.build_ui()
-        self.start_background_Monitors()
-        self.fetch_orders_async()
+        self.start_background_monitors()
+        self.start_local_bridge_server()
+        self.fetch_orders_async(auto_select_top=True)
 
     def load_config(self):
         if os.path.exists(CONFIG_FILE):
@@ -239,20 +263,18 @@ class RockstarAutoTradeApp:
             self.log(f"Gagal menyimpan konfigurasi: {e}")
 
     def build_ui(self):
-        # Header
         hdr = tk.Frame(self.root, bg="#101c38", pady=10, padx=14)
         hdr.pack(fill="x")
 
-        lbl_title = tk.Label(
+        tk.Label(
             hdr,
             text="⚡ ROCKSTAR.STORE — AUTO-TRADE BOT (TAP SIMULATOR REBORN)",
             font=("Segoe UI", 12, "bold"),
             fg="#f5f8ff",
             bg="#101c38"
-        )
-        lbl_title.pack(side="left")
+        ).pack(side="left")
 
-        chk_top = tk.Checkbutton(
+        tk.Checkbutton(
             hdr,
             text="Selalu di Atas (Topmost)",
             variable=self.always_on_top,
@@ -263,16 +285,14 @@ class RockstarAutoTradeApp:
             activebackground="#101c38",
             activeforeground="#ffffff",
             font=("Segoe UI", 9)
-        )
-        chk_top.pack(side="right")
+        ).pack(side="right")
 
-        # Status Bar Atas
         status_frame = tk.Frame(self.root, bg="#0d162b", pady=6, padx=14)
         status_frame.pack(fill="x", padx=10, pady=(8, 4))
 
         self.lbl_status = tk.Label(
             status_frame,
-            text="🟢 STATUS: STANDBY (Siap Menjalankan Auto-Trade)",
+            text="🟢 STATUS: STANDBY (Terhubung ke Website & Halaman /analisis)",
             font=("Segoe UI", 10, "bold"),
             fg="#2ecc71",
             bg="#0d162b"
@@ -281,14 +301,13 @@ class RockstarAutoTradeApp:
 
         self.lbl_cursor = tk.Label(
             status_frame,
-            text="Posisi Mouse: (0, 0) | Pintasan: [F8] Mulai Trade  [F9/ESC] Stop Darurat",
+            text="Mouse: (0, 0) | Pintasan: [F8] Mulai Trade  [F9/ESC] Stop Darurat",
             font=("Consolas", 9),
             fg="#8fa3cc",
             bg="#0d162b"
         )
         self.lbl_cursor.pack(side="right")
 
-        # Notebook (Tab Utama & Tab Kalibrasi)
         style = ttk.Style()
         style.theme_use("default")
         style.configure("TNotebook", background="#080e1c", borderwidth=0)
@@ -307,7 +326,6 @@ class RockstarAutoTradeApp:
         self.build_main_tab()
         self.build_calib_tab()
 
-        # Log Panel di Bawah
         log_frame = tk.Frame(self.root, bg="#080e1c", padx=10, pady=6)
         log_frame.pack(fill="x")
 
@@ -330,11 +348,9 @@ class RockstarAutoTradeApp:
             pady=6
         )
         self.txt_log.pack(fill="x", pady=(2, 0))
-        self.log("Bot Auto-Trade Tap Simulator Reborn siap digunakan!")
-        self.log("Tips: Buka tab 'Kalibrasi Titik Klik Layar (F2)' untuk mencocokkan posisi tombol dengan layar Anda.")
+        self.log("Bot Auto-Trade Tap Simulator Reborn aktif! Anda juga bisa memicu trade dari halaman /analisis di web.")
 
     def build_main_tab(self):
-        # Bagian Atas: Form Pengaturan Trade Saat Ini
         form_card = tk.LabelFrame(
             self.tab_main,
             text=" 🎯 Pengaturan Item / Pet yang Akan Dikirim ",
@@ -347,14 +363,13 @@ class RockstarAutoTradeApp:
         )
         form_card.pack(fill="x", padx=10, pady=8)
 
-        # Baris 1: Username Pembeli & Kategori Tab
         r1 = tk.Frame(form_card, bg="#0b1326")
         r1.pack(fill="x", pady=4)
 
         tk.Label(r1, text="Username Roblox Pembeli:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
-        self.ent_buyer = tk.Entry(r1, bg="#101d36", fg="#ffffff", insertbackground="#ffffff", font=("Segoe UI", 10), width=22)
+        self.ent_buyer = tk.Entry(r1, bg="#101d36", fg="#70e1ff", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=22)
         self.ent_buyer.pack(side="left", padx=(0, 14))
-        self.ent_buyer.insert(0, "@BREAKxBooy")
+        self.ent_buyer.insert(0, "Breakxbooy")
 
         tk.Label(r1, text="Tab Inventory:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(4, 6))
         tk.Radiobutton(
@@ -366,14 +381,13 @@ class RockstarAutoTradeApp:
             bg="#0b1326", fg="#f3d27a", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
         ).pack(side="left", padx=6)
 
-        # Baris 2: Nama Pet/Item (yang diketik di Search pets...) & Jumlah Klik Pet
         r2 = tk.Frame(form_card, bg="#0b1326")
         r2.pack(fill="x", pady=4)
 
-        tk.Label(r2, text="Nama Pet/Item (Search):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
+        tk.Label(r2, text="Nama Pet di Game (Search):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
         self.ent_pet_name = tk.Entry(r2, bg="#101d36", fg="#f3d27a", insertbackground="#ffffff", font=("Segoe UI", 10, "bold"), width=22)
         self.ent_pet_name.pack(side="left", padx=(0, 14))
-        self.ent_pet_name.insert(0, "Volcanic Angel")
+        self.ent_pet_name.insert(0, "Volcanic Devil")
 
         tk.Label(r2, text="Jumlah Pet (Klik):", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9)).pack(side="left", padx=(4, 6))
         self.spin_qty = tk.Spinbox(r2, from_=0, to=40, width=6, bg="#101d36", fg="#ffffff", font=("Segoe UI", 10, "bold"))
@@ -386,7 +400,6 @@ class RockstarAutoTradeApp:
         self.ent_tokens.insert(0, "0")
         self.ent_tokens.pack(side="left")
 
-        # Baris 3: Mode Mulai Trade & Anti-AFK
         r3 = tk.Frame(form_card, bg="#0b1326")
         r3.pack(fill="x", pady=(6, 2))
 
@@ -406,7 +419,6 @@ class RockstarAutoTradeApp:
             bg="#0b1326", fg="#a9bcff", selectcolor="#080e1c", font=("Segoe UI", 9)
         ).pack(side="left", padx=10)
 
-        # Baris 4: Tombol Eksekusi Utama
         btn_row = tk.Frame(form_card, bg="#0b1326")
         btn_row.pack(fill="x", pady=(10, 2))
 
@@ -438,7 +450,7 @@ class RockstarAutoTradeApp:
         )
         self.btn_stop.pack(side="left", padx=6)
 
-        chk_afk = tk.Checkbutton(
+        tk.Checkbutton(
             btn_row,
             text="🛡️ Anti-AFK 24 Jam",
             variable=self.anti_afk_enabled,
@@ -446,13 +458,11 @@ class RockstarAutoTradeApp:
             fg="#2ecc71",
             selectcolor="#080e1c",
             font=("Segoe UI", 9, "bold")
-        )
-        chk_afk.pack(side="right", padx=6)
+        ).pack(side="right", padx=6)
 
-        # Bagian Bawah: Daftar Order Live dari Website Rockstar.Store
         orders_card = tk.LabelFrame(
             self.tab_main,
-            text=" 📦 Daftar Pesanan Terbaru dari Website Rockstar.Store (Klik Pesanan untuk Isi Otomatis) ",
+            text=" 📦 Daftar Pesanan Terbaru dari Website Rockstar.Store (Auto-Refresh Tiap 5 Detik) ",
             font=("Segoe UI", 10, "bold"),
             fg="#9bb5ff",
             bg="#0b1326",
@@ -467,7 +477,7 @@ class RockstarAutoTradeApp:
 
         tk.Label(
             top_ord,
-            text="Pilih order di bawah lalu klik 'Muat ke Form Trade' atau tekan F8:",
+            text="Klik baris pesanan di bawah untuk memuat nama pembeli & nama Pet secara otomatis:",
             fg="#8fa3cc",
             bg="#0b1326",
             font=("Segoe UI", 9)
@@ -475,8 +485,8 @@ class RockstarAutoTradeApp:
 
         tk.Button(
             top_ord,
-            text="🔄 Refresh Order Web",
-            command=self.fetch_orders_async,
+            text="🔄 Refresh Sekarang",
+            command=lambda: self.fetch_orders_async(auto_select_top=False),
             bg="#2b4eff",
             fg="#ffffff",
             font=("Segoe UI", 8, "bold"),
@@ -504,7 +514,7 @@ class RockstarAutoTradeApp:
             self.tab_calib,
             text=(
                 "CARA KALIBRASI TITIK KLIK (HANYA PERLU 1X SETTING):\n"
-                "1. Klik tombol 'Pilih & Rekam (F2)' pada baris tombol yang ingin diatur.\n"
+                "1. Klik tombol 'Pilih & Tekan F2' pada baris tombol yang ingin diatur.\n"
                 "2. Arahkan kursor mouse Anda ke tombol tersebut di dalam game Roblox (tanpa perlu klik).\n"
                 "3. Tekan tombol [F2] di keyboard Anda — akan terdengar bunyi Beep dan koordinat langsung tersimpan otomatis!"
             ),
@@ -523,7 +533,7 @@ class RockstarAutoTradeApp:
         self.coord_vars = {}
         self.calib_buttons = {}
 
-        for idx, (key, label_text) in enumerate(COORD_LABELS):
+        for key, label_text in COORD_LABELS:
             row_f = tk.Frame(grid_frame, bg="#0b1326", pady=3)
             row_f.pack(fill="x")
 
@@ -541,16 +551,15 @@ class RockstarAutoTradeApp:
             var = tk.StringVar(value=f"X: {xy[0]} , Y: {xy[1]}")
             self.coord_vars[key] = var
 
-            lbl_xy = tk.Label(
+            tk.Label(
                 row_f,
                 textvariable=var,
                 fg="#2ecc71",
                 bg="#101d36",
                 font=("Consolas", 9, "bold"),
                 width=18,
-                 pady=3
-            )
-            lbl_xy.pack(side="left", padx=8)
+                pady=3
+            ).pack(side="left", padx=8)
 
             btn_rec = tk.Button(
                 row_f,
@@ -567,7 +576,7 @@ class RockstarAutoTradeApp:
             btn_rec.pack(side="left", padx=4)
             self.calib_buttons[key] = btn_rec
 
-            btn_test = tk.Button(
+            tk.Button(
                 row_f,
                 text="🎯 Tes Posisi Mouse",
                 command=lambda k=key: self.test_move_cursor(k),
@@ -578,8 +587,7 @@ class RockstarAutoTradeApp:
                 padx=8,
                 pady=3,
                 cursor="hand2"
-            )
-            btn_test.pack(side="left", padx=4)
+            ).pack(side="left", padx=4)
 
     def toggle_topmost(self):
         self.root.attributes("-topmost", bool(self.always_on_top.get()))
@@ -607,11 +615,60 @@ class RockstarAutoTradeApp:
         user32.SetCursorPos(int(x), int(y))
         self.log(f"Kursor diarahkan ke {key}: ({x}, {y})")
 
-    def start_background_Monitors(self):
+    def start_local_bridge_server(self):
+        app_ref = self
+
+        class BridgeHandler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                parsed = urllib.parse.urlparse(self.path)
+                if parsed.path == "/trade":
+                    qs = urllib.parse.parse_qs(parsed.query)
+                    buyer = (qs.get("buyer", [""])[0] or "").strip()
+                    raw_item = (qs.get("item", [""])[0] or "").strip()
+                    qty_raw = int(qs.get("qty", ["1"])[0] or "1")
+                    pet_kw, total_qty = extract_pet_search_and_qty(raw_item, qty_raw)
+
+                    def _load_and_run():
+                        if buyer:
+                            app_ref.ent_buyer.delete(0, "end")
+                            app_ref.ent_buyer.insert(0, buyer)
+                        if pet_kw:
+                            app_ref.ent_pet_name.delete(0, "end")
+                            app_ref.ent_pet_name.insert(0, pet_kw)
+                        app_ref.spin_qty.delete(0, "end")
+                        app_ref.spin_qty.insert(0, str(total_qty))
+                        app_ref.log(f"🌐 Perintah dari Web /analisis diterima: Pembeli={buyer}, Pet='{pet_kw}' x{total_qty}")
+                        app_ref.trigger_trade_async()
+
+                    app_ref.root.after(0, _load_and_run)
+                    self.send_response(200)
+                    self.send_header("Access-Control-Allow-Origin", "*")
+                    self.end_headers()
+                    self.wfile.write(b"OK")
+                else:
+                    self.send_response(200)
+                    self.send_header("Access-Control-Allow-Origin", "*")
+                    self.end_headers()
+                    self.wfile.write(b"Rockstar AutoTrade Bridge Active")
+
+            def log_message(self, format, *args):
+                return
+
+        def _serve():
+            try:
+                srv = HTTPServer(("127.0.0.1", 17888), BridgeHandler)
+                srv.serve_forever()
+            except Exception:
+                pass
+
+        threading.Thread(target=_serve, daemon=True).start()
+
+    def start_background_monitors(self):
         def monitor_loop():
             f2_was_down = False
             f8_was_down = False
             stop_was_down = False
+            last_poll = time.time()
 
             while True:
                 try:
@@ -621,7 +678,6 @@ class RockstarAutoTradeApp:
                         text=f"Mouse: ({x}, {y}) RGB:({r},{g},{b}) | [F8] Mulai  [F9/ESC] Stop"
                     ))
 
-                    # Cek Tombol F2 untuk rekam kalibrasi
                     f2_down = bool(user32.GetAsyncKeyState(VK_F2) & 0x8000)
                     if f2_down and not f2_was_down and self.calibrating_key:
                         k = self.calibrating_key
@@ -635,20 +691,23 @@ class RockstarAutoTradeApp:
                         self.root.after(0, lambda k=k, x=x, y=y: self.finish_calibration_ui(k, x, y))
                     f2_was_down = f2_down
 
-                    # Cek Tombol F8 untuk mulai Auto-Trade
                     f8_down = bool(user32.GetAsyncKeyState(VK_F8) & 0x8000)
                     if f8_down and not f8_was_down and not self.is_running_trade:
                         self.root.after(0, self.trigger_trade_async)
                     f8_was_down = f8_down
 
-                    # Cek Tombol F9 atau ESC untuk Stop Darurat
                     stop_down = bool((user32.GetAsyncKeyState(VK_F9) & 0x8000) or (user32.GetAsyncKeyState(VK_ESCAPE) & 0x8000))
                     if stop_down and not stop_was_down and self.is_running_trade:
                         self.stop_requested = True
                         self.root.after(0, lambda: self.log("🛑 STOP DARURAT DITEKAN! Menghentikan proses Auto-Trade..."))
                     stop_was_down = stop_down
 
-                    # Anti-AFK setiap 8 menit saat sedang tidak trade
+                    # Auto-refresh order setiap 5 detik
+                    if time.time() - last_poll > 5.0:
+                        last_poll = time.time()
+                        self.fetch_orders_async(auto_select_top=False)
+
+                    # Anti-AFK setiap 8 menit
                     if self.anti_afk_enabled.get() and not self.is_running_trade:
                         if time.time() - self.last_afk_time > 480:
                             self.last_afk_time = time.time()
@@ -659,8 +718,7 @@ class RockstarAutoTradeApp:
                     pass
                 time.sleep(0.06)
 
-        t = threading.Thread(target=monitor_loop, daemon=True)
-        t.start()
+        threading.Thread(target=monitor_loop, daemon=True).start()
 
     def finish_calibration_ui(self, key, x, y):
         if key in self.coord_vars:
@@ -708,12 +766,11 @@ class RockstarAutoTradeApp:
         self.btn_start.configure(state="disabled", bg="#556078", text="⏳ SEDANG MENJALANKAN AUTO-TRADE...")
         self.lbl_status.configure(text=f"🟡 SEDANG PROSES TRADE KE {buyer}...", fg="#f3d27a")
 
-        t = threading.Thread(
+        threading.Thread(
             target=self.execute_trade_sequence,
             args=(buyer, pet_name, qty, tokens, mode, inv_tab),
             daemon=True
-        )
-        t.start()
+        ).start()
 
     def execute_trade_sequence(self, buyer, pet_name, qty, tokens, mode, inv_tab):
         try:
@@ -725,7 +782,6 @@ class RockstarAutoTradeApp:
             self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Tab: {inv_tab}, Token: {tokens})")
             self.smart_sleep(0.8)
 
-            # LANGKAH 1: Buka Menu Trade jika mode == "full_menu"
             if mode == "full_menu":
                 self.log("Langkah 1: Mengklik tombol Trade di kiri layar...")
                 roblox_click(*self.coords["btn_trade_menu"])
@@ -736,7 +792,6 @@ class RockstarAutoTradeApp:
                 self.log("Menunggu pembeli menerima permintaan Trade (4.5 detik)...")
                 self.smart_sleep(4.5)
 
-            # LANGKAH 2: Pilih Tab Pets atau Items
             if qty > 0 and pet_name:
                 if inv_tab == "Items":
                     self.log("Mengklik tab 'Items'...")
@@ -746,13 +801,11 @@ class RockstarAutoTradeApp:
                     roblox_click(*self.coords["tab_pets"])
                 self.smart_sleep(0.45)
 
-                # LANGKAH 3: Klik Search Box & Ketik Nama Pet/Item
                 self.log(f"Mencari '{pet_name}' di kotak Search...")
                 sx, sy = self.coords["search_box"]
                 roblox_click(sx, sy)
                 self.smart_sleep(0.25)
 
-                # Ketik di Search Box menggunakan thread utama Tkinter untuk akses Clipboard aman
                 done_evt = threading.Event()
                 def _do_type():
                     try:
@@ -763,7 +816,6 @@ class RockstarAutoTradeApp:
                 done_evt.wait(timeout=3.0)
                 self.smart_sleep(0.65)
 
-                # LANGKAH 4: Klik Kotak Pet Pertama sesuai jumlah (qty)
                 px, py = self.coords["pet_slot_1"]
                 for i in range(qty):
                     self.check_stop()
@@ -771,7 +823,6 @@ class RockstarAutoTradeApp:
                     roblox_click(px, py)
                     self.smart_sleep(0.35)
 
-            # LANGKAH 5: Input Token (jika tokens > 0)
             if tokens > 0:
                 self.log(f"Memasukkan jumlah Token: {tokens}...")
                 tx, ty = self.coords["token_plus_btn"]
@@ -788,13 +839,11 @@ class RockstarAutoTradeApp:
                 done_tok.wait(timeout=3.0)
                 self.smart_sleep(0.5)
 
-            # LANGKAH 6: Klik Tombol READY
             self.log("Mengklik tombol READY! Menunggu pembeli klik READY...")
             rx, ry = self.coords["btn_ready"]
             roblox_click(rx, ry)
             self.smart_sleep(1.0)
 
-            # LANGKAH 7: Deteksi Pintar (Tunggu sampai layar 'Check the offer!' muncul & tombol Confirm berwarna Hijau)
             cx, cy = self.coords["btn_confirm"]
             self.log("👀 Memantau layar: menunggu tombol 'Confirm' menyala HIJAU (Maks 60 detik)...")
             confirmed_stage = False
@@ -809,9 +858,8 @@ class RockstarAutoTradeApp:
             if confirmed_stage:
                 self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Mengklik Confirm dalam 0.6 detik...")
                 self.smart_sleep(0.6)
-                roblox_click(cx, cy)
+                roblox_click(cx, ry if cy == 0 else cy)
                 self.smart_sleep(0.5)
-                # Klik sekali lagi untuk memastikan Confirm terdaftar
                 if is_lime_green_button(cx, cy):
                     roblox_click(cx, cy)
 
@@ -838,9 +886,9 @@ class RockstarAutoTradeApp:
 
     def reset_trade_button_ui(self):
         self.btn_start.configure(state="normal", bg="#20b96c", text="🚀 JALANKAN AUTO-TRADE SEKARANG (F8)")
-        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Siap Menjalankan Auto-Trade)", fg="#2ecc71")
+        self.lbl_status.configure(text="🟢 STATUS: STANDBY (Terhubung ke Website & Halaman /analisis)", fg="#2ecc71")
 
-    def fetch_orders_async(self):
+    def fetch_orders_async(self, auto_select_top=False):
         def _fetch():
             try:
                 url = f"{SB_URL}/rest/v1/orders?select=id,items,total,status,waktu&order=waktu.desc&limit=25"
@@ -853,13 +901,16 @@ class RockstarAutoTradeApp:
                     data = json.loads(res.read().decode("utf-8"))
                 if isinstance(data, list):
                     self.orders_data = data
-                    self.root.after(0, self.populate_orders_listbox)
-            except Exception as e:
-                self.root.after(0, lambda e=e: self.log(f"Info koneksi order web: {e}"))
+                    self.root.after(0, lambda: self.populate_orders_listbox(auto_select_top))
+            except Exception:
+                pass
 
         threading.Thread(target=_fetch, daemon=True).start()
 
-    def populate_orders_listbox(self):
+    def populate_orders_listbox(self, auto_select_top=False):
+        cur_sel = self.orders_listbox.curselection()
+        selected_idx = cur_sel[0] if cur_sel else None
+
         self.orders_listbox.delete(0, "end")
         for row in self.orders_data:
             oid = row.get("id", "?")
@@ -877,37 +928,52 @@ class RockstarAutoTradeApp:
             first = items[0] if isinstance(items[0], dict) else {}
             rbx_user = first.get("u") or "-"
             summary = ", ".join([f"{it.get('n', '?')} (x{it.get('q', 1)})" for it in items if isinstance(it, dict)])
-            display = f"#{oid:<4} [{status:<5}] 👤 {rbx_user:<16} | 📦 {summary} — Rp {total:,}"
+            display = f"#{oid:<4} [{status:<5}] 👤 {rbx_user:<14} | 📦 {summary} — Rp {total:,}"
             self.orders_listbox.insert("end", display)
+
+        if self.orders_data:
+            top_id = self.orders_data[0].get("id")
+            if self.known_top_order_id is not None and top_id != self.known_top_order_id:
+                self.known_top_order_id = top_id
+                self.load_order_row_into_form(self.orders_data[0])
+            elif self.known_top_order_id is None:
+                self.known_top_order_id = top_id
+                if auto_select_top:
+                    self.load_order_row_into_form(self.orders_data[0])
+
+        if selected_idx is not None and selected_idx < self.orders_listbox.size():
+            self.orders_listbox.selection_set(selected_idx)
+
+    def load_order_row_into_form(self, row):
+        try:
+            raw_items = row.get("items", "[]")
+            items = json.loads(raw_items) if isinstance(raw_items, str) else raw_items
+            if items and isinstance(items[0], dict):
+                first = items[0]
+                raw_nm = str(first.get("n") or "").strip()
+                raw_qty = int(first.get("q") or 1)
+                user = str(first.get("u") or "").strip()
+                pet_kw, total_qty = extract_pet_search_and_qty(raw_nm, raw_qty)
+
+                if user:
+                    self.ent_buyer.delete(0, "end")
+                    self.ent_buyer.insert(0, user)
+                if pet_kw:
+                    self.ent_pet_name.delete(0, "end")
+                    self.ent_pet_name.insert(0, pet_kw)
+                self.spin_qty.delete(0, "end")
+                self.spin_qty.insert(0, str(total_qty))
+                self.log(f"📥 Order #{row.get('id')} dimuat: Pembeli='{user or '-'}', Search Game='{pet_kw}' x{total_qty}")
+        except Exception:
+            pass
 
     def on_select_order(self, event):
         sel = self.orders_listbox.curselection()
         if not sel:
             return
         idx = sel[0]
-        if idx >= len(self.orders_data):
-            return
-        row = self.orders_data[idx]
-        try:
-            raw_items = row.get("items", "[]")
-            items = json.loads(raw_items) if isinstance(raw_items, str) else raw_items
-            if items and isinstance(items[0], dict):
-                first = items[0]
-                nm = str(first.get("n") or "").strip()
-                qty = int(first.get("q") or 1)
-                user = str(first.get("u") or "").strip()
-
-                if user:
-                    self.ent_buyer.delete(0, "end")
-                    self.ent_buyer.insert(0, user)
-                if nm:
-                    self.ent_pet_name.delete(0, "end")
-                    self.ent_pet_name.insert(0, nm)
-                self.spin_qty.delete(0, "end")
-                self.spin_qty.insert(0, str(max(1, min(40, qty))))
-                self.log(f"📥 Order #{row.get('id')} dimuat ke form: Pembeli={user or '-'}, Item='{nm}' x{qty}")
-        except Exception:
-            pass
+        if idx < len(self.orders_data):
+            self.load_order_row_into_form(self.orders_data[idx])
 
 
 if __name__ == "__main__":

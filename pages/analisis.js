@@ -9,7 +9,7 @@ const oswald = Oswald({
   variable: "--font-oswald",
 });
 
-const pageScripts = ["/site-scripts/analisis-01.js"];
+const pageScripts = ["/site-scripts/analisis-01.js?v=autotrade-20261105"];
 
 export default function AnalisisPage() {
   return (
