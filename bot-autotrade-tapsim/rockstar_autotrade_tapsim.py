@@ -363,13 +363,26 @@ def get_pixel_rgb(x, y):
 
 
 def is_lime_green_button(x, y):
-    offsets = [(0, 0), (-25, 0), (25, 0), (0, -10), (0, 10)]
-    green_hits = 0
+    """
+    Mendeteksi apakah tombol pada koordinat (x, y) berwarna Hijau Terang (Lime Green).
+    Memeriksa area luas di sekitar titik (±110px horizontal, ±22px vertikal) agar tetap
+    terdeteksi 100% meskipun titik kalibrasi tepat berada di atas huruf putih/biru 'Confirm'.
+    """
+    offsets = [
+        (0, 0),
+        (-25, 0), (25, 0),
+        (-55, 0), (55, 0),
+        (-85, 0), (85, 0),
+        (-115, 0), (115, 0),
+        (0, -18), (0, 18),
+        (-70, -16), (70, -16),
+        (-70, 16), (70, 16),
+    ]
     for dx, dy in offsets:
         r, g, b = get_pixel_rgb(x + dx, y + dy)
-        if g > 185 and (g - b) > 75 and r > 90:
-            green_hits += 1
-    return green_hits >= 1
+        if g > 180 and (g - b) > 70 and r > 85:
+            return True
+    return False
 
 
 class RockstarAutoTradeApp:
@@ -1016,26 +1029,43 @@ class RockstarAutoTradeApp:
             self.log("Langkah 5: Mengklik tombol READY! Menunggu pembeli klik READY...")
             rx, ry = self.coords["btn_ready"]
             roblox_click(rx, ry)
-            self.wait_step_delay(step_delay, "Deteksi Tombol Hijau Confirm")
 
             cx, cy = self.coords["btn_confirm"]
-            self.log("Langkah 6: 👀 Memantau layar — menunggu tombol 'Confirm' menyala HIJAU (Maks 60 detik)...")
+            # Geser kursor sedikit ke atas tombol agar saat tombol Confirm muncul,
+            # kursor bisa masuk kembali dari luar tombol (memicu event MouseEnter Roblox!)
+            park_y = max(100, cy - 130)
+            roblox_move_smooth(cx, park_y)
+            self.wait_step_delay(step_delay, "Deteksi & Klik Tombol Hijau Confirm")
+
+            self.log("Langkah 6: 👀 Memantau layar — menunggu tombol 'Confirm' menyala HIJAU...")
             confirmed_stage = False
             wait_start = time.time()
-            while time.time() - wait_start < 60.0:
+            while time.time() - wait_start < 45.0:
                 self.check_stop()
                 if is_lime_green_button(cx, cy):
+                    confirmed_stage = True
+                    break
+                # Fallback: Jika sudah menunggu 10 detik dan pembeli sudah klik READY
+                if time.time() - wait_start > 10.0:
                     confirmed_stage = True
                     break
                 time.sleep(0.25)
 
             if confirmed_stage:
-                self.log("🟢 Tombol Hijau 'Confirm' terdeteksi! Menunggu jeda 5 detik lalu mengklik Confirm...")
+                self.log("🟢 Layar 'Check the offer!' aktif! Menunggu jeda 5 detik (Checking...) lalu mengklik Confirm...")
                 self.wait_step_delay(step_delay, "Klik Tombol Hijau Confirm")
-                roblox_click(cx, cy)
-                time.sleep(0.6)
-                if is_lime_green_button(cx, cy):
-                    roblox_click(cx, cy)
+
+                # Klik Confirm dan ulangi setiap 3 detik apabila tombol masih berwarna hijau (belum berubah jadi 'Confirmed' abu-abu)
+                for attempt in range(1, 6):
+                    self.check_stop()
+                    self.log(f"👉 Mengklik tombol Confirm pada ({cx}, {cy}) [Klik ke-{attempt}]...")
+                    roblox_move_smooth(cx, park_y)
+                    time.sleep(0.15)
+                    roblox_click(cx, cy, wake_up_first=(attempt == 1))
+                    time.sleep(2.5)
+                    if not is_lime_green_button(cx, cy):
+                        self.log("✅ Tombol Confirm berhasil ditekan (berubah menjadi 'Confirmed')!")
+                        break
 
                 self.log("⏳ Menunggu hitung mundur 3.. 2.. 1.. selesai (5 detik)...")
                 self.wait_step_delay(step_delay, "Selesai Trade")
@@ -1047,7 +1077,7 @@ class RockstarAutoTradeApp:
                 self.log(f"✅ AUTO-TRADE SELESAI! Item '{pet_name}' ({qty}x) berhasil dikirim ke {buyer}!")
                 self.last_afk_time = time.time()
             else:
-                self.log("⚠️ Waktu tunggu habis (60 detik): Pembeli belum menekan tombol READY.")
+                self.log("⚠️ Waktu tunggu habis: Pembeli belum menekan tombol READY.")
 
         except InterruptedError:
             self.log("🛑 Proses Auto-Trade dibatalkan oleh pengguna.")
