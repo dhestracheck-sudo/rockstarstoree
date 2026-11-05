@@ -106,6 +106,7 @@ VK_F9 = 0x78
 SW_RESTORE = 9
 
 DEFAULT_COORDS = {
+    "btn_accept_popup": [890, 580],   # 0. Tombol Hijau Terima Trade (Saat Pembeli Ajukan Trade ke Kita)
     "btn_trade_menu": [61, 605],      # 1. Ikon Trade biru di kiri layar
     "btn_player_row1": [1135, 455],   # 2. Tombol Trade pemain baris ke-1
     "tab_pets": [636, 315],           # 3. Tab hijau 'Pets' di dalam Trade
@@ -118,6 +119,7 @@ DEFAULT_COORDS = {
 }
 
 COORD_LABELS = [
+    ("btn_accept_popup", "0. Tombol Terima Trade (Saat Pembeli Ajukan Trade)"),
     ("btn_trade_menu", "1. Tombol Menu Trade (Kiri Layar)"),
     ("btn_player_row1", "2. Tombol Trade Pemain Baris 1"),
     ("tab_pets", "3. Tab 'Pets' (Dalam Jendela Trade)"),
@@ -404,6 +406,7 @@ class RockstarAutoTradeApp:
         self.is_running_trade = False
         self.stop_requested = False
         self.anti_afk_enabled = tk.BooleanVar(value=True)
+        self.auto_accept_buyer_trade = tk.BooleanVar(value=True)
         self.always_on_top = tk.BooleanVar(value=True)
         self.start_mode = tk.StringVar(value="full_menu")
         self.item_tab_mode = tk.StringVar(value="Pets")
@@ -601,18 +604,37 @@ class RockstarAutoTradeApp:
         tk.Label(r3, text="Cara Mulai Trade:", fg="#d3dcf1", bg="#0b1326", font=("Segoe UI", 9), width=22, anchor="w").pack(side="left")
         tk.Radiobutton(
             r3,
-            text="Otomatis Penuh (Menu Trade Kiri -> Pemain 1 -> Search Pet -> Ready)",
+            text="Otomatis Penuh (Menu Trade Kiri -> Pemain 1)",
             variable=self.start_mode,
             value="full_menu",
             bg="#0b1326", fg="#2ecc71", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
         ).pack(side="left")
         tk.Radiobutton(
             r3,
+            text="Pembeli Ajukan Trade ke Saya (Klik Terima)",
+            variable=self.start_mode,
+            value="buyer_request",
+            bg="#0b1326", fg="#70e1ff", selectcolor="#080e1c", font=("Segoe UI", 9, "bold")
+        ).pack(side="left", padx=8)
+        tk.Radiobutton(
+            r3,
             text="Jendela Trade Sudah Terbuka",
             variable=self.start_mode,
             value="window_open",
             bg="#0b1326", fg="#a9bcff", selectcolor="#080e1c", font=("Segoe UI", 9)
-        ).pack(side="left", padx=10)
+        ).pack(side="left", padx=4)
+
+        r4 = tk.Frame(form_card, bg="#0b1326")
+        r4.pack(fill="x", pady=(4, 2))
+        tk.Checkbutton(
+            r4,
+            text="🤝 Radar Aktif: Jika Pembeli Ajukan Trade ke Saya di Game, Otomatis Terima & Jalankan Auto-Trade!",
+            variable=self.auto_accept_buyer_trade,
+            bg="#0b1326",
+            fg="#f3d27a",
+            selectcolor="#080e1c",
+            font=("Segoe UI", 9, "bold")
+        ).pack(side="left")
 
         btn_row = tk.Frame(form_card, bg="#0b1326")
         btn_row.pack(fill="x", pady=(10, 2))
@@ -859,6 +881,21 @@ class RockstarAutoTradeApp:
                         last_poll = time.time()
                         self.fetch_orders_async(auto_select_top=False)
 
+                    # RADAR TERIMA TRADE OTOMATIS SAAT PEMBELI AJUKAN TRADE KE KITA DI DALAM GAME:
+                    if (
+                        self.auto_accept_buyer_trade.get()
+                        and not self.is_running_trade
+                        and self.calibrating_key is None
+                    ):
+                        ax, ay = self.coords.get("btn_accept_popup", [890, 580])
+                        fg_hwnd = user32.GetForegroundWindow()
+                        rbx_hwnd = user32.FindWindowW(None, "Roblox")
+                        if rbx_hwnd and fg_hwnd == rbx_hwnd and is_lime_green_button(ax, ay):
+                            time.sleep(0.35)
+                            if not self.is_running_trade and is_lime_green_button(ax, ay):
+                                self.root.after(0, self.trigger_trade_from_buyer_popup)
+                                time.sleep(1.0)
+
                     if self.anti_afk_enabled.get() and not self.is_running_trade:
                         if time.time() - self.last_afk_time > 480:
                             self.last_afk_time = time.time()
@@ -917,7 +954,13 @@ class RockstarAutoTradeApp:
             ))
             self.smart_sleep(1.0)
 
-    def trigger_trade_async(self):
+    def trigger_trade_from_buyer_popup(self):
+        if self.is_running_trade:
+            return
+        self.log("🤝 RADAR AKTIF: Pembeli mengajukan Trade ke Anda di dalam game! Otomatis klik Terima & kirim item...")
+        self.trigger_trade_async(override_mode="buyer_popup_now")
+
+    def trigger_trade_async(self, override_mode=None):
         if self.is_running_trade:
             self.log("⚠️ Bot sedang menjalankan trade!")
             return
@@ -937,7 +980,7 @@ class RockstarAutoTradeApp:
             tokens = 0
 
         buyer = self.ent_buyer.get().strip()
-        mode = self.start_mode.get()
+        mode = override_mode or self.start_mode.get()
         inv_tab = self.item_tab_mode.get()
 
         self.is_running_trade = True
@@ -963,10 +1006,43 @@ class RockstarAutoTradeApp:
             time.sleep(0.50)
             focus_roblox_window()
 
-            self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Jeda: {int(step_delay)} detik/tindakan)")
+            self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Mode: {mode}, Jeda: {int(step_delay)} dtk)")
             first_click_needed = True
 
-            if mode == "full_menu":
+            if mode == "buyer_popup_now":
+                ax, ay = self.coords["btn_accept_popup"]
+                self.log(f"Langkah 1: Mengklik tombol Terima Trade Masuk pada ({ax}, {ay})...")
+                roblox_click(ax, ay, wake_up_first=first_click_needed)
+                first_click_needed = False
+                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka & Search Pet Otomatis")
+
+            elif mode == "buyer_request":
+                ax, ay = self.coords["btn_accept_popup"]
+                self.log(f"👀 STANDBY: Menunggu pembeli '{buyer}' mengajukan Trade ke Anda di dalam game (Maks 15 menit)...")
+                wait_req_start = time.time()
+                got_req = False
+                while time.time() - wait_req_start < 900.0:
+                    self.check_stop()
+                    if is_lime_green_button(ax, ay):
+                        got_req = True
+                        break
+                    el = int(time.time() - wait_req_start)
+                    self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
+                        text=f"🤝 MENUNGGU PEMBELI ({b}) AJUKAN TRADE KE SAYA... ({e} dtk)",
+                        fg="#70e1ff"
+                    ))
+                    self.smart_sleep(0.5)
+
+                if not got_req:
+                    self.log("⚠️ Waktu tunggu 15 menit habis: Pembeli belum mengajukan Trade.")
+                    return
+
+                self.log(f"🟢 Pembeli '{buyer}' mengajukan Trade! Mengklik tombol Terima Trade pada ({ax}, {ay})...")
+                roblox_click(ax, ay, wake_up_first=first_click_needed)
+                first_click_needed = False
+                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka & Search Pet Otomatis")
+
+            elif mode == "full_menu":
                 self.log("Langkah 1: Mengklik tombol Menu Trade di kiri layar...")
                 roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
                 first_click_needed = False
