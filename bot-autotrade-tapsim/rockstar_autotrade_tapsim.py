@@ -12,13 +12,22 @@ from ctypes import wintypes
 import json
 import os
 import re
+import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.request
 import winsound
 import tkinter as tk
 from tkinter import ttk
+
+try:
+    from PIL import Image, ImageGrab
+    import numpy as np
+    HAS_VISION = True
+except Exception:
+    HAS_VISION = False
 
 # Pastikan DPI Awareness aktif agar koordinat layar 100% akurat (1920x1080)
 try:
@@ -387,6 +396,142 @@ def is_lime_green_button(x, y):
     return False
 
 
+def is_active_trade_window_open(coords):
+    """
+    Mendeteksi apakah Jendela Trade Utama ('Your Pets' / 'Search pets...' / 'You give')
+    BENAR-BENAR sedang terbuka di layar.
+    Mengecek warna biru khas kotak 'Search pets...' (R~44, G~188, B~255) di sekitar search_box.
+    Jika pembeli menekan TOLAK (Decline / Cancel), fungsi ini langsung mengembalikan False!
+    """
+    sx, sy = coords.get("search_box", [356, 292])
+    sample_offsets = [
+        (0, 0), (-30, 0), (30, 0), (-55, 0), (55, 0),
+        (0, -8), (0, 8), (-40, -8), (40, 8)
+    ]
+    blue_hits = 0
+    for dx, dy in sample_offsets:
+        r, g, b = get_pixel_rgb(sx + dx, sy + dy)
+        # Warna kotak Search pets... adalah Sky Blue terang (R: 20..95, G: 145..225, B: 215..255)
+        if 15 <= r <= 100 and 140 <= g <= 230 and b >= 210 and (b - r) >= 115:
+            blue_hits += 1
+    if blue_hits >= 2:
+        return True
+
+    # Cek juga apakah sedang di layar 'Check the offer!' (tombol Confirm hijau menyala)
+    cx, cy = coords.get("btn_confirm", [1310, 856])
+    if is_lime_green_button(cx, cy):
+        return True
+
+    return False
+
+
+def detect_players_in_room_ocr(p1x, p1y):
+    """
+    Mendeteksi nama-nama pemain yang berada di dalam ruangan (daftar Trading)
+    menggunakan filter teks Cyan + Windows 10/11 OCR.
+    """
+    if not HAS_VISION:
+        return []
+    try:
+        x1 = max(0, int(p1x - 560))
+        y1 = max(0, int(p1y - 60))
+        x2 = max(x1 + 120, int(p1x - 85))
+        y2 = min(SCREEN_H, int(p1y + 220))
+        grab = ImageGrab.grab(bbox=(x1, y1, x2, y2)).convert("RGB")
+        arr = np.array(grab)
+        # Filter warna huruf nama pemain di daftar Trading (Cyan: R < 115, G > 135, B > 195)
+        mask = (arr[:, :, 0] < 115) & (arr[:, :, 1] > 135) & (arr[:, :, 2] > 195)
+        if int(mask.sum()) < 40:
+            return []
+        bw = np.where(mask, 0, 255).astype(np.uint8)
+        tmp_img = os.path.join(tempfile.gettempdir(), "rockstar_room_ocr.png")
+        Image.fromarray(bw).resize((grab.width * 3, grab.height * 3)).save(tmp_img)
+
+        ps_cmd = r"""
+Add-Type -AssemblyName System.Runtime.WindowsRuntime
+$null = [Windows.Media.Ocr.OcrEngine, Windows.Foundation, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.BitmapDecoder, Windows.Graphics, ContentType = WindowsRuntime]
+$null = [Windows.Graphics.Imaging.SoftwareBitmap, Windows.Graphics, ContentType = WindowsRuntime]
+$asTaskGeneric = ([System.WindowsRuntimeSystemExtensions].GetMethods() | Where-Object {
+    $_.Name -eq 'AsTask' -and $_.GetParameters().Count -eq 1 -and $_.GetParameters()[0].ParameterType.Name -like 'IAsyncOperation*'
+})[0]
+function Await($WinRtTask, $ResultType) {
+    $asTask = $asTaskGeneric.MakeGenericMethod($ResultType)
+    $netTask = $asTask.Invoke($null, @($WinRtTask))
+    $netTask.Wait(-1) | Out-Null
+    $netTask.Result
+}
+$fs = [System.IO.File]::OpenRead($env:OCR_IMG_PATH)
+$stream = [System.IO.WindowsRuntimeStreamExtensions]::AsRandomAccessStream($fs)
+$decoder = Await ([Windows.Graphics.Imaging.BitmapDecoder]::CreateAsync($stream)) ([Windows.Graphics.Imaging.BitmapDecoder])
+$bitmap = Await ($decoder.GetSoftwareBitmapAsync()) ([Windows.Graphics.Imaging.SoftwareBitmap])
+$engine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromUserProfileLanguages()
+$result = Await ($engine.RecognizeAsync($bitmap)) ([Windows.Media.Ocr.OcrResult])
+foreach ($line in $result.Lines) { Write-Output $line.Text }
+$stream.Dispose()
+$fs.Dispose()
+"""
+        env = dict(os.environ, OCR_IMG_PATH=tmp_img)
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        out = subprocess.check_output(
+            ["powershell", "-NoProfile", "-Command", ps_cmd],
+            text=True,
+            env=env,
+            timeout=3.5,
+            startupinfo=startupinfo,
+        )
+        names = []
+        for raw_line in out.splitlines():
+            cleaned = re.sub(r"[^A-Za-z0-9_@ ]+", "", raw_line).strip()
+            if len(cleaned) >= 3 and cleaned.lower() not in ("trading", "history", "trade", "all", "view"):
+                names.append(cleaned)
+        return names
+    except Exception:
+        return []
+
+
+def find_incoming_trade_accept_button(coords):
+    """
+    Mencari tombol Hijau Terang (Accept / Terima Trade Masuk) saat pembeli mengajukan Trade ke kita:
+    1. Mengecek titik kalibrasi 'btn_accept_popup'.
+    2. Jika belum dikalibrasi, memindai area popup layar secara otomatis menggunakan Vision (ImageGrab)
+       untuk menemukan tombol hijau Accept dari pembeli!
+    """
+    ax, ay = coords.get("btn_accept_popup", [890, 580])
+    if is_lime_green_button(ax, ay):
+        return (ax, ay)
+
+    if not HAS_VISION:
+        return None
+
+    try:
+        # Pindai area tengah-bawah layar tempat popup Accept Trade biasanya muncul
+        x1, y1, x2, y2 = int(SCREEN_W * 0.25), int(SCREEN_H * 0.28), int(SCREEN_W * 0.75), int(SCREEN_H * 0.86)
+        grab = ImageGrab.grab(bbox=(x1, y1, x2, y2)).convert("RGB")
+        arr = np.array(grab)
+        # Warna Lime Green khas tombol Accept/Trade di Tap Simulator Reborn
+        mask = (
+            (arr[:, :, 0] >= 145) & (arr[:, :, 0] <= 215) &
+            (arr[:, :, 1] >= 232) &
+            (arr[:, :, 2] <= 70) &
+            ((arr[:, :, 1].astype(np.int16) - arr[:, :, 2].astype(np.int16)) >= 170)
+        )
+        ys, xs = np.where(mask)
+        if len(xs) >= 250:
+            cx = int(x1 + np.median(xs))
+            cy = int(y1 + np.median(ys))
+            return (cx, cy)
+    except Exception:
+        pass
+    return None
+
+
+class TradeDeclinedByBuyerError(Exception):
+    """Dilempar ketika pembeli menekan TOLAK (Decline / Cancel) agar Bot kembali ke mode Siaga."""
+    pass
+
+
 class RockstarAutoTradeApp:
     def __init__(self, root):
         self.root = root
@@ -628,13 +773,22 @@ class RockstarAutoTradeApp:
         r4.pack(fill="x", pady=(4, 2))
         tk.Checkbutton(
             r4,
-            text="🤝 Radar Aktif: Jika Pembeli Ajukan Trade ke Saya di Game, Otomatis Terima & Jalankan Auto-Trade!",
+            text="🤝 Radar Aktif: Jika Pembeli Tolak Lalu Ajukan Trade Lagi, Otomatis Terima & Jalankan!",
             variable=self.auto_accept_buyer_trade,
             bg="#0b1326",
             fg="#f3d27a",
             selectcolor="#080e1c",
             font=("Segoe UI", 9, "bold")
         ).pack(side="left")
+
+        self.lbl_room_players = tk.Label(
+            r4,
+            text="👥 Pemain di Ruangan: (Klik Scan / Otomatis saat Trade)",
+            fg="#70e1ff",
+            bg="#0b1326",
+            font=("Segoe UI", 9, "bold")
+        )
+        self.lbl_room_players.pack(side="right", padx=6)
 
         btn_row = tk.Frame(form_card, bg="#0b1326")
         btn_row.pack(fill="x", pady=(10, 2))
@@ -887,14 +1041,23 @@ class RockstarAutoTradeApp:
                         and not self.is_running_trade
                         and self.calibrating_key is None
                     ):
-                        ax, ay = self.coords.get("btn_accept_popup", [890, 580])
                         fg_hwnd = user32.GetForegroundWindow()
                         rbx_hwnd = user32.FindWindowW(None, "Roblox")
-                        if rbx_hwnd and fg_hwnd == rbx_hwnd and is_lime_green_button(ax, ay):
-                            time.sleep(0.35)
-                            if not self.is_running_trade and is_lime_green_button(ax, ay):
-                                self.root.after(0, self.trigger_trade_from_buyer_popup)
-                                time.sleep(1.0)
+                        if rbx_hwnd and fg_hwnd == rbx_hwnd:
+                            # 1. Jika jendela Trade utama tiba-tiba sudah terbuka (misal baru diterima)
+                            if is_active_trade_window_open(self.coords):
+                                time.sleep(0.4)
+                                if not self.is_running_trade and is_active_trade_window_open(self.coords):
+                                    self.root.after(0, lambda: self.trigger_trade_async(override_mode="window_open"))
+                                    time.sleep(1.0)
+                            else:
+                                # 2. Jika muncul tombol hijau Terima Trade (Popup Accept) dari pembeli
+                                ax, ay = self.coords.get("btn_accept_popup", [890, 580])
+                                if is_lime_green_button(ax, ay):
+                                    time.sleep(0.35)
+                                    if not self.is_running_trade and is_lime_green_button(ax, ay):
+                                        self.root.after(0, self.trigger_trade_from_buyer_popup)
+                                        time.sleep(1.0)
 
                     if self.anti_afk_enabled.get() and not self.is_running_trade:
                         if time.time() - self.last_afk_time > 480:
@@ -994,6 +1157,16 @@ class RockstarAutoTradeApp:
             daemon=True
         ).start()
 
+    def ensure_trade_window_open(self):
+        """
+        Memastikan jendela Trade utama ('Your Pets' / 'Search pets...') MASIH TERBUKA.
+        Jika pembeli tiba-tiba menekan TOLAK / Cancel, fungsi ini langsung menghentikan
+        langkah klik saat ini dan mengalihkan Bot ke Mode Siaga!
+        """
+        self.check_stop()
+        if not is_active_trade_window_open(self.coords):
+            raise TradeDeclinedByBuyerError("Jendela Trade tertutup / Pembeli menekan TOLAK!")
+
     def execute_trade_sequence(self, buyer, pet_name, qty, tokens, mode, inv_tab, step_delay=5.0):
         try:
             try:
@@ -1007,185 +1180,247 @@ class RockstarAutoTradeApp:
             focus_roblox_window()
 
             self.log(f"🚀 Memulai Auto-Trade untuk {buyer}: {qty}x '{pet_name}' (Mode: {mode}, Jeda: {int(step_delay)} dtk)")
-            first_click_needed = True
+            current_mode = mode
+            trade_completed = False
 
-            if mode == "buyer_popup_now":
-                ax, ay = self.coords["btn_accept_popup"]
-                self.log(f"Langkah 1: Mengklik tombol Terima Trade Masuk pada ({ax}, {ay})...")
-                roblox_click(ax, ay, wake_up_first=first_click_needed)
-                first_click_needed = False
-                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka & Search Pet Otomatis")
+            while not trade_completed:
+                self.check_stop()
+                first_click_needed = True
 
-            elif mode == "buyer_request":
-                ax, ay = self.coords["btn_accept_popup"]
-                self.log(f"👀 STANDBY: Menunggu pembeli '{buyer}' mengajukan Trade ke Anda di dalam game (Maks 15 menit)...")
-                wait_req_start = time.time()
-                got_req = False
-                while time.time() - wait_req_start < 900.0:
-                    self.check_stop()
-                    if is_lime_green_button(ax, ay):
-                        got_req = True
-                        break
-                    el = int(time.time() - wait_req_start)
-                    self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
-                        text=f"🤝 MENUNGGU PEMBELI ({b}) AJUKAN TRADE KE SAYA... ({e} dtk)",
-                        fg="#70e1ff"
-                    ))
-                    self.smart_sleep(0.5)
+                try:
+                    # JIKA JENDELA TRADE UTAMA SUDAH TERBUKA, LANGSUNG KE STEP 3 (SEARCH PET)!
+                    if is_active_trade_window_open(self.coords):
+                        self.log("✅ Jendela Trade Utama terdeteksi sudah terbuka! Langsung menjalankan Search Pet Otomatis...")
 
-                if not got_req:
-                    self.log("⚠️ Waktu tunggu 15 menit habis: Pembeli belum mengajukan Trade.")
-                    return
+                    elif current_mode == "buyer_popup_now":
+                        ax, ay = self.coords["btn_accept_popup"]
+                        self.log(f"Langkah 1: Mengklik tombol Terima Trade Masuk pada ({ax}, {ay})...")
+                        roblox_click(ax, ay, wake_up_first=first_click_needed)
+                        first_click_needed = False
+                        self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka")
 
-                self.log(f"🟢 Pembeli '{buyer}' mengajukan Trade! Mengklik tombol Terima Trade pada ({ax}, {ay})...")
-                roblox_click(ax, ay, wake_up_first=first_click_needed)
-                first_click_needed = False
-                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka & Search Pet Otomatis")
+                    elif current_mode == "buyer_request":
+                        self.log(f"🤝 SIAGA: Menunggu pembeli '{buyer}' mengajukan Trade ke Anda di dalam game...")
+                        wait_req_start = time.time()
+                        while time.time() - wait_req_start < 900.0:
+                            self.check_stop()
+                            if is_active_trade_window_open(self.coords):
+                                break
+                            # Cek apakah muncul tombol hijau Terima Trade (Popup Accept) atau tombol hijau di daftar Trade
+                            btn_pos = find_incoming_trade_accept_button(self.coords)
+                            p1x, p1y = self.coords["btn_player_row1"]
+                            if btn_pos is not None:
+                                bx, by = btn_pos
+                                self.log(f"🟢 Permintaan Trade dari '{buyer}' terdeteksi pada ({bx}, {by})! Mengklik Terima...")
+                                roblox_click(bx, by, wake_up_first=first_click_needed)
+                                first_click_needed = False
+                                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka")
+                                if is_active_trade_window_open(self.coords):
+                                    break
+                            elif is_lime_green_button(p1x, p1y):
+                                self.log(f"🟢 Tombol [Trade] pemain '{buyer}' aktif pada ({p1x}, {p1y})! Mengklik [Trade]...")
+                                roblox_click(p1x, p1y, wake_up_first=first_click_needed)
+                                first_click_needed = False
+                                self.wait_step_delay(step_delay, "Menunggu Jendela Trade Terbuka")
+                                if is_active_trade_window_open(self.coords):
+                                    break
 
-            elif mode == "full_menu":
-                self.log("Langkah 1: Mengklik tombol Menu Trade di kiri layar...")
-                roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
-                first_click_needed = False
-                self.wait_step_delay(step_delay, "Cek Kehadiran Pembeli di Menu Trade")
+                            el = int(time.time() - wait_req_start)
+                            self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
+                                text=f"🤝 SIAGA: SILAKAN PEMBELI ({b}) AJUKAN TRADE KE SAYA... ({e} dtk)",
+                                fg="#70e1ff"
+                            ))
+                            self.smart_sleep(0.6)
 
-                p1x, p1y = self.coords["btn_player_row1"]
+                    elif current_mode == "full_menu":
+                        self.log("Langkah 1: Mengklik tombol Menu Trade di kiri layar...")
+                        roblox_click(*self.coords["btn_trade_menu"], wake_up_first=first_click_needed)
+                        first_click_needed = False
+                        self.wait_step_delay(step_delay, "Deteksi Pemain di Dalam Ruangan")
 
-                # FASE 2A: TUNGGU SAMPAI PEMBELI MASUK KE SERVER (Tombol Hijau [Trade] Muncul)
-                # Jika pembeli belum masuk server, area (p1x, p1y) masih berwarna biru kosong (bukan hijau).
-                # Bot akan sabar menunggu (hingga 15 menit) sampai pembeli benar-benar masuk ke server!
-                if not is_lime_green_button(p1x, p1y):
-                    self.log(f"👀 Pembeli '{buyer}' belum terlihat di menu Trade. Bot STANDBY menunggu pembeli masuk server (Maks 15 menit)...")
-                    join_wait_start = time.time()
-                    last_afk_ping = time.time()
-                    buyer_joined = False
-                    while time.time() - join_wait_start < 900.0:  # 15 menit
-                        self.check_stop()
-                        if is_lime_green_button(p1x, p1y):
-                            buyer_joined = True
-                            break
-                        elapsed = int(time.time() - join_wait_start)
-                        self.root.after(0, lambda el=elapsed, b=buyer: self.lbl_status.configure(
-                            text=f"👀 MENUNGGU PEMBELI ({b}) MASUK SERVER... ({el} dtk)",
-                            fg="#70e1ff"
-                        ))
-                        # Anti-AFK ringan setiap 3 menit selama menunggu pembeli masuk
-                        if time.time() - last_afk_ping > 180.0:
+                        p1x, p1y = self.coords["btn_player_row1"]
+
+                        # FASE 2A: DETEKSI PEMAIN DI DALAM RUANGAN & TUNGGU JIKA BELUM MASUK
+                        if not is_lime_green_button(p1x, p1y) and not is_active_trade_window_open(self.coords):
+                            self.log(f"👀 Pembeli '{buyer}' belum terlihat di ruangan. Bot STANDBY menunggu pembeli masuk server...")
+                            join_wait_start = time.time()
                             last_afk_ping = time.time()
-                            roblox_move_smooth(p1x - 80, p1y)
-                        self.smart_sleep(1.0)
+                            buyer_joined = False
+                            while time.time() - join_wait_start < 900.0:
+                                self.check_stop()
+                                if is_lime_green_button(p1x, p1y) or is_active_trade_window_open(self.coords):
+                                    buyer_joined = True
+                                    break
+                                elapsed = int(time.time() - join_wait_start)
+                                self.root.after(0, lambda el=elapsed, b=buyer: self.lbl_status.configure(
+                                    text=f"👀 MENUNGGU PEMBELI ({b}) MASUK RUANGAN... ({el} dtk)",
+                                    fg="#70e1ff"
+                                ))
+                                if time.time() - last_afk_ping > 180.0:
+                                    last_afk_ping = time.time()
+                                    roblox_move_smooth(p1x - 80, p1y)
+                                self.smart_sleep(1.0)
 
-                    if not buyer_joined:
-                        self.log(f"⚠️ Pembeli '{buyer}' belum masuk ke server setelah 15 menit. Auto-Trade dihentikan.")
-                        return
+                            if not buyer_joined:
+                                self.log(f"⚠️ Pembeli '{buyer}' belum masuk ke ruangan setelah 15 menit.")
+                                return
 
-                    self.log(f"🟢 Pembeli '{buyer}' TERDETEKSI MASUK SERVER! Memulai pengiriman permintaan Trade...")
+                        # DETEKSI NAMA PEMAIN DI DALAM RUANGAN MENGGUNAKAN OCR VISION
+                        detected_names = detect_players_in_room_ocr(p1x, p1y)
+                        if detected_names:
+                            names_str = ", ".join(detected_names)
+                            self.log(f"👥 Pemain terdeteksi di dalam ruangan: {names_str}")
+                            self.root.after(0, lambda ns=names_str: self.lbl_room_players.configure(
+                                text=f"👥 Pemain di Ruangan: {ns}", fg="#2ecc71"
+                            ))
+                        else:
+                            self.log(f"👥 Pemain terdeteksi di baris ke-1 ruangan (Target: {buyer})")
+                            self.root.after(0, lambda b=buyer: self.lbl_room_players.configure(
+                                text=f"👥 Pemain di Ruangan: {b}", fg="#2ecc71"
+                            ))
+
+                        # FASE 2B: KLIK [Trade] & PASTIKAN JENDELA TRADE BENAR-BENAR TERBUKA (TIDAK DITOLAK!)
+                        if not is_active_trade_window_open(self.coords):
+                            self.log(f"Langkah 2: Mengklik tombol [Trade] untuk '{buyer}' pada ({p1x}, {p1y})...")
+                            roblox_click(p1x, p1y)
+                            self.wait_step_delay(step_delay, "Verifikasi Apakah Pembeli Menerima Trade")
+
+                            retry_count = 0
+                            max_retries = 36
+                            while retry_count < max_retries and not is_active_trade_window_open(self.coords):
+                                self.check_stop()
+                                retry_count += 1
+                                # Jika tombol hijau [Trade] masih ada (cooldown 30 detik atau pembeli belum klik Accept / sempat klik Tolak lalu ajukan lagi)
+                                if is_lime_green_button(p1x, p1y):
+                                    self.log(
+                                        f"⏳ Jendela Trade belum terbuka (Cooldown 30 Detik / Menunggu '{buyer}' Terima / Ajukan Trade) "
+                                        f"[{retry_count}/{max_retries}]: Mengklik [Trade]..."
+                                    )
+                                    roblox_click(p1x, p1y)
+                                else:
+                                    # Cek apakah ada popup Terima Trade dari pembeli di layar
+                                    btn_pos = find_incoming_trade_accept_button(self.coords)
+                                    if btn_pos is not None:
+                                        bx, by = btn_pos
+                                        self.log(f"🟢 Pembeli '{buyer}' mengajukan Trade balik! Mengklik Terima pada ({bx}, {by})...")
+                                        roblox_click(bx, by)
+                                    else:
+                                        self.log(
+                                            f"⚠️ Pembeli '{buyer}' belum menerima / menekan TOLAK! "
+                                            f"Bot SIAGA menunggu pembeli mengajukan Trade... ({retry_count}/{max_retries})"
+                                        )
+                                        self.root.after(0, lambda b=buyer: self.lbl_status.configure(
+                                            text=f"🤝 PEMBELI TOLAK/BELUM TERIMA — SILAKAN {b} AJUKAN TRADE!",
+                                            fg="#f3d27a"
+                                        ))
+                                self.wait_step_delay(step_delay, f"Menunggu Jendela Trade Terbuka ({retry_count}/{max_retries})")
+
+                    # PASTIKAN JENDELA TRADE UTAMA ('Your Pets' / 'Search pets...') BENAR-BENAR TERBUKA SEBELUM LANJUT!
+                    self.ensure_trade_window_open()
+                    self.log("✅ Jendela Trade Utama TERVERIFIKASI TERBUKA! Memulai pengisian Pet...")
                     self.smart_sleep(1.0)
 
-                # FASE 2B: PEMBELI SUDAH DI SERVER -> KLIK [Trade] SETIAP 5 DETIK SAMPAI COOLDOWN 30 DETIK HABIS & PEMBELI KLIK ACCEPT
-                self.log("Langkah 2: Mengklik tombol [Trade] pada pemain baris ke-1...")
-                roblox_click(p1x, p1y)
-                self.wait_step_delay(step_delay, "Menunggu Cooldown 30 Detik / Pembeli Klik Accept")
+                    if qty > 0 and pet_name:
+                        self.ensure_trade_window_open()
+                        if inv_tab == "Items":
+                            self.log("Mengklik tab 'Items'...")
+                            roblox_click(*self.coords["tab_items"], wake_up_first=first_click_needed)
+                            first_click_needed = False
+                            self.wait_step_delay(step_delay, "Klik Kolom Search")
 
-                retry_count = 0
-                max_retries = 36  # Maksimal 36 x 5 detik = 3 menit menunggu pembeli klik Accept & melewati cooldown 30 detik
-                while retry_count < max_retries and is_lime_green_button(p1x, p1y):
-                    self.check_stop()
-                    retry_count += 1
-                    self.log(
-                        f"⏳ Menunggu Cooldown 30 Detik / Pembeli klik Accept "
-                        f"(Kirim ulang Trade ke-{retry_count}/{max_retries}): Mengklik [Trade] lagi..."
-                    )
-                    roblox_click(p1x, p1y)
-                    self.wait_step_delay(step_delay, f"Menunggu Jendela Trade Terbuka ({retry_count}/{max_retries})")
+                        self.ensure_trade_window_open()
+                        sx, sy = self.coords["search_box"]
+                        self.log(f"Langkah 3 (Search Otomatis): Mengklik kotak Search ({sx}, {sy}) & mengetik '{pet_name.lower()}'...")
+                        auto_search_in_roblox_box(sx, sy, pet_name)
+                        first_click_needed = False
+                        self.wait_step_delay(step_delay, f"Pilih Pet '{pet_name}' di Kotak Pertama")
 
-                self.log("✅ Jendela Trade Utama sudah terbuka! Menyiapkan Search Pet Otomatis...")
-                self.smart_sleep(1.5)
+                        px, py = self.coords["pet_slot_1"]
+                        for i in range(qty):
+                            self.ensure_trade_window_open()
+                            self.log(f"Langkah 4: Memilih Pet hasil Search ke-{i+1} dari {qty} pada ({px}, {py})...")
+                            roblox_click(px, py)
+                            self.wait_step_delay(step_delay, "Langkah Berikutnya")
 
-            if qty > 0 and pet_name:
-                # Catatan: Jendela Trade Tap Simulator Reborn otomatis terbuka di tab 'Pets'.
-                # Hanya klik tab 'Items' apabila pengguna memilih pengiriman 'Items'.
-                if inv_tab == "Items":
-                    self.log("Mengklik tab 'Items'...")
-                    roblox_click(*self.coords["tab_items"], wake_up_first=first_click_needed)
-                    first_click_needed = False
-                    self.wait_step_delay(step_delay, "Klik Kolom Search")
+                    if tokens > 0:
+                        self.ensure_trade_window_open()
+                        self.log(f"Memasukkan jumlah Token: {tokens}...")
+                        tx, ty = self.coords["token_plus_btn"]
+                        roblox_click(tx, ty, wake_up_first=first_click_needed)
+                        first_click_needed = False
+                        time.sleep(0.50)
+                        clear_and_type_text(self.root, str(tokens))
+                        press_vk(VK_RETURN, 0.06)
+                        self.wait_step_delay(step_delay, "Klik Tombol READY")
 
-                sx, sy = self.coords["search_box"]
-                self.log(f"Langkah 3 (Search Otomatis): Mengklik kotak Search ({sx}, {sy}) & mengetik '{pet_name.lower()}'...")
-                auto_search_in_roblox_box(sx, sy, pet_name)
-                first_click_needed = False
-                self.wait_step_delay(step_delay, f"Pilih Pet '{pet_name}' di Kotak Pertama")
+                    self.ensure_trade_window_open()
+                    self.log("Langkah 5: Mengklik tombol READY! Menunggu pembeli klik READY...")
+                    rx, ry = self.coords["btn_ready"]
+                    roblox_click(rx, ry)
 
-                px, py = self.coords["pet_slot_1"]
-                for i in range(qty):
-                    self.check_stop()
-                    self.log(f"Langkah 4: Memilih Pet hasil Search ke-{i+1} dari {qty} pada ({px}, {py})...")
-                    roblox_click(px, py)
-                    self.wait_step_delay(step_delay, "Langkah Berikutnya")
-
-            if tokens > 0:
-                self.log(f"Memasukkan jumlah Token: {tokens}...")
-                tx, ty = self.coords["token_plus_btn"]
-                roblox_click(tx, ty, wake_up_first=first_click_needed)
-                first_click_needed = False
-                time.sleep(0.50)
-                clear_and_type_text(self.root, str(tokens))
-                press_vk(VK_RETURN, 0.06)
-                self.wait_step_delay(step_delay, "Klik Tombol READY")
-
-            self.log("Langkah 5: Mengklik tombol READY! Menunggu pembeli klik READY...")
-            rx, ry = self.coords["btn_ready"]
-            roblox_click(rx, ry)
-
-            cx, cy = self.coords["btn_confirm"]
-            # Geser kursor sedikit ke atas tombol agar saat tombol Confirm muncul,
-            # kursor bisa masuk kembali dari luar tombol (memicu event MouseEnter Roblox!)
-            park_y = max(100, cy - 130)
-            roblox_move_smooth(cx, park_y)
-            self.wait_step_delay(step_delay, "Deteksi & Klik Tombol Hijau Confirm")
-
-            self.log("Langkah 6: 👀 Memantau layar — menunggu pembeli klik READY & tombol 'Confirm' menyala HIJAU (Maks 3 menit)...")
-            confirmed_stage = False
-            wait_start = time.time()
-            while time.time() - wait_start < 180.0:
-                self.check_stop()
-                if is_lime_green_button(cx, cy):
-                    confirmed_stage = True
-                    break
-                el = int(time.time() - wait_start)
-                self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
-                    text=f"👀 MENUNGGU PEMBELI ({b}) KLIK READY... ({e} dtk)",
-                    fg="#70e1ff"
-                ))
-                time.sleep(0.25)
-
-            if confirmed_stage:
-                self.log("🟢 Layar 'Check the offer!' aktif! Menunggu jeda 5 detik (Checking...) lalu mengklik Confirm...")
-                self.wait_step_delay(step_delay, "Klik Tombol Hijau Confirm")
-
-                # Klik Confirm dan ulangi setiap 3 detik apabila tombol masih berwarna hijau (belum berubah jadi 'Confirmed' abu-abu)
-                for attempt in range(1, 6):
-                    self.check_stop()
-                    self.log(f"👉 Mengklik tombol Confirm pada ({cx}, {cy}) [Klik ke-{attempt}]...")
+                    cx, cy = self.coords["btn_confirm"]
+                    park_y = max(100, cy - 130)
                     roblox_move_smooth(cx, park_y)
-                    time.sleep(0.15)
-                    roblox_click(cx, cy, wake_up_first=(attempt == 1))
-                    time.sleep(2.5)
-                    if not is_lime_green_button(cx, cy):
-                        self.log("✅ Tombol Confirm berhasil ditekan (berubah menjadi 'Confirmed')!")
-                        break
+                    self.wait_step_delay(step_delay, "Deteksi & Klik Tombol Hijau Confirm")
 
-                self.log("⏳ Menunggu hitung mundur 3.. 2.. 1.. selesai (5 detik)...")
-                self.wait_step_delay(step_delay, "Selesai Trade")
-                try:
-                    winsound.Beep(1400, 180)
-                    winsound.Beep(1700, 220)
-                except Exception:
-                    pass
-                self.log(f"✅ AUTO-TRADE SELESAI! Item '{pet_name}' ({qty}x) berhasil dikirim ke {buyer}!")
-                self.last_afk_time = time.time()
-            else:
-                self.log("⚠️ Waktu tunggu habis: Pembeli belum menekan tombol READY.")
+                    self.log("Langkah 6: 👀 Memantau layar — menunggu pembeli klik READY & tombol 'Confirm' menyala HIJAU (Maks 3 menit)...")
+                    confirmed_stage = False
+                    wait_start = time.time()
+                    while time.time() - wait_start < 180.0:
+                        self.check_stop()
+                        if is_lime_green_button(cx, cy):
+                            confirmed_stage = True
+                            break
+                        # Jika pembeli tiba-tiba menekan Cancel/Tolak saat kita menunggu dia klik READY:
+                        if not is_active_trade_window_open(self.coords):
+                            raise TradeDeclinedByBuyerError("Pembeli menekan TOLAK / Cancel saat tahap READY!")
+                        el = int(time.time() - wait_start)
+                        self.root.after(0, lambda e=el, b=buyer: self.lbl_status.configure(
+                            text=f"👀 MENUNGGU PEMBELI ({b}) KLIK READY... ({e} dtk)",
+                            fg="#70e1ff"
+                        ))
+                        time.sleep(0.25)
+
+                    if confirmed_stage:
+                        self.log("🟢 Layar 'Check the offer!' aktif! Menunggu jeda 5 detik (Checking...) lalu mengklik Confirm...")
+                        self.wait_step_delay(step_delay, "Klik Tombol Hijau Confirm")
+
+                        for attempt in range(1, 6):
+                            self.check_stop()
+                            self.log(f"👉 Mengklik tombol Confirm pada ({cx}, {cy}) [Klik ke-{attempt}]...")
+                            roblox_move_smooth(cx, park_y)
+                            time.sleep(0.15)
+                            roblox_click(cx, cy, wake_up_first=(attempt == 1))
+                            time.sleep(2.5)
+                            if not is_lime_green_button(cx, cy):
+                                self.log("✅ Tombol Confirm berhasil ditekan (berubah menjadi 'Confirmed')!")
+                                break
+
+                        self.log("⏳ Menunggu hitung mundur 3.. 2.. 1.. selesai (5 detik)...")
+                        self.wait_step_delay(step_delay, "Selesai Trade")
+                        try:
+                            winsound.Beep(1400, 180)
+                            winsound.Beep(1700, 220)
+                        except Exception:
+                            pass
+                        self.log(f"✅ AUTO-TRADE SELESAI! Item '{pet_name}' ({qty}x) berhasil dikirim ke {buyer}!")
+                        self.last_afk_time = time.time()
+                        trade_completed = True
+                    else:
+                        raise TradeDeclinedByBuyerError("Waktu tunggu READY habis.")
+
+                except TradeDeclinedByBuyerError as decl_err:
+                    self.log(
+                        f"⚠️ {decl_err} — Menghentikan klik otomatis & beralih ke MODE SIAGA! "
+                        f"Silakan pembeli '{buyer}' AJUKAN TRADE ke Anda untuk memulai ulang otomatis!"
+                    )
+                    self.root.after(0, lambda b=buyer: self.lbl_status.configure(
+                        text=f"🤝 PEMBELI MENEKAN TOLAK! SILAKAN {b} AJUKAN TRADE UNTUK MULAI LAGI",
+                        fg="#f3d27a"
+                    ))
+                    # Beralih ke mode menunggu pembeli mengajukan Trade kembali!
+                    current_mode = "buyer_request"
+                    self.smart_sleep(2.0)
 
         except InterruptedError:
             self.log("🛑 Proses Auto-Trade dibatalkan oleh pengguna.")
