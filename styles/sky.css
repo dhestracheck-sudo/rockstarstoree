@@ -1,126 +1,97 @@
-/* Langit belakang: gelembung kristal es + bintang.
-   Semua di lapisan paling belakang (z-index -1), pointer-events none. */
-.bubbles-back {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-.bubbles-back .bubble {
-  position: absolute;
-  bottom: -8%;
-  left: var(--x, 50%);
-  width: var(--s, 34px);
-  height: var(--s, 34px);
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.08) 32%, rgba(180, 215, 255, 0.15) 60%, rgba(130, 185, 255, 0.25) 100%);
-  border: 1px solid rgba(200, 230, 255, 0.3);
-  box-shadow: inset -3px -4px 8px rgba(255, 255, 255, 0.15), 0 0 12px rgba(130, 185, 255, 0.2);
-  opacity: 0;
-  animation: bubble-rise var(--d, 12s) linear var(--dl, 0s) infinite;
-  will-change: transform, opacity;
-}
-@keyframes bubble-rise {
-  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.7); }
-  10% { opacity: 0.75; transform: translate3d(0, -12vh, 0) scale(1); }
-  50% { transform: translate3d(var(--sw, 24px), -55vh, 0) scale(1.05); }
-  90% { opacity: 0.65; }
-  100% { opacity: 0; transform: translate3d(calc(var(--sw, 24px) * -0.5), -112vh, 0) scale(1); }
-}
-
-/* Efek salju kristal (Crystal Snowflakes) - Di lapisan paling belakang (background) agar tidak menutupi produk */
-.snow-flakes,
-.sakura-petals {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-.snow-flakes i,
-.sakura-petals i {
-  position: absolute;
-  top: -8%;
-  left: var(--x, 50%);
-  width: var(--s, 22px);
-  height: var(--s, 22px);
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 1)) drop-shadow(0 0 10px rgba(120, 190, 255, 0.8));
-  opacity: 0;
-  animation: snow-fall var(--d, 10s) linear var(--dl, 0s) infinite;
-  will-change: transform, opacity;
-}
-.snow-flakes i:nth-child(odd),
-.sakura-petals i:nth-child(odd) {
-  background-image: url("/snowflake-1.svg");
-}
-.snow-flakes i:nth-child(even),
-.sakura-petals i:nth-child(even) {
-  background-image: url("/snowflake-2.svg");
-}
-.snow-flakes i:nth-child(3n),
-.sakura-petals i:nth-child(3n) {
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 8px rgba(100, 170, 255, 0.5));
-  opacity: 0.85;
-}
-@keyframes snow-fall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, -6vh, 0) rotate(0deg);
-  }
-  8% {
-    opacity: var(--op, 0.95);
-  }
-  50% {
-    transform: translate3d(var(--sw, 26px), 52vh, 0) rotate(180deg);
-  }
-  92% {
-    opacity: var(--op, 0.9);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(calc(var(--sw, 26px) * -0.5), 108vh, 0) rotate(360deg);
-  }
-}
-
-/* Bintang berkelip, lapisan paling belakang */
-.stars-back {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-}
-.stars-back i {
-  position: absolute;
-  left: var(--x, 50%);
-  top: var(--y, 20%);
-  width: var(--s, 2px);
-  height: var(--s, 2px);
-  border-radius: 50%;
-  background: #dfeaff;
-  opacity: 0.25;
-  animation: star-twinkle var(--d, 3.5s) ease-in-out var(--dl, 0s) infinite;
-}
-@keyframes star-twinkle {
-  0%, 100% { opacity: 0.15; transform: scale(0.8); }
-  50% { opacity: 0.9; transform: scale(1.2); }
-}
-
-@media (max-width: 768px) {
-  .snow-flakes i,
-  .sakura-petals i {
-    width: calc(var(--s, 20px) * 0.88);
-    height: calc(var(--s, 20px) * 0.88);
-  }
-  .snow-flakes i:nth-child(n + 9),
-  .sakura-petals i:nth-child(n + 9) { display: none; }
-  .bubbles-back .bubble:nth-child(n + 4) { display: none; }
-  .stars-back i:nth-child(n + 11) { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .bubbles-back, .snow-flakes, .sakura-petals, .spl-petals, .stars-back { display: none; }
-}
+.bubbles-back, .bubbles-back .bubble { display: none !important; }
+
+/* Efek salju kristal (Crystal Snowflakes) - Di lapisan paling belakang (background) agar tidak menutupi produk */
+.snow-flakes,
+.sakura-petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.snow-flakes i,
+.sakura-petals i {
+  position: absolute;
+  top: -8%;
+  left: var(--x, 50%);
+  width: var(--s, 22px);
+  height: var(--s, 22px);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 1)) drop-shadow(0 0 10px rgba(120, 190, 255, 0.8));
+  opacity: 0;
+  animation: snow-fall var(--d, 10s) linear var(--dl, 0s) infinite;
+  will-change: transform, opacity;
+}
+.snow-flakes i:nth-child(odd),
+.sakura-petals i:nth-child(odd) {
+  background-image: url("/snowflake-1.svg");
+}
+.snow-flakes i:nth-child(even),
+.sakura-petals i:nth-child(even) {
+  background-image: url("/snowflake-2.svg");
+}
+.snow-flakes i:nth-child(3n),
+.sakura-petals i:nth-child(3n) {
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 8px rgba(100, 170, 255, 0.5));
+  opacity: 0.85;
+}
+@keyframes snow-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -6vh, 0) rotate(0deg);
+  }
+  8% {
+    opacity: var(--op, 0.95);
+  }
+  50% {
+    transform: translate3d(var(--sw, 26px), 52vh, 0) rotate(180deg);
+  }
+  92% {
+    opacity: var(--op, 0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--sw, 26px) * -0.5), 108vh, 0) rotate(360deg);
+  }
+}
+
+/* Bintang berkelip, lapisan paling belakang */
+.stars-back {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.stars-back i {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 20%);
+  width: var(--s, 2px);
+  height: var(--s, 2px);
+  border-radius: 50%;
+  background: #dfeaff;
+  opacity: 0.25;
+  animation: star-twinkle var(--d, 3.5s) ease-in-out var(--dl, 0s) infinite;
+}
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.8); }
+  50% { opacity: 0.9; transform: scale(1.2); }
+}
+
+@media (max-width: 768px) {
+  .snow-flakes i,
+  .sakura-petals i {
+    width: calc(var(--s, 20px) * 0.88);
+    height: calc(var(--s, 20px) * 0.88);
+  }
+  .snow-flakes i:nth-child(n + 9),
+  .sakura-petals i:nth-child(n + 9) { display: none; }
+  .bubbles-back .bubble:nth-child(n + 4) { display: none; }
+  .stars-back i:nth-child(n + 11) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubbles-back, .snow-flakes, .sakura-petals, .spl-petals, .stars-back { display: none; }
+}
