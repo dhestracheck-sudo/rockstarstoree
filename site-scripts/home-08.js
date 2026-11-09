@@ -1767,6 +1767,21 @@ function trackSearch(q){
 // Hitung dilihat per produk: tiap card yang tampil di layar +1 (sekali per render).
 
 let viewObs = null;
+const viewedInSession = (function(){
+  try {
+    const raw = sessionStorage.getItem("rs_viewed_v1");
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch(e){ return new Set(); }
+})();
+
+function markViewedInSession(key){
+  try {
+    viewedInSession.add(key);
+    if(viewedInSession.size <= 300){
+      sessionStorage.setItem("rs_viewed_v1", JSON.stringify(Array.from(viewedInSession)));
+    }
+  } catch(e){}
+}
 
 function watchViews(){
 
@@ -1788,48 +1803,39 @@ function watchViews(){
 
         if(!nm || pg === "topup") return;
 
+        const sessionKey = pg + ":" + nm;
+        if(viewedInSession.has(sessionKey)) return;
+        markViewedInSession(sessionKey);
+
         (function(nm, pg, el){
 
           const tbl = sbTableOf(pg);
+          const r = resolveWish(nm);
+          const cur = (r && r.item && Number(r.item.dilihat)) || 0;
+          const nextV = cur + 1;
+          if(r && r.item) r.item.dilihat = nextV;
 
-          const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" };
+          const c = el.querySelector(".viewcount");
+          if(c) c.textContent = "👁 " + Number(nextV).toLocaleString("id-ID");
+          const vp = el.querySelector(".viewpill");
+          if(vp) vp.textContent = "👁 " + Number(nextV).toLocaleString("id-ID");
 
-          fetch(SB_URL + "/rest/v1/" + tbl + "?select=dilihat&name=eq." + encodeURIComponent(nm), { headers: H })
-
-            .then(r => r.json()).then(a => {
-
-              const cur = (a && a[0] && Number(a[0].dilihat)) || 0;
-
-              return fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
-
-                method: "PATCH", headers: H, body: JSON.stringify({ dilihat: cur + 1 })
-
-              }).then(r => r.json()).then(u => {
-
-                const v = (u && u[0] && u[0].dilihat !== undefined) ? u[0].dilihat : cur + 1;
-
-                const c = el.querySelector(".viewcount");
-
-                if(c) c.textContent = "👁 " + Number(v).toLocaleString("id-ID");
-
-                const vp = el.querySelector(".viewpill");
-
-                if(vp) vp.textContent = "👁 " + Number(v).toLocaleString("id-ID");
-
-              });
-
-            }).catch(() => {});
+          const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json", Prefer: "return=minimal" };
+          fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
+            method: "PATCH", headers: H, body: JSON.stringify({ dilihat: nextV }), keepalive: true
+          }).catch(() => {});
 
         })(nm, pg, el);
 
       });
 
-    }, { threshold: 0.3 });
+    }, { threshold: 0.35 });
 
     document.querySelectorAll('.item[data-viewname]').forEach(el => {
-
-      viewObs.observe(el);
-
+      const nm = el.dataset.viewname, pg = el.dataset.page;
+      if(nm && pg && !viewedInSession.has(pg + ":" + nm)){
+        viewObs.observe(el);
+      }
     });
 
   } catch(e) {}
@@ -1990,7 +1996,7 @@ function checkout(){
         </div>
       </div>
       <div id="checkoutQrisBox" style="padding:8px;border-radius:10px;background:#0b1120;border:1px solid rgba(168,85,247,.35);text-align:center;margin-bottom:6px;">
-        <img src="/qris-rockstar-spin.jpg" alt="QRIS Rockstar.Store" style="max-width:165px;width:100%;height:auto;border-radius:8px;border:1px solid rgba(255,255,255,.15);margin:0 auto;display:block;">
+        <img src="/optimized/qris-rockstar-spin.webp" alt="QRIS Rockstar.Store" loading="lazy" decoding="async" style="max-width:165px;width:100%;height:auto;border-radius:8px;border:1px solid rgba(255,255,255,.15);margin:0 auto;display:block;">
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;background:#0b1120;border:1px solid rgba(148,163,184,.18);margin-bottom:6px;">
         <div style="display:flex;align-items:center;gap:9px;min-width:0;">
@@ -2210,7 +2216,6 @@ function sbGet(path){
 
   return fetch(SB_URL + "/rest/v1/" + path, {
 
-    cache: "no-store",
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
 
   }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
@@ -2218,22 +2223,31 @@ function sbGet(path){
 }
 
 function fetchSheet(sheet, cbName){
-
-  return sbGet(sbTableOf(sheet) + "?select=*&order=urutan");
-
+  const tbl = sbTableOf(sheet);
+  // Untuk tabel info di homepage, ambil HANYA INFO_TEKS dan INFO_KURS (jangan unduh ratusan foto testimoni / state spin)
+  if(tbl === "info"){
+    return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS)");
+  }
+  return sbGet(tbl + "?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
 }
 
 /* ===== catat aktivitas pengunjung (klik / keranjang / checkout) — tanpa data pribadi ===== */
 
+const loggedClicksInSession = new Set();
 function logAksi(aksi, name, kat, price, page){
 
   try {
+    if(aksi === "klik"){
+      const k = String(page || "") + ":" + String(name || "");
+      if(loggedClicksInSession.has(k)) return;
+      loggedClicksInSession.add(k);
+    }
 
     fetch(SB_URL + "/rest/v1/klik", {
 
       method: "POST",
 
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" },
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json", Prefer: "return=minimal" },
 
       body: JSON.stringify({ aksi: aksi, name: String(name || "").slice(0, 200),
 
@@ -2398,28 +2412,48 @@ function paintHot(){
     return candidates.slice(0, 8);
   }
 
-  const since = new Date(Date.now() - 30 * 24 * 3600 * 1000).toISOString();
+  function buildPopularFromAgg(rows){
+    const popular = (Array.isArray(rows) ? rows : []).map(function(row){
+      const name = String(row && row.name || "").trim();
+      const total = Number(row && row.total) || 0;
+      if(!name || total <= 0) return null;
+      const r = resolveWish(name);
+      return r ? { r: r, clicks: total } : null;
+    }).filter(function(entry){
+      return entry && isAvailable(entry.r.item);
+    }).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
+    return popular;
+  }
+
+  try {
+    const cachedRaw = localStorage.getItem("rs_hot_agg_v1");
+    if(cachedRaw){
+      const cachedObj = JSON.parse(cachedRaw);
+      if(cachedObj && cachedObj.t && (Date.now() - cachedObj.t) < 10 * 60 * 1000 && Array.isArray(cachedObj.data)){
+        const cachedPopular = buildPopularFromAgg(cachedObj.data);
+        if(cachedPopular.length){
+          renderProducts(cachedPopular, true);
+          window.clearTimeout(fallbackTimer);
+          return;
+        }
+      }
+    }
+  } catch(e){}
+
   const requestTimeout = window.setTimeout(function(){
     if(controller) controller.abort();
-  }, 5000);
-  fetch(SB_URL + "/rest/v1/klik?select=name&aksi=eq.klik&order=waktu.desc&limit=2000&waktu=gte." + encodeURIComponent(since), {
+  }, 4000);
+  fetch(SB_URL + "/rest/v1/klik_agregat?select=name,total&order=total.desc&limit=32", {
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
     ...(controller ? { signal: controller.signal } : {})
   }).then(function(response){
     if(!response.ok) throw new Error("Gagal mengambil data produk populer");
     return response.json();
   }).then(function(rows){
-    const frequency = {};
-    (Array.isArray(rows) ? rows : []).forEach(function(row){
-      const name = String(row.name || "").slice(0, 80);
-      if(name) frequency[name] = (frequency[name] || 0) + 1;
-    });
-    const popular = Object.keys(frequency).map(function(name){
-      const r = resolveWish(name);
-      return r ? { r: r, clicks: frequency[name] } : null;
-    }).filter(function(entry){
-      return entry && isAvailable(entry.r.item);
-    }).sort(function(a, b){ return b.clicks - a.clicks; }).slice(0, 8);
+    if(Array.isArray(rows) && rows.length){
+      try { localStorage.setItem("rs_hot_agg_v1", JSON.stringify({ t: Date.now(), data: rows })); } catch(e){}
+    }
+    const popular = buildPopularFromAgg(rows);
     renderProducts(popular.length ? popular : catalogFallback(), true);
   }).catch(function(){
     renderProducts(catalogFallback(), true);
@@ -2657,14 +2691,22 @@ let orderCache = null;
 function getOrdersOnce(){
 
   if(orderCache) return Promise.resolve(orderCache);
+  try {
+    const raw = sessionStorage.getItem("rs_orders_together_v1");
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)){ orderCache = parsed; return Promise.resolve(orderCache); }
+    }
+  } catch(e){}
 
-  return fetch(SB_URL + "/rest/v1/orders?select=items&order=waktu.desc&limit=500", {
+  return fetch(SB_URL + "/rest/v1/orders?select=items&order=waktu.desc&limit=120", {
 
     headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
 
   }).then(r => r.json()).then(a => {
 
     orderCache = Array.isArray(a) ? a : [];
+    try { sessionStorage.setItem("rs_orders_together_v1", JSON.stringify(orderCache)); } catch(e){}
 
     return orderCache;
 
@@ -3161,18 +3203,27 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 
 
 
-function loadLiveStock(){
-
+function loadLiveStock(forceNetwork){
+  let hasWarmCache = false;
   try {
-
-    applySnap(loadCached("Brainrot"), loadCached("Topup"), loadCached("Akun"), loadCached("Joki"), loadCached("Info"));
+    const bCache = loadCached("Brainrot");
+    const tCache = loadCached("Topup");
+    const aCache = loadCached("Akun");
+    const jCache = loadCached("Joki");
+    const iCache = loadCached("Info");
+    hasWarmCache = bCache.length > 0 && aCache.length > 0;
+    applySnap(bCache, tCache, aCache, jCache, iCache);
 
     applyLang();
     render();
-    try { paintHot(); } catch(e) {}
+    if(hasWarmCache){ try { paintHot(); } catch(e) {} }
     try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
     hideLoader();
 
+    const lastSync = Number(localStorage.getItem("rs_last_full_sync") || 0);
+    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 45000){
+      return Promise.resolve(false);
+    }
   } catch(e) {}
 
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
@@ -3188,25 +3239,17 @@ function loadLiveStock(){
     const b = res[0] || [], t = res[1] || [], a = res[2] || [], jk = res[3] || [], info = res[4] || [];
 
     try {
-
-      const catalogAlreadyLoaded = [brainrotCategories, topupCategories, akunCategories, jokiCategories]
-        .some(function(categories){ return categories.length > 0; });
-      // On a first visit there may be no cached catalog yet. Keep the fresh data in
-      // memory even if the visitor has started scrolling so Hot Product can resolve
-      // its cards without forcing a page-wide rerender or moving their scroll position.
       applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
-
       if (t.length) saveCached("Topup", t);
-
       if (a.length) saveCached("Akun", a);
-
       if (jk.length) saveCached("Joki", jk);
-
       if (info.length) saveCached("Info", info);
-
+      if (b.length && a.length) {
+        try { localStorage.setItem("rs_last_full_sync", String(Date.now())); } catch(e){}
+      }
     } catch(e) {}
-
+    return true;
   });
 
 }
@@ -3245,19 +3288,21 @@ try {
 
 
 
-loadLiveStock().then(() => {
-  try {
-    const savedY = window.scrollY;
-    applyLang();
-    if(shownCat !== -1){
-      try { paintItems(true); } catch(e) {}
-    } else {
-      try { render(); } catch(e) {}
-      if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
-    }
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
-  } catch(e) {}
-  try { paintHot(); } catch(e) {}
+loadLiveStock().then((didRefetch) => {
+  if(didRefetch !== false){
+    try {
+      const savedY = window.scrollY;
+      applyLang();
+      if(shownCat !== -1){
+        try { paintItems(true); } catch(e) {}
+      } else {
+        try { render(); } catch(e) {}
+        if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
+      }
+      try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+    } catch(e) {}
+    try { paintHot(); } catch(e) {}
+  }
   try { syncWishCount(); } catch(e) {}
   try { let searchTimer = null;
 /* Saran instan (ringan, maks 6) — render penuh ditunda biar ketikan tidak nyendat */
@@ -3316,7 +3361,7 @@ document.getElementById("searchInput").addEventListener("input", searchType); } 
 let lastLiveFetch = Date.now();
 document.addEventListener("visibilitychange", function(){
   if(document.visibilityState === "visible"){
-    if(Date.now() - lastLiveFetch > 45000){
+    if(Date.now() - lastLiveFetch > 180000){
       lastLiveFetch = Date.now();
       loadLiveStock().then(function(){
         try {

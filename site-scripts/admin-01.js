@@ -36,7 +36,7 @@ function b64ToBlob(b64, mime){
 function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
 function makeThumb(blob, maxEdge, quality){
   maxEdge = Number(maxEdge) > 0 ? Number(maxEdge) : 480;
-  quality = Number(quality) > 0 ? Number(quality) : 0.75;
+  quality = Number(quality) > 0 ? Number(quality) : 0.82;
   return new Promise(resolve => {
     try {
       const url = URL.createObjectURL(blob);
@@ -48,7 +48,10 @@ function makeThumb(blob, maxEdge, quality){
           const cv = document.createElement("canvas");
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
           cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
-          cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+          const ctx = cv.getContext("2d");
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(im, 0, 0, cv.width, cv.height);
           cv.toBlob(b => resolve(b || null), "image/webp", quality);
         } catch(e){ resolve(null); }
       };
@@ -57,9 +60,9 @@ function makeThumb(blob, maxEdge, quality){
     } catch(e){ resolve(null); }
   });
 }
-function makeTinyThumb(blob){ return makeThumb(blob, 128, 0.7); }
+function makeTinyThumb(blob){ return makeThumb(blob, 160, 0.78); }
 const ADMIN_PIN = "112233"; // <-- GANTI PIN INI
-const ADMIN_V = "v2026.10.24.5";
+const ADMIN_V = "v2026.10.28.1";
 document.getElementById("adminV").textContent = "(" + ADMIN_V + ")";
 
 function CURSHEET(){
@@ -84,11 +87,12 @@ window.addEventListener("resize", stickSync);
 function unlock(){
   if(document.getElementById("pinInput").value === ADMIN_PIN){
     document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","miniNav","sheetCard","teksCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","productEditorCard","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
+    ["analTopBtn","miniNav","sheetCard","teksCard","sectSpin","spinAdminCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","productEditorCard","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
     document.getElementById("featMenu").style.display = "grid";
     document.getElementById("sheetBar").style.display = "flex";
     stickSync();
     loadTeks();
+    loadSpinAdmin();
     loadItems();
     loadAkunProds();
     loadTestimoniAdmin();
@@ -305,6 +309,7 @@ function prefill(){
     renderPreview("", null);
     renderSlides();
   }
+  updateProductCatalogSelection();
 }
 
 function postSet(col, value, stEl, btn, okMsg){
@@ -348,11 +353,15 @@ function addLocalRow(o){
       s.appendChild(op);
     }
   });
+  renderProductCatalog(document.getElementById("itemSearch")?.value || "");
 }
 
 function updItem(name, patch){
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
-  if(o) Object.assign(o, patch);
+  if(o){
+    Object.assign(o, patch);
+    updateProductCatalogSelection();
+  }
   return o;
 }
 
@@ -362,6 +371,7 @@ function syncAfterProduct(name){
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
   if(o) renderPreview(name, o);
   renderSlides();
+  renderProductCatalog(document.getElementById("itemSearch")?.value || "");
 }
 
 function deleteProduct(){
@@ -625,19 +635,153 @@ function fillProductOptions(filter){
   const sel = document.getElementById("itemSel");
   const cur = sel.value;
   sel.innerHTML = "";
-  ALL_ITEMS.forEach(o => {
+  const products = ALL_ITEMS.filter(o => {
     const nm = String(o.name || "").trim();
-    if (!nm || nm.indexOf("CAT:") === 0 || nm.indexOf("INFO_") === 0) return;
-    if (filter && nm.toLowerCase().indexOf(filter) === -1) return;
+    return !!nm && nm.indexOf("CAT:") !== 0 && nm.indexOf("INFO_") !== 0;
+  });
+  products.forEach(o => {
+    const nm = String(o.name || "").trim();
     const op = document.createElement("option");
     op.value = nm;
     op.textContent = nm.slice(0, 70);
     sel.appendChild(op);
   });
-  if(cur && Array.from(sel.options).some(p => p.value === cur)) sel.value = cur;
+  if(cur && products.some(o => String(o.name || "").trim() === cur)) sel.value = cur;
+  else if(sel.options.length) sel.selectedIndex = 0;
   sel.onchange = prefill;
+  renderProductCatalog(filter);
   prefill();
 }
+
+function updateProductCatalogSelection(){
+  const name = document.getElementById("itemSel")?.value || "";
+  const product = ALL_ITEMS.find(o => String(o.name || "").trim() === name);
+  const nameEl = document.getElementById("productCatalogSelectedName");
+  const metaEl = document.getElementById("productCatalogSelectedMeta");
+  const priceEl = document.getElementById("productCatalogSelectedPrice");
+  const imageEl = document.getElementById("productCatalogSelectedImage");
+  const fallbackEl = document.getElementById("productCatalogSelectedFallback");
+  if(!nameEl || !metaEl || !priceEl || !imageEl || !fallbackEl) return;
+
+  nameEl.textContent = name || "Pilih produk";
+  metaEl.textContent = product ? (String(product.kategori || "").trim() || "Tanpa kategori") : "Pilih katalog produk";
+  priceEl.textContent = product ? "Rp " + (Number(product.price) || 0).toLocaleString("id-ID") : "";
+  const src = product ? imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean)[0] || "" : "";
+  if(src){
+    imageEl.src = src;
+    imageEl.alt = "Foto " + name;
+    imageEl.hidden = false;
+    fallbackEl.hidden = true;
+    imageEl.onerror = () => { imageEl.hidden = true; fallbackEl.hidden = false; };
+  } else {
+    imageEl.removeAttribute("src");
+    imageEl.alt = "";
+    imageEl.hidden = true;
+    fallbackEl.hidden = false;
+  }
+}
+
+function renderProductCatalog(filter){
+  const grid = document.getElementById("productCatalogGrid");
+  const count = document.getElementById("productCatalogCount");
+  const empty = document.getElementById("productCatalogEmpty");
+  if(!grid || !count || !empty) return;
+
+  const query = String(filter || "").trim().toLowerCase();
+  const selectedName = document.getElementById("itemSel")?.value || "";
+  const products = ALL_ITEMS.filter(o => {
+    const name = String(o.name || "").trim();
+    if(!name || name.indexOf("CAT:") === 0 || name.indexOf("INFO_") === 0) return false;
+    const category = String(o.kategori || "").trim();
+    return !query || name.toLowerCase().includes(query) || category.toLowerCase().includes(query);
+  });
+
+  grid.replaceChildren();
+  products.forEach(o => {
+    const name = String(o.name || "").trim();
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "product-catalog-item";
+    button.setAttribute("aria-pressed", String(name === selectedName));
+    button.setAttribute("aria-label", name + ", " + (String(o.kategori || "").trim() || "Tanpa kategori") + ", Rp " + (Number(o.price) || 0).toLocaleString("id-ID"));
+
+    const media = document.createElement("span");
+    media.className = "product-catalog-image-wrap";
+    const fallback = document.createElement("span");
+    fallback.className = "product-catalog-placeholder";
+    fallback.textContent = "📦";
+    media.appendChild(fallback);
+    const src = imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+    if(src){
+      const image = document.createElement("img");
+      image.src = src;
+      image.alt = "";
+      image.loading = "lazy";
+      image.onerror = () => { image.hidden = true; fallback.hidden = false; };
+      fallback.hidden = true;
+      media.appendChild(image);
+    }
+
+    const copy = document.createElement("span");
+    copy.className = "product-catalog-item-copy";
+    const title = document.createElement("span");
+    title.className = "product-catalog-item-name";
+    title.textContent = name;
+    const meta = document.createElement("span");
+    meta.className = "product-catalog-item-meta";
+    meta.textContent = String(o.kategori || "").trim() || "Tanpa kategori";
+    const price = document.createElement("span");
+    price.className = "product-catalog-item-price";
+    price.textContent = "Rp " + (Number(o.price) || 0).toLocaleString("id-ID");
+    copy.append(title, meta, price);
+    button.append(media, copy);
+    button.addEventListener("click", () => chooseCatalogProduct(name));
+    grid.appendChild(button);
+  });
+
+  count.textContent = products.length + " produk" + (query ? " ditemukan" : " tersedia");
+  empty.hidden = products.length > 0;
+  updateProductCatalogSelection();
+}
+
+function setProductCatalogOpen(open){
+  const popover = document.getElementById("productCatalogPopover");
+  const toggle = document.getElementById("productCatalogToggle");
+  if(!popover || !toggle) return;
+  const shouldOpen = (typeof open === "boolean") ? open : popover.hidden;
+  popover.hidden = !shouldOpen;
+  toggle.setAttribute("aria-expanded", String(shouldOpen));
+  if(shouldOpen){
+    const search = document.getElementById("itemSearch");
+    renderProductCatalog(search?.value || "");
+    if(search) search.focus();
+  }
+}
+
+function toggleProductCatalog(){ setProductCatalogOpen(); }
+function closeProductCatalog(){ setProductCatalogOpen(false); }
+
+function chooseCatalogProduct(name){
+  const sel = document.getElementById("itemSel");
+  if(!sel || !Array.from(sel.options).some(option => option.value === name)) return;
+  sel.value = name;
+  sel.dispatchEvent(new Event("change", { bubbles:true }));
+  closeProductCatalog();
+  renderProductCatalog(document.getElementById("itemSearch")?.value || "");
+}
+
+document.addEventListener("click", event => {
+  const card = document.getElementById("mainCard");
+  if(card && !card.contains(event.target)) closeProductCatalog();
+});
+document.addEventListener("keydown", event => {
+  if(event.key !== "Escape") return;
+  const popover = document.getElementById("productCatalogPopover");
+  if(popover && !popover.hidden){
+    closeProductCatalog();
+    document.getElementById("productCatalogToggle")?.focus();
+  }
+});
 
 function catList(){
   const cats = [];
@@ -674,8 +818,9 @@ function fillCatOptions(filter){
 }
 
 function loadTeks(){
-  // Tabel "info" Supabase, tidak campur Brainrot.
-  sbList("Info").then(function(arr){
+  // Ambil hanya baris INFO_TEKS & INFO_KURS agar tidak mengunduh ratusan baris testimoni
+  fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS)", { headers: sbH() })
+    .then(function(r){ return r.json(); }).then(function(arr){
     try {
       var o = (arr || []).find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
@@ -898,7 +1043,8 @@ function validRobloxServerUrl(value){
 function loadServerSettings(){
   const status = document.getElementById("serverSettingsStatus");
   if(status) status.textContent = "Memuat daftar server...";
-  return sbList("Info").then(function(arr){
+  return fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=eq.INFO_SERVERS", { headers: sbH() })
+    .then(function(r){ return r.json(); }).catch(function(){ return []; }).then(function(arr){
     const row = (arr || []).find(function(item){ return String(item.name || "").trim() === "INFO_SERVERS"; });
     SERVER_SETTING_EXISTS = !!row;
     if(row){
@@ -1042,6 +1188,7 @@ function loadItems(){
       fillProductOptions("");
       fillCatOptions("");
       loadTeks();
+    loadSpinAdmin();
       muatFotoBackground();
     } catch(e) {}
   });
@@ -1049,22 +1196,13 @@ function loadItems(){
 
 // Data Supabase sudah lengkap (termasuk foto) — sinkron ulang diam-diam.
 function muatFotoBackground(){
-  sbList(CURSHEET()).then(arr => {
-    try {
-      if(!arr.length) return;
-      const byName = {};
-      ALL_ITEMS.forEach(o => { byName[String(o.name).trim()] = o; });
-      arr.forEach(o => {
-        const k = String(o.name || "").trim();
-        if(k && byName[k]) Object.assign(byName[k], o);
-      });
-      prefill();
-      renderSlides();
-      const nm = document.getElementById("itemSel").value;
-      const cur = ALL_ITEMS.find(x => String(x.name).trim() === nm);
-      if(cur) renderPreview(nm, cur);
-    } catch(e) {}
-  });
+  try {
+    prefill();
+    renderSlides();
+    const nm = document.getElementById("itemSel").value;
+    const cur = ALL_ITEMS.find(x => String(x.name).trim() === nm);
+    if(cur) renderPreview(nm, cur);
+  } catch(e) {}
 }
 
 document.getElementById("catFileInput").addEventListener("change", e => {
@@ -1262,14 +1400,14 @@ function slideAddFile(){
     const blob = b64ToBlob(p.base64, p.mime);
     const putFull = fetch(SB_URL + "/storage/v1/object/foto/" + path, {
       method: "PUT",
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": p.mime, "x-upsert": "true" },
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": p.mime, "cache-control": "31536000", "x-upsert": "true" },
       body: blob
     });
     const putThumb = makeThumb(blob).then(tblob => {
       if(!tblob) return;
       return fetch(SB_URL + "/storage/v1/object/foto/thumb_" + path, {
         method: "PUT",
-        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "x-upsert": "true" },
+        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "cache-control": "31536000", "x-upsert": "true" },
         body: tblob
       }).catch(function(){});
     });
@@ -1277,7 +1415,7 @@ function slideAddFile(){
       if(!tblob) return;
       return fetch(SB_URL + "/storage/v1/object/foto/tiny_" + path, {
         method: "PUT",
-        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "x-upsert": "true" },
+        headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "image/webp", "cache-control": "31536000", "x-upsert": "true" },
         body: tblob
       }).catch(function(){});
     });
@@ -1555,7 +1693,7 @@ async function sbAction(action, tbl, body, signal){
     var up = await fetch(SB_URL + "/storage/v1/object/foto/" + path, {
       method: "PUT",
       headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
-        "Content-Type": body.mime || "application/octet-stream", "x-upsert": "true" },
+        "Content-Type": body.mime || "application/octet-stream", "cache-control": "31536000", "x-upsert": "true" },
       body: blob, signal: signal
     });
     if(!up.ok) return { result: "error: upload foto gagal (" + up.status + ")" };
@@ -1566,7 +1704,7 @@ async function sbAction(action, tbl, body, signal){
         await fetch(SB_URL + "/storage/v1/object/foto/thumb_" + path, {
           method: "PUT",
           headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
-            "Content-Type": "image/webp", "x-upsert": "true" },
+            "Content-Type": "image/webp", "cache-control": "31536000", "x-upsert": "true" },
           body: tblob, signal: signal
         });
       }
@@ -1575,7 +1713,7 @@ async function sbAction(action, tbl, body, signal){
         await fetch(SB_URL + "/storage/v1/object/foto/tiny_" + path, {
           method: "PUT",
           headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY,
-            "Content-Type": "image/webp", "x-upsert": "true" },
+            "Content-Type": "image/webp", "cache-control": "31536000", "x-upsert": "true" },
           body: tiny, signal: signal
         });
       }
@@ -1677,11 +1815,14 @@ function prepImage(f){
           const cv = document.createElement("canvas");
           cv.width = Math.max(1, Math.round(im.naturalWidth * sc));
           cv.height = Math.max(1, Math.round(im.naturalHeight * sc));
-          cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-          // Samakan optimasi web: selalu WebP q82 (fallback JPEG bila browser jadul)
+          const ctx = cv.getContext("2d");
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = "high";
+          ctx.drawImage(im, 0, 0, cv.width, cv.height);
+          // Optimasi gambar tajam & ukuran ringan: WebP q85 dengan high smoothing (fallback JPEG bila browser jadul)
           let mime = "image/webp";
           let dataUrl = "";
-          try { dataUrl = cv.toDataURL(mime, 0.82); } catch(e) { dataUrl = ""; }
+          try { dataUrl = cv.toDataURL(mime, 0.85); } catch(e) { dataUrl = ""; }
           let nm = String(f.name || "foto").replace(/\.[^.]+$/, "");
           if(!dataUrl || dataUrl === "data:,"){
             mime = "image/jpeg";
@@ -1734,4 +1875,492 @@ function renameCat(){
     prefill();
     prefillCat();
   }).catch(() => { st.innerHTML = '<span class="err">Gagal kirim, cek koneksi.</span>'; btn.disabled = false; });
+}
+
+
+/* ===== LUCKY SPIN GRAND PRIZE ADMIN PANEL ===== */
+const SPIN_STATE_KEY = "LUCKY_SPIN_STATE_V1";
+const SPIN_LOCAL_KEY = "rockstar_lucky_spin_state_v1";
+const SPIN_BC_NAME = "rockstar_lucky_spin_channel";
+const SPIN_COLORS = [
+  "#7C3AED", "#06B6D4", "#EC4899", "#F59E0B", "#10B981",
+  "#2B4EFF", "#EF4444", "#A855F7", "#14B8A6", "#F97316"
+];
+
+let SPIN_CATALOG_PRODUCTS = [];
+
+let SPIN_STATE = {
+  prizeName: "Secret Brainrot",
+  prizeProduct: null,
+  participants: [
+    { id: "p1", username: "BrainrotKing99", tickets: 10, color: SPIN_COLORS[0] },
+    { id: "p2", username: "RbxSlayer_ID", tickets: 5, color: SPIN_COLORS[1] },
+    { id: "p3", username: "NoobMaster69", tickets: 2, color: SPIN_COLORS[2] },
+    { id: "p4", username: "SkibidiSigma", tickets: 8, color: SPIN_COLORS[3] },
+    { id: "p5", username: "LuckyPlayer77", tickets: 1, color: SPIN_COLORS[4] },
+    { id: "p6", username: "SepuhRoblox_X", tickets: 4, color: SPIN_COLORS[5] }
+  ],
+  lockedWinnerId: "FAIR_RANDOM",
+  spinEvent: null
+};
+
+function broadcastSpinState(payload){
+  try {
+    localStorage.setItem(SPIN_LOCAL_KEY, JSON.stringify(payload));
+  } catch(e){}
+  if(typeof window !== "undefined" && "BroadcastChannel" in window){
+    try {
+      const bc = new BroadcastChannel(SPIN_BC_NAME);
+      bc.postMessage(payload);
+      bc.close();
+    } catch(e){}
+  }
+}
+
+async function persistSpinStateToSupabase(payload){
+  payload.updatedAt = new Date().toISOString();
+  broadcastSpinState(payload);
+  try {
+    const serialized = JSON.stringify(payload);
+    const checkRes = await fetch(SB_URL + "/rest/v1/info?select=name&name=eq." + encodeURIComponent(SPIN_STATE_KEY), {
+      headers: sbH()
+    });
+    const existing = await checkRes.json();
+    if(Array.isArray(existing) && existing.length > 0){
+      const patchRes = await fetch(SB_URL + "/rest/v1/info?name=eq." + encodeURIComponent(SPIN_STATE_KEY), {
+        method: "PATCH",
+        headers: sbH(),
+        body: JSON.stringify({ deskripsi: serialized })
+      });
+      return patchRes.ok;
+    } else {
+      const postRes = await fetch(SB_URL + "/rest/v1/info", {
+        method: "POST",
+        headers: sbH(),
+        body: JSON.stringify({
+          name: SPIN_STATE_KEY,
+          kategori: "INFO",
+          price: 0,
+          coret: 0,
+          deskripsi: serialized,
+          stock: 0,
+          soldout: "",
+          image: "",
+          sold: 0,
+          dilihat: 0
+        })
+      });
+      return postRes.ok;
+    }
+  } catch(e){
+    return false;
+  }
+}
+
+function renderSpinPrizePreview(){
+  const box = document.getElementById("spinPrizePreviewBox");
+  const img = document.getElementById("spinPrizePreviewImg");
+  const nm = document.getElementById("spinPrizePreviewName");
+  const meta = document.getElementById("spinPrizePreviewMeta");
+  if(!box) return;
+  const prod = SPIN_STATE.prizeProduct;
+  if(prod && prod.name){
+    box.style.display = "flex";
+    if(img){
+      if(prod.image){
+        img.src = prod.image;
+        img.style.display = "block";
+      } else {
+        img.style.display = "none";
+      }
+    }
+    if(nm) nm.textContent = prod.name;
+    if(meta) meta.textContent = (prod.sheet ? "[" + String(prod.sheet).toUpperCase() + "] " : "") + (prod.kategori ? prod.kategori + " • " : "") + "Rp " + Number(prod.price || 0).toLocaleString("id-ID");
+  } else {
+    box.style.display = "none";
+  }
+}
+
+function renderSpinPrizeSelector(q){
+  const sel = document.getElementById("spinPrizeProductSel");
+  if(!sel) return;
+  const query = String(q || "").toLowerCase().trim();
+  const filtered = SPIN_CATALOG_PRODUCTS.filter(p => {
+    if(!query) return true;
+    return (p.name + " " + p.kategori + " " + p.sheet).toLowerCase().indexOf(query) !== -1;
+  });
+  sel.innerHTML = '<option value="">-- Tanpa Produk Katalog / Pakai Nama Hadiah Manual (' + filtered.length + ' produk ready) --</option>';
+  const curKey = SPIN_STATE.prizeProduct ? (SPIN_STATE.prizeProduct.sheet + "::" + SPIN_STATE.prizeProduct.name) : "";
+  filtered.slice(0, 300).forEach(p => {
+    const opt = document.createElement("option");
+    const k = p.sheet + "::" + p.name;
+    opt.value = k;
+    opt.textContent = "[" + String(p.sheet).toUpperCase() + "] " + p.name + " — Rp " + Number(p.price || 0).toLocaleString("id-ID") + " (Stok: " + p.stock + ")";
+    sel.appendChild(opt);
+  });
+  if(curKey && Array.from(sel.options).some(o => o.value === curKey)){
+    sel.value = curKey;
+  } else {
+    sel.value = "";
+  }
+}
+
+function clearSpinPrizeProduct(){
+  SPIN_STATE.prizeProduct = null;
+  const sel = document.getElementById("spinPrizeProductSel");
+  if(sel) sel.value = "";
+  renderSpinPrizePreview();
+  const prizeInput = document.getElementById("spinPrizeInput");
+  if(prizeInput) prizeInput.focus();
+  const st = document.getElementById("statusSpinPrize");
+  persistSpinStateToSupabase(SPIN_STATE).then(ok => {
+    if(st) st.innerHTML = ok
+      ? '<span class="ok">✅ Produk katalog dikosongkan! Anda bebas mengetik hadiah apa saja di kolom Nama Hadiah di bawah.</span>'
+      : '<span class="ok">✅ Produk katalog dikosongkan.</span>';
+  });
+}
+
+function onSelectSpinPrizeProduct(val){
+  if(!val){
+    clearSpinPrizeProduct();
+    return;
+  }
+  const found = SPIN_CATALOG_PRODUCTS.find(p => (p.sheet + "::" + p.name) === val);
+  if(!found) return;
+  SPIN_STATE.prizeProduct = {
+    name: found.name,
+    kategori: found.kategori,
+    price: found.price,
+    image: found.image,
+    sheet: found.sheet
+  };
+  SPIN_STATE.prizeName = found.name;
+  const prizeInput = document.getElementById("spinPrizeInput");
+  if(prizeInput) prizeInput.value = found.name;
+  renderSpinPrizePreview();
+  saveSpinPrize();
+}
+
+function renderSpinAdminUI(){
+  const listEl = document.getElementById("spinParticipantList");
+  const selEl = document.getElementById("spinTargetSel");
+  const countEl = document.getElementById("spinTotalCount");
+  const ticketsEl = document.getElementById("spinTotalTickets");
+  const prizeInput = document.getElementById("spinPrizeInput");
+  if(prizeInput && document.activeElement !== prizeInput){
+    prizeInput.value = SPIN_STATE.prizeName || "Secret Brainrot";
+  }
+  renderSpinPrizePreview();
+  if(!listEl || !selEl) return;
+
+  const parts = Array.isArray(SPIN_STATE.participants) ? SPIN_STATE.participants : [];
+  const totalTickets = parts.reduce((s, p) => s + (Number(p.tickets) || 0), 0);
+  if(countEl) countEl.textContent = String(parts.length);
+  if(ticketsEl) ticketsEl.textContent = String(totalTickets);
+
+  selEl.innerHTML = '<option value="FAIR_RANDOM">🎲 Acak Murni (Fair Random sesuai Jumlah Tiket)</option>';
+  parts.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.id;
+    opt.textContent = "🔒 Kunci Pemenang: " + p.username + " (" + p.tickets + " Tiket)";
+    selEl.appendChild(opt);
+  });
+  selEl.value = parts.some(p => p.id === SPIN_STATE.lockedWinnerId) ? SPIN_STATE.lockedWinnerId : "FAIR_RANDOM";
+
+  if(!parts.length){
+    listEl.innerHTML = '<p class="hint">Belum ada peserta di kloter ini. Tambahkan peserta di atas.</p>';
+    return;
+  }
+
+  listEl.innerHTML = parts.map((p, idx) => {
+    const pct = totalTickets > 0 ? ((Number(p.tickets) / totalTickets) * 100).toFixed(1) : "0.0";
+    const col = p.color || SPIN_COLORS[idx % SPIN_COLORS.length];
+    return '<div class="arow" style="margin-top:8px;">' +
+      '<div class="ainfo" style="display:flex;align-items:center;gap:10px;">' +
+        '<span style="width:14px;height:14px;border-radius:999px;background:' + col + ';display:inline-block;flex-shrink:0;border:1px solid rgba(255,255,255,.3);"></span>' +
+        '<div><b>' + escAkun(p.username) + '</b> <span style="color:#c084fc;font-weight:700;">(' + p.tickets + ' Tiket)</span>' +
+        '<div style="font-size:11.5px;color:var(--mut);">Peluang Menang: <b style="color:#38bdf8;">' + pct + '%</b></div></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;">' +
+        '<button type="button" class="ghost" style="width:auto;margin:0;padding:7px 12px;font-size:12px;" onclick="startSpinEdit(\'' + p.id + '\')">✏️ Edit</button>' +
+        '<button type="button" class="danger" style="width:auto;margin:0;padding:7px 12px;font-size:12px;" onclick="deleteSpinParticipant(\'' + p.id + '\')">🗑️ Hapus</button>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+}
+
+function loadSpinAdmin(){
+  try {
+    const raw = localStorage.getItem(SPIN_LOCAL_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(typeof parsed.prizeName === "string" && parsed.prizeName.trim()) SPIN_STATE.prizeName = parsed.prizeName.trim();
+      SPIN_STATE.prizeProduct = (parsed.prizeProduct && typeof parsed.prizeProduct === "object" && parsed.prizeProduct.name) ? parsed.prizeProduct : null;
+      if(Array.isArray(parsed.participants)) SPIN_STATE.participants = parsed.participants;
+      if(parsed.lockedWinnerId) SPIN_STATE.lockedWinnerId = parsed.lockedWinnerId;
+      if(parsed.spinEvent) SPIN_STATE.spinEvent = parsed.spinEvent;
+    }
+  } catch(e){}
+  renderSpinAdminUI();
+
+  fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq." + encodeURIComponent(SPIN_STATE_KEY), {
+    headers: sbH(),
+    cache: "no-store"
+  }).then(r => r.json()).then(rows => {
+    if(Array.isArray(rows) && rows[0] && rows[0].deskripsi){
+      const remote = JSON.parse(rows[0].deskripsi);
+      if(typeof remote.prizeName === "string" && remote.prizeName.trim()) SPIN_STATE.prizeName = remote.prizeName.trim();
+      SPIN_STATE.prizeProduct = (remote.prizeProduct && typeof remote.prizeProduct === "object" && remote.prizeProduct.name) ? remote.prizeProduct : null;
+      if(Array.isArray(remote.participants)) SPIN_STATE.participants = remote.participants;
+      if(remote.lockedWinnerId) SPIN_STATE.lockedWinnerId = remote.lockedWinnerId;
+      if(remote.spinEvent) SPIN_STATE.spinEvent = remote.spinEvent;
+      renderSpinAdminUI();
+      renderSpinPrizeSelector(document.getElementById("spinPrizeSearch") ? document.getElementById("spinPrizeSearch").value : "");
+    }
+  }).catch(() => {});
+
+  // Muat daftar produk READY (tidak sold out & stok > 0) dari katalog (Brainrot, Akun, Topup, Joki) untuk dipilih sebagai hadiah Spin
+  Promise.all(["brainrot", "akun", "topup", "joki"].map(tbl =>
+    fetch(SB_URL + "/rest/v1/" + tbl + "?select=name,kategori,price,stock,soldout,image,urutan&order=urutan.asc", { headers: sbH() })
+      .then(r => r.json())
+      .then(rows => {
+        const list = Array.isArray(rows) ? rows : [];
+        const catMap = {};
+        list.forEach(x => {
+          if(x && String(x.name || "").indexOf("CAT:") === 0 && x.image){
+            const k = String(x.kategori || String(x.name).slice(4)).trim();
+            catMap[k] = String(x.image).split("|").map(s => s.trim()).filter(Boolean)[0] || "";
+          }
+        });
+        return list.filter(x => {
+          if(!x || !x.name) return false;
+          const nm = String(x.name).trim();
+          if(nm.indexOf("CAT:") === 0 || nm === "INFO_TEKS") return false;
+          const isSoldOut = /^(ya|y|yes|habis|sold)/i.test(String(x.soldout || "").trim());
+          const st = Number(x.stock);
+          return !isSoldOut && isFinite(st) && st > 0;
+        }).map(x => {
+          const kat = String(x.kategori || "").trim();
+          const firstImg = String(x.image || "").split("|").map(s => s.trim()).filter(Boolean)[0] || catMap[kat] || "";
+          return {
+            name: String(x.name).trim(),
+            kategori: kat,
+            price: Number(x.price) || 0,
+            stock: Number(x.stock) || 0,
+            image: firstImg,
+            sheet: tbl
+          };
+        });
+      })
+      .catch(() => [])
+  )).then(lists => {
+    SPIN_CATALOG_PRODUCTS = [].concat.apply([], lists);
+    renderSpinPrizeSelector(document.getElementById("spinPrizeSearch") ? document.getElementById("spinPrizeSearch").value : "");
+  });
+}
+
+function saveSpinPrize(){
+  const input = document.getElementById("spinPrizeInput");
+  const sel = document.getElementById("spinPrizeProductSel");
+  const st = document.getElementById("statusSpinPrize");
+  const btn = document.getElementById("spinSavePrizeBtn");
+  const val = (input ? input.value : "").trim();
+  if(!val){
+    if(st) st.innerHTML = '<span class="err">Pilih produk atau isi nama hadiah terlebih dahulu!</span>';
+    return;
+  }
+  SPIN_STATE.prizeName = val;
+  if(!sel || !sel.value){
+    const matched = SPIN_CATALOG_PRODUCTS.find(p => p.name.toLowerCase() === val.toLowerCase());
+    if(matched){
+      SPIN_STATE.prizeProduct = {
+        name: matched.name,
+        kategori: matched.kategori,
+        price: matched.price,
+        image: matched.image,
+        sheet: matched.sheet
+      };
+    } else {
+      SPIN_STATE.prizeProduct = null;
+    }
+  } else if(SPIN_STATE.prizeProduct && SPIN_STATE.prizeProduct.name !== val){
+    const matched = SPIN_CATALOG_PRODUCTS.find(p => p.name.toLowerCase() === val.toLowerCase());
+    if(matched){
+      SPIN_STATE.prizeProduct = {
+        name: matched.name,
+        kategori: matched.kategori,
+        price: matched.price,
+        image: matched.image,
+        sheet: matched.sheet
+      };
+    } else {
+      SPIN_STATE.prizeProduct = null;
+      if(sel) sel.value = "";
+    }
+  }
+  renderSpinPrizePreview();
+  if(btn) btn.disabled = true;
+  if(st) st.textContent = "Menyimpan hadiah ke halaman /spin...";
+  persistSpinStateToSupabase(SPIN_STATE).then(ok => {
+    if(btn) btn.disabled = false;
+    if(st) st.innerHTML = ok
+      ? '<span class="ok">✅ Hadiah berhasil diatur menjadi: <b>' + escAkun(val) + '</b>!</span>'
+      : '<span class="ok">✅ Hadiah tersimpan lokal.</span>';
+  });
+}
+
+function startSpinEdit(id){
+  const p = (SPIN_STATE.participants || []).find(x => x.id === id);
+  if(!p) return;
+  document.getElementById("spinEditId").value = p.id;
+  document.getElementById("spinUserInput").value = p.username;
+  document.getElementById("spinTicketInput").value = p.tickets;
+  document.getElementById("spinFormTitle").textContent = "✏️ Edit Peserta: " + p.username;
+  document.getElementById("spinSaveUserBtn").textContent = "💾 Simpan Perubahan";
+  document.getElementById("spinCancelEditBtn").style.display = "inline-block";
+  document.getElementById("spinUserInput").focus();
+}
+
+function cancelSpinEdit(){
+  document.getElementById("spinEditId").value = "";
+  document.getElementById("spinUserInput").value = "";
+  document.getElementById("spinTicketInput").value = "1";
+  document.getElementById("spinFormTitle").textContent = "➕ Tambah / Edit Peserta Spin";
+  document.getElementById("spinSaveUserBtn").textContent = "➕ Tambah / Simpan Peserta";
+  document.getElementById("spinCancelEditBtn").style.display = "none";
+}
+
+function saveSpinParticipant(){
+  const editId = document.getElementById("spinEditId").value.trim();
+  const username = document.getElementById("spinUserInput").value.trim();
+  const tickets = Math.max(1, parseInt(document.getElementById("spinTicketInput").value, 10) || 1);
+  const st = document.getElementById("statusSpinUser");
+  const btn = document.getElementById("spinSaveUserBtn");
+
+  if(!username){
+    st.innerHTML = '<span class="err">Isi Username Roblox peserta terlebih dahulu!</span>';
+    return;
+  }
+
+  let parts = Array.isArray(SPIN_STATE.participants) ? SPIN_STATE.participants.slice() : [];
+  if(editId){
+    parts = parts.map(p => p.id === editId ? Object.assign({}, p, { username: username, tickets: tickets }) : p);
+  } else {
+    const existIdx = parts.findIndex(p => String(p.username).toLowerCase() === username.toLowerCase());
+    if(existIdx !== -1){
+      parts[existIdx] = Object.assign({}, parts[existIdx], { tickets: (Number(parts[existIdx].tickets) || 0) + tickets });
+    } else {
+      const col = SPIN_COLORS[parts.length % SPIN_COLORS.length];
+      parts.push({ id: "p_" + Date.now(), username: username, tickets: tickets, color: col });
+    }
+  }
+
+  SPIN_STATE.participants = parts;
+  cancelSpinEdit();
+  renderSpinAdminUI();
+
+  btn.disabled = true;
+  st.textContent = "Menyimpan ke halaman /spin...";
+  persistSpinStateToSupabase(SPIN_STATE).then(ok => {
+    btn.disabled = false;
+    st.innerHTML = ok
+      ? '<span class="ok">✅ Peserta tersimpan & langsung tampil di halaman /spin!</span>'
+      : '<span class="ok">✅ Tersimpan lokal.</span>';
+  });
+}
+
+function deleteSpinParticipant(id){
+  const p = (SPIN_STATE.participants || []).find(x => x.id === id);
+  if(!p) return;
+  if(!confirm("Hapus peserta \"" + p.username + "\" dari roda spin?")) return;
+
+  SPIN_STATE.participants = (SPIN_STATE.participants || []).filter(x => x.id !== id);
+  if(SPIN_STATE.lockedWinnerId === id) SPIN_STATE.lockedWinnerId = "FAIR_RANDOM";
+  renderSpinAdminUI();
+  persistSpinStateToSupabase(SPIN_STATE);
+}
+
+function resetSpinKloterAdmin(){
+  if(!confirm("Reset Kloter? Semua daftar peserta Lucky Spin saat ini akan dikosongkan.")) return;
+  SPIN_STATE.participants = [];
+  SPIN_STATE.lockedWinnerId = "FAIR_RANDOM";
+  SPIN_STATE.spinEvent = null;
+  renderSpinAdminUI();
+  persistSpinStateToSupabase(SPIN_STATE).then(() => {
+    const st = document.getElementById("statusSpinTrigger");
+    if(st) st.innerHTML = '<span class="ok">✅ Kloter berhasil di-reset (kosong)!</span>';
+  });
+}
+
+function changeSpinTarget(val){
+  SPIN_STATE.lockedWinnerId = val || "FAIR_RANDOM";
+  persistSpinStateToSupabase(SPIN_STATE);
+}
+
+function triggerLiveSpinFromAdmin(){
+  const parts = Array.isArray(SPIN_STATE.participants) ? SPIN_STATE.participants : [];
+  const st = document.getElementById("statusSpinTrigger");
+  const btn = document.getElementById("spinTriggerBtn");
+
+  if(!parts.length){
+    st.innerHTML = '<span class="err">Belum ada peserta! Tambahkan peserta terlebih dahulu.</span>';
+    return;
+  }
+
+  const totalTickets = parts.reduce((s, p) => s + (Number(p.tickets) || 0), 0);
+  if(totalTickets <= 0) return;
+
+  let currentAngle = 0;
+  const slices = parts.map((p, idx) => {
+    const t = Number(p.tickets) || 1;
+    const deg = (t / totalTickets) * 360;
+    const item = {
+      participant: Object.assign({}, p, { color: p.color || SPIN_COLORS[idx % SPIN_COLORS.length] }),
+      startAngle: currentAngle,
+      endAngle: currentAngle + deg
+    };
+    currentAngle += deg;
+    return item;
+  });
+
+  const lockedId = document.getElementById("spinTargetSel").value || SPIN_STATE.lockedWinnerId || "FAIR_RANDOM";
+  SPIN_STATE.lockedWinnerId = lockedId;
+
+  let targetSlice = null;
+  if(lockedId !== "FAIR_RANDOM"){
+    targetSlice = slices.find(s => s.participant.id === lockedId) || null;
+  }
+  if(!targetSlice){
+    const rand = Math.random() * totalTickets;
+    let cum = 0;
+    for(let i = 0; i < slices.length; i++){
+      cum += Number(slices[i].participant.tickets) || 1;
+      if(rand <= cum){
+        targetSlice = slices[i];
+        break;
+      }
+    }
+    if(!targetSlice) targetSlice = slices[slices.length - 1];
+  }
+
+  const span = targetSlice.endAngle - targetSlice.startAngle;
+  const targetLocalAngle = targetSlice.startAngle + span * (0.2 + Math.random() * 0.6);
+
+  const spinEvent = {
+    spinId: Date.now(),
+    targetLocalAngle: targetLocalAngle,
+    winner: targetSlice.participant,
+    triggeredAt: Date.now()
+  };
+
+  SPIN_STATE.spinEvent = spinEvent;
+  btn.disabled = true;
+  st.innerHTML = '<span class="ok">🎡 Sinyal terkirim! Roda sedang berputar di halaman /spin selama 6 detik...</span>';
+
+  persistSpinStateToSupabase(SPIN_STATE).then(() => {
+    setTimeout(() => {
+      btn.disabled = false;
+      st.innerHTML = '<span class="ok">🏆 Roda berhenti! Pemenang: <b>' + escAkun(targetSlice.participant.username) + '</b> (' + targetSlice.participant.tickets + ' Tiket)</span>';
+    }, 6200);
+  });
 }

@@ -14,7 +14,7 @@ if("serviceWorker" in navigator){
   const registerSiteServiceWorker = function(){
     navigator.serviceWorker.register("sw.js", { updateViaCache: "none" })
       .then(function(reg){
-        setInterval(function(){ reg.update().catch(function(){}); }, 60 * 1000);
+        setInterval(function(){ if(document.visibilityState === 'visible') reg.update().catch(function(){}); }, 15 * 60 * 1000);
         return reg.update();
       })
       .catch(function(){});

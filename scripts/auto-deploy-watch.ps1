@@ -5,6 +5,8 @@ $ErrorActionPreference = "Stop"
 $projectRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $deployScript = Join-Path $PSScriptRoot "deploy.ps1"
 $stateDirectory = Join-Path $env:LOCALAPPDATA "RockstarStore"
+$previousXdgConfigHome = $env:XDG_CONFIG_HOME
+$env:XDG_CONFIG_HOME = Join-Path $stateDirectory "wrangler-config"
 $logPath = Join-Path $stateDirectory "auto-deploy.log"
 $lockPath = Join-Path $stateDirectory "auto-deploy.lock"
 $pidPath = Join-Path $stateDirectory "auto-deploy.pid"
@@ -53,7 +55,18 @@ function Get-SourceSnapshot {
 try {
   [System.IO.File]::WriteAllText($pidPath, [string]$PID, [System.Text.Encoding]::ASCII)
   $baseline = Get-SourceSnapshot
-  Write-AutoDeployLog "Watcher aktif untuk $projectRoot"
+  $wranglerConfigPath = Join-Path $env:XDG_CONFIG_HOME ".wrangler\config\default.toml"
+  $wranglerConfigExists = Test-Path -LiteralPath $wranglerConfigPath
+  $wranglerConfigReadable = $false
+  if ($wranglerConfigExists) {
+    try {
+      $authFileStream = [System.IO.File]::OpenRead($wranglerConfigPath)
+      $authFileStream.Dispose()
+      $wranglerConfigReadable = $true
+    } catch {}
+  }
+  $watcherIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+  Write-AutoDeployLog "Watcher aktif untuk $projectRoot (identity=$watcherIdentity; userProfile=$env:USERPROFILE; appData=$env:APPDATA; authConfigExists=$wranglerConfigExists; authConfigReadable=$wranglerConfigReadable; authConfigPath=$wranglerConfigPath)."
 
   while ($true) {
     Start-Sleep -Seconds 2
@@ -74,8 +87,18 @@ try {
     Write-AutoDeployLog "Perubahan sumber terdeteksi; memulai build dan deploy."
     $commitMessage = "Auto deploy Rockstar.Store " + [DateTime]::Now.ToString("yyyy-MM-dd HH:mm:ss")
     try {
-      $output = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $deployScript -CommitMessage $commitMessage 2>&1 | ForEach-Object { [string]$_ })
-      $exitCode = $LASTEXITCODE
+      # Native tools can emit warnings on stderr; keep the watcher alive while
+      # capturing them so a warning does not truncate the deploy process.
+      $previousDeployErrorActionPreference = $ErrorActionPreference
+      try {
+        $ErrorActionPreference = "Continue"
+        # Run deploy in this process so Wrangler keeps the same interactive-user
+        # profile and OAuth context as the scheduled watcher.
+        $output = @(& $deployScript -CommitMessage $commitMessage 2>&1 | ForEach-Object { [string]$_ })
+        $exitCode = if ($LASTEXITCODE -is [int]) { $LASTEXITCODE } else { 0 }
+      } finally {
+        $ErrorActionPreference = $previousDeployErrorActionPreference
+      }
     } catch {
       $output = @($_.Exception.Message)
       $exitCode = 1
@@ -91,6 +114,7 @@ try {
   Write-AutoDeployLog ("Watcher berhenti karena error: " + $_.Exception.Message)
   throw
 } finally {
+  $env:XDG_CONFIG_HOME = $previousXdgConfigHome
   if (Test-Path -LiteralPath $pidPath) { Remove-Item -LiteralPath $pidPath -Force -ErrorAction SilentlyContinue }
   if ($lockStream) { $lockStream.Dispose() }
 }
