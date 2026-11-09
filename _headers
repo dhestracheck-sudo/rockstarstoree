@@ -1,2 +1,35 @@
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+/optimized/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/*.webp
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.png
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.jpg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.jpeg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.svg
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.ico
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff
+  Cache-Control: public, max-age=31536000, immutable
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/site-scripts/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400

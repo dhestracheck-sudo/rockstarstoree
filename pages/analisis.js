@@ -1,7 +1,15 @@
 import Head from 'next/head';
 import PageScripts from '../components/PageScripts';
+import { Oswald } from "next/font/google";
 
-const pageScripts = ["/site-scripts/analisis-01.js"];
+const oswald = Oswald({
+  weight: ["600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-oswald",
+});
+
+const pageScripts = ["/site-scripts/analisis-01.js?v=autotrade-v3-20261105"];
 
 export default function AnalisisPage() {
   return (
@@ -27,7 +35,7 @@ export default function AnalisisPage() {
         {"\n"}
       </Head>
       {"\n"}
-      <div className="wrap">
+      <div className={`wrap ${oswald.variable}`}>
         {"\n  "}
         <h1>
           {"📊 Analisis Rockstar.Store"}

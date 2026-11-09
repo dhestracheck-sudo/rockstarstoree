@@ -2,7 +2,7 @@
    - Gambar: tampilkan cache instan + refresh di belakang -> foto baru dari admin
      tampil pada kunjungan berikutnya (tidak pernah jadi basi selamanya).
    - Naikkan CACHE setiap rilis agar HP membuang file lama yang tersimpan. */
-const CACHE = "rockstar-v11";
+const CACHE = "rockstar-v20";
 const CORE = ["./", "faq/", "manifest.json", "ROCKSTARICON.png"];
 const IMG_MAX = 400; // batasi jumlah gambar cache biar storage HP tidak bengkak
 
@@ -35,6 +35,20 @@ self.addEventListener("fetch", e => {
   if(e.request.method !== "GET" || url.origin !== location.origin) return;
   // API Supabase selalu live
   if(url.hostname.indexOf("supabase.co") !== -1) return;
+
+  // Navigasi HTML: selalu Network-First tanpa stale cache browser saat online
+  if(e.request.mode === "navigate"){
+    e.respondWith(
+      fetch(e.request, { cache: "no-cache" }).then(r => {
+        if(r && r.ok){
+          const cp = r.clone();
+          caches.open(CACHE).then(c => c.put(e.request, cp)).catch(() => {});
+        }
+        return r;
+      }).catch(() => caches.match(e.request).then(hit => hit || caches.match("./")))
+    );
+    return;
+  }
   const isImg = /\.(png|jpg|jpeg|webp|gif|svg)$/i.test(url.pathname);
   if(isImg){
     const net = fetch(e.request).then(r => {

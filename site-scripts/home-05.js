@@ -15,7 +15,7 @@ var megaMotionPreference = window.matchMedia ? window.matchMedia("(prefers-reduc
 
       l.className = "mega-logo";
 
-      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="26px" alt="Rockstar.Store" width="500" height="500" loading="lazy">rockstar.store';
+      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="18px" alt="Rockstar.Store" width="500" height="500" loading="lazy"><span>rockstar.store</span>';
 
       s.insertBefore(l, s.firstChild);
 
@@ -252,11 +252,20 @@ function fitMega(){
 
     if(!slides.length) return;
 
+    if(window.innerWidth <= 760){
+      slides.forEach(function(s){
+        s.style.height = "";
+        s.style.minHeight = "";
+        s.style.maxHeight = "";
+      });
+      return;
+    }
+
     let max = 0;
 
     const originalStyles = slides.map(function(slide){
 
-      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight };
+      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight, maxHeight: slide.style.maxHeight };
 
     });
 
@@ -267,6 +276,8 @@ function fitMega(){
       slide.style.height = "auto";
 
       slide.style.minHeight = "0";
+
+      slide.style.maxHeight = "none";
 
     });
 
@@ -284,13 +295,19 @@ function fitMega(){
 
       slide.style.minHeight = originalStyles[index].minHeight;
 
+      slide.style.maxHeight = originalStyles[index].maxHeight;
+
     });
 
     if(!max) return;
 
-    const H = Math.max(max, window.innerWidth <= 760 ? 340 : 380);
+    const H = Math.max(max, 380);
 
-    slides.forEach(function(s){ s.style.height = H + "px"; });
+    slides.forEach(function(s){
+      s.style.height = H + "px";
+      s.style.minHeight = "380px";
+      s.style.maxHeight = "none";
+    });
 
   }catch(e){}
 

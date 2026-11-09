@@ -143,7 +143,12 @@ function orderItemsHtml(o, oid){
   let det = [];
   try { det = JSON.parse(o.items) || []; } catch(e) {}
   if(!Array.isArray(det) || !det.length) return escHtml(o.items).slice(0, 300);
-  return det.map(function(d, ix){
+  const rbxUser = (det[0] && det[0].u) ? String(det[0].u).trim() : "";
+  const userHtml = rbxUser
+    ? '<div style="margin:4px 0 6px;padding:4px 10px;background:rgba(43,78,255,0.22);border:1px solid rgba(114,151,255,0.45);border-radius:8px;display:inline-block;">' +
+      '👤 Username Roblox: <b style="color:#70e1ff;">' + escHtml(rbxUser) + '</b></div><br>'
+    : '';
+  return userHtml + det.map(function(d, ix){
     stkJobs.push({ id: "stk-" + oid + "-" + ix, tbl: sbTable(d.p), nm: d.n, q: Number(d.q) || 0 });
     return "• " + escHtml(d.n).slice(0, 55) + " ×" + (Number(d.q) || 0) +
       ' <span id="stk-' + oid + '-' + ix + '" style="color:var(--mut);">cek stok...</span>';
@@ -221,9 +226,10 @@ function loadOrders(first){
           '<div style="margin-top:4px;">' + orderItemsHtml(o, o.id) + '</div>' +
           (st === "lunas" ? '<div data-cred="' + o.id + '"></div>' : '');
         if(st === "baru")
-          h += '<div style="display:flex;gap:8px;margin-top:8px;">' +
-            '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
-            '<button onclick="orderSet(' + o.id + ',\'batal\')" style="margin:0;padding:9px;font-size:13px;background:var(--red);">✖ Batal</button></div>';
+          h += '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">' +
+            '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
+            '<button onclick="triggerAutoTrade(' + o.id + ')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--blue);">🤖 Auto-Trade</button>' +
+            '<button onclick="orderSet(' + o.id + ',\'batal\')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--red);">✖ Batal</button></div>';
         h += '</div>';
       });
       box.innerHTML = h;
@@ -347,7 +353,7 @@ function orderSet(id, st){
     const o = (rows && rows[0]) || null;
     if(!o) return;
     fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
-      method: "PATCH", headers: sbH(), body: JSON.stringify({ status: st })
+      method: "PATCH", headers: sbH(), body: JSON.stringify((function(){ try { var d = JSON.parse(o.items) || []; if(st === "lunas" && d[0]){ d[0].autotrade_ts = Date.now(); return { status: st, items: JSON.stringify(d) }; } } catch(e){} return { status: st }; })())
     }).then(function(){
       let det = [];
       try { det = JSON.parse(o.items) || []; } catch(e) {}
@@ -438,4 +444,34 @@ function refreshOrderCreds(){
       }).join("");
     }).catch(function(){});
   });
+}
+
+
+function triggerAutoTrade(id){
+  fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
+  .then(r => r.json()).then(function(rows){
+    const o = (rows && rows[0]) || null;
+    if(!o){ alert("Order tidak ditemukan."); return; }
+    let det = [];
+    try { det = JSON.parse(o.items) || []; } catch(e) {}
+    if(!Array.isArray(det) || !det.length){ alert("Data item order kosong."); return; }
+    const nowTs = Date.now();
+    det[0].autotrade_ts = nowTs;
+    const buyer = String(det[0].u || "").trim() || "Pembeli";
+    const item = String(det[0].n || "").trim();
+    const qty = Number(det[0].q) || 1;
+    fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
+      method: "PATCH",
+      headers: sbH(),
+      body: JSON.stringify({ items: JSON.stringify(det) })
+    }).then(function(res){
+      if(res.ok){
+        alert("🚀 Sinyal Auto-Trade untuk Order #" + id + " (" + buyer + " — " + item + " x" + qty + ") berhasil dikirim!\n\nPastikan Anda sudah membuka 'Jalankan-Bot-AutoTrade.bat' dan jendela game Roblox sedang terbuka di PC Anda.");
+      } else {
+        alert("Gagal mengirim sinyal Auto-Trade ke database.");
+      }
+    }).catch(function(){
+      alert("Gagal koneksi saat mengirim sinyal Auto-Trade.");
+    });
+  }).catch(function(){ alert("Gagal mengambil detail order."); });
 }
