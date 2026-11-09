@@ -451,7 +451,58 @@ body .site-footer-copy strong {
     margin: 0 auto !important;
   }
 
-  body .s4 .mega-char,
+  body .s4 .mega-in {
+    position: static !important;
+    z-index: 2;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 4px 0 74px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    text-align: center !important;
+  }
+
+  body .s4 .mega-titlebox {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    flex: 0 0 46% !important;
+    width: 46% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  body .s4 .mega-title-g {
+    font-size: clamp(14px, 4.2vw, 19px) !important;
+  }
+
+  body .s4 .mega-ribbon {
+    font-size: clamp(6.5px, 1.9vw, 8px) !important;
+    padding: 3px 6px !important;
+    margin-top: 2px !important;
+    white-space: nowrap !important;
+  }
+
+  body .s4 .mega-char {
+    display: flex !important;
+    position: absolute !important;
+    left: 0px !important;
+    bottom: 0 !important;
+    top: 18px !important;
+    width: 74px !important;
+    max-width: 74px !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
   body .s6 .mega-char {
     display: flex !important;
     position: absolute !important;
@@ -476,7 +527,21 @@ body .site-footer-copy strong {
   }
 
   body .s4 .mega-steps {
-    display: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 0 0 52% !important;
+    width: 52% !important;
+    min-width: 0 !important;
+    gap: 4px !important;
+    text-align: left !important;
+    z-index: 2 !important;
+  }
+
+  body .s4 .mega-step {
+    font-size: clamp(6.8px, 1.9vw, 8.2px) !important;
+    line-height: 1.2 !important;
+    padding: 4px 6px !important;
+    border-radius: 6px !important;
   }
 
   body .s6 .mega-phone,
