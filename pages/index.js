@@ -11,7 +11,7 @@ import HomeArticles from '../components/HomeArticles';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=checkout-clean-20261110", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=faqorder-20261110", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
 
 
 
@@ -1145,7 +1145,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
         <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-20261031" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=checkout-clean-20261110" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=faqorder-20261110" />
 
         {"\r\n"}
 

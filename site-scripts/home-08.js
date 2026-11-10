@@ -1993,22 +1993,19 @@ function checkout(){
       <label for="checkoutRbxUser" style="display:block;font-size:11.5px;font-weight:700;color:#9bb5ff;margin-bottom:5px;">🎮 Username Roblox (Untuk Pengiriman Item / Topup):</label>
       <input id="checkoutRbxUser" type="text" value="${savedRbxUser}" placeholder="Contoh: @BREAKxBooy" autocomplete="off" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(153,178,255,0.28);background:#081020;color:#fff;font-size:13.5px;outline:none;box-sizing:border-box;">
     </div>`;
-  const isTopupItem = (p) => {
-    const pg = String(p.page || "").toLowerCase();
-    const nm = String(p.name || "").toLowerCase();
-    return pg === "topup" || nm.includes("robux") || nm.includes("premium") || nm.includes("bundle") || nm.includes("gamepass");
-  };
-  const hasNonTopup = cart.some(p => !isTopupItem(p));
-  const nonTopupTotal = cart.filter(p => !isTopupItem(p)).reduce((s, p) => s + (Number(p.price) || 0), 0);
-  const spinTicketsEarned = Math.floor(nonTopupTotal / 50000);
-
-  if (hasNonTopup) {
-    if (spinTicketsEarned > 0) {
-      previewHTML += `<div style="margin:10px 0;padding:10px 12px;border-radius:11px;background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(168,85,247,.16));border:1px solid rgba(250,204,21,.4);font-size:12px;color:#fef08a;line-height:1.45;">🎟️ <b>Selamat!</b> Total belanja ini otomatis mendapatkan <b>${spinTicketsEarned}x Kupon Lucky Spin Grand Prize</b> (Minimal Belanja Rp 50,000 / Tiket)</div>`;
-    } else {
-      previewHTML += `<div style="margin:10px 0;padding:9px 12px;border-radius:11px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.28);font-size:11.5px;color:#e9d5ff;line-height:1.45;">🎟️ <b>Info Lucky Spin:</b> Minimal Belanja <b>Rp 50,000 / Tiket</b> otomatis dapat 1x Kupon Spin Grand Prize!</div>`;
-    }
-  }
+  previewHTML += `<div style="margin:10px 0;padding:10px 12px;border-radius:11px;background:rgba(37,99,235,0.14);border:1px solid rgba(96,165,250,0.32);font-size:12px;color:#cbd5e1;line-height:1.5;text-align:left;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:4px;">
+      <span style="font-weight:800;color:#60a5fa;font-size:12px;display:inline-flex;align-items:center;gap:5px;">
+        💡 <b>Panduan Cara Order:</b>
+      </span>
+      <a href="/faq" target="_blank" rel="noopener noreferrer" style="font-size:11px;font-weight:700;color:#38bdf8;text-decoration:none;display:inline-flex;align-items:center;gap:4px;background:rgba(56,189,248,0.14);padding:2px 8px;border-radius:6px;border:1px solid rgba(56,189,248,0.3);">
+        📖 Baca FAQ Order ↗
+      </a>
+    </div>
+    <div style="font-size:11.5px;color:#cbd5e1;">
+      Tekan tombol <b>"✓ Kirim ke Admin"</b> untuk mengirim detail pesanan ke WhatsApp. Admin akan langsung memproses dan mengirim nomor rekening / QRIS pembayaran resmi.
+    </div>
+  </div>`;
 
   const m = document.createElement('div');
   m.id = 'checkoutModal';
