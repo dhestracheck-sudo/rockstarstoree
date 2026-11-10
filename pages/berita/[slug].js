@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
-import { ARTICLES, getArticleBySlug, getAllArticleSlugs } from "../../data/articles";
+import { getArticleBySlug, getAllArticleSlugs } from "../../data/articles";
+import { ARTICLES_META } from "../../data/articles-meta";
 
 export async function getStaticPaths() {
   const slugs = getAllArticleSlugs();
@@ -13,7 +14,7 @@ export async function getStaticProps({ params }) {
   if (!article) {
     return { notFound: true };
   }
-  const relatedArticles = ARTICLES.filter((a) => a.slug !== params.slug).slice(0, 2);
+  const relatedArticles = ARTICLES_META.filter((a) => a.slug !== params.slug).slice(0, 2);
   return {
     props: {
       article,
@@ -168,8 +169,11 @@ export default function BeritaDetail({ article, relatedArticles }) {
               <img
                 src={article.image}
                 alt={article.title}
+                width="860"
+                height="420"
                 loading="eager"
                 decoding="async"
+                fetchPriority="high"
               />
             </div>
 
@@ -223,7 +227,7 @@ export default function BeritaDetail({ article, relatedArticles }) {
               <div className="related-grid">
                 {relatedArticles.map((rel) => (
                   <Link href={`/berita/${rel.slug}`} className="related-card" key={rel.slug}>
-                    <img src={rel.image} alt={rel.title} loading="lazy" />
+                    <img src={rel.image} alt={rel.title} width="80" height="80" loading="lazy" decoding="async" />
                     <div className="related-card-info">
                       <span className="related-badge" style={{ color: rel.categoryColor }}>
                         {rel.category}

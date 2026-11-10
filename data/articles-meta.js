@@ -400,3 +400,5 @@ export const ARTICLES_META = [
     "image": "/LEMPAR PALU FOR BRAINROT DISPLAY.webp"
   }
 ];
+
+export const HOME_ARTICLES = ARTICLES_META.slice(0, 8);

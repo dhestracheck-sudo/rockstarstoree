@@ -1,9 +1,9 @@
 import React from "react";
-import { ARTICLES_META } from "../data/articles-meta";
+import { HOME_ARTICLES } from "../data/articles-meta";
 
 export default function HomeArticles() {
-  // Ambil artikel terbaru untuk slider horizontal yang kaya informasi
-  const articles = ARTICLES_META.slice(0, 8);
+  // Ambil artikel terbaru untuk slider horizontal yang kaya informasi (hanya 8 artikel = ultra-ringan <2KB)
+  const articles = HOME_ARTICLES;
 
   return (
     <section className="home-articles-section" aria-labelledby="homeArticlesTitle">

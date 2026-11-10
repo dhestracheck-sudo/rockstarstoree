@@ -1,8 +1,17 @@
 import Head from "next/head";
 import Link from "next/link";
-import { ARTICLES } from "../../data/articles";
+import { ARTICLES_META } from "../../data/articles-meta";
 
-export default function BeritaPortal() {
+export async function getStaticProps() {
+  return {
+    props: {
+      articles: ARTICLES_META,
+    },
+    revalidate: 3600,
+  };
+}
+
+export default function BeritaPortal({ articles = ARTICLES_META }) {
   const portalJsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -77,14 +86,17 @@ export default function BeritaPortal() {
           </section>
 
           <section className="news-grid">
-            {ARTICLES.map((article, idx) => (
+            {articles.map((article, idx) => (
               <article className="news-card" key={article.slug}>
                 <Link href={`/berita/${article.slug}`} className="news-card-media">
                   <img
                     src={article.image}
                     alt={article.title}
-                    loading={idx === 0 ? "eager" : "lazy"}
+                    width="340"
+                    height="190"
+                    loading={idx < 2 ? "eager" : "lazy"}
                     decoding="async"
+                    fetchPriority={idx === 0 ? "high" : "low"}
                   />
                   <span className="news-card-badge" style={{ backgroundColor: article.categoryColor }}>
                     {article.category}
@@ -242,6 +254,8 @@ export default function BeritaPortal() {
           margin-bottom: 50px;
         }
         .news-card {
+          content-visibility: auto;
+          contain-intrinsic-size: 380px;
           background: linear-gradient(150deg, #0e1b3d 0%, #081024 100%);
           border: 1px solid rgba(59, 130, 246, 0.35);
           border-radius: 18px;
