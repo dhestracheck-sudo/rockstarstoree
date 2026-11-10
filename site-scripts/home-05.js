@@ -95,7 +95,8 @@ function jokiStarsFill(){
 
     let h = "";
 
-    for (let i = 0; i < 46; i++) {
+    const starCount = (window.innerWidth <= 768) ? 22 : 46;
+    for (let i = 0; i < starCount; i++) {
 
       const g = Math.random() < 0.18 ? (Math.random() < 0.6 ? " g1" : " g2") : "";
 

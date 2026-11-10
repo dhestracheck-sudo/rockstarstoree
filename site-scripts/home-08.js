@@ -991,7 +991,7 @@ function paintItems(preserveScrollPosition){
 
     `<div class="itemgrid${akunCls}">` + category.items.map((_, j) => j < shownN ? itemCard(categories, shownCat, j) : "").join("") + `</div>` +
 
-    (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button class="btn-ghost" onclick="moreItems()">${tr("more_a")} (${category.items.length - shownN} ${tr("more_b")})</button></div>` : ``);
+    (category.items.length > shownN ? `<div style="text-align:center;margin:22px 0;"><button id="moreItemsBtn" class="btn-ghost" onclick="moreItems()">${tr("more_a")} (${category.items.length - shownN} ${tr("more_b")})</button></div>` : ``);
 
   if ((isJokiCat || isAkunCat || isBrainrotCat) && typeof jokiStarsFill === "function") jokiStarsFill();
 
@@ -1000,7 +1000,21 @@ function paintItems(preserveScrollPosition){
   else scrollToCatalog("instant");
 
   watchViews();
+  watchMoreItemsBtn();
 
+}
+
+let moreItemsObs = null;
+function watchMoreItemsBtn(){
+  try {
+    if(moreItemsObs) moreItemsObs.disconnect();
+    const btn = document.getElementById("moreItemsBtn");
+    if(!btn || typeof IntersectionObserver === "undefined") return;
+    moreItemsObs = new IntersectionObserver(function(entries){
+      if(entries[0] && entries[0].isIntersecting){ moreItemsObs.disconnect(); moreItems(); }
+    }, { rootMargin: "400px" });
+    moreItemsObs.observe(btn);
+  } catch(e){}
 }
 
 function moreItems(){
@@ -2890,7 +2904,7 @@ function loadCached(sheet){
 
     const o = JSON.parse(raw);
 
-    if(!o || !o.t || (Date.now() - o.t) > 15 * 60 * 1000) return [];
+    if(!o || !o.t || (Date.now() - o.t) > 7 * 24 * 60 * 60 * 1000) return [];
 
     return Array.isArray(o.data) ? o.data : [];
 

@@ -92,7 +92,7 @@ function brandLetters(){
 
 }
 
-try { brandLetters(); setInterval(brandLetters, 7000); } catch(e) {}
+try { brandLetters(); setInterval(function(){ if(document.visibilityState === 'visible') brandLetters(); }, 7000); } catch(e) {}
 
 (function pwaInit(){
 

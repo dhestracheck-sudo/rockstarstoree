@@ -1,5 +1,5 @@
 /* Banner homepage: biru semua + kilau bergerak + gambar kecil. Ringan, tanpa file baru. */
-.banners .banner { position: relative; overflow: hidden; }
+.banners .banner { position: relative; overflow: hidden; contain: paint; }
 .banners .banner::before {
   content: "";
   position: absolute;
@@ -9,7 +9,7 @@
   animation: banner-streak 13s linear infinite;
 }
 @keyframes banner-streak {
-  to { transform: translateX(190px); }
+  to { transform: translate3d(190px, 0, 0); }
 }
 .banners .banner::after {
   position: absolute;
@@ -18,14 +18,14 @@
   font-size: 96px;
   line-height: 1;
   opacity: 0.2;
-  transform: rotate(-10deg);
+  transform: rotate(-10deg) translate3d(0, 0, 0);
   pointer-events: none;
-  filter: saturate(1.2) drop-shadow(0 0 14px rgba(80, 140, 255, 0.5));
+  text-shadow: 0 0 14px rgba(80, 140, 255, 0.5);
   animation: banner-float 5s ease-in-out infinite;
 }
 @keyframes banner-float {
-  0%, 100% { transform: rotate(-10deg) translateY(0); }
-  50% { transform: rotate(-10deg) translateY(-9px); }
+  0%, 100% { transform: rotate(-10deg) translate3d(0, 0, 0); }
+  50% { transform: rotate(-10deg) translate3d(0, -9px, 0); }
 }
 .banners .banner:nth-child(1) {
   background: linear-gradient(135deg, #0a1440 0%, #123a8f 60%, #0b2f7a 100%);
@@ -50,6 +50,8 @@
 .banners .banner:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); }
 @media (max-width: 760px) {
   .banners .banner::after { font-size: 72px; bottom: -14px; }
+  /* Matikan animasi diagonal tak terbatas di kartu pada layar HP agar scroll 60FPS mulus */
+  .banners .banner::before { animation: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .banners .banner::before, .banners .banner::after { animation: none; }
