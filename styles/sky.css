@@ -20,18 +20,17 @@
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
+  background-image: url("/snowflake-1.svg");
   opacity: 0;
   animation: snow-fall var(--d, 10s) linear var(--dl, 0s) infinite;
   will-change: transform, opacity;
   backface-visibility: hidden;
 }
 .snow-flakes i:nth-child(odd),
-.sakura-petals i:nth-child(odd) {
-  background-image: url("/snowflake-1.svg");
-}
+.sakura-petals i:nth-child(odd),
 .snow-flakes i:nth-child(even),
 .sakura-petals i:nth-child(even) {
-  background-image: url("/snowflake-2.svg");
+  background-image: url("/snowflake-1.svg");
 }
 .snow-flakes i:nth-child(3n),
 .sakura-petals i:nth-child(3n) {
