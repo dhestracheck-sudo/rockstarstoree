@@ -1,5 +1,239 @@
 export const ARTICLES = [
   {
+    slug: "cara-cepat-jadi-sepuh-steal-an-egg-roblox-koin-max",
+    title: "Cara Cepat Jadi Sepuh di Steal an Egg Roblox: Trik Panen Triliunan Koin & Level Max",
+    excerpt: "Mau cepat punya gelar Sepuh di Steal an Egg? Ini panduan rute farming koin tercepat, urutan upgrade tas, dan trik mencapai level maksimal dalam waktu singkat!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:00:00+07:00",
+    author: "Min Rock - Egg Master",
+    readTime: "5 menit baca",
+    views: "34.2K",
+    image: "/+1 MENUMBUHKAN LENGAN DISPLAY.webp",
+    tags: ["Steal an Egg", "Sepuh Steal an Egg", "Koin Max Steal an Egg", "Level Max Roblox", "Tips Steal an Egg"],
+    contentHtml: `
+      <p class="lead">Game <strong>Steal an Egg</strong> saat ini menjadi fenomena game nomor 1 di Roblox dengan ratusan ribu pemain aktif setiap hari. Kecepatan reaksi mencuri telur dari sarang monster raksasa dan mengumpulkan koin triliunan membuat game ini sangat seru. Simak panduan cepat jadi Sepuh di Steal an Egg berikut!</p>
+
+      <h2>1. Prioritas Upgrade Tas & Kecepatan Lari</h2>
+      <p>Banyak pemula salah menghabiskan koin awal untuk gacha telur murah. Kunci utama adalah menaikkan kapasitas <strong>Backpack (Tas)</strong> dan <strong>Speed (Kecepatan Lari)</strong> terlebih dahulu agar kamu bisa mengangkut lebih banyak telur sekaligus kabur dari kejaran monster penjaga sarang.</p>
+
+      <h2>2. Rute Farming Koin Paling Efisien</h2>
+      <p>Fokuslah mengumpulkan koin di zona terluar sampai kamu mampu membeli akses ke <em>Volcano Zone</em> atau <em>Alien Nest</em>. Koin dan telur di zona tingkat lanjut bernilai jutaan kali lipat dibanding zona awal.</p>
+
+      <div class="cta-card safe-theme">
+        <div class="cta-content">
+          <h3>👑 Mau Langsung Punya Pet Sepuh di Steal an Egg?</h3>
+          <p>Capek grinding berhari-hari? Di <strong>Rockstar Store</strong>, kamu bisa langsung mendapatkan Pet Secret, Yeti Inferno OG, dan akun Steal an Egg siap tempur dengan garansi 100%!</p>
+          <div class="cta-actions">
+            <a href="/?tab=brainrot" class="cta-btn primary">Cek Katalog Pet Steal an Egg 🔥</a>
+            <a href="/?tab=akun" class="cta-btn secondary">Pilih Akun Sepuh Siap Pakai 🛡️</a>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    slug: "daftar-telur-dan-peluang-mutasi-steal-an-egg-roblox",
+    title: "Daftar Lengkap Telur & Peluang Mutasi di Steal an Egg: Golden, Rainbow, & Void",
+    excerpt: "Berapa persentase peluang dapat mutasi Rainbow di Steal an Egg? Simak daftar seluruh jenis telur dari Basic Egg hingga Void Egg beserta pengali kekuatannya!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:05:00+07:00",
+    author: "Min Rock - Mutation Specialist",
+    readTime: "5 menit baca",
+    views: "31.8K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Telur Steal an Egg", "Mutasi Rainbow", "Golden Mutation", "Void Egg Roblox"],
+    contentHtml: `
+      <p class="lead">Mutasi adalah faktor utama penentu harga dan kekuatan pet di Steal an Egg. Menetaskan telur dengan status mutasi langka akan melipatgandakan statistik monster secara drastis!</p>
+
+      <h2>1. Tingkatan Mutasi & Pengali Statistik</h2>
+      <ul>
+        <li><strong>Golden Mutation (Pengali 2x):</strong> Warna kuning berkilau dengan peluang 1 banding 50 penetasan.</li>
+        <li><strong>Rainbow Mutation (Pengali 5x):</strong> Warna pelangi dinamis dengan peluang 1 banding 500 penetasan.</li>
+        <li><strong>Void / Transcendent Mutation (Pengali 10x):</strong> Mutasi terlangka dengan aura hitam ungu yang membuat monster memiliki kekuatan hingga kuadriliun!</li>
+      </ul>
+    `
+  },
+  {
+    slug: "lokasi-sarang-telur-raksasa-zona-rahasia-steal-an-egg",
+    title: "Lokasi Sarang Telur Raksasa & Zona Rahasia di Steal an Egg Roblox (Peta Lengkap)",
+    excerpt: "Ada sarang telur tersembunyi dengan nilai koin triliunan! Ini peta lokasi pintu rahasia di balik air terjun lava dan cara memasukinya tanpa terkena jebakan.",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#3b82f6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:10:00+07:00",
+    author: "Min Rock - Secret Hunter",
+    readTime: "4 menit baca",
+    views: "29.4K",
+    image: "/BABAS DISPLAY.webp",
+    tags: ["Sarang Telur Steal an Egg", "Zona Rahasia", "Secret Map Roblox", "Telur Raksasa"],
+    contentHtml: `
+      <p class="lead">Selain zona publik yang ramai, Steal an Egg memiliki beberapa <strong>Secret Nests (Sarang Rahasia)</strong> yang dijaga monster bos berukuran raksasa. Mengetahui rute masuknya adalah kunci memanen telur bernilai fantastis!</p>
+
+      <h2>1. Sarang Rahasia di Bawah Air Terjun Kristal</h2>
+      <p>Di tepi tebing Crystal Mountain, terdapat celah di balik air terjun biru. Lompati batu pijakan tersembunyi dengan timing tepat untuk menemukan sarang telur Prismatic rahasia.</p>
+    `
+  },
+  {
+    slug: "tier-list-pet-terkuat-steal-an-egg-mythic-godly",
+    title: "Tier List Pet Terkuat di Steal an Egg 2026: Dari Kasta Mythic hingga Godly Transcendent",
+    excerpt: "Monster mana yang menghasilkan koin paling deras per detik? Simak tier list pet Steal an Egg terbaru mulai dari Yeti Inferno, Mega Kitsune, hingga Cosmic Dragon!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:15:00+07:00",
+    author: "Min Rock - Tier Master",
+    readTime: "5 menit baca",
+    views: "38.1K",
+    image: "/BABAS YETI 145 M OG.webp",
+    tags: ["Tier List Steal an Egg", "Pet Terkuat Steal an Egg", "Yeti Inferno", "Pet Godly Roblox"],
+    contentHtml: `
+      <p class="lead">Dengan ratusan varian monster yang bisa ditetaskan, memiliki pet dengan stats tier teratas adalah pembeda nyata antara pemain biasa dan para 'Sultan' di Steal an Egg.</p>
+
+      <h2>1. Tier SSS (Godly & Transcendent)</h2>
+      <ul>
+        <li><strong>Yeti Inferno OG:</strong> Kemampuan pasif membakar sarang dan menduplikasi perolehan koin telur hingga 10x lipat.</li>
+        <li><strong>Mega Kitsune Prismatic:</strong> Memiliki kecepatan mencuri telur instan dan aura pelangi pelindung dari serangan monster penjaga.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "trik-curi-telur-sarang-monster-steal-an-egg-tanpa-ketahuan",
+    title: "Trik Solo Curi Telur dari Sarang Monster di Steal an Egg Tanpa Ketahuan (Stealth Tactic)",
+    excerpt: "Sering mati diterkam monster raksasa saat mengambil telur? Kuasai trik timing mengendap-endap, pola rotasi pandangan monster, dan sudut lari teraman!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:20:00+07:00",
+    author: "Min Rock - Stealth Pro",
+    readTime: "4 menit baca",
+    views: "27.5K",
+    image: "/BE FALSH 20 T.webp",
+    tags: ["Trik Curi Telur", "Monster Steal an Egg", "Tips Solo Steal an Egg", "Stealth Tactic"],
+    contentHtml: `
+      <p class="lead">Monster penjaga sarang di Steal an Egg memiliki radius pandangan (*Cone of Vision*) dan waktu istirahat tidur. Mengetahui ritme gerakannya akan membuatmu bisa mengambil telur raksasa tanpa tergores sedikit pun!</p>
+
+      <h2>1. Perhatikan Efek Mendengkur Monster</h2>
+      <p>Saat monster tidur (ditandai dengan gelembung 'Zzz' di atas kepalanya), kamu memiliki jendela waktu aman selama 10 detik untuk masuk, mengambil telur, dan segera melompat ke luar garis sarang.</p>
+    `
+  },
+  {
+    slug: "kode-redeem-steal-an-egg-terbaru-hari-ini-gratis-potion",
+    title: "Daftar Kode Redeem Steal an Egg Terbaru Hari Ini: Klaim Lucky Potion & Koin Gratis",
+    excerpt: "Klaim kode promosi Steal an Egg aktif hari ini! Dapatkan bonus ramuan keberuntungan (Super Luck Potion), koin gratis, dan kecepatan lari instan.",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:25:00+07:00",
+    author: "Min Rock - Code Hunter",
+    readTime: "4 menit baca",
+    views: "42.3K",
+    image: "/BE FALSH DISPLAY.webp",
+    tags: ["Kode Redeem Steal an Egg", "Code Steal an Egg 2026", "Free Potion Roblox", "Koin Gratis"],
+    contentHtml: `
+      <p class="lead">Pengembang Steal an Egg rutin merilis kode redeem hadiah gratis setiap kali mencapai target jumlah like baru di Roblox. Manfaatkan kode ini untuk mempercepat progres awal karaktermu!</p>
+
+      <h2>1. Cara Menukarkan Kode di Dalam Game</h2>
+      <ol class="step-list">
+        <li>Buka game Steal an Egg di Roblox.</li>
+        <li>Klik ikon <strong>Burung Twitter / Kode Hadiah</strong> di sisi kanan layar.</li>
+        <li>Ketikkan kode yang valid, lalu tekan tombol <strong>Redeem</strong> untuk langsung menerima hadiah potion dan koin!</li>
+      </ol>
+    `
+  },
+  {
+    slug: "cara-menggabungkan-pet-fusion-steal-an-egg-stats-naik",
+    title: "Cara Menggabungkan Pet (Pet Fusion) di Steal an Egg: Naikkan Stats Kekuatan 1000%",
+    excerpt: "Punya banyak pet kembar yang memenuhi tas? Gabungkan di mesin Fusion Machine untuk melahirkan monster berukuran raksasa dengan multiplier fantastis!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:30:00+07:00",
+    author: "Min Rock - Fusion Lab",
+    readTime: "4 menit baca",
+    views: "28.9K",
+    image: "/BE FLASH 10 T.webp",
+    tags: ["Pet Fusion Steal an Egg", "Gabung Pet Roblox", "Upgrade Monster", "Stats Multiplier"],
+    contentHtml: `
+      <p class="lead">Fitur <strong>Pet Fusion</strong> memungkinkan pemain melebur 5 pet bertipe sama menjadi satu monster berkekuatan dahsyat dengan ukuran tubuh yang lebih besar dan aura bersinar menakjubkan.</p>
+
+      <h2>1. Syarat Sukses Melakukan Fusion</h2>
+      <p>Bawa pet kembar ke mesin <em>Fusion Altar</em> di Area 3. Semakin tinggi kesamaan jenis pet yang digabungkan, semakin besar peluang mendapatkan pet hasil evolusi bertipe Titan atau Colossal!</p>
+    `
+  },
+  {
+    slug: "bocoran-update-steal-an-egg-world-baru-bos-monster",
+    title: "Bocoran Update Steal an Egg: World Baru Dimensi Galaxy & Bos Monster Naga Purba",
+    excerpt: "Update terbesar Steal an Egg segera tiba! Intip bocoran dimensi antariksa Galaxy World, jenis telur kosmik baru, dan monster penjaga dengan serangan meteor.",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:35:00+07:00",
+    author: "Min Rock - News Team",
+    readTime: "4 menit baca",
+    views: "33.6K",
+    image: "/BE FLASH 67 HACKER 3 QA.webp",
+    tags: ["Update Steal an Egg", "Galaxy World", "Bos Naga Steal an Egg", "Bocoran Roblox"],
+    contentHtml: `
+      <p class="lead">Komunitas Steal an Egg dihebohkan dengan teaser pembaruan <strong>Galaxy World</strong> yang memperkenalkan sistem gravitasi rendah dan telur kosmik berdaya Sekstiliun (Sx)!</p>
+
+      <h2>1. Fitur Utama Update Mendatang</h2>
+      <ul>
+        <li><strong>Area Gravitasi Rendah:</strong> Pemain bisa melompat 3 kali lebih tinggi untuk menghindari jebakan laser monster.</li>
+        <li><strong>Bos Naga Purba (Ancient Dragon):</strong> Sarang bos komunal yang membutuhkan kerja sama banyak pemain untuk mengalihkan perhatiannya.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "panduan-trading-pet-steal-an-egg-nilai-value-terbaru",
+    title: "Panduan Barter & Nilai Value Pet di Steal an Egg (Cara Cek Nilai Asli Biar Tidak Rugi)",
+    excerpt: "Mau barter monster langka di lobi Steal an Egg? Pahami urutan kasta nilai pet, kelangkaan mutasi OG, dan cara membaca penawaran barter yang adil!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:40:00+07:00",
+    author: "Min Rock - Trading Analyst",
+    readTime: "5 menit baca",
+    views: "30.4K",
+    image: "/BE FLASH 67 HACKER LV 30.webp",
+    tags: ["Trading Steal an Egg", "Value Pet Steal an Egg", "Barter Pet Roblox", "Pet OG Langka"],
+    contentHtml: `
+      <p class="lead">Sistem pertukaran pet di Steal an Egg sangat aktif. Memahami nilai pasar monster langka akan menghindarkanmu dari pertukaran yang merugikan (*bad trade*).</p>
+
+      <h2>1. Faktor yang Menentukan Nilai Pet</h2>
+      <ul>
+        <li><strong>Status OG (Original Batch):</strong> Pet yang dirilis pada minggu pertama game memiliki nilai kolektor yang jauh lebih tinggi dibanding versi baru.</li>
+        <li><strong>Tingkat Mutasi:</strong> Pet dengan mutasi Rainbow selalu bernilai minimal setara 5 pet biasa dengan jenis yang sama.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "kenapa-steal-an-egg-jadi-game-nomor-1-di-roblox-ulasan",
+    title: "Kenapa Steal an Egg Menjadi Game Nomor 1 di Roblox? Ulasan Lengkap & Rahasia Viralitasnya",
+    excerpt: "Mengapa game mencuri telur ini bisa mengalahkan popularitas game raksasa lain di Roblox? Simak ulasan mendalam gameplay loop yang adiktif dan komunitasnya yang solid!",
+    category: "Panduan Steal an Egg",
+    categoryColor: "#3b82f6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T14:45:00+07:00",
+    author: "Min Rock - Editorial",
+    readTime: "5 menit baca",
+    views: "35.8K",
+    image: "/BE FLASH GAJAH PELANGI LV MAX 70T.webp",
+    tags: ["Review Steal an Egg", "Game Nomor 1 Roblox", "Viral Roblox", "Komunitas Steal an Egg"],
+    contentHtml: `
+      <p class="lead">Dengan lebih dari ratusan ribu pemain bersamaan setiap harinya, <strong>Steal an Egg</strong> membuktikan bahwa konsep gameplay yang sederhana namun memacu adrenalin dapat mendominasi industri game Roblox secara global.</p>
+
+      <h2>1. Siklus Gameplay yang Memuaskan (High Stakes, High Reward)</h2>
+      <p>Sensasi berlari menyelinap ke dalam sarang monster berbahaya demi membawa pulang telur raksasa memberikan kepuasan instan yang memicu lonjakan hormon dopamin para pemain.</p>
+
+      <h2>2. Antusiasme Komunitas Gaming Indonesia</h2>
+      <p>Dukungan kreator konten TikTok dan YouTube yang aktif memamerkan pet mutasi raksasa menjadikan Steal an Egg sebagai game mabar wajib bagi anak muda di tanah air!</p>
+    `
+  },
+  {
     slug: "cara-mendapatkan-v4-awakening-blox-fruits-semua-race",
     title: "Panduan Lengkap Cara Mendapatkan V4 Awakening di Blox Fruits (Semua Race: Angel, Shark, Cyborg)",
     excerpt: "Ingin membuka kekuatan ras maksimal V4 di Blox Fruits? Simak panduan lengkap mulai dari mencari Mirage Island, menarik tuas Temple of Time, hingga memenangkan Trial!",
@@ -10,7 +244,7 @@ export const ARTICLES = [
     author: "Min Rock - Sea Sepuh",
     readTime: "6 menit baca",
     views: "24.1K",
-    image: "/ability mega kitsune.webp",
+    image: "/BE FLASH GAKAH LV MAX 24T.webp",
     tags: ["V4 Blox Fruits", "Race Awakening V4", "Temple of Time", "Trial Blox Fruits", "Blox Fruits Sea 3"],
     contentHtml: `
       <p class="lead">Membuka <strong>Race V4 Awakening</strong> adalah puncak kekuatan tertinggi di Blox Fruits. Transformasi V4 memberikan sayap, perisai air kebal, atau aura listrik mematikan yang membuat karakternya tak terkalahkan dalam duel PvP. Berikut adalah panduan langkah demi langkah membuka V4 untuk seluruh ras!</p>
@@ -39,7 +273,7 @@ export const ARTICLES = [
     author: "Min Rock - Blox Master",
     readTime: "5 menit baca",
     views: "20.7K",
-    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    image: "/BE FLASH KETUPAT MAX LV 48QI.webp",
     tags: ["Mirage Island", "Blue Gear Blox Fruits", "Sea Events", "Blox Fruits Third Sea"],
     contentHtml: `
       <p class="lead">Mencari <strong>Mirage Island</strong> adalah salah satu tantangan paling menguras kesabaran di Blox Fruits. Pulau misterius ini hanya bertahan selama 15 menit sebelum lenyap ditelan kabut samudra. Berikut trik efisien memancing kemunculan Mirage Island!</p>
@@ -62,7 +296,7 @@ export const ARTICLES = [
     author: "Min Rock - Swordsman",
     readTime: "4 menit baca",
     views: "18.5K",
-    image: "/STEAL A EGG DISPLAY.webp",
+    image: "/BE FLASH TIK TAK HACKER LV 40.webp",
     tags: ["TTK Blox Fruits", "True Triple Katana", "Shisui", "Wando", "Saddi", "Pedang Legendaris"],
     contentHtml: `
       <p class="lead"><strong>True Triple Katana (TTK)</strong> adalah salah satu pedang terkuat dalam sejarah Blox Fruits. Dengan jangkauan tebasan angin tornado yang luas dan damage kritikal tinggi, pedang ini menjadi senjata favorit para pendekar pedang di Second Sea dan Third Sea.</p>
@@ -90,7 +324,7 @@ export const ARTICLES = [
     author: "Min Rock - Raid Leader",
     readTime: "5 menit baca",
     views: "17.4K",
-    image: "/ability mega kitsune.webp",
+    image: "/BE FLASH W L LV MAX NO MUTASI.webp",
     tags: ["Rip Indra Blox Fruits", "Dough King", "Mirror Fractal", "God Chalice", "Raid Boss"],
     contentHtml: `
       <p class="lead">Mengalahkan <strong>Rip Indra</strong> dan <strong>Dough King</strong> adalah kewajiban bagi setiap pemain yang ingin membuka portal Third Sea dan misi V4. Kedua raid boss ini memiliki jutaan darah (HP) dan serangan area yang mampu menghabisi pemain dalam satu kali kombo.</p>
@@ -113,7 +347,7 @@ export const ARTICLES = [
     author: "Min Rock - Aesthetic Editor",
     readTime: "4 menit baca",
     views: "23.8K",
-    image: "/meta diamond normal.webp",
+    image: "/BE MONKEY 69 1 SX ALGMYTI.webp",
     tags: ["Map Aesthetic Roblox", "Foto Avatar Roblox", "Roblox Y2K", "Outfit Hypebeast Roblox"],
     contentHtml: `
       <p class="lead">Bagi komunitas fesyen dan kreator konten Roblox, tampilan visual yang fotogenik adalah segalanya. Menemukan map dengan pencahayaan (*lighting*) realistis, efek neon, dan spot foto tersembunyi akan membuat avatarmu tampak seperti model profesional.</p>
@@ -137,7 +371,7 @@ export const ARTICLES = [
     author: "Min Rock - Sea Sepuh",
     readTime: "4 menit baca",
     views: "16.1K",
-    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    image: "/BE MONKEY DISPLAY.webp",
     tags: ["Title Blox Fruits", "Gelar Langka Blox Fruits", "Bounty Hunter Title", "Warna Title Roblox"],
     contentHtml: `
       <p class="lead">Gelar atau <strong>Title</strong> di Blox Fruits bukan sekadar hiasan nama, melainkan bukti pencapaian dedikasi dan keterampilan seorang pemain. Gelar-gelar ini dipajang tepat di atas kepala karakter dan memiliki warna-warna khusus yang mencolok.</p>
@@ -160,7 +394,7 @@ export const ARTICLES = [
     author: "Min Rock - Gaming Reviewer",
     readTime: "4 menit baca",
     views: "15.2K",
-    image: "/permainan lucky block display.webp",
+    image: "/BE MONKEY TIC TAK SAHUR TRINITY 150QI.webp",
     tags: ["Game Tycoon Roblox", "Tycoon Terbaik Roblox", "Theme Park Tycoon", "Mabar Seru Roblox"],
     contentHtml: `
       <p class="lead">Genre <strong>Tycoon</strong> adalah salah satu pilar paling klasik dan digemari di Roblox sejak belasan tahun lalu. Kepuasan melihat pabrik, taman hiburan, atau markas pahlawan berkembang dari sepetak tanah kosong menjadi megah adalah pengalaman yang sangat adiktif.</p>
@@ -183,7 +417,7 @@ export const ARTICLES = [
     author: "Min Rock - Tech Specialist",
     readTime: "4 menit baca",
     views: "25.3K",
-    image: "/BE FALSH DISPLAY.webp",
+    image: "/BECOM A BRAINROT MEITIERIA AMDIN.webp",
     tags: ["Voice Chat Roblox", "Cara Aktifkan VC Roblox", "Spatial Voice", "Mikrofon Roblox HP"],
     contentHtml: `
       <p class="lead">Fitur <strong>Spatial Voice Chat (VC)</strong> memungkinkan pemain berbicara secara langsung dengan suara di dalam game, di mana volume suara akan terdengar semakin keras saat mendekati karakter teman dan semakin mengecil saat menjauh. Sangat seru untuk mabar game horor atau nongkrong!</p>
@@ -209,7 +443,7 @@ export const ARTICLES = [
     author: "Min Rock - Parkour Sepuh",
     readTime: "4 menit baca",
     views: "19.8K",
-    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp",
+    image: "/BECOME A BRAINROT DISPLAY.webp",
     tags: ["Tower of Hell", "Obby Roblox", "Parkour Roblox", "Trik Shiftlock", "Tips Obby"],
     contentHtml: `
       <p class="lead">Game rintangan (*Obstacle Course / Obby*) seperti <strong>Tower of Hell</strong> menguji ketahanan mental dan akurasi jari. Menara 6 lantai tanpa checkpoint ini sering kali membuat pemain frustrasi karena satu kesalahan kecil akan mengembalikanmu ke lantai dasar!</p>
@@ -232,7 +466,7 @@ export const ARTICLES = [
     author: "Min Rock - Brainrot Sepuh",
     readTime: "4 menit baca",
     views: "18.9K",
-    image: "/BECOME A BRAINROT DISPLAY.webp",
+    image: "/BECOME BRAINROT CAPTAIN MOBI.webp",
     tags: ["Become a Brainrot", "Pet Secret Brainrot", "Stats Kuadriliun", "Sepuh Roblox"],
     contentHtml: `
       <p class="lead">Di dunia <strong>Become a Brainrot</strong>, angka kekuatan karakter dihitung bukan lagi dalam ribuan atau jutaan, melainkan mencapai Triliun (T), Kuadriliun (Qi), hingga Sekstiliun (Sx). Memiliki pet tier Secret adalah kunci utama melipatgandakan poin kekuatan tersebut!</p>
@@ -252,7 +486,7 @@ export const ARTICLES = [
     author: "Min Rock - Event Hunter",
     readTime: "4 menit baca",
     views: "16.8K",
-    image: "/SNIPER BRAINROT DISPLAY.webp",
+    image: "/BECOME BRAINROT FRAGOLA.webp",
     tags: ["Event Roblox 2026", "Aksesoris Gratis Roblox", "Update Map Roblox", "Free Item Roblox"],
     contentHtml: `
       <p class="lead">Roblox selalu merayakan musim liburan dan kolaborasi internasional melalui event berhadiah item limited. Pemain yang rajin menyelesaikan quest musiman bisa mengoleksi sayap, helm, dan efek aura langka yang nilainya akan menjadi sangat tinggi di masa depan!</p>
@@ -275,7 +509,7 @@ export const ARTICLES = [
     author: "Min Rock - Visual Specialist",
     readTime: "5 menit baca",
     views: "21.1K",
-    image: "/BE FALSH DISPLAY.webp",
+    image: "/BECOME BRAINROT HACKER 1X1 NIL S .webp",
     tags: ["Shaders Roblox", "RoShade", "Grafis Realistis Roblox", "Roblox RTX", "Cinematic Roblox"],
     contentHtml: `
       <p class="lead">Dengan bantuan filter grafis (*Shaders* / ReShade), tampilan visual Roblox bisa disulap layaknya game konsol modern dengan efek pantulan sinar matahari (*God rays*), *Ambient Occlusion*, dan pantulan air yang sangat hidup.</p>
@@ -299,7 +533,7 @@ export const ARTICLES = [
     author: "Min Rock - Gaming Reviewer",
     readTime: "4 menit baca",
     views: "17.6K",
-    image: "/permainan lucky block display.webp",
+    image: "/BECOME BRAINROT NAGA ADMIN .webp",
     tags: ["Game Simulator Roblox", "Arm Wrestle Simulator", "Muscle Legends", "Grinding Seru"],
     contentHtml: `
       <p class="lead">Game bergenre <strong>Simulator</strong> selalu memiliki daya tarik magnetis di Roblox. Konsepnya sederhana: latih kekuatan karaktermu, kumpulkan peliharaan (*pets*), dan kalahkan bos di setiap arena untuk membuka dunia baru yang lebih menakjubkan.</p>
@@ -319,7 +553,7 @@ export const ARTICLES = [
     author: "Min Rock - Tactical Guide",
     readTime: "5 menit baca",
     views: "19.5K",
-    image: "/ability mega kitsune.webp",
+    image: "/BECOME BRAINROT STELLAR RANDOM LV MAX.webp",
     tags: ["Anime Defenders", "Trait SSS Anime Defenders", "Unit Mythic", "Tower Defense Roblox"],
     contentHtml: `
       <p class="lead"><strong>Anime Defenders</strong> menuntut kecerdasan taktik penempatan unit dan pemilihan trait yang tepat. Unit dengan trait tier SSS seperti <em>Almighty</em> atau <em>Requiem</em> mampu melipatgandakan damage area dan kecepatan serang hingga 300%!</p>
@@ -339,7 +573,7 @@ export const ARTICLES = [
     author: "Min Rock - Combat Expert",
     readTime: "5 menit baca",
     views: "22.9K",
-    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    image: "/BECOME BRAINROT TITAK SAHUR.webp",
     tags: ["Melee Blox Fruits", "Godhuman", "Sanguine Art", "Fighting Style", "PvP Blox Fruits"],
     contentHtml: `
       <p class="lead">Gaya bertarung (*Fighting Style / Melee*) adalah fondasi utama bagi kombo PvP di Blox Fruits. Dua nama teratas yang saat ini mendominasi meta pertempuran adalah <strong>Godhuman</strong> dan <strong>Sanguine Art</strong>.</p>
@@ -362,7 +596,7 @@ export const ARTICLES = [
     author: "Min Rock - Lore Hunter",
     readTime: "5 menit baca",
     views: "27.4K",
-    image: "/SNIPER BRAINROT DISPLAY.webp",
+    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp",
     tags: ["Misteri Roblox", "John Doe Roblox", "Guest 666", "Creepypasta Roblox", "Sejarah Roblox"],
     contentHtml: `
       <p class="lead">Sejak didirikan pada tahun 2006, Roblox memiliki segudang cerita misteri dan legenda urban yang diwariskan dari generasi ke generasi. Di balik cerita seram tersebut, tersimpan fakta sejarah menarik dari masa pengembangan awal platform!</p>
@@ -385,7 +619,7 @@ export const ARTICLES = [
     author: "Min Rock - Security Team",
     readTime: "4 menit baca",
     views: "14.9K",
-    image: "/hack vault brainrot display.webp",
+    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA QADC.webp",
     tags: ["Trading Pet Simulator 99", "Anti Scam Roblox", "Trade Switch", "Huge Pets Safe"],
     contentHtml: `
       <p class="lead">Pasar pertukaran pet di Pet Simulator 99 bernilai sangat fantastis. Tingginya nilai transaksi ini sering dimanfaatkan oknum penipu (*scammer*) dengan taktik psikologis yang mengelabui pandangan mata.</p>
@@ -405,7 +639,7 @@ export const ARTICLES = [
     author: "Min Rock - Gaming Reviewer",
     readTime: "4 menit baca",
     views: "16.2K",
-    image: "/permainan lucky block display.webp",
+    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA TDC.webp",
     tags: ["Parkour Roblox", "Game Parkour", "Uji Refleks Roblox", "Skill Parkour"],
     contentHtml: `
       <p class="lead">Bagi pemain yang menyukai aksi akrobatik penuh gaya, genre parkour modern di Roblox menawarkan fisika pergerakan yang sangat dinamis, mulai dari melompati gedung pencakar langit hingga meluncur di bawah rintangan sempit.</p>
@@ -425,7 +659,7 @@ export const ARTICLES = [
     author: "Min Rock - Hardware Guide",
     readTime: "4 menit baca",
     views: "18.7K",
-    image: "/BABAS DISPLAY.webp",
+    image: "/BRAIN BLAST DISPLAY.webp",
     tags: ["Roblox Smart TV", "Main Roblox Pakai Stik", "Gamepad Roblox", "Android TV Gaming"],
     contentHtml: `
       <p class="lead">Menikmati dunia virtual Roblox tidak terbatas hanya di layar HP kecil atau laptop. Kamu bisa menikmati pengalaman sinematik di layar TV ruang tamu dengan stik controller nirkabel (*wireless gamepad*)!</p>
@@ -449,7 +683,7 @@ export const ARTICLES = [
     author: "Min Rock - Community Editor",
     readTime: "4 menit baca",
     views: "26.9K",
-    image: "/meta diamond normal.webp",
+    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
     tags: ["Mabar Roblox", "Game Roblox Berdua", "Roblox Bareng Bestie", "Co-op Roblox Seru"],
     contentHtml: `
       <p class="lead">Roblox adalah platform sempurna untuk menghabiskan waktu berkualitas bersama orang terdekat. Baik berdua dengan sahabat sejati maupun pasangan, game-game co-op ini menuntut kerja sama tim yang harmonis dan penuh canda tawa.</p>
@@ -473,7 +707,7 @@ export const ARTICLES = [
     author: "Min Rock - Blox Master",
     readTime: "5 menit baca",
     views: "15.4K",
-    image: "/ability mega kitsune.webp",
+    image: "/CANTCH AND TAME DISPLAY.webp",
     tags: ["Kitsune Blox Fruits", "Buah Kitsune", "Combo PvP Blox Fruits", "Sea 3 Blox Fruits", "Tips Blox Fruits"],
     contentHtml: `
       <p class="lead">Di antara seluruh buah iblis (Devil Fruit) tipe Mythical di Blox Fruits, <strong>Kitsune Fruit</strong> menduduki kasta tertinggi dalam hal mobilitas, kecepatan serangan, dan estetika animasi. Dengan wujud rubah ekor sembilan legendaris, pengguna Kitsune hampir mustahil dikejar saat bertarung di lautan Third Sea. Berikut panduan lengkap cara mendapatkannya serta kombo PvP mematikan!</p>
@@ -517,7 +751,7 @@ export const ARTICLES = [
     author: "Min Rock - News Team",
     readTime: "4 menit baca",
     views: "18.2K",
-    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    image: "/CAPYBARA VS TANAMAN DISPLAY.webp",
     tags: ["Dragon Rework Blox Fruits", "Bocoran Blox Fruits", "Update Blox Fruits", "Dragon Fruit 2026"],
     contentHtml: `
       <p class="lead">Pembaruan <strong>Dragon Rework</strong> telah menjadi topik paling hangat di seluruh forum Roblox internasional. Gamer menanti-nanti transformasi baru dari buah legendaris bertipe Zoan naga ini. Berikut rangkuman bocoran resmi dari tim pengembang Gamer Robot Inc!</p>
@@ -547,7 +781,7 @@ export const ARTICLES = [
     author: "Min Rock - Tech Specialist",
     readTime: "4 menit baca",
     views: "21.6K",
-    image: "/BE FALSH DISPLAY.webp",
+    image: "/DORONG BATU FOR BRAINROT DISPLAY.webp",
     tags: ["Roblox Lag", "HP Kentang Roblox", "Fix Lag Roblox", "Setting Grafik Roblox", "60 FPS Roblox"],
     contentHtml: `
       <p class="lead">Bermain game Roblox dengan efek partikel tinggi seperti Blox Fruits Sea 3 atau map Brainrot sering kali membuat HP berspesifikasi pas-pasan (RAM 3GB - 4GB) mengalami *thermal throttling*, patah-patah (*drop frame*), hingga *force close*. Jangan berkecil hati, ikuti <strong>cara ampuh mengatasi Roblox lag</strong> berikut ini!</p>
@@ -576,7 +810,7 @@ export const ARTICLES = [
     author: "Min Rock - Brainrot Sepuh",
     readTime: "4 menit baca",
     views: "14.1K",
-    image: "/STEAL A EGG DISPLAY.webp",
+    image: "/DORONG LUCKY BLOK DISPLAY.webp",
     tags: ["Steal an Egg", "Pet Secret Brainrot", "Hoki Telur Roblox", "Trik Brainrot", "Sepuh Brainrot"],
     contentHtml: `
       <p class="lead">Map <strong>Steal an Egg</strong> dan game-game bertema <strong>Brainrot</strong> sedang merajai trending game di Indonesia. Mendapatkan monster tier <em>Secret</em> atau <em>Transcendent</em> dengan kekuatan Qi atau Sx adalah dambaan setiap pemain. Berikut rahasia dan trik meningkatkan hoki menetas telur!</p>
@@ -602,7 +836,7 @@ export const ARTICLES = [
     author: "Min Rock - Community Guide",
     readTime: "4 menit baca",
     views: "13.8K",
-    image: "/BECOME A BRAINROT DISPLAY.webp",
+    image: "/GAG 2 BEAR PET.webp",
     tags: ["Istilah Gaul Roblox", "Kamus Roblox", "Arti Sepuh", "WFL Roblox", "Trading Term Roblox"],
     contentHtml: `
       <p class="lead">Dunia Roblox memiliki bahasa komunitasnya sendiri yang unik. Pemain pemula sering kali bingung saat membaca percakapan di in-game chat atau forum trading. Berikut adalah <strong>kamus istilah Roblox terlengkap</strong> yang wajib kamu pahami!</p>
@@ -629,7 +863,7 @@ export const ARTICLES = [
     author: "Min Rock - Style Editor",
     readTime: "4 menit baca",
     views: "17.9K",
-    image: "/meta diamond normal.webp",
+    image: "/GAG 2 BEE PET.webp",
     tags: ["Avatar Roblox Keren", "Outfit Gratis Roblox", "Roblox Tanpa Robux", "Skin Roblox Keren"],
     contentHtml: `
       <p class="lead">Siapa bilang tampil keren di Roblox harus menghabiskan ribuan Robux? Roblox Avatar Shop menyediakan ratusan aksesoris, rambut, dan pakaian resmi gratis yang jika dikombinasikan dengan cerdas akan menghasilkan avatar bernuansa sultan!</p>
@@ -652,7 +886,7 @@ export const ARTICLES = [
     author: "Min Rock - Gaming Reviewer",
     readTime: "5 menit baca",
     views: "16.5K",
-    image: "/SNIPER BRAINROT DISPLAY.webp",
+    image: "/GAG 2 BEE SKILL.webp",
     tags: ["Game Horor Roblox", "Roblox Terseram", "Mabar Roblox", "Doors Roblox", "The Mimic"],
     contentHtml: `
       <p class="lead">Bosan dengan game grinding santai? Saatnya menguji adrenalin dan keberanian bersama kawan satu tongkrongan! Roblox memiliki koleksi game horor dengan tata suara 3D dan visual gelap yang tidak kalah menegangkan dibanding game PC AAA.</p>
@@ -678,7 +912,7 @@ export const ARTICLES = [
     author: "Min Rock - Trading Expert",
     readTime: "5 menit baca",
     views: "22.4K",
-    image: "/ability mega kitsune.webp",
+    image: "/GAG 2 DISPLAY.webp",
     tags: ["Blox Fruits Values", "Tier List Buah Blox Fruits", "Trading Blox Fruits", "Harga Buah Blox Fruits"],
     contentHtml: `
       <p class="lead">Bursa trading di Blox Fruits sangat kompetitif. Salah menghitung nilai buah bisa membuat kamu mengalami kerugian besar (*Big L*). Untuk mempermudah transaksi barter di Cafe Sea 2 atau Mansion Sea 3, berikut <strong>panduan tier list value buah Blox Fruits terbaru</strong>!</p>
@@ -714,7 +948,7 @@ export const ARTICLES = [
     author: "Min Rock - Cyber Security",
     readTime: "4 menit baca",
     views: "11.7K",
-    image: "/hack vault brainrot display.webp",
+    image: "/JATUH FOR BRAINROT DISPLAY.webp",
     tags: ["Keamanan Akun Roblox", "Anti Phishing Roblox", "Cookie Stealer", "Akun Roblox Aman"],
     contentHtml: `
       <p class="lead">Maraknya kejahatan siber di dunia game membuat pemain Roblox harus ekstra hati-hati. Hacker kini tidak lagi menebak password secara manual, melainkan menggunakan teknik jebakan <strong>Phishing</strong> dan <strong>Cookie Logger</strong>. Simak cara melindungi akun kesayanganmu!</p>
@@ -737,7 +971,7 @@ export const ARTICLES = [
     author: "Min Rock - Reviewer",
     readTime: "4 menit baca",
     views: "15.9K",
-    image: "/BABAS DISPLAY.webp",
+    image: "/KALB ABYSALL ORANG YANG BERUNTUNG 2.6Q.webp",
     tags: ["Game Roblox Mirip GTA", "Roblox Roleplay", "Game Mobil Roblox", "Emergency Hamburg Roblox"],
     contentHtml: `
       <p class="lead">Bagi kamu yang menyukai konsep dunia terbuka (*open-world*) ala Grand Theft Auto (GTA), Roblox menawarkan berbagai pengalaman roleplay dengan grafis kota modern, kendaraan mewah yang bisa dimodifikasi, serta sistem pekerjaan realistis.</p>
@@ -763,7 +997,7 @@ export const ARTICLES = [
     author: "Min Rock - Anime Editor",
     readTime: "4 menit baca",
     views: "19.3K",
-    image: "/permainan lucky block display.webp",
+    image: "/KALB BELUGA HEAVEN 307T.webp",
     tags: ["Game Anime Roblox", "Anime Roblox Terbaik", "Blox Fruits", "Anime Defenders", "Jujutsu Roblox"],
     contentHtml: `
       <p class="lead">Komunitas penggemar anime di Roblox sangatlah masif. Para pengembang game menghadirkan adaptasi anime legendaris (seperti One Piece, Jujutsu Kaisen, Dragon Ball, hingga Demon Slayer) dengan efek animasi jurus 3D yang sangat memanjakan mata. Berikut adalah <strong>game Roblox bertema anime paling seru dan wajib kamu mainkan di tahun 2026</strong>!</p>
@@ -803,7 +1037,7 @@ export const ARTICLES = [
     author: "Min Rock - Entertainment",
     readTime: "4 menit baca",
     views: "28.5K",
-    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp",
+    image: "/KALB GAJAH BECON 186T .webp",
     tags: ["ID Lagu Roblox", "Music Code Roblox", "Kode Boombox Roblox", "Lagu Viral Roblox TikTok"],
     contentHtml: `
       <p class="lead">Memutar musik favorit menggunakan item Boombox di dalam game Roblox adalah cara terbaik untuk memeriahkan suasana saat berkumpul atau balapan bareng teman-teman. Berikut adalah <strong>kumpulan ID lagu Roblox terbaru yang sedang viral di TikTok</strong> dan siap kamu pasang!</p>
@@ -834,7 +1068,7 @@ export const ARTICLES = [
     author: "Min Rock - Security Team",
     readTime: "5 menit baca",
     views: "10.5K",
-    image: "/STEAL A EGG DISPLAY.webp",
+    image: "/KALB GAJAH BECON MAX.webp",
     tags: ["Anti Banned Roblox", "Banned Roblox", "Keamanan Akun", "Anti Cheat Byfron", "Robux Legal", "Tips Roblox"],
     contentHtml: `
       <p class="lead">Membangun akun Roblox hingga menjadi 'Sepuh' dengan koleksi item langka, level maksimal di Blox Fruits, dan saldo Robux melimpah membutuhkan waktu dan perjuangan panjang. Menghadapi layar merah bertuliskan <strong>Account Banned</strong> atau <strong>Account Terminated</strong> adalah mimpi buruk setiap gamer. Simak <strong>7 cara ampuh agar akun Roblox tidak terkena banned</strong> berikut ini!</p>
@@ -912,7 +1146,7 @@ export const ARTICLES = [
     author: "Min Rock - Market Analyst",
     readTime: "5 menit baca",
     views: "12.8K",
-    image: "/ability mega kitsune.webp",
+    image: "/KALB KRUPUK BECON 240T.webp",
     tags: ["Item Roblox Terlaris", "Trading Roblox", "Blox Fruits Kitsune", "Brainrot Secret", "Pet Simulator 99 Huge", "Item Roblox 2026"],
     contentHtml: `
       <p class="lead">Ekonomi dan pasar jual-beli di Roblox semakin berkembang pesat di tahun 2026. Jutaan pemain setiap harinya saling bertukar item langka untuk memperkuat karakter atau sekadar pamer status sebagai 'Sultan' dan 'Sepuh'. Bagi kamu yang penasaran apa saja <strong>item Roblox paling laku, paling dicari, dan bernilai jual paling tinggi di tahun 2026</strong>, berikut ulasan lengkapnya!</p>
@@ -1003,7 +1237,7 @@ export const ARTICLES = [
     author: "Min Rock - Community Guide",
     readTime: "5 menit baca",
     views: "9.4K",
-    image: "/ROBUX.webp",
+    image: "/KALB POT HOT SPOT BECON 233T.webp",
     tags: ["Robux Gratis", "Free Robux", "Microsoft Rewards", "PLS DONATE", "Klaim Robux", "Roblox Tips"],
     contentHtml: `
       <p class="lead">Siapa yang tidak ingin memiliki saldo Robux melimpah untuk membeli avatar keren, animasi eksklusif, atau gamepass langka di Roblox? Namun, jangan sampai kamu terjebak tautan palsu (*scam*) yang menjanjikan ribuan Robux instan. Berikut adalah <strong>cara resmi, legal, dan 100% aman untuk mengklaim Robux gratis</strong> yang telah terbukti berhasil oleh jutaan pemain di seluruh dunia!</p>
@@ -1083,7 +1317,7 @@ export const ARTICLES = [
     author: "Min Rock - Robux Specialist",
     readTime: "4 menit baca",
     views: "11.2K",
-    image: "/ROBUX.webp",
+    image: "/KALB SEPEDA BECON LV MAX 22T.webp",
     tags: ["Robux", "Kirim Robux Instan", "Roblox Premium", "Verifikasi 18+", "Username Roblox", "Tanpa Delay 14 Hari"],
     contentHtml: `
       <p class="lead">Banyak pemain Roblox selama ini mengeluhkan lamanya proses kirim Robux via grup yang harus menunggu masa penahanan (*delay*) 14 sampai 15 hari. Namun kini ada <strong>update metode terbaru resmi dari Roblox</strong>: kamu bisa mengirim dan menerima Robux langsung lewat Username <strong>SECARA INSTAN TANPA PERLU MENUNGGU 14 HARI</strong>!</p>
@@ -1185,7 +1419,7 @@ export const ARTICLES = [
     author: "Min Rock - Editorial",
     readTime: "5 menit baca",
     views: "6.2K",
-    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    image: "/KOTAK GULUNG BRAINROT DISPLAY.webp",
     tags: ["Roblox", "Game Populer", "Blox Fruits", "Brainrot", "Steal an Egg", "Sepuh Roblox"],
     contentHtml: `
       <p class="lead">Dengan lebih dari 70 juta pemain aktif harian di seluruh dunia, Roblox menyajikan ribuan dunia virtual. Namun, hanya segelintir game yang berhasil mendominasi daftar teratas dengan ratusan ribu hingga jutaan pemain online secara bersamaan. Berikut adalah <strong>daftar game Roblox paling banyak dimainkan saat ini</strong> yang wajib kalian coba!</p>
@@ -1251,7 +1485,7 @@ export const ARTICLES = [
     author: "Min Rock - Editorial",
     readTime: "3 menit baca",
     views: "2.4K",
-    image: "/STEAL A EGG DISPLAY.webp",
+    image: "/LEMPAR KOIN BOLA DYSON BESAR 13QI.webp",
     tags: ["Roblox", "Kode Redeem", "Gratis", "Item Langka", "Robux"],
     contentHtml: `
       <p class="lead">Bagi para pemain setia Roblox, mendapatkan item eksklusif dan aksesoris avatar langka secara gratis adalah salah satu hal yang paling dicari. Hari ini, kami telah merangkum daftar <strong>kode redeem Roblox terbaru</strong> yang masih aktif dan bisa langsung kalian tukarkan!</p>
@@ -1354,7 +1588,7 @@ export const ARTICLES = [
     author: "Min Rock - Editorial",
     readTime: "4 menit baca",
     views: "3.8K",
-    image: "/BE FALSH DISPLAY.webp",
+    image: "/LEMPAR KOIN FOR BRAINROT DISPLAY.webp",
     tags: ["Roblox", "Tips Grinding", "Sepuh Roblox", "Trading", "Item Secret"],
     contentHtml: `
       <p class="lead">Di komunitas Roblox Indonesia, julukan <strong>"Sepuh"</strong> disematkan untuk pemain yang memiliki level maksimal, item langka (Secret / OG / Mutasi), dan penguasaan map yang luar biasa. Bagaimana cara mereka mencapainya dengan cepat?</p>
@@ -1407,7 +1641,7 @@ export const ARTICLES = [
     author: "Min Rock - Security Team",
     readTime: "4 menit baca",
     views: "5.1K",
-    image: "/BECOME A BRAINROT DISPLAY.webp",
+    image: "/LEMPAR PALU FOR BRAINROT DISPLAY.webp",
     tags: ["Keamanan Akun", "Anti Hackback", "Data Polos", "Jual Beli Akun", "Roblox Safe"],
     contentHtml: `
       <p class="lead">Membeli akun Roblox yang sudah memiliki item langka dan level tinggi adalah jalan pintas terbaik untuk langsung bersenang-senang. Namun, maraknya kasus <strong>hackback</strong> (pemilik lama menarik kembali akunnya) membuat pembeli harus ekstra waspada.</p>

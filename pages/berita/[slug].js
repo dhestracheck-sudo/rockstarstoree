@@ -35,6 +35,9 @@ export default function BeritaDetail({ article, relatedArticles }) {
     "image": [fullImageUrl],
     "datePublished": article.isoDate,
     "dateModified": article.isoDate,
+    "inLanguage": "id-ID",
+    "articleSection": article.category,
+    "keywords": article.tags ? article.tags.join(", ") : "",
     "author": {
       "@type": "Person",
       "name": article.author,
@@ -43,9 +46,10 @@ export default function BeritaDetail({ article, relatedArticles }) {
     "publisher": {
       "@type": "Organization",
       "name": "Rockstar.Store",
+      "url": "https://rockstarstore.id",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://rockstarstore.id/ROCKSTARLOGO.png"
+        "url": "https://rockstarstore.id/ROCKSTARLOGO.webp"
       }
     },
     "mainEntityOfPage": {
@@ -88,15 +92,27 @@ export default function BeritaDetail({ article, relatedArticles }) {
       <Head>
         <title>{`${article.title} | Rockstar.Store`}</title>
         <meta name="description" content={article.excerpt} />
+        <meta name="keywords" content={`${(article.tags || []).join(", ")}, berita roblox, update roblox, trik roblox, rockstar store`} />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:site_name" content="Rockstar.Store" />
+        <meta property="og:locale" content="id_ID" />
         <meta property="og:type" content="article" />
         <meta property="og:title" content={`${article.title} | Rockstar.Store`} />
         <meta property="og:description" content={article.excerpt} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={fullImageUrl} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="675" />
         <meta property="article:published_time" content={article.isoDate} />
+        <meta property="article:modified_time" content={article.isoDate} />
+        <meta property="article:section" content={article.category} />
         <meta property="article:author" content={article.author} />
+        {(article.tags || []).map((t) => (
+          <meta property="article:tag" content={t} key={t} />
+        ))}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@RockstarStore" />
         <meta name="twitter:title" content={`${article.title} | Rockstar.Store`} />
         <meta name="twitter:description" content={article.excerpt} />
         <meta name="twitter:image" content={fullImageUrl} />
@@ -179,6 +195,27 @@ export default function BeritaDetail({ article, relatedArticles }) {
               </div>
             </footer>
           </article>
+
+          <div className="article-store-banner">
+            <div className="store-banner-inner">
+              <span className="store-banner-pill">⚡ REKOMENDASI RESMI ROCKSTAR STORE</span>
+              <h3 className="store-banner-title">Mau Jadi Sepuh Roblox Lebih Cepat?</h3>
+              <p className="store-banner-desc">
+                Dapatkan kebutuhan Robux kilat termurah, Pet Secret & Koin Steal an Egg, Buah Mythical Blox Fruits, hingga Akun Sultan Bergaransi 100% Anti Hackback hanya di Rockstar Store!
+              </p>
+              <div className="store-banner-actions">
+                <Link href="/?tab=topup" className="btn-banner-gold">
+                  🛒 Top Up Robux Murah
+                </Link>
+                <Link href="/?tab=brainrot" className="btn-banner-blue">
+                  🥚 Item & Pet Steal an Egg
+                </Link>
+                <Link href="/" className="btn-banner-outline">
+                  Lihat Katalog Lengkap →
+                </Link>
+              </div>
+            </div>
+          </div>
 
           {relatedArticles.length > 0 && (
             <section className="related-section">
@@ -609,6 +646,91 @@ export default function BeritaDetail({ article, relatedArticles }) {
         .related-date {
           font-size: 11.5px;
           color: #64748b;
+        }
+        .article-store-banner {
+          background: linear-gradient(135deg, rgba(37, 99, 235, 0.22) 0%, rgba(13, 26, 60, 0.95) 100%);
+          border: 1px solid rgba(59, 130, 246, 0.4);
+          border-radius: 18px;
+          padding: 32px 24px;
+          text-align: center;
+          margin-bottom: 40px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(96, 165, 250, 0.25);
+        }
+        .store-banner-pill {
+          display: inline-block;
+          font-size: 11px;
+          font-weight: 800;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.15);
+          border: 1px solid rgba(56, 189, 248, 0.35);
+          padding: 4px 12px;
+          border-radius: 999px;
+          margin-bottom: 12px;
+          letter-spacing: 0.5px;
+        }
+        .store-banner-title {
+          font-size: clamp(20px, 4vw, 26px);
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0 0 10px;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+        }
+        .store-banner-desc {
+          color: #cbd5e1;
+          font-size: 14.5px;
+          line-height: 1.6;
+          max-width: 620px;
+          margin: 0 auto 22px;
+        }
+        .store-banner-actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .btn-banner-gold {
+          background: linear-gradient(90deg, #f59e0b, #d97706);
+          color: #ffffff;
+          font-weight: 800;
+          font-size: 13.5px;
+          padding: 11px 22px;
+          border-radius: 10px;
+          text-decoration: none;
+          box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
+          transition: transform 0.15s ease;
+        }
+        .btn-banner-blue {
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          border: 1px solid #60a5fa;
+          color: #ffffff;
+          font-weight: 800;
+          font-size: 13.5px;
+          padding: 11px 22px;
+          border-radius: 10px;
+          text-decoration: none;
+          box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+          transition: transform 0.15s ease;
+        }
+        .btn-banner-outline {
+          background: rgba(15, 23, 42, 0.7);
+          border: 1px solid rgba(148, 163, 184, 0.35);
+          color: #e2e8f0;
+          font-weight: 700;
+          font-size: 13.5px;
+          padding: 11px 20px;
+          border-radius: 10px;
+          text-decoration: none;
+          transition: all 0.15s ease;
+        }
+        .btn-banner-gold:hover, .btn-banner-blue:hover {
+          transform: translateY(-2px);
+        }
+        .btn-banner-outline:hover {
+          background: rgba(30, 41, 59, 0.9);
+          border-color: #94a3b8;
+          color: #ffffff;
+          transform: translateY(-2px);
         }
         .article-site-footer {
           text-align: center;

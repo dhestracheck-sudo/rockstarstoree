@@ -1,11 +1,91 @@
 export const ARTICLES_META = [
   {
+    "slug": "cara-cepat-jadi-sepuh-steal-an-egg-roblox-koin-max",
+    "title": "Cara Cepat Jadi Sepuh di Steal an Egg Roblox: Trik Panen Triliunan Koin & Level Max",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#f59e0b",
+    "author": "Min Rock - Egg Master",
+    "image": "/+1 MENUMBUHKAN LENGAN DISPLAY.webp"
+  },
+  {
+    "slug": "daftar-telur-dan-peluang-mutasi-steal-an-egg-roblox",
+    "title": "Daftar Lengkap Telur & Peluang Mutasi di Steal an Egg: Golden, Rainbow, & Void",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#8b5cf6",
+    "author": "Min Rock - Mutation Specialist",
+    "image": "/ability mega kitsune.webp"
+  },
+  {
+    "slug": "lokasi-sarang-telur-raksasa-zona-rahasia-steal-an-egg",
+    "title": "Lokasi Sarang Telur Raksasa & Zona Rahasia di Steal an Egg Roblox (Peta Lengkap)",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#3b82f6",
+    "author": "Min Rock - Secret Hunter",
+    "image": "/BABAS DISPLAY.webp"
+  },
+  {
+    "slug": "tier-list-pet-terkuat-steal-an-egg-mythic-godly",
+    "title": "Tier List Pet Terkuat di Steal an Egg 2026: Dari Kasta Mythic hingga Godly Transcendent",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#ef4444",
+    "author": "Min Rock - Tier Master",
+    "image": "/BABAS YETI 145 M OG.webp"
+  },
+  {
+    "slug": "trik-curi-telur-sarang-monster-steal-an-egg-tanpa-ketahuan",
+    "title": "Trik Solo Curi Telur dari Sarang Monster di Steal an Egg Tanpa Ketahuan (Stealth Tactic)",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#10b981",
+    "author": "Min Rock - Stealth Pro",
+    "image": "/BE FALSH 20 T.webp"
+  },
+  {
+    "slug": "kode-redeem-steal-an-egg-terbaru-hari-ini-gratis-potion",
+    "title": "Daftar Kode Redeem Steal an Egg Terbaru Hari Ini: Klaim Lucky Potion & Koin Gratis",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#06b6d4",
+    "author": "Min Rock - Code Hunter",
+    "image": "/BE FALSH DISPLAY.webp"
+  },
+  {
+    "slug": "cara-menggabungkan-pet-fusion-steal-an-egg-stats-naik",
+    "title": "Cara Menggabungkan Pet (Pet Fusion) di Steal an Egg: Naikkan Stats Kekuatan 1000%",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#ec4899",
+    "author": "Min Rock - Fusion Lab",
+    "image": "/BE FLASH 10 T.webp"
+  },
+  {
+    "slug": "bocoran-update-steal-an-egg-world-baru-bos-monster",
+    "title": "Bocoran Update Steal an Egg: World Baru Dimensi Galaxy & Bos Monster Naga Purba",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#f59e0b",
+    "author": "Min Rock - News Team",
+    "image": "/BE FLASH 67 HACKER 3 QA.webp"
+  },
+  {
+    "slug": "panduan-trading-pet-steal-an-egg-nilai-value-terbaru",
+    "title": "Panduan Barter & Nilai Value Pet di Steal an Egg (Cara Cek Nilai Asli Biar Tidak Rugi)",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#8b5cf6",
+    "author": "Min Rock - Trading Analyst",
+    "image": "/BE FLASH 67 HACKER LV 30.webp"
+  },
+  {
+    "slug": "kenapa-steal-an-egg-jadi-game-nomor-1-di-roblox-ulasan",
+    "title": "Kenapa Steal an Egg Menjadi Game Nomor 1 di Roblox? Ulasan Lengkap & Rahasia Viralitasnya",
+    "category": "Panduan Steal an Egg",
+    "categoryColor": "#3b82f6",
+    "author": "Min Rock - Editorial",
+    "image": "/BE FLASH GAJAH PELANGI LV MAX 70T.webp"
+  },
+  {
     "slug": "cara-mendapatkan-v4-awakening-blox-fruits-semua-race",
     "title": "Panduan Lengkap Cara Mendapatkan V4 Awakening di Blox Fruits (Semua Race: Angel, Shark, Cyborg)",
     "category": "Panduan Game",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Sea Sepuh",
-    "image": "/ability mega kitsune.webp"
+    "image": "/BE FLASH GAKAH LV MAX 24T.webp"
   },
   {
     "slug": "lokasi-spawn-mirage-island-cara-cari-blue-gear-blox-fruits",
@@ -13,7 +93,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#3b82f6",
     "author": "Min Rock - Blox Master",
-    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
+    "image": "/BE FLASH KETUPAT MAX LV 48QI.webp"
   },
   {
     "slug": "cara-mendapatkan-true-triple-katana-ttk-blox-fruits",
@@ -21,7 +101,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#10b981",
     "author": "Min Rock - Swordsman",
-    "image": "/STEAL A EGG DISPLAY.webp"
+    "image": "/BE FLASH TIK TAK HACKER LV 40.webp"
   },
   {
     "slug": "cara-kalahkan-rip-indra-dough-king-raid-boss-blox-fruits",
@@ -29,7 +109,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Raid Leader",
-    "image": "/ability mega kitsune.webp"
+    "image": "/BE FLASH W L LV MAX NO MUTASI.webp"
   },
   {
     "slug": "daftar-map-roblox-aesthetic-foto-outfit-keren",
@@ -37,7 +117,7 @@ export const ARTICLES_META = [
     "category": "Kreatif & Avatar",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Aesthetic Editor",
-    "image": "/meta diamond normal.webp"
+    "image": "/BE MONKEY 69 1 SX ALGMYTI.webp"
   },
   {
     "slug": "cara-dapat-title-gelar-langka-blox-fruits",
@@ -45,7 +125,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#f59e0b",
     "author": "Min Rock - Sea Sepuh",
-    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
+    "image": "/BE MONKEY DISPLAY.webp"
   },
   {
     "slug": "game-tycoon-roblox-paling-adiktif-seru-mabar",
@@ -53,7 +133,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#10b981",
     "author": "Min Rock - Gaming Reviewer",
-    "image": "/permainan lucky block display.webp"
+    "image": "/BE MONKEY TIC TAK SAHUR TRINITY 150QI.webp"
   },
   {
     "slug": "cara-aktifkan-spatial-voice-chat-roblox-tanpa-ktp",
@@ -61,7 +141,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#06b6d4",
     "author": "Min Rock - Tech Specialist",
-    "image": "/BE FALSH DISPLAY.webp"
+    "image": "/BECOM A BRAINROT MEITIERIA AMDIN.webp"
   },
   {
     "slug": "tips-lolos-obby-tersulit-roblox-tower-of-hell",
@@ -69,7 +149,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#f59e0b",
     "author": "Min Rock - Parkour Sepuh",
-    "image": "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp"
+    "image": "/BECOME A BRAINROT DISPLAY.webp"
   },
   {
     "slug": "daftar-pet-secret-terkuat-become-a-brainrot-power-max",
@@ -77,7 +157,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Brainrot Sepuh",
-    "image": "/BECOME A BRAINROT DISPLAY.webp"
+    "image": "/BECOME BRAINROT CAPTAIN MOBI.webp"
   },
   {
     "slug": "bocoran-event-spesial-roblox-update-map-hadiah-gratis",
@@ -85,7 +165,7 @@ export const ARTICLES_META = [
     "category": "Update & Fitur",
     "categoryColor": "#06b6d4",
     "author": "Min Rock - Event Hunter",
-    "image": "/SNIPER BRAINROT DISPLAY.webp"
+    "image": "/BECOME BRAINROT FRAGOLA.webp"
   },
   {
     "slug": "cara-pasang-shaders-roblox-grafis-realistis-cinematic",
@@ -93,7 +173,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#10b981",
     "author": "Min Rock - Visual Specialist",
-    "image": "/BE FALSH DISPLAY.webp"
+    "image": "/BECOME BRAINROT HACKER 1X1 NIL S .webp"
   },
   {
     "slug": "game-roblox-simulator-paling-seru-dan-populer",
@@ -101,7 +181,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#3b82f6",
     "author": "Min Rock - Gaming Reviewer",
-    "image": "/permainan lucky block display.webp"
+    "image": "/BECOME BRAINROT NAGA ADMIN .webp"
   },
   {
     "slug": "cara-cepat-level-up-anime-defenders-trait-sss",
@@ -109,7 +189,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Tactical Guide",
-    "image": "/ability mega kitsune.webp"
+    "image": "/BECOME BRAINROT STELLAR RANDOM LV MAX.webp"
   },
   {
     "slug": "daftar-senjata-melee-terkuat-blox-fruits-tier-list",
@@ -117,7 +197,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Combat Expert",
-    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
+    "image": "/BECOME BRAINROT TITAK SAHUR.webp"
   },
   {
     "slug": "misteri-mitos-legenda-roblox-paling-menyeramkan-john-doe",
@@ -125,7 +205,7 @@ export const ARTICLES_META = [
     "category": "Edukasi & Komunitas",
     "categoryColor": "#64748b",
     "author": "Min Rock - Lore Hunter",
-    "image": "/SNIPER BRAINROT DISPLAY.webp"
+    "image": "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp"
   },
   {
     "slug": "trik-hindari-scam-trading-pet-simulator-99-aman",
@@ -133,7 +213,7 @@ export const ARTICLES_META = [
     "category": "Panduan Keamanan",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Security Team",
-    "image": "/hack vault brainrot display.webp"
+    "image": "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA QADC.webp"
   },
   {
     "slug": "game-parkour-roblox-paling-menantang-uji-refleks",
@@ -141,7 +221,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#f59e0b",
     "author": "Min Rock - Gaming Reviewer",
-    "image": "/permainan lucky block display.webp"
+    "image": "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA TDC.webp"
   },
   {
     "slug": "cara-main-roblox-di-smart-tv-gamepad-controller",
@@ -149,7 +229,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#06b6d4",
     "author": "Min Rock - Hardware Guide",
-    "image": "/BABAS DISPLAY.webp"
+    "image": "/BRAIN BLAST DISPLAY.webp"
   },
   {
     "slug": "game-roblox-multiplayer-terbaik-mabar-bareng-pasangan-bestie",
@@ -157,7 +237,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Community Editor",
-    "image": "/meta diamond normal.webp"
+    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
   },
   {
     "slug": "cara-mendapatkan-kitsune-fruit-blox-fruits-kombo-pvp",
@@ -165,7 +245,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Blox Master",
-    "image": "/ability mega kitsune.webp"
+    "image": "/CANTCH AND TAME DISPLAY.webp"
   },
   {
     "slug": "bocoran-update-dragon-rework-blox-fruits-stats-terbaru",
@@ -173,7 +253,7 @@ export const ARTICLES_META = [
     "category": "Update & Fitur",
     "categoryColor": "#ef4444",
     "author": "Min Rock - News Team",
-    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
+    "image": "/CAPYBARA VS TANAMAN DISPLAY.webp"
   },
   {
     "slug": "cara-mengatasi-roblox-lag-patah-patah-hp-kentang-60fps",
@@ -181,7 +261,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#10b981",
     "author": "Min Rock - Tech Specialist",
-    "image": "/BE FALSH DISPLAY.webp"
+    "image": "/DORONG BATU FOR BRAINROT DISPLAY.webp"
   },
   {
     "slug": "rahasia-menetas-pet-secret-steal-an-egg-brainrot-hoki",
@@ -189,7 +269,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#3b82f6",
     "author": "Min Rock - Brainrot Sepuh",
-    "image": "/STEAL A EGG DISPLAY.webp"
+    "image": "/DORONG LUCKY BLOK DISPLAY.webp"
   },
   {
     "slug": "arti-istilah-gaul-roblox-kamus-lengkap-pemain-pemula",
@@ -197,7 +277,7 @@ export const ARTICLES_META = [
     "category": "Edukasi & Komunitas",
     "categoryColor": "#f59e0b",
     "author": "Min Rock - Community Guide",
-    "image": "/BECOME A BRAINROT DISPLAY.webp"
+    "image": "/GAG 2 BEAR PET.webp"
   },
   {
     "slug": "cara-bikin-avatar-roblox-keren-sultan-gratisan-tanpa-robux",
@@ -205,7 +285,7 @@ export const ARTICLES_META = [
     "category": "Kreatif & Avatar",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Style Editor",
-    "image": "/meta diamond normal.webp"
+    "image": "/GAG 2 BEE PET.webp"
   },
   {
     "slug": "game-horor-roblox-paling-menyeramkan-mabar-bareng-teman",
@@ -213,7 +293,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#64748b",
     "author": "Min Rock - Gaming Reviewer",
-    "image": "/SNIPER BRAINROT DISPLAY.webp"
+    "image": "/GAG 2 BEE SKILL.webp"
   },
   {
     "slug": "daftar-nilai-value-buah-blox-fruits-tier-list-trading-terbaru",
@@ -221,7 +301,7 @@ export const ARTICLES_META = [
     "category": "Panduan Game",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Trading Expert",
-    "image": "/ability mega kitsune.webp"
+    "image": "/GAG 2 DISPLAY.webp"
   },
   {
     "slug": "cara-amankan-akun-roblox-dari-link-phishing-dan-hacker",
@@ -229,7 +309,7 @@ export const ARTICLES_META = [
     "category": "Panduan Keamanan",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Cyber Security",
-    "image": "/hack vault brainrot display.webp"
+    "image": "/JATUH FOR BRAINROT DISPLAY.webp"
   },
   {
     "slug": "game-roblox-mirip-gta-kehidupan-nyata-roleplay-terbaik",
@@ -237,7 +317,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#06b6d4",
     "author": "Min Rock - Reviewer",
-    "image": "/BABAS DISPLAY.webp"
+    "image": "/KALB ABYSALL ORANG YANG BERUNTUNG 2.6Q.webp"
   },
   {
     "slug": "game-roblox-bertema-anime-paling-seru-grafis-memukau",
@@ -245,7 +325,7 @@ export const ARTICLES_META = [
     "category": "Rekomendasi Game",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Anime Editor",
-    "image": "/permainan lucky block display.webp"
+    "image": "/KALB BELUGA HEAVEN 307T.webp"
   },
   {
     "slug": "daftar-id-lagu-roblox-music-code-viral-tiktok-terbaru",
@@ -253,7 +333,7 @@ export const ARTICLES_META = [
     "category": "Hiburan & Musik",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Entertainment",
-    "image": "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp"
+    "image": "/KALB GAJAH BECON 186T .webp"
   },
   {
     "slug": "cara-agar-akun-roblox-tidak-di-banned-panduan-keamanan",
@@ -261,7 +341,7 @@ export const ARTICLES_META = [
     "category": "Panduan Keamanan",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Security Team",
-    "image": "/STEAL A EGG DISPLAY.webp"
+    "image": "/KALB GAJAH BECON MAX.webp"
   },
   {
     "slug": "item-roblox-paling-laku-dan-dicari-tahun-2026",
@@ -269,7 +349,7 @@ export const ARTICLES_META = [
     "category": "Tren & Pasar",
     "categoryColor": "#ec4899",
     "author": "Min Rock - Market Analyst",
-    "image": "/ability mega kitsune.webp"
+    "image": "/KALB KRUPUK BECON 240T.webp"
   },
   {
     "slug": "cara-claim-robux-gratis-resmi-legal-dan-aman",
@@ -277,7 +357,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#06b6d4",
     "author": "Min Rock - Community Guide",
-    "image": "/ROBUX.webp"
+    "image": "/KALB POT HOT SPOT BECON 233T.webp"
   },
   {
     "slug": "syarat-kirim-robux-via-username-panduan-lengkap",
@@ -285,7 +365,7 @@ export const ARTICLES_META = [
     "category": "Update & Fitur",
     "categoryColor": "#10b981",
     "author": "Min Rock - Robux Specialist",
-    "image": "/ROBUX.webp"
+    "image": "/KALB SEPEDA BECON LV MAX 22T.webp"
   },
   {
     "slug": "game-roblox-paling-banyak-dimainkan-populer-saat-ini",
@@ -293,7 +373,7 @@ export const ARTICLES_META = [
     "category": "Game Populer",
     "categoryColor": "#8b5cf6",
     "author": "Min Rock - Editorial",
-    "image": "/BUILD AND STEAL BASE YETI INFERNO 1B.webp"
+    "image": "/KOTAK GULUNG BRAINROT DISPLAY.webp"
   },
   {
     "slug": "kode-redeem-roblox-terbaru-hari-ini",
@@ -301,7 +381,7 @@ export const ARTICLES_META = [
     "category": "Kode Redeem",
     "categoryColor": "#22c55e",
     "author": "Min Rock - Editorial",
-    "image": "/STEAL A EGG DISPLAY.webp"
+    "image": "/LEMPAR KOIN BOLA DYSON BESAR 13QI.webp"
   },
   {
     "slug": "cara-cepat-jadi-sepuh-di-roblox-dan-tips-trading-item-langka",
@@ -309,7 +389,7 @@ export const ARTICLES_META = [
     "category": "Tips & Trik",
     "categoryColor": "#3b82f6",
     "author": "Min Rock - Editorial",
-    "image": "/BE FALSH DISPLAY.webp"
+    "image": "/LEMPAR KOIN FOR BRAINROT DISPLAY.webp"
   },
   {
     "slug": "tips-aman-beli-akun-roblox-data-polos-anti-hackback",
@@ -317,6 +397,6 @@ export const ARTICLES_META = [
     "category": "Panduan Keamanan",
     "categoryColor": "#ef4444",
     "author": "Min Rock - Security Team",
-    "image": "/BECOME A BRAINROT DISPLAY.webp"
+    "image": "/LEMPAR PALU FOR BRAINROT DISPLAY.webp"
   }
 ];

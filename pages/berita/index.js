@@ -38,13 +38,18 @@ export default function BeritaPortal() {
       <Head>
         <title>Berita & Update Roblox Terbaru Hari Ini | Rockstar.Store</title>
         <meta name="description" content="Kumpulan berita Roblox terbaru hari ini, update game, daftar kode redeem gratis yang masih aktif, dan tips trik cara cepat jadi sepuh di Rockstar Store." />
+        <meta name="keywords" content="berita roblox terbaru, tips steal an egg roblox, kode redeem blox fruits, cara jadi sepuh roblox, info update roblox 2026, rockstar store" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <link rel="canonical" href="https://rockstarstore.id/berita" />
+        <meta property="og:site_name" content="Rockstar.Store" />
+        <meta property="og:locale" content="id_ID" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Berita & Update Roblox Terbaru Hari Ini | Rockstar.Store" />
         <meta property="og:description" content="Kumpulan berita Roblox terbaru hari ini, update game, kode redeem gratis, dan tips trik cara cepat jadi sepuh di Rockstar Store." />
         <meta property="og:url" content="https://rockstarstore.id/berita" />
         <meta property="og:image" content="https://rockstarstore.id/STEAL%20A%20EGG%20DISPLAY.webp" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@RockstarStore" />
         <meta name="twitter:title" content="Berita & Update Roblox Terbaru Hari Ini | Rockstar.Store" />
         <meta name="twitter:description" content="Kumpulan berita Roblox terbaru hari ini, update game, kode redeem gratis, dan tips trik jadi sepuh di Rockstar Store." />
         <meta name="twitter:image" content="https://rockstarstore.id/STEAL%20A%20EGG%20DISPLAY.webp" />
