@@ -11,7 +11,7 @@ import HomeArticles from '../components/HomeArticles';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=faqorder-20261110", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=sw-20261102", "/site-scripts/home-08-lang.js?v=lang-20261031", "/site-scripts/home-08.js?v=topgames-20261110", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b"];
 
 
 
@@ -1145,7 +1145,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
         <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-20261031" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=faqorder-20261110" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=topgames-20261110" />
 
         {"\r\n"}
 
@@ -1736,6 +1736,22 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
           </span>
 
         </a>
+
+        <div className="mnav-topgames-box">
+          <div className="mnav-topgames-header">
+            <div className="mnav-topgames-title">
+              <span>🔥</span>
+              <span>10 GAME TERATAS ROBLOX</span>
+            </div>
+            <span className="mnav-live-badge">
+              <span className="live-pulse-dot"></span> LIVE
+            </span>
+          </div>
+          <p className="mnav-topgames-sub">Paling ramai dimainkan saat ini. Klik game langsung auto main di Roblox!</p>
+          <div id="mnavTopGamesList" className="mnav-topgames-list">
+            <div className="mnav-game-skeleton">Memuat daftar game teratas...</div>
+          </div>
+        </div>
 
         {"\r\n  "}
 
@@ -3406,6 +3422,179 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
       {"\r\n\r\n"}
 
+            <style jsx global>{`
+        .mnav-topgames-box {
+          margin: 10px 0;
+          padding: 13px;
+          background: linear-gradient(160deg, rgba(14, 27, 61, 0.95) 0%, rgba(8, 16, 36, 0.98) 100%);
+          border: 1px solid rgba(59, 130, 246, 0.35);
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(96, 165, 250, 0.15);
+        }
+        .mnav-topgames-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 4px;
+        }
+        .mnav-topgames-title {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12.5px;
+          font-weight: 800;
+          color: #ffffff;
+          letter-spacing: 0.4px;
+        }
+        .mnav-live-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 10px;
+          font-weight: 800;
+          color: #4ade80;
+          background: rgba(34, 197, 94, 0.15);
+          border: 1px solid rgba(34, 197, 94, 0.35);
+          padding: 2px 7px;
+          border-radius: 999px;
+          letter-spacing: 0.5px;
+        }
+        .live-pulse-dot, .game-online-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #22c55e;
+          box-shadow: 0 0 6px #22c55e;
+          animation: mnav-pulse 1.6s infinite ease-in-out;
+          display: inline-block;
+        }
+        @keyframes mnav-pulse {
+          0% { transform: scale(0.9); opacity: 0.8; }
+          50% { transform: scale(1.3); opacity: 1; }
+          100% { transform: scale(0.9); opacity: 0.8; }
+        }
+        .mnav-topgames-sub {
+          font-size: 11px;
+          color: #94a3b8;
+          margin: 0 0 10px;
+          line-height: 1.4;
+        }
+        .mnav-topgames-list {
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+          max-height: 380px;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          padding-right: 2px;
+        }
+        .mnav-topgames-list::-webkit-scrollbar {
+          width: 4px;
+        }
+        .mnav-topgames-list::-webkit-scrollbar-thumb {
+          background: #2563eb;
+          border-radius: 4px;
+        }
+        .mnav-game-skeleton {
+          padding: 14px;
+          text-align: center;
+          font-size: 11.5px;
+          color: #94a3b8;
+          font-style: italic;
+        }
+        .mnav-game-item {
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          padding: 7px 9px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 11px;
+          text-decoration: none;
+          color: inherit;
+          transition: all 0.18s ease;
+        }
+        .mnav-game-item:hover, .mnav-game-item:active {
+          background: rgba(37, 99, 235, 0.22);
+          border-color: rgba(96, 165, 250, 0.45);
+          transform: translateX(3px);
+        }
+        .mnav-game-rank {
+          font-size: 11px;
+          font-weight: 800;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 6px;
+          flex-shrink: 0;
+          color: #fff;
+          background: rgba(255, 255, 255, 0.1);
+        }
+        .mnav-game-rank.rank-1 {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+        .mnav-game-rank.rank-2 {
+          background: linear-gradient(135deg, #94a3b8, #64748b);
+          box-shadow: 0 2px 8px rgba(148, 163, 184, 0.3);
+        }
+        .mnav-game-rank.rank-3 {
+          background: linear-gradient(135deg, #b45309, #78350f);
+          box-shadow: 0 2px 8px rgba(180, 83, 9, 0.3);
+        }
+        .mnav-game-thumb {
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          object-fit: cover;
+          flex-shrink: 0;
+          background: #080f1d;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .mnav-game-info {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .mnav-game-title {
+          font-size: 12px;
+          font-weight: 700;
+          color: #f1f5f9;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 1.3;
+        }
+        .mnav-game-meta {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 6px;
+          font-size: 10.5px;
+          margin-top: 2px;
+        }
+        .mnav-game-online {
+          color: #4ade80;
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .mnav-game-play {
+          font-size: 10px;
+          font-weight: 800;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.12);
+          border: 1px solid rgba(56, 189, 248, 0.3);
+          padding: 1px 6px;
+          border-radius: 5px;
+          flex-shrink: 0;
+        }
+      `}</style>
       <PageScripts sources={pageScripts} />
 
     </>

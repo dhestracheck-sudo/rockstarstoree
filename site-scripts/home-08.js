@@ -507,6 +507,60 @@ function positionMnavPanel(){
   const top = Math.max(0, Math.round(topWrap.getBoundingClientRect().bottom));
   menu.style.setProperty("--mnav-top", top + "px");
 }
+let _topGamesCache = null;
+let _topGamesLoading = false;
+let _lastTopGamesFetch = 0;
+
+function renderTopGames(games){
+  const box = document.getElementById("mnavTopGamesList");
+  if(!box || !Array.isArray(games) || !games.length) return;
+  box.innerHTML = games.map((g, idx) => {
+    const rank = g.rank || (idx + 1);
+    const rankCls = rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : "";
+    const p = Number(g.playing) || 0;
+    const playingStr = p >= 1000000 
+      ? (p / 1000000).toFixed(1) + "M"
+      : p >= 1000 
+        ? Math.round(p / 1000) + "K"
+        : p.toLocaleString("id-ID");
+    const name = String(g.name || "Roblox Game").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const gameUrl = g.url || ("https://www.roblox.com/games/" + (g.placeId || ""));
+    const iconUrl = g.icon || "/optimized/ROCKSTARLOGO-72.webp";
+    return `<a href="${gameUrl}" target="_blank" rel="noopener noreferrer" class="mnav-game-item">
+      <div class="mnav-game-rank ${rankCls}">#${rank}</div>
+      <img src="${iconUrl}" class="mnav-game-thumb" alt="${name}" width="38" height="38" loading="lazy" decoding="async" onerror="this.src='/optimized/ROCKSTARLOGO-72.webp'">
+      <div class="mnav-game-info">
+        <div class="mnav-game-title">${name}</div>
+        <div class="mnav-game-meta">
+          <span class="mnav-game-online"><span class="game-online-dot"></span>${playingStr} Main</span>
+          <span class="mnav-game-play">Auto Main ↗</span>
+        </div>
+      </div>
+    </a>`;
+  }).join("");
+}
+
+function loadTopRobloxGames(){
+  const now = Date.now();
+  if(_topGamesCache && (now - _lastTopGamesFetch < 60000)){
+    renderTopGames(_topGamesCache);
+    return;
+  }
+  if(_topGamesLoading) return;
+  _topGamesLoading = true;
+  fetch("/api/roblox-top-games")
+    .then(r => r.json())
+    .then(json => {
+      _topGamesLoading = false;
+      if(json && Array.isArray(json.data)){
+        _topGamesCache = json.data;
+        _lastTopGamesFetch = Date.now();
+        renderTopGames(_topGamesCache);
+      }
+    })
+    .catch(() => { _topGamesLoading = false; });
+}
+
 function toggleMnav(){
   const m = document.getElementById("mnav");
   if(!m) return;
@@ -515,6 +569,7 @@ function toggleMnav(){
   if(open){
     positionMnavPanel();
     lockPageScrollForMnav();
+    loadTopRobloxGames();
   }
   else unlockPageScrollForMnav();
   const b = document.getElementById("burgerBtn");
