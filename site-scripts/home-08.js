@@ -708,6 +708,8 @@ function searchCatalog(){
 
       c.items.forEach((item, j) => {
 
+        if(!item || item.stock === 0 || (typeof item.stock !== "undefined" && Number(item.stock) <= 0)) return;
+        if(item.soldout && /^(ya|y|yes|habis|sold)/i.test(String(item.soldout).trim())) return;
         if((c.name + " " + item.name).toLowerCase().includes(q)) out.push({page, i, j, cname: c.name, item});
 
       });
@@ -774,15 +776,19 @@ function sugShow(q, rows){
 
   const box = document.getElementById("searchSug");
 
-  if(!box || !rows.length){ sugHide(); return; }
+  if(!box || !rows || !rows.length){ sugHide(); return; }
 
-  box.innerHTML = rows.map(r => {
+  // Filter ketat: jangan tampilkan produk habis di saran pencarian
+  const availableRows = rows.filter(r => r && r.item && r.item.stock !== 0 && !(typeof r.item.stock !== "undefined" && Number(r.item.stock) <= 0) && !(r.item.soldout && /^(ya|y|yes|habis|sold)/i.test(String(r.item.soldout).trim())));
+  if(!availableRows.length){ sugHide(); return; }
+
+  box.innerHTML = availableRows.map(r => {
 
     const cats = catsOf(r.page);
 
     const im = r.item.img || (r.item.images && r.item.images[0]) || (cats[r.i] && cats[r.i].img) || "";
 
-    const pr = (r.item.stock === 0) ? tr("habis") : ("Rp " + Number(r.item.price || 0).toLocaleString("id-ID"));
+    const pr = "Rp " + Number(r.item.price || 0).toLocaleString("id-ID");
 
     const nm = String(r.item.name || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const imgAlt = nm.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -3378,7 +3384,7 @@ function searchSuggestNow(){
 
   const out = [];
 
-  const pages = ["brainrot", "topup", "akun"];
+  const pages = ["brainrot", "akun", "topup", "joki"];
 
   for(let p = 0; p < pages.length && out.length < 6; p++){
 
@@ -3389,6 +3395,10 @@ function searchSuggestNow(){
       for(let j = 0; j < cats[i].items.length && out.length < 6; j++){
 
         const it = cats[i].items[j];
+
+        // Jangan tampilkan produk yang stoknya habis di pencarian
+        if(!it || it.stock === 0 || (typeof it.stock !== "undefined" && Number(it.stock) <= 0)) continue;
+        if(it.soldout && /^(ya|y|yes|habis|sold)/i.test(String(it.soldout).trim())) continue;
 
         if((cats[i].name + " " + it.name).toLowerCase().includes(q))
 
