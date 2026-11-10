@@ -1,5 +1,356 @@
 export const ARTICLES = [
   {
+    slug: "cara-mendapatkan-kitsune-fruit-blox-fruits-kombo-pvp",
+    title: "Cara Mendapatkan Kitsune Fruit di Blox Fruits & Trik Kombo PvP Paling Mematikan",
+    excerpt: "Kitsune Fruit adalah buah iblis Mythical termahal dan paling lincah di Blox Fruits. Simak lokasi spawn, cara gacha, dan racikan combo PvP auto win di Sea 3!",
+    category: "Panduan Game",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:10:00+07:00",
+    author: "Min Rock - Blox Master",
+    readTime: "5 menit baca",
+    views: "15.4K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Kitsune Blox Fruits", "Buah Kitsune", "Combo PvP Blox Fruits", "Sea 3 Blox Fruits", "Tips Blox Fruits"],
+    contentHtml: `
+      <p class="lead">Di antara seluruh buah iblis (Devil Fruit) tipe Mythical di Blox Fruits, <strong>Kitsune Fruit</strong> menduduki kasta tertinggi dalam hal mobilitas, kecepatan serangan, dan estetika animasi. Dengan wujud rubah ekor sembilan legendaris, pengguna Kitsune hampir mustahil dikejar saat bertarung di lautan Third Sea. Berikut panduan lengkap cara mendapatkannya serta kombo PvP mematikan!</p>
+
+      <h2>1. Tiga Cara Mendapatkan Kitsune Fruit</h2>
+      <p>Kitsune memiliki peluang spawn dan gacha yang sangat kecil (di bawah 0.1%). Berikut metode resmi mendapatkannya:</p>
+      <ul>
+        <li><strong>Blox Fruit Dealer (Beli dengan Beli / Robux):</strong> Beli langsung saat stok tersedia seharga 8.000.000 Beli atau 4.000 Robux untuk versi permanen (*Permanent Kitsune*).</li>
+        <li><strong>Gacha di Zioles (Blox Fruit Gacha):</strong> Lakukan gacha berkala di Third Sea (Mansion) setiap 2 jam sekali.</li>
+        <li><strong>Event Kitsune Shrine (Kitsune Island):</strong> Event spesial saat Full Moon di Third Sea. Kumpulkan *Azure Embers* di Kitsune Shrine untuk ditukar dengan buah Kitsune fisik, aksesoris Kitsune Ribbon, atau Fox Lamp.</li>
+      </ul>
+
+      <h2>2. Racikan Kombo PvP Kitsune Auto Win</h2>
+      <p>Keunggulan utama Kitsune terletak pada passive speed dan stun ekornya. Gunakan racikan item ini:</p>
+      <ul>
+        <li><strong>Melee Pendukung:</strong> Sanguine Art atau Godhuman untuk breaking Ken Haki.</li>
+        <li><strong>Sword / Senjata:</strong> Cursed Dual Katana (CDK) atau Fox Lamp.</li>
+        <li><strong>Kombo Urutan Skill:</strong> Mulai dengan <em>Kitsune (C) Flame Dash</em> untuk menutup jarak &gt; gunakan <em>Melee Sanguine (C)</em> &gt; sambung dengan <em>Kitsune (Z)</em> &gt; eksekusi penutup dengan <em>Kitsune (X) Tails Burst</em>. Musuh dijamin kehabisan darah seketika!</li>
+      </ul>
+
+      <div class="cta-card safe-theme">
+        <div class="cta-content">
+          <h3>🦊 Mau Punya Akun Blox Fruits Kitsune Siap Pakai?</h3>
+          <p>Malas gacha bertahun-tahun tanpa hasil? Di <strong>Rockstar Store</strong>, kamu bisa langsung mendapatkan Akun Sepuh Blox Fruits Sea 3 dengan Kitsune Permanen, Godhuman, dan CDK dengan harga terjangkau dan garansi anti hackback!</p>
+          <div class="cta-actions">
+            <a href="/?tab=akun" class="cta-btn primary">Pilih Akun Blox Fruits Sepuh 🛡️</a>
+            <a href="/?tab=joki" class="cta-btn secondary">Order Joki Sea 3 & Kitsune 🏆</a>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    slug: "bocoran-update-dragon-rework-blox-fruits-stats-terbaru",
+    title: "Bocoran Update Dragon Rework Blox Fruits: Perubahan Model, Skill Baru & Prediksi Rilis",
+    excerpt: "Update rework Dragon Fruit yang paling dinanti komunitas Roblox akhirnya segera tiba! Intip bocoran tampilan baru, skill naga elemental, dan perkiraan harganya.",
+    category: "Update & Fitur",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:15:00+07:00",
+    author: "Min Rock - News Team",
+    readTime: "4 menit baca",
+    views: "18.2K",
+    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    tags: ["Dragon Rework Blox Fruits", "Bocoran Blox Fruits", "Update Blox Fruits", "Dragon Fruit 2026"],
+    contentHtml: `
+      <p class="lead">Pembaruan <strong>Dragon Rework</strong> telah menjadi topik paling hangat di seluruh forum Roblox internasional. Gamer menanti-nanti transformasi baru dari buah legendaris bertipe Zoan naga ini. Berikut rangkuman bocoran resmi dari tim pengembang Gamer Robot Inc!</p>
+
+      <h2>1. Perubahan Desain Model & Animasi Terbang</h2>
+      <p>Jika model Dragon lama tampak kaku seperti naga klasik Barat, versi Rework menghadirkan model <em>Eastern Azure Dragon</em> yang lebih dinamis dengan sisik berkilau, tanduk menyala, dan pergerakan ekor yang sangat halus di udara.</p>
+
+      <h2>2. Efek Dua Elemen: Api dan Petir</h2>
+      <p>Bocoran teaser menunjukkan bahwa Dragon Rework akan mengadopsi dua mode elemen:</p>
+      <ul>
+        <li><strong>Mode Inferno Flame:</strong> Menyemburkan api area dengan *burn damage* berkepanjangan yang merusak pertahanan musuh.</li>
+        <li><strong>Mode Thunder Storm:</strong> Memanggil kilat badai yang memberikan efek stun kaku pada lawan di sekeliling arena.</li>
+      </ul>
+
+      <h2>3. Nilai Trading Diprediksi Melambung Tinggi</h2>
+      <p>Harga fisik Dragon di pasar barter saat ini sudah setara dengan 2 hingga 3 buah Leopard. Bagi yang sudah mengoleksi buah Dragon fisik di inventory, jangan buru-buru menukarnya karena nilainya diprediksi akan menjadi buah termahal melampaui Kitsune saat update diluncurkan!</p>
+    `
+  },
+  {
+    slug: "cara-mengatasi-roblox-lag-patah-patah-hp-kentang-60fps",
+    title: "Cara Mengatasi Roblox Lag & Patah-Patah di HP Kentang (Trik Rahasia 60 FPS Mulus)",
+    excerpt: "Sering force close atau patah-patah saat mabar Blox Fruits atau Steal an Egg? Terapkan 6 trik rahasia setting Roblox ini agar HP kentang tetap adem dan lancar 60 FPS!",
+    category: "Tips & Trik",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:20:00+07:00",
+    author: "Min Rock - Tech Specialist",
+    readTime: "4 menit baca",
+    views: "21.6K",
+    image: "/BE FALSH DISPLAY.webp",
+    tags: ["Roblox Lag", "HP Kentang Roblox", "Fix Lag Roblox", "Setting Grafik Roblox", "60 FPS Roblox"],
+    contentHtml: `
+      <p class="lead">Bermain game Roblox dengan efek partikel tinggi seperti Blox Fruits Sea 3 atau map Brainrot sering kali membuat HP berspesifikasi pas-pasan (RAM 3GB - 4GB) mengalami *thermal throttling*, patah-patah (*drop frame*), hingga *force close*. Jangan berkecil hati, ikuti <strong>cara ampuh mengatasi Roblox lag</strong> berikut ini!</p>
+
+      <h2>1. Ubah Graphics Mode ke Manual (Level 1 - 2)</h2>
+      <p>Secara default, Roblox menyetel grafik ke mode Otomatis yang memaksa HP merender jarak pandang (*render distance*) terlalu jauh. Masuk ke pengaturan in-game (ikon logo Roblox di pojok kiri atas), ubah <strong>Graphics Mode: Manual</strong> dan turunkan slider grafik ke bar 1 atau 2.</p>
+
+      <h2>2. Aktifkan Mode 'Fast Mode' di Pengaturan Game</h2>
+      <p>Di game-game berat seperti Blox Fruits, terdapat tombol khusus berikon roda gigi di pojok layar untuk mengaktifkan <strong>Fast Mode</strong>. Mode ini mematikan animasi rumput, bayangan pohon, dan efek laut yang berat sehingga FPS langsung melonjak.</p>
+
+      <h2>3. Bersihkan Cache Aplikasi Roblox Secara Berkala</h2>
+      <p>Buka menu <em>Pengaturan HP &gt; Manajemen Aplikasi &gt; Roblox &gt; Hapus Cache</em>. Cache peta dan texture game yang menumpuk hingga bergiga-giga sering kali menjadi penyebab utama lag memori.</p>
+
+      <h2>4. Matikan Aplikasi Berjalan di Latar Belakang</h2>
+      <p>Sebelum membuka Roblox, pastikan kamu menutup aplikasi media sosial seperti TikTok, Instagram, dan YouTube agar seluruh kapasitas RAM HP dialokasikan penuh untuk performa game.</p>
+    `
+  },
+  {
+    slug: "rahasia-menetas-pet-secret-steal-an-egg-brainrot-hoki",
+    title: "Rahasia Menetas Pet Secret di Steal an Egg & Map Brainrot (Trik Hoki 99% Berhasil)",
+    excerpt: "Peluang dapat pet Secret sangat kecil? Jangan buang koin sia-sia! Ini trik jitu menetas telur monster legendaris berdaya kuadriliun di Steal an Egg Roblox.",
+    category: "Panduan Game",
+    categoryColor: "#3b82f6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:25:00+07:00",
+    author: "Min Rock - Brainrot Sepuh",
+    readTime: "4 menit baca",
+    views: "14.1K",
+    image: "/STEAL A EGG DISPLAY.webp",
+    tags: ["Steal an Egg", "Pet Secret Brainrot", "Hoki Telur Roblox", "Trik Brainrot", "Sepuh Brainrot"],
+    contentHtml: `
+      <p class="lead">Map <strong>Steal an Egg</strong> dan game-game bertema <strong>Brainrot</strong> sedang merajai trending game di Indonesia. Mendapatkan monster tier <em>Secret</em> atau <em>Transcendent</em> dengan kekuatan Qi atau Sx adalah dambaan setiap pemain. Berikut rahasia dan trik meningkatkan hoki menetas telur!</p>
+
+      <h2>1. Manfaatkan Lucky Potion & Server Boost</h2>
+      <p>Jangan pernah membuka telur di zona inti tanpa meminum <strong>Lucky Potion</strong>. Pastikan juga server memiliki status <em>Server Luck Boost</em> aktif yang biasanya diberikan saat ada event khusus atau donasi pemain sultan.</p>
+
+      <h2>2. Gunakan Fitur Auto-Delete Pet Biasa</h2>
+      <p>Sebelum memulai *Auto-Hatch*, atur filter inventori untuk langsung menghapus pet tier Common dan Rare secara otomatis. Ini menjaga agar tas kamu tidak cepat penuh dan siklus penetasan tidak terhenti.</p>
+
+      <h2>3. Beli Langsung Tanpa Gacha Capek di Rockstar Store</h2>
+      <p>Daripada menghabiskan waktu berhari-hari menatap layar HP tanpa kepastian, kamu bisa langsung membeli <strong>Pet Secret, Yeti Inferno OG, dan Monster Mutasi</strong> dengan kekuatan maksimal langsung ke akunmu lewat Rockstar Store!</p>
+    `
+  },
+  {
+    slug: "arti-istilah-gaul-roblox-kamus-lengkap-pemain-pemula",
+    title: "Kamus Gaul Roblox Lengkap: Arti Istilah Sepuh, W/F/L, AFK, RNG, OG, Hingga Cross Trading",
+    excerpt: "Baru main Roblox dan bingung dengan istilah-istilah para pemain di chat? Ini arti lengkap singkatan dan bahasa gaul komunitas Roblox Indonesia!",
+    category: "Edukasi & Komunitas",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:30:00+07:00",
+    author: "Min Rock - Community Guide",
+    readTime: "4 menit baca",
+    views: "13.8K",
+    image: "/BECOME A BRAINROT DISPLAY.webp",
+    tags: ["Istilah Gaul Roblox", "Kamus Roblox", "Arti Sepuh", "WFL Roblox", "Trading Term Roblox"],
+    contentHtml: `
+      <p class="lead">Dunia Roblox memiliki bahasa komunitasnya sendiri yang unik. Pemain pemula sering kali bingung saat membaca percakapan di in-game chat atau forum trading. Berikut adalah <strong>kamus istilah Roblox terlengkap</strong> yang wajib kamu pahami!</p>
+
+      <h2>1. Daftar Istilah Paling Populer</h2>
+      <ul>
+        <li><strong>Sepuh:</strong> Sebutan kehormatan untuk pemain veteran yang memiliki level maksimal, item dewa, dan skill bertarung sangat tinggi.</li>
+        <li><strong>W / F / L:</strong> Singkatan dalam trading: <em>Win</em> (Untung besar), <em>Fair</em> (Seimbang), atau <em>Lose</em> (Rugi/buntung).</li>
+        <li><strong>OG (Original Gangster):</strong> Item atau akun versi awal/klasik yang sudah tidak bisa didapatkan lagi di masa sekarang (sangat langka).</li>
+        <li><strong>AFK (Away From Keyboard):</strong> Pemain yang meninggalkan karakter dalam keadaan menyala tanpa digerakkan.</li>
+        <li><strong>RNG (Random Number Generator):</strong> Sistem peluang keberuntungan gacha berbasis acak matematis.</li>
+        <li><strong>Cross Trading:</strong> Transaksi menukar item dari dua game berbeda atau barter dengan mata uang nyata (sangat rawan scam jika tidak menggunakan perantara terpercaya).</li>
+      </ul>
+    `
+  },
+  {
+    slug: "cara-bikin-avatar-roblox-keren-sultan-gratisan-tanpa-robux",
+    title: "Cara Bikin Avatar Roblox Keren Mirip Sultan Tanpa Robux (100% Gratis & Stylish)",
+    excerpt: "Mau tampil keren dan disegani saat mabar tanpa harus beli Robux mahal? Ini trik racikan pakaian avatar gratisan terbaik yang bikin tampilanmu auto stylish!",
+    category: "Kreatif & Avatar",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:35:00+07:00",
+    author: "Min Rock - Style Editor",
+    readTime: "4 menit baca",
+    views: "17.9K",
+    image: "/meta diamond normal.webp",
+    tags: ["Avatar Roblox Keren", "Outfit Gratis Roblox", "Roblox Tanpa Robux", "Skin Roblox Keren"],
+    contentHtml: `
+      <p class="lead">Siapa bilang tampil keren di Roblox harus menghabiskan ribuan Robux? Roblox Avatar Shop menyediakan ratusan aksesoris, rambut, dan pakaian resmi gratis yang jika dikombinasikan dengan cerdas akan menghasilkan avatar bernuansa sultan!</p>
+
+      <h2>1. Manfaatkan Item dari Event Konser & Game Resmi</h2>
+      <p>Banyak brand dunia (seperti Gucci, Vans, Spotify, dan event anime) membagikan item limited gratis hanya dengan masuk ke map mereka dan menyelesaikan misi tutorial singkat selama 5 menit.</p>
+
+      <h2>2. Gunakan Trik Layered Clothing</h2>
+      <p>Gunakan jaket dan celana 3D gratis yang pas dengan proporsi tubuh R15. Padukan dengan warna kulit netral dan animasi berjalan gratis seperti <em>Rthro Animation Package</em> untuk memberikan kesan karakter profesional.</p>
+    `
+  },
+  {
+    slug: "game-horor-roblox-paling-menyeramkan-mabar-bareng-teman",
+    title: "5 Game Horor Roblox Paling Menyeramkan yang Wajib Dicoba Bareng Teman (Uji Nyali Mabar)",
+    excerpt: "Cari game mabar seru yang bikin jantung berdebar kencang? Ini rekomendasi game horor Roblox paling seram dengan jumpscare dan grafis paling mencekam!",
+    category: "Rekomendasi Game",
+    categoryColor: "#64748b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:40:00+07:00",
+    author: "Min Rock - Gaming Reviewer",
+    readTime: "5 menit baca",
+    views: "16.5K",
+    image: "/SNIPER BRAINROT DISPLAY.webp",
+    tags: ["Game Horor Roblox", "Roblox Terseram", "Mabar Roblox", "Doors Roblox", "The Mimic"],
+    contentHtml: `
+      <p class="lead">Bosan dengan game grinding santai? Saatnya menguji adrenalin dan keberanian bersama kawan satu tongkrongan! Roblox memiliki koleksi game horor dengan tata suara 3D dan visual gelap yang tidak kalah menegangkan dibanding game PC AAA.</p>
+
+      <h2>1. The Mimic (Horor Bernuansa Urban Legend Asia)</h2>
+      <p>Mengangkat cerita mitologi folklore Jepang, pemain harus menyusuri lorong labirin gelap dengan lentera redup sambil menghindari kejaran monster pemakan manusia. Efek suara bisikannya dijamin membuat bulu kuduk merinding!</p>
+
+      <h2>2. DOORS (Petualangan Misteri 100 Pintu)</h2>
+      <p>Buka pintu demi pintu di hotel berhantu sambil memecahkan teka-teki kunci dan bersembunyi di dalam lemari dari entitas mematikan seperti Rush, Ambush, dan Figure.</p>
+
+      <h2>3. Apeirophobia & Blair</h2>
+      <p>Terinspirasi dari fenomena <em>The Backrooms</em> dan investigasi hantu bergaya Phasmophobia, game-game ini sangat seru dimainkan dengan fitur Spatial Voice Chat aktif.</p>
+    `
+  },
+  {
+    slug: "daftar-nilai-value-buah-blox-fruits-tier-list-trading-terbaru",
+    title: "Daftar Nilai Value Buah Blox Fruits: Tier List Trading Terbaru (Biar Gak Kena Rugi/L)",
+    excerpt: "Jangan sampai rugi barter buah iblis! Ini daftar lengkap value buah Blox Fruits terbaru mulai dari Kitsune, Dragon, Dough, Leopard, Buddha hingga Portal.",
+    category: "Panduan Game",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:45:00+07:00",
+    author: "Min Rock - Trading Expert",
+    readTime: "5 menit baca",
+    views: "22.4K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Blox Fruits Values", "Tier List Buah Blox Fruits", "Trading Blox Fruits", "Harga Buah Blox Fruits"],
+    contentHtml: `
+      <p class="lead">Bursa trading di Blox Fruits sangat kompetitif. Salah menghitung nilai buah bisa membuat kamu mengalami kerugian besar (*Big L*). Untuk mempermudah transaksi barter di Cafe Sea 2 atau Mansion Sea 3, berikut <strong>panduan tier list value buah Blox Fruits terbaru</strong>!</p>
+
+      <h2>1. Tier SSS (Raja Pasar Barter)</h2>
+      <ul>
+        <li><strong>Kitsune Fruit:</strong> Nilai trading tertinggi, sangat likuid dan mudah ditukar dengan gamepass apa pun.</li>
+        <li><strong>Dragon Fruit (Pre-Rework & Rework):</strong> Menjadi incaran nomor satu investor trading karena potensi lonjakan harga.</li>
+      </ul>
+
+      <h2>2. Tier SS (Buah Sultan Favorit PvP)</h2>
+      <ul>
+        <li><strong>Leopard Fruit:</strong> Sangat diminati pemain bounty hunter.</li>
+        <li><strong>Dough Fruit (Awakened):</strong> Buah dengan kombo stun paling konsisten di arena pertarungan.</li>
+        <li><strong>T-Rex Fruit:</strong> Kuat untuk grinding sea events dan pertarungan darat.</li>
+      </ul>
+
+      <h2>3. Tier S (Buah Utilitas Paling Dicari)</h2>
+      <ul>
+        <li><strong>Buddha Fruit:</strong> Buah wajib untuk grinding level 1 sampai maksimal dalam waktu tercepat.</li>
+        <li><strong>Portal Fruit:</strong> Alat teleportasi antar pulau instan favorit trader dan bounty hunter.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "cara-amankan-akun-roblox-dari-link-phishing-dan-hacker",
+    title: "Waspada Hacker! Cara Mengamankan Akun Roblox dari Link Phishing & Pencurian Cookie",
+    excerpt: "Banyak akun sultan dibobol hacker hanya karena klik link palsu! Pelajari cara kerja link jebakan phishing, pencurian .ROBLOSECURITY, dan cara melindunginya.",
+    category: "Panduan Keamanan",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:50:00+07:00",
+    author: "Min Rock - Cyber Security",
+    readTime: "4 menit baca",
+    views: "11.7K",
+    image: "/hack vault brainrot display.webp",
+    tags: ["Keamanan Akun Roblox", "Anti Phishing Roblox", "Cookie Stealer", "Akun Roblox Aman"],
+    contentHtml: `
+      <p class="lead">Maraknya kejahatan siber di dunia game membuat pemain Roblox harus ekstra hati-hati. Hacker kini tidak lagi menebak password secara manual, melainkan menggunakan teknik jebakan <strong>Phishing</strong> dan <strong>Cookie Logger</strong>. Simak cara melindungi akun kesayanganmu!</p>
+
+      <h2>1. Waspadai Domain Tautan Mirip</h2>
+      <p>Hacker sering menyebarkan tautan grup atau profile palsu di Discord dan TikTok yang sepintas tampak asli (misalnya: <code>roblox.com.py</code>, <code>roblx-trade.vip</code>, atau <code>roblox-login.org</code>). Selalu cek kolom URL browser: website asli Roblox <strong>HANYA</strong> beralamat di <strong>https://www.roblox.com</strong> dengan sertifikat keamanan gembok hijau.</p>
+
+      <h2>2. Jangan Pernah Menempelkan Script Bookmarklet / Inspect Element</h2>
+      <p>Modus penipuan yang meminta korban meng-copy script tertentu ke address bar browser untuk 'menggandakan Robux' adalah trik untuk mencuri token <code>.ROBLOSECURITY</code> milikmu secara otomatis.</p>
+    `
+  },
+  {
+    slug: "game-roblox-mirip-gta-kehidupan-nyata-roleplay-terbaik",
+    title: "5 Game Roblox Mirip GTA & Simulasi Kehidupan Nyata (Bisa Kerja, Beli Mobil Mewah & Rumah)",
+    excerpt: "Ingin merasakan serunya main game mirip GTA di HP lewat Roblox? Ini daftar game open-world roleplay terbaik dengan kota luas, modifikasi supercar, dan interaksi seru!",
+    category: "Rekomendasi Game",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:55:00+07:00",
+    author: "Min Rock - Reviewer",
+    readTime: "4 menit baca",
+    views: "15.9K",
+    image: "/BABAS DISPLAY.webp",
+    tags: ["Game Roblox Mirip GTA", "Roblox Roleplay", "Game Mobil Roblox", "Emergency Hamburg Roblox"],
+    contentHtml: `
+      <p class="lead">Bagi kamu yang menyukai konsep dunia terbuka (*open-world*) ala Grand Theft Auto (GTA), Roblox menawarkan berbagai pengalaman roleplay dengan grafis kota modern, kendaraan mewah yang bisa dimodifikasi, serta sistem pekerjaan realistis.</p>
+
+      <h2>1. Emergency Hamburg (Simulasi Kota & Kriminalitas)</h2>
+      <p>Pilih peranmu sebagai warga sipil biasa, supir truk, petugas polisi penegak hukum, petugas medis, atau menjadi buronan perampok bank yang dikejar ke sekeliling kota.</p>
+
+      <h2>2. Driving Empire & Vehicle Legends</h2>
+      <p>Surga bagi para pencinta otomotif! Di sini kamu bisa mengoleksi ratusan supercar berlisensi, melakukan balap drag, drifting di pegunungan, dan memodifikasi warna cat serta knalpot.</p>
+
+      <h2>3. Southwest Florida</h2>
+      <p>Peta berskala luas dengan pemandangan kota pesisir pantai yang memukau, cocok untuk sekadar bersantai (*cruising*) menikmati sore bersama sahabat.</p>
+    `
+  },
+  {
+    slug: "cara-jadi-joki-roblox-profesional-hasilkan-uang-sendiri",
+    title: "Cara Menjadi Joki Roblox Profesional & Hasilkan Uang dari Rumah (Tips Memulai Bisnis Joki)",
+    excerpt: "Punya skill jago main Blox Fruits atau Steal an Egg? Manfaatkan keahlianmu menjadi ladang cuan! Simak panduan membangun jasa joki Roblox terpercaya dan aman.",
+    category: "Karir & Bisnis Game",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:00:00+07:00",
+    author: "Min Rock - Business Guide",
+    readTime: "4 menit baca",
+    views: "13.2K",
+    image: "/permainan lucky block display.webp",
+    tags: ["Joki Roblox", "Jasa Joki Roblox", "Cuan dari Game", "Bisnis Joki Game", "Rockstar Store Joki"],
+    contentHtml: `
+      <p class="lead">Bermain game kini bukan sekadar sarana hiburan, melainkan profesi menjanjikan bagi mereka yang memiliki ketekunan dan keahlian di atas rata-rata. Menjadi <strong>joki Roblox</strong> profesional adalah salah satu cara terbaik menghasilkan uang saku sendiri sambil tetap bermain game favorit!</p>
+
+      <h2>1. Kunci Utama Bisnis Joki: Kepercayaan & Kejujuran</h2>
+      <p>Customer mempercayakan akun mereka kepadamu. Jangan pernah menggunakan script cheat berbahaya yang bisa membuat akun pelanggan terkena ban, dan jangan pernah mengutak-atik item pribadi di inventori mereka.</p>
+
+      <h2>2. Tentukan Spesialisasi Map</h2>
+      <p>Fokuslah pada map dengan permintaan jasa leveling tertinggi, seperti:</p>
+      <ul>
+        <li><strong>Joki Blox Fruits:</strong> Leveling Sea 1 ke Sea 3, membuka V4 Awakening, raid boss, dan mencari mastery senjata.</li>
+        <li><strong>Joki Map Brainrot:</strong> Membuka zona baru, mengumpulkan pet Secret, dan menaikkan power karakter.</li>
+      </ul>
+
+      <h2>3. Solusi Joki Cepat & Bergaransi di Rockstar Store</h2>
+      <p>Bagi kamu yang ingin menaikkan level akun tanpa ribet dan dipegang langsung oleh tim joki profesional berpengalaman, percayakan pada layanan <strong>Joki Sepuh Rockstar Store</strong>!</p>
+    `
+  },
+  {
+    slug: "daftar-id-lagu-roblox-music-code-viral-tiktok-terbaru",
+    title: "Daftar ID Lagu Roblox Paling Viral di TikTok (Music Code Boombox Lengkap & Cara Pakai)",
+    excerpt: "Mau nyalain boombox di Roblox dengan lagu-lagu hits TikTok terbaru? Ini kumpulan kode ID lagu Roblox Indonesia & internasional paling trending beserta panduan cara memasangnya!",
+    category: "Hiburan & Musik",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:05:00+07:00",
+    author: "Min Rock - Entertainment",
+    readTime: "4 menit baca",
+    views: "28.5K",
+    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp",
+    tags: ["ID Lagu Roblox", "Music Code Roblox", "Kode Boombox Roblox", "Lagu Viral Roblox TikTok"],
+    contentHtml: `
+      <p class="lead">Memutar musik favorit menggunakan item Boombox di dalam game Roblox adalah cara terbaik untuk memeriahkan suasana saat berkumpul atau balapan bareng teman-teman. Berikut adalah <strong>kumpulan ID lagu Roblox terbaru yang sedang viral di TikTok</strong> dan siap kamu pasang!</p>
+
+      <h2>1. Cara Memasang ID Lagu di Boombox Roblox</h2>
+      <ol class="step-list">
+        <li>Pegang item <strong>Boombox</strong> atau masuk ke kendaraan yang memiliki fitur radio di dalam game.</li>
+        <li>Klik pada Boombox untuk memunculkan kotak dialog teks (<em>Enter Song ID</em>).</li>
+        <li>Ketikkan atau tempel deretan angka ID lagu yang kamu pilih, lalu tekan tombol <strong>Play</strong>.</li>
+      </ol>
+
+      <h2>2. Kategori ID Lagu Paling Dicari</h2>
+      <ul>
+        <li><strong>Lagu Jedag-Jedug & DJ Remix Viral:</strong> Pilihan utama untuk menghidupkan suasana di map hangout.</li>
+        <li><strong>Lagu Populer Indonesia & Anime OP:</strong> Cocok untuk menemani perjalanan santai keliling kota.</li>
+      </ul>
+      <p>Pastikan game yang kamu mainkan mengizinkan pemutaran audio publik agar musik dapat didengarkan oleh pemain lain di sekitarmu!</p>
+    `
+  },
+  {
     slug: "cara-agar-akun-roblox-tidak-di-banned-panduan-keamanan",
     title: "7 Cara Ampuh Agar Akun Roblox Tidak Kena Banned (Wajib Tahu Pemain & Trader)",
     excerpt: "Takut akun Roblox kesayangan kena ban permanen atau suspensi? Pelajari penyebab utama hukuman Roblox mulai dari anti-cheat Hyperion, Robux ilegal, hingga tips keamanan akun.",

@@ -209,7 +209,7 @@ export default function BeritaDetail({ article, relatedArticles }) {
       <style jsx global>{`
         .article-page-wrapper {
           min-height: 100vh;
-          background: #060913;
+          background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.2) 0%, rgba(13, 22, 48, 0.95) 45%, #060b17 100%);
           color: #f2f5ff;
           font-family: var(--font-poppins), sans-serif;
         }

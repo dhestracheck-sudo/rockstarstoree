@@ -2,64 +2,67 @@ import React from "react";
 import { ARTICLES_META } from "../data/articles-meta";
 
 export default function HomeArticles() {
-  // Ambil 6 artikel terbaru untuk slider horizontal yang kaya informasi
-  const articles = ARTICLES_META.slice(0, 6);
+  // Ambil 6-8 artikel terbaru untuk slider horizontal yang kaya informasi
+  const articles = ARTICLES_META.slice(0, 8);
 
   return (
     <section className="home-articles-section" aria-labelledby="homeArticlesTitle">
-      <div className="home-articles-header">
-        <div className="home-articles-title-wrap">
-          <h2 className="home-articles-title" id="homeArticlesTitle">
-            ARTIKEL TERBARU &amp; BERITA GAME
-          </h2>
-          <span className="home-articles-swipe-hint">
-            {"👉 Geser untuk lihat artikel lainnya"}
-          </span>
+      <div className="home-articles-container">
+        <div className="home-articles-header">
+          <div className="home-articles-title-wrap">
+            <h2 className="home-articles-title" id="homeArticlesTitle">
+              {"📰 ARTIKEL TERBARU & BERITA GAME"}
+            </h2>
+            <span className="home-articles-swipe-hint">
+              {"👉 Geser untuk lihat artikel"}
+            </span>
+          </div>
+          <p className="home-articles-sub">
+            Dapatkan informasi terbaru seputar dunia game! Temukan panduan lengkap untuk meningkatkan pengalaman bermain, serta berita terkini mengenai promo, update top-up, dan komunitas gamer.
+          </p>
         </div>
-        <p className="home-articles-sub">
-          Dapatkan informasi terbaru seputar dunia game! Temukan panduan lengkap untuk meningkatkan pengalaman bermain, serta berita terkini mengenai promo, update top-up, dan komunitas gamer.
-        </p>
-      </div>
 
-      <div className="home-articles-scroll" role="region" aria-label="Slider Berita Roblox">
-        {articles.map((article) => (
-          <a
-            key={article.slug}
-            href={`/berita/${article.slug}`}
-            className="home-article-card"
-          >
-            <div className="home-article-thumb">
-              <img
-                src={article.image}
-                alt={article.title}
-                loading="lazy"
-                decoding="async"
-                fetchPriority="low"
-                width="280"
-                height="160"
-              />
-              <span
-                className="home-article-badge"
-                style={{ background: article.categoryColor || "#3b82f6" }}
-              >
-                {article.category}
-              </span>
-            </div>
+        <div className="home-articles-scroll" role="region" aria-label="Slider Berita Roblox">
+          {articles.map((article) => (
+            <a
+              key={article.slug}
+              href={`/berita/${article.slug}`}
+              className="home-article-card"
+            >
+              <div className="home-article-thumb">
+                <img
+                  src={article.image}
+                  alt={article.title}
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                  width="280"
+                  height="160"
+                />
+                <span
+                  className="home-article-badge"
+                  style={{ background: article.categoryColor || "#2563eb" }}
+                >
+                  {article.category}
+                </span>
+              </div>
 
-            <div className="home-article-body">
-              <span className="home-article-author">
-                {article.author || "Rockstar Store"}
-              </span>
-              <h3 className="home-article-name">{article.title}</h3>
-            </div>
+              <div className="home-article-body">
+                <span className="home-article-author">
+                  {article.author || "Rockstar Store"}
+                </span>
+                <h3 className="home-article-name">{article.title}</h3>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div className="home-articles-footer">
+          <a href="/berita" className="home-articles-btn">
+            <span>{"Lihat Semua Artikel"}</span>
+            <span className="home-articles-btn-arrow">{"→"}</span>
           </a>
-        ))}
-      </div>
-
-      <div className="home-articles-footer">
-        <a href="/berita" className="home-articles-btn">
-          Lihat Semua Artikel
-        </a>
+        </div>
       </div>
 
       <style jsx>{`
@@ -69,11 +72,35 @@ export default function HomeArticles() {
           padding: 0 16px;
           box-sizing: border-box;
           content-visibility: auto;
-          contain-intrinsic-size: 290px;
+          contain-intrinsic-size: 320px;
         }
+
+        /* ===== Rockstar Store Blue Theme Container ===== */
+        .home-articles-container {
+          background: linear-gradient(165deg, rgba(16, 28, 64, 0.85) 0%, rgba(9, 15, 34, 0.95) 60%, rgba(6, 10, 22, 0.98) 100%);
+          border: 1px solid rgba(59, 130, 246, 0.35);
+          border-radius: 20px;
+          padding: 22px 20px 24px;
+          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(96, 165, 250, 0.2);
+          position: relative;
+          overflow: hidden;
+        }
+        .home-articles-container::before {
+          content: "";
+          position: absolute;
+          top: -60px;
+          right: -60px;
+          width: 220px;
+          height: 220px;
+          background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
         .home-articles-header {
           margin-bottom: 16px;
           text-align: left;
+          position: relative;
+          z-index: 1;
         }
         .home-articles-title-wrap {
           display: flex;
@@ -89,24 +116,26 @@ export default function HomeArticles() {
           color: #ffffff;
           letter-spacing: 0.5px;
           margin: 0;
+          text-shadow: 0 0 18px rgba(59, 130, 246, 0.5);
         }
         .home-articles-swipe-hint {
           font-size: 0.74rem;
-          color: #38bdf8;
-          font-weight: 600;
-          background: rgba(56, 189, 248, 0.1);
-          border: 1px solid rgba(56, 189, 248, 0.25);
-          padding: 3px 9px;
+          color: #60a5fa;
+          font-weight: 700;
+          background: rgba(37, 99, 235, 0.18);
+          border: 1px solid rgba(59, 130, 246, 0.35);
+          padding: 4px 10px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
         }
         .home-articles-sub {
           font-size: 0.82rem;
-          color: #94a3b8;
+          color: #93c5fd;
           line-height: 1.5;
           max-width: 760px;
           margin: 0;
+          opacity: 0.9;
         }
         
         /* ===== Horizontal Slider Layout (Mirip Flash Sale) ===== */
@@ -116,40 +145,41 @@ export default function HomeArticles() {
           overflow-x: auto;
           scroll-snap-type: x mandatory;
           -webkit-overflow-scrolling: touch;
-          padding: 4px 2px 14px 2px;
+          padding: 6px 2px 14px 2px;
           margin-bottom: 14px;
           scrollbar-width: thin;
-          scrollbar-color: rgba(59, 130, 246, 0.45) transparent;
+          scrollbar-color: #2563eb rgba(255, 255, 255, 0.05);
+          position: relative;
+          z-index: 1;
         }
         .home-articles-scroll::-webkit-scrollbar {
-          height: 5px;
+          height: 6px;
         }
         .home-articles-scroll::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.04);
+          background: rgba(255, 255, 255, 0.05);
           border-radius: 6px;
         }
         .home-articles-scroll::-webkit-scrollbar-thumb {
-          background: rgba(59, 130, 246, 0.4);
+          background: linear-gradient(90deg, #1d4ed8, #3b82f6);
           border-radius: 6px;
-        }
-        .home-articles-scroll::-webkit-scrollbar-thumb:hover {
-          background: rgba(59, 130, 246, 0.7);
+          box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
         }
 
+        /* ===== Kartu Berita Biru Rockstar ===== */
         .home-article-card {
           flex: 0 0 260px;
           width: 260px;
           scroll-snap-align: start;
-          background: rgba(13, 20, 36, 0.9);
-          border: 1px solid rgba(59, 130, 246, 0.18);
+          background: linear-gradient(150deg, #111f42 0%, #0a1329 100%);
+          border: 1px solid rgba(59, 130, 246, 0.35);
           border-radius: 14px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
           text-decoration: none;
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(96, 165, 250, 0.2);
           contain: content;
-          transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+          transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
         @media (min-width: 768px) {
           .home-article-card {
@@ -158,9 +188,9 @@ export default function HomeArticles() {
           }
         }
         .home-article-card:hover {
-          transform: translateY(-3px);
-          border-color: rgba(59, 130, 246, 0.55);
-          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+          transform: translateY(-4px);
+          border-color: #60a5fa;
+          box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5), 0 0 18px rgba(37, 99, 235, 0.4);
         }
         .home-article-thumb {
           position: relative;
@@ -183,10 +213,10 @@ export default function HomeArticles() {
           position: absolute;
           top: 8px;
           left: 8px;
-          font-size: 0.65rem;
+          font-size: 0.66rem;
           font-weight: 700;
           color: #ffffff;
-          padding: 2px 7px;
+          padding: 2px 8px;
           border-radius: 5px;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
@@ -196,47 +226,62 @@ export default function HomeArticles() {
           display: flex;
           flex-direction: column;
           flex: 1;
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
-          background: rgba(8, 14, 26, 0.95);
+          border-top: 1px solid rgba(59, 130, 246, 0.25);
+          background: linear-gradient(180deg, #0e1936 0%, #091024 100%);
         }
         .home-article-author {
-          font-size: 0.72rem;
-          color: #94a3b8;
+          font-size: 0.73rem;
+          color: #60a5fa;
           font-weight: 600;
           margin-bottom: 4px;
         }
         .home-article-name {
-          font-size: 0.86rem;
+          font-size: 0.88rem;
           font-weight: 700;
-          color: #f8fafc;
-          line-height: 1.38;
+          color: #ffffff;
+          line-height: 1.4;
           margin: 0;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+
+        /* ===== Tombol "Lihat Semua Artikel" Biru Ala Rockstar Store ===== */
         .home-articles-footer {
-          margin-top: 2px;
+          margin-top: 4px;
+          position: relative;
+          z-index: 1;
         }
         .home-articles-btn {
           display: inline-flex;
           align-items: center;
-          justify-content: center;
-          background: #000000;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          gap: 8px;
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+          border: 1px solid #60a5fa;
           color: #ffffff;
-          font-size: 0.8rem;
-          font-weight: 700;
-          padding: 8px 16px;
-          border-radius: 8px;
+          font-size: 0.85rem;
+          font-weight: 800;
+          padding: 10px 20px;
+          border-radius: 10px;
           text-decoration: none;
-          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+          box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          letter-spacing: 0.3px;
+          transition: all 0.2s ease;
         }
         .home-articles-btn:hover {
-          background: #111827;
-          border-color: #3b82f6;
-          color: #38bdf8;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          border-color: #93c5fd;
+          box-shadow: 0 6px 24px rgba(37, 99, 235, 0.65), 0 0 14px rgba(59, 130, 246, 0.5);
+          transform: translateY(-2px);
+          color: #ffffff;
+        }
+        .home-articles-btn-arrow {
+          font-size: 1rem;
+          transition: transform 0.2s ease;
+        }
+        .home-articles-btn:hover .home-articles-btn-arrow {
+          transform: translateX(4px);
         }
       `}</style>
     </section>
