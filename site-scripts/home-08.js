@@ -525,10 +525,10 @@ function renderTopGames(games){
         : p.toLocaleString("id-ID");
     const name = String(g.name || "Roblox Game").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const gameUrl = g.url || ("https://www.roblox.com/games/" + (g.placeId || ""));
-    const iconUrl = g.icon || "/optimized/ROCKSTARLOGO-72.webp";
+    const iconUrl = g.icon || "https://tr.rbxcdn.com/180DAY-910355fa3ecc8a4524e0ffa7a55707a3/150/150/Image/Webp/noFilter";
     return `<a href="${gameUrl}" target="_blank" rel="noopener noreferrer" class="mnav-game-item">
       <div class="mnav-game-rank ${rankCls}">#${rank}</div>
-      <img src="${iconUrl}" class="mnav-game-thumb" alt="${name}" width="38" height="38" loading="lazy" decoding="async" onerror="this.src='/optimized/ROCKSTARLOGO-72.webp'">
+      <img src="${iconUrl}" class="mnav-game-thumb" alt="${name}" width="38" height="38" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='https://tr.rbxcdn.com/180DAY-910355fa3ecc8a4524e0ffa7a55707a3/150/150/Image/Webp/noFilter'">
       <div class="mnav-game-info">
         <div class="mnav-game-title">${name}</div>
         <div class="mnav-game-meta">
