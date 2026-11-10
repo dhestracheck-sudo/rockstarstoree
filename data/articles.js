@@ -1,5 +1,468 @@
 export const ARTICLES = [
   {
+    slug: "cara-mendapatkan-v4-awakening-blox-fruits-semua-race",
+    title: "Panduan Lengkap Cara Mendapatkan V4 Awakening di Blox Fruits (Semua Race: Angel, Shark, Cyborg)",
+    excerpt: "Ingin membuka kekuatan ras maksimal V4 di Blox Fruits? Simak panduan lengkap mulai dari mencari Mirage Island, menarik tuas Temple of Time, hingga memenangkan Trial!",
+    category: "Panduan Game",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:10:00+07:00",
+    author: "Min Rock - Sea Sepuh",
+    readTime: "6 menit baca",
+    views: "24.1K",
+    image: "/ability mega kitsune.webp",
+    tags: ["V4 Blox Fruits", "Race Awakening V4", "Temple of Time", "Trial Blox Fruits", "Blox Fruits Sea 3"],
+    contentHtml: `
+      <p class="lead">Membuka <strong>Race V4 Awakening</strong> adalah puncak kekuatan tertinggi di Blox Fruits. Transformasi V4 memberikan sayap, perisai air kebal, atau aura listrik mematikan yang membuat karakternya tak terkalahkan dalam duel PvP. Berikut adalah panduan langkah demi langkah membuka V4 untuk seluruh ras!</p>
+
+      <h2>1. Syarat Awal Sebelum Memulai Misi V4</h2>
+      <ul>
+        <li>Karakter sudah mencapai Third Sea dan memiliki ras minimal V3.</li>
+        <li>Telah mengalahkan raid boss <strong>Rip Indra</strong> dan <strong>Dough King</strong> untuk mendapatkan *Mirror Fractal*.</li>
+      </ul>
+
+      <h2>2. Menemukan Mirage Island & Blue Gear</h2>
+      <p>Berlayarlah ke zona laut Danger Level 4–6 saat malam hari hingga pulau berkabut <strong>Mirage Island</strong> muncul. Naiki puncak tertinggi pulau, aktifkan skill V3, lalu tatap bulan purnama (*Full Moon*) selama 15 detik hingga bulan bersinar terang. Segera kelilingi pulau mencari roda gigi biru (*Blue Gear*) yang tersembunyi di antara pepohonan.</p>
+
+      <h2>3. Menarik Tuas Temple of Time & Memulai Trial</h2>
+      <p>Setelah mendapatkan Blue Gear, pergilah ke puncak pohon raksasa *Great Tree* dan bicaralah dengan NPC misterius untuk masuk ke <strong>Temple of Time</strong>. Bersama 2 teman dengan ras berbeda, berdirilah di depan pintu trial masing-masing ras, lalu aktifkan skill secara serentak saat Full Moon untuk memulai Trial!</p>
+    `
+  },
+  {
+    slug: "lokasi-spawn-mirage-island-cara-cari-blue-gear-blox-fruits",
+    title: "Lokasi Spawn Mirage Island & Trik Cepat Cari Blue Gear di Blox Fruits Tanpa Tersesat",
+    excerpt: "Sering berlayar berjam-jam tapi Mirage Island tidak muncul? Ini rahasia rute pelayaran, level bahaya laut terbaik, dan trik mencari Blue Gear saat Full Moon.",
+    category: "Panduan Game",
+    categoryColor: "#3b82f6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:15:00+07:00",
+    author: "Min Rock - Blox Master",
+    readTime: "5 menit baca",
+    views: "20.7K",
+    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    tags: ["Mirage Island", "Blue Gear Blox Fruits", "Sea Events", "Blox Fruits Third Sea"],
+    contentHtml: `
+      <p class="lead">Mencari <strong>Mirage Island</strong> adalah salah satu tantangan paling menguras kesabaran di Blox Fruits. Pulau misterius ini hanya bertahan selama 15 menit sebelum lenyap ditelan kabut samudra. Berikut trik efisien memancing kemunculan Mirage Island!</p>
+
+      <h2>1. Rute Pelayaran & Danger Level Paling Ideal</h2>
+      <p>Gunakan kapal berkecepatan tinggi (seperti *Beast Hunter* atau *Enies Lobby Ship*). Berlayarlah lurus dari dermaga Tiki Outpost menuju batas Danger Level 4 hingga 5. Hindari masuk ke Danger Level 6 sendirian karena kemunculan Terror Shark dapat menghancurkan kapalmu dalam sekejap.</p>
+
+      <h2>2. Trik Resonansi Bulan</h2>
+      <p>Pastikan kamu membawa buah yang memiliki mobilitas terbang (seperti Light, Portal, atau Kitsune) agar kamu bisa langsung melesat ke puncak batu tertinggi begitu Mirage Island muncul di hadapanmu.</p>
+    `
+  },
+  {
+    slug: "cara-mendapatkan-true-triple-katana-ttk-blox-fruits",
+    title: "Cara Mendapatkan True Triple Katana (TTK) di Blox Fruits: Syarat 3 Pedang Legendaris",
+    excerpt: "Pedang 3 bilah legendaris Roronoa Zoro impian semua swordsman! Simak jadwal spawn Legendary Sword Dealer dan syarat 2.000.000 Beli untuk menggabungkan Wando, Shisui, dan Saddi.",
+    category: "Panduan Game",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:20:00+07:00",
+    author: "Min Rock - Swordsman",
+    readTime: "4 menit baca",
+    views: "18.5K",
+    image: "/STEAL A EGG DISPLAY.webp",
+    tags: ["TTK Blox Fruits", "True Triple Katana", "Shisui", "Wando", "Saddi", "Pedang Legendaris"],
+    contentHtml: `
+      <p class="lead"><strong>True Triple Katana (TTK)</strong> adalah salah satu pedang terkuat dalam sejarah Blox Fruits. Dengan jangkauan tebasan angin tornado yang luas dan damage kritikal tinggi, pedang ini menjadi senjata favorit para pendekar pedang di Second Sea dan Third Sea.</p>
+
+      <h2>1. Mengumpulkan Tiga Pedang dari Legendary Sword Dealer</h2>
+      <p>Di Second Sea, bicaralah dengan Manager di The Cafe untuk mengetahui kapan <strong>Legendary Sword Dealer</strong> tiba. Kamu harus membeli tiga pedang berikut seharga masing-masing 2.000.000 Beli:</p>
+      <ul>
+        <li><strong>Shisui:</strong> Memiliki kecepatan dash tebasan ungu tercepat.</li>
+        <li><strong>Saddi:</strong> Memberikan serangan tebasan berputar area luas.</li>
+        <li><strong>Wando:</strong> Menghasilkan damage burst tunggal paling sakit.</li>
+      </ul>
+
+      <h2>2. Menempa Menjadi True Triple Katana</h2>
+      <p>Naikkan mastery ketiga pedang tersebut hingga minimal level 300. Setelah itu, naiki puncak tangkai hijau raksasa di Green Zone, temui Mysterious Man, dan bayar 2.000.000 Beli untuk menempa ketiganya menjadi True Triple Katana!</p>
+    `
+  },
+  {
+    slug: "cara-kalahkan-rip-indra-dough-king-raid-boss-blox-fruits",
+    title: "Trik Mengalahkan Rip Indra & Dough King Raid Boss Blox Fruits (Buka Mirror Fractal)",
+    excerpt: "Kesulitan mengalahkan bos raid tersulit di Blox Fruits? Ini strategi bertahan hidup dari skill Dough King dan cara memanggil Rip Indra menggunakan God's Chalice.",
+    category: "Panduan Game",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:25:00+07:00",
+    author: "Min Rock - Raid Leader",
+    readTime: "5 menit baca",
+    views: "17.4K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Rip Indra Blox Fruits", "Dough King", "Mirror Fractal", "God Chalice", "Raid Boss"],
+    contentHtml: `
+      <p class="lead">Mengalahkan <strong>Rip Indra</strong> dan <strong>Dough King</strong> adalah kewajiban bagi setiap pemain yang ingin membuka portal Third Sea dan misi V4. Kedua raid boss ini memiliki jutaan darah (HP) dan serangan area yang mampu menghabisi pemain dalam satu kali kombo.</p>
+
+      <h2>1. Cara Memanggil Dough King</h2>
+      <p>Kumpulkan 10 <em>Cocoa</em> dari NPC di Chocolate Island, lalu gabungkan dengan <em>God's Chalice</em> untuk membuat <strong>Sweet Chalice</strong>. Bunuh 500 musuh di Cake Land sebelum berbicara dengan NPC Drip Mama untuk memunculkan Dough King.</p>
+
+      <h2>2. Rekomendasi Buah Terbaik untuk Raid</h2>
+      <p>Gunakan buah <strong>Buddha (Awakened)</strong> dengan stat Melee dan Defense maksimal, dipadukan dengan pedang jarak serang panjang atau fighting style Sanguine Art untuk mendapatkan efek *life leech* (regenerasi darah otomatis saat memukul bos).</p>
+    `
+  },
+  {
+    slug: "daftar-map-roblox-aesthetic-foto-outfit-keren",
+    title: "Daftar Map Roblox Aesthetic Terbaik untuk Foto & Pamer Outfit Keren (Vibe Y2K & Hypebeast)",
+    excerpt: "Mau foto avatar Roblox aesthetic buat foto profil TikTok atau Instagram? Ini rekomendasi map dengan tata cahaya neon, pemandangan kota malam, dan studio foto terlengkap!",
+    category: "Kreatif & Avatar",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:30:00+07:00",
+    author: "Min Rock - Aesthetic Editor",
+    readTime: "4 menit baca",
+    views: "23.8K",
+    image: "/meta diamond normal.webp",
+    tags: ["Map Aesthetic Roblox", "Foto Avatar Roblox", "Roblox Y2K", "Outfit Hypebeast Roblox"],
+    contentHtml: `
+      <p class="lead">Bagi komunitas fesyen dan kreator konten Roblox, tampilan visual yang fotogenik adalah segalanya. Menemukan map dengan pencahayaan (*lighting*) realistis, efek neon, dan spot foto tersembunyi akan membuat avatarmu tampak seperti model profesional.</p>
+
+      <h2>1. Rekomendasi Map Studio & Hangout</h2>
+      <ul>
+        <li><strong>Tokyo Alleyways:</strong> Gang kota bernuansa malam dengan lampu neon warna-warni dan rintik hujan reflektif di aspal.</li>
+        <li><strong>Warm Isolation:</strong> Ruangan interior minimalis dengan pencahayaan sinar matahari sore (*golden hour*) yang sangat estetik.</li>
+        <li><strong>Vibe Cafe & Midnight City:</strong> Tempat nongkrong santai dengan alunan musik lofi untuk berpose bersama sahabat tongkrongan.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "cara-dapat-title-gelar-langka-blox-fruits",
+    title: "Cara Mendapatkan Title & Gelar Langka di Blox Fruits (Simbol Status Sepuh & Sultan)",
+    excerpt: "Pernah melihat pemain dengan title berwarna merah, emas, atau pelangi di atas kepalanya? Ini cara membuka gelar-gelar paling prestisius di Blox Fruits!",
+    category: "Panduan Game",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:35:00+07:00",
+    author: "Min Rock - Sea Sepuh",
+    readTime: "4 menit baca",
+    views: "16.1K",
+    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    tags: ["Title Blox Fruits", "Gelar Langka Blox Fruits", "Bounty Hunter Title", "Warna Title Roblox"],
+    contentHtml: `
+      <p class="lead">Gelar atau <strong>Title</strong> di Blox Fruits bukan sekadar hiasan nama, melainkan bukti pencapaian dedikasi dan keterampilan seorang pemain. Gelar-gelar ini dipajang tepat di atas kepala karakter dan memiliki warna-warna khusus yang mencolok.</p>
+
+      <h2>1. Gelar Berdasarkan Nilai Bounty & Honor</h2>
+      <ul>
+        <li><strong>The Emperor / Pirate King:</strong> Diperoleh saat mencapai batas bounty puluhan juta melalui pertarungan PvP melawan pemain lain.</li>
+        <li><strong>Warna Merah & Pelangi:</strong> Hanya diberikan kepada pemain yang berhasil menyelesaikan misi tersembunyi, membuka seluruh warna Haki legendaris, atau menaklukkan event raid tingkat tinggi.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "game-tycoon-roblox-paling-adiktif-seru-mabar",
+    title: "5 Game Tycoon Roblox Paling Adiktif 2026 (Seru Dimainkan Santai Bareng Sahabat)",
+    excerpt: "Suka membangun kerajaan bisnis dari nol di dalam game? Ini deretan game Tycoon Roblox terpopuler mulai dari Theme Park Tycoon, Retail Tycoon, hingga Super Hero Tycoon!",
+    category: "Rekomendasi Game",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:40:00+07:00",
+    author: "Min Rock - Gaming Reviewer",
+    readTime: "4 menit baca",
+    views: "15.2K",
+    image: "/permainan lucky block display.webp",
+    tags: ["Game Tycoon Roblox", "Tycoon Terbaik Roblox", "Theme Park Tycoon", "Mabar Seru Roblox"],
+    contentHtml: `
+      <p class="lead">Genre <strong>Tycoon</strong> adalah salah satu pilar paling klasik dan digemari di Roblox sejak belasan tahun lalu. Kepuasan melihat pabrik, taman hiburan, atau markas pahlawan berkembang dari sepetak tanah kosong menjadi megah adalah pengalaman yang sangat adiktif.</p>
+
+      <h2>1. Theme Park Tycoon 2</h2>
+      <p>Karya mahakarya simulasi di mana kamu merancang wahana roller coaster dengan lintasan berputar bebas, menata dekorasi pepohonan, dan melayani ribuan pengunjung taman hiburan.</p>
+
+      <h2>2. Retail Tycoon 2 & Restaurant Tycoon 2</h2>
+      <p>Simulasi mengelola supermarket atau restoran kuliner kelas dunia, mulai dari menyusun rak barang, mengatur kasir, hingga memasak resep masakan internasional.</p>
+    `
+  },
+  {
+    slug: "cara-aktifkan-spatial-voice-chat-roblox-tanpa-ktp",
+    title: "Cara Mengaktifkan Spatial Voice Chat (VC) Roblox di HP & PC (Panduan Resmi Terbaru)",
+    excerpt: "Mau ngobrol langsung pakai suara saat mabar tanpa perlu discord? Ini cara menyalakan fitur Spatial Voice Chat di akun Roblox dengan verifikasi nomor HP atau email resmi.",
+    category: "Tips & Trik",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:45:00+07:00",
+    author: "Min Rock - Tech Specialist",
+    readTime: "4 menit baca",
+    views: "25.3K",
+    image: "/BE FALSH DISPLAY.webp",
+    tags: ["Voice Chat Roblox", "Cara Aktifkan VC Roblox", "Spatial Voice", "Mikrofon Roblox HP"],
+    contentHtml: `
+      <p class="lead">Fitur <strong>Spatial Voice Chat (VC)</strong> memungkinkan pemain berbicara secara langsung dengan suara di dalam game, di mana volume suara akan terdengar semakin keras saat mendekati karakter teman dan semakin mengecil saat menjauh. Sangat seru untuk mabar game horor atau nongkrong!</p>
+
+      <h2>1. Langkah Mengaktifkan Voice Chat Resmi</h2>
+      <ol class="step-list">
+        <li>Masuk ke menu <strong>Settings (Pengaturan) &gt; Privacy</strong> di aplikasi Roblox.</li>
+        <li>Cari bagian <strong>Microphone and Camera Input</strong>.</li>
+        <li>Nyalakan toggle <em>Enable Microphone to chat with voice</em>.</li>
+        <li>Izinkan aplikasi Roblox mengakses mikrofon di pengaturan sistem HP milikmu.</li>
+      </ol>
+      <p>Gunakan earphone atau headset yang memiliki mikrofon bersih agar suara kamu terdengar jernih oleh kawan satu tim.</p>
+    `
+  },
+  {
+    slug: "tips-lolos-obby-tersulit-roblox-tower-of-hell",
+    title: "Trik Jitu Menaklukkan Obby Tersulit di Roblox: Rahasia Menang di Tower of Hell",
+    excerpt: "Sering jatuh dan emosi saat main Tower of Hell? Kuasai trik Shiftlock, lompatan sudut (corner clip), dan timing lompat laser agar selalu sampai puncak!",
+    category: "Tips & Trik",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:50:00+07:00",
+    author: "Min Rock - Parkour Sepuh",
+    readTime: "4 menit baca",
+    views: "19.8K",
+    image: "/BLOCK KEBERUNTUNGAN LEDAKAN DAYA DISPLAY.webp",
+    tags: ["Tower of Hell", "Obby Roblox", "Parkour Roblox", "Trik Shiftlock", "Tips Obby"],
+    contentHtml: `
+      <p class="lead">Game rintangan (*Obstacle Course / Obby*) seperti <strong>Tower of Hell</strong> menguji ketahanan mental dan akurasi jari. Menara 6 lantai tanpa checkpoint ini sering kali membuat pemain frustrasi karena satu kesalahan kecil akan mengembalikanmu ke lantai dasar!</p>
+
+      <h2>1. Wajib Menggunakan Shiftlock</h2>
+      <p>Aktifkan <strong>Shiftlock Switch</strong> di pengaturan game. Shiftlock mengunci kamera tepat di belakang karakter sehingga arah lompatan selalu lurus dan presisi saat meniti balok tipis.</p>
+
+      <h2>2. Mengatur Sudut Kamera Vertikal</h2>
+      <p>Arahkan kamera sedikit menunduk dari atas saat melompati platform sempit agar kamu bisa melihat dengan jelas di mana pijakan kaki mendarat.</p>
+    `
+  },
+  {
+    slug: "daftar-pet-secret-terkuat-become-a-brainrot-power-max",
+    title: "Daftar Pet Secret Terkuat di Become a Brainrot: Stats Kekuatan Miliaran hingga Kuadriliun",
+    excerpt: "Ingin tahu monster paling mematikan di map Become a Brainrot? Ini bocoran daftar pet tier Secret, status mutasi terbaik, dan cara mendapatkan power maksimal!",
+    category: "Panduan Game",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T10:55:00+07:00",
+    author: "Min Rock - Brainrot Sepuh",
+    readTime: "4 menit baca",
+    views: "18.9K",
+    image: "/BECOME A BRAINROT DISPLAY.webp",
+    tags: ["Become a Brainrot", "Pet Secret Brainrot", "Stats Kuadriliun", "Sepuh Roblox"],
+    contentHtml: `
+      <p class="lead">Di dunia <strong>Become a Brainrot</strong>, angka kekuatan karakter dihitung bukan lagi dalam ribuan atau jutaan, melainkan mencapai Triliun (T), Kuadriliun (Qi), hingga Sekstiliun (Sx). Memiliki pet tier Secret adalah kunci utama melipatgandakan poin kekuatan tersebut!</p>
+
+      <h2>1. Karakteristik Pet Secret Legendaris</h2>
+      <p>Pet Secret memiliki efek aura unik di sekeliling tubuhnya dan memberikan pengali (*multiplier*) kekuatan pasif yang tidak dimiliki pet biasa. Varian mutasi <em>Golden</em> dan <em>Rainbow</em> melipatgandakan statistik dasar hingga 5 kali lipat.</p>
+    `
+  },
+  {
+    slug: "bocoran-event-spesial-roblox-update-map-hadiah-gratis",
+    title: "Bocoran Event Spesial Roblox: Update Map Musiman, Item Avatar & Aksesoris Gratis",
+    excerpt: "Siap-siap klaim aksesoris limited gratis! Ini bocoran kalender event resmi Roblox tahun 2026, kolaborasi dunia anime, dan update map musiman yang wajib dipantau.",
+    category: "Update & Fitur",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:00:00+07:00",
+    author: "Min Rock - Event Hunter",
+    readTime: "4 menit baca",
+    views: "16.8K",
+    image: "/SNIPER BRAINROT DISPLAY.webp",
+    tags: ["Event Roblox 2026", "Aksesoris Gratis Roblox", "Update Map Roblox", "Free Item Roblox"],
+    contentHtml: `
+      <p class="lead">Roblox selalu merayakan musim liburan dan kolaborasi internasional melalui event berhadiah item limited. Pemain yang rajin menyelesaikan quest musiman bisa mengoleksi sayap, helm, dan efek aura langka yang nilainya akan menjadi sangat tinggi di masa depan!</p>
+
+      <h2>1. Kalender Event Utama</h2>
+      <ul>
+        <li><strong>Roblox Innovation Awards (RIA):</strong> Voting game terbaik sambil mengklaim setelan jas dan mahkota piala eksklusif.</li>
+        <li><strong>Festival Musim Panas & Dingin:</strong> Map hub khusus dengan mini-game seru berhadiah bundle avatar resmi.</li>
+      </ul>
+    `
+  },
+  {
+    slug: "cara-pasang-shaders-roblox-grafis-realistis-cinematic",
+    title: "Cara Memasang Shaders di Roblox: Ubah Grafis Jadi Sinematik & Realistis Mirip Game RTX",
+    excerpt: "Bosan dengan grafis Roblox yang kartun? Pasang shader RoShade atau BloxShade untuk efek pencahayaan dinamis, bayangan tajam, dan pantulan air super jernih!",
+    category: "Tips & Trik",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:05:00+07:00",
+    author: "Min Rock - Visual Specialist",
+    readTime: "5 menit baca",
+    views: "21.1K",
+    image: "/BE FALSH DISPLAY.webp",
+    tags: ["Shaders Roblox", "RoShade", "Grafis Realistis Roblox", "Roblox RTX", "Cinematic Roblox"],
+    contentHtml: `
+      <p class="lead">Dengan bantuan filter grafis (*Shaders* / ReShade), tampilan visual Roblox bisa disulap layaknya game konsol modern dengan efek pantulan sinar matahari (*God rays*), *Ambient Occlusion*, dan pantulan air yang sangat hidup.</p>
+
+      <h2>1. Panduan Memasang RoShade Resmi</h2>
+      <ol class="step-list">
+        <li>Unduh installer resmi dari situs RoShade terverifikasi.</li>
+        <li>Pilih preset grafis sesuai kemampuan kartu grafis PC milikmu (Glossy, Cinematic, atau Low-Performance).</li>
+        <li>Buka game Roblox, lalu tekan tombol <strong>F8</strong> di keyboard untuk menyalakan atau mematikan efek shader secara instan.</li>
+      </ol>
+    `
+  },
+  {
+    slug: "game-roblox-simulator-paling-seru-dan-populer",
+    title: "5 Game Simulator Roblox Paling Seru (Auto Cepat Naik Level & Grinding Santai)",
+    excerpt: "Cari game santai yang memuaskan untuk dimainkan saat waktu luang? Ini deretan game simulator Roblox terbaik dari Arm Wrestle Simulator hingga Muscle Legends!",
+    category: "Rekomendasi Game",
+    categoryColor: "#3b82f6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:10:00+07:00",
+    author: "Min Rock - Gaming Reviewer",
+    readTime: "4 menit baca",
+    views: "17.6K",
+    image: "/permainan lucky block display.webp",
+    tags: ["Game Simulator Roblox", "Arm Wrestle Simulator", "Muscle Legends", "Grinding Seru"],
+    contentHtml: `
+      <p class="lead">Game bergenre <strong>Simulator</strong> selalu memiliki daya tarik magnetis di Roblox. Konsepnya sederhana: latih kekuatan karaktermu, kumpulkan peliharaan (*pets*), dan kalahkan bos di setiap arena untuk membuka dunia baru yang lebih menakjubkan.</p>
+
+      <h2>1. Arm Wrestle Simulator & Muscle Legends</h2>
+      <p>Latih otot bisep dan angkat beban untuk menantang adu panco melawan NPC dari seluruh penjuru dunia. Semakin besar tubuh karaktermu, semakin disegani di dalam lobi permainan!</p>
+    `
+  },
+  {
+    slug: "cara-cepat-level-up-anime-defenders-trait-sss",
+    title: "Panduan Cepat Level Up di Anime Defenders & Kombinasi Trait SSS Terkuat",
+    excerpt: "Mau menaklukkan Infinite Mode Anime Defenders sampai wave tertinggi? Ini rahasia racikan unit Mythic, reroll trait SSS (Almighty & Requiem), dan strategi placement!",
+    category: "Panduan Game",
+    categoryColor: "#8b5cf6",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:15:00+07:00",
+    author: "Min Rock - Tactical Guide",
+    readTime: "5 menit baca",
+    views: "19.5K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Anime Defenders", "Trait SSS Anime Defenders", "Unit Mythic", "Tower Defense Roblox"],
+    contentHtml: `
+      <p class="lead"><strong>Anime Defenders</strong> menuntut kecerdasan taktik penempatan unit dan pemilihan trait yang tepat. Unit dengan trait tier SSS seperti <em>Almighty</em> atau <em>Requiem</em> mampu melipatgandakan damage area dan kecepatan serang hingga 300%!</p>
+
+      <h2>1. Strategi Reroll Trait</h2>
+      <p>Kumpulkan Trait Crystals dari quest harian dan raid mingguan. Fokuskan reroll pada unit bertipe DPS utama (seperti Shadow Commander) sebelum menaikkan unit support bertipe perlambatan musuh.</p>
+    `
+  },
+  {
+    slug: "daftar-senjata-melee-terkuat-blox-fruits-tier-list",
+    title: "Daftar Senjata Melee & Fighting Style Terkuat di Blox Fruits (Godhuman vs Sanguine Art)",
+    excerpt: "Bingung memilih gaya bertarung terbaik untuk PvP dan Grinding? Ini perbandingan lengkap Godhuman, Sanguine Art, Dragon Talon, dan Electric Claw di Blox Fruits!",
+    category: "Panduan Game",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:20:00+07:00",
+    author: "Min Rock - Combat Expert",
+    readTime: "5 menit baca",
+    views: "22.9K",
+    image: "/BUILD AND STEAL BASE YETI INFERNO 1B.webp",
+    tags: ["Melee Blox Fruits", "Godhuman", "Sanguine Art", "Fighting Style", "PvP Blox Fruits"],
+    contentHtml: `
+      <p class="lead">Gaya bertarung (*Fighting Style / Melee*) adalah fondasi utama bagi kombo PvP di Blox Fruits. Dua nama teratas yang saat ini mendominasi meta pertempuran adalah <strong>Godhuman</strong> dan <strong>Sanguine Art</strong>.</p>
+
+      <h2>1. Godhuman (Raja Kombo Serbaguna)</h2>
+      <p>Memiliki animasi serangan yang sangat cepat dan skill dash penembus pertahanan Ken Haki. Sangat mematikan jika dipadukan dengan buah Dough atau Kitsune.</p>
+
+      <h2>2. Sanguine Art (Darah Abadi & Lintah Nyawa)</h2>
+      <p>Gaya bertarung asal Third Sea Tiki Outpost yang memiliki kemampuan menyedot darah musuh (*Life Leech*) serta serangan proyektil jarak jauh.</p>
+    `
+  },
+  {
+    slug: "misteri-mitos-legenda-roblox-paling-menyeramkan-john-doe",
+    title: "Misteri & Mitos Roblox Paling Menyeramkan: Legenda John Doe, Jane Doe, Hingga Guest 666",
+    excerpt: "Benarkah John Doe menghantui pemain di tanggal 18 Maret? Simak fakta sejarah di balik mitos hacker legendaris dan creepypasta paling viral di dunia Roblox!",
+    category: "Edukasi & Komunitas",
+    categoryColor: "#64748b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:25:00+07:00",
+    author: "Min Rock - Lore Hunter",
+    readTime: "5 menit baca",
+    views: "27.4K",
+    image: "/SNIPER BRAINROT DISPLAY.webp",
+    tags: ["Misteri Roblox", "John Doe Roblox", "Guest 666", "Creepypasta Roblox", "Sejarah Roblox"],
+    contentHtml: `
+      <p class="lead">Sejak didirikan pada tahun 2006, Roblox memiliki segudang cerita misteri dan legenda urban yang diwariskan dari generasi ke generasi. Di balik cerita seram tersebut, tersimpan fakta sejarah menarik dari masa pengembangan awal platform!</p>
+
+      <h2>1. Fakta Akun John Doe & Jane Doe</h2>
+      <p>Banyak rumor mengklaim John Doe adalah hacker jahat. Padahal kenyataannya, akun bernomor ID #2 ini adalah akun uji coba (*test account*) resmi milik sang pendiri Roblox, David Baszucki dan mendiang Erik Cassel, untuk menguji sistem server multiplayer di masa beta.</p>
+
+      <h2>2. Fenomena Guest 666</h2>
+      <p>Kisah tentang sosok hantu beravatar hitam tanpa kepala yang konon dapat merusak server game adalah creepypasta buatan komunitas yang kemudian diabadikan dalam berbagai game petualangan buatan penggemar.</p>
+    `
+  },
+  {
+    slug: "trik-hindari-scam-trading-pet-simulator-99-aman",
+    title: "Trik Jitu Menghindari Modus Penipuan Trading di Pet Simulator 99 (Waspada Trade Switch)",
+    excerpt: "Jangan sampai pet Huge kesayanganmu lenyap karena kelalaian! Pelajari trik licik scammer di Trading Plaza Pet Simulator 99 dan cara bertransaksi aman 100%.",
+    category: "Panduan Keamanan",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:30:00+07:00",
+    author: "Min Rock - Security Team",
+    readTime: "4 menit baca",
+    views: "14.9K",
+    image: "/hack vault brainrot display.webp",
+    tags: ["Trading Pet Simulator 99", "Anti Scam Roblox", "Trade Switch", "Huge Pets Safe"],
+    contentHtml: `
+      <p class="lead">Pasar pertukaran pet di Pet Simulator 99 bernilai sangat fantastis. Tingginya nilai transaksi ini sering dimanfaatkan oknum penipu (*scammer*) dengan taktik psikologis yang mengelabui pandangan mata.</p>
+
+      <h2>1. Modus Trade Switch (Ganti Pet Detik Terakhir)</h2>
+      <p>Penipu memasukkan pet Huge langka di awal penawaran, lalu mengajakmu mengobrol di chat untuk mengalihkan fokusmu. Saat hitungan detik terakhir sebelum konfirmasi, mereka dengan cepat menukar pet Huge tersebut dengan versi Miniatur biasa. Selalu periksa ulang ikon dan nama item di jendela konfirmasi kedua!</p>
+    `
+  },
+  {
+    slug: "game-parkour-roblox-paling-menantang-uji-refleks",
+    title: "5 Game Parkour Roblox Paling Menantang untuk Menguji Ketangkasan Jari & Refleks",
+    excerpt: "Merasa jarimu lincah? Buktikan kehebatanmu di game parkour Roblox paling menantang dengan gerakan wall-run, slide, dan lompatan akrobatik berkecepatan tinggi!",
+    category: "Rekomendasi Game",
+    categoryColor: "#f59e0b",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:35:00+07:00",
+    author: "Min Rock - Gaming Reviewer",
+    readTime: "4 menit baca",
+    views: "16.2K",
+    image: "/permainan lucky block display.webp",
+    tags: ["Parkour Roblox", "Game Parkour", "Uji Refleks Roblox", "Skill Parkour"],
+    contentHtml: `
+      <p class="lead">Bagi pemain yang menyukai aksi akrobatik penuh gaya, genre parkour modern di Roblox menawarkan fisika pergerakan yang sangat dinamis, mulai dari melompati gedung pencakar langit hingga meluncur di bawah rintangan sempit.</p>
+
+      <h2>1. Parkour Reborn (Standar Baru Fisika Parkour)</h2>
+      <p>Menghadirkan animasi gerakan realistis dengan sistem stamina, lari di dinding (*wall run*), dan ayunan tali yang menuntut refleks mata dan ketepatan menekan tombol secara presisi.</p>
+    `
+  },
+  {
+    slug: "cara-main-roblox-di-smart-tv-gamepad-controller",
+    title: "Cara Main Roblox di Smart TV & Android Box Menggunakan Gamepad Controller (Layar Lebar)",
+    excerpt: "Mau main Blox Fruits atau balapan mobil di layar TV besar 55 inch dari sofa ruang tamu? Ini panduan menyambungkan stik joystick gamepad ke Roblox di Android TV!",
+    category: "Tips & Trik",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:40:00+07:00",
+    author: "Min Rock - Hardware Guide",
+    readTime: "4 menit baca",
+    views: "18.7K",
+    image: "/BABAS DISPLAY.webp",
+    tags: ["Roblox Smart TV", "Main Roblox Pakai Stik", "Gamepad Roblox", "Android TV Gaming"],
+    contentHtml: `
+      <p class="lead">Menikmati dunia virtual Roblox tidak terbatas hanya di layar HP kecil atau laptop. Kamu bisa menikmati pengalaman sinematik di layar TV ruang tamu dengan stik controller nirkabel (*wireless gamepad*)!</p>
+
+      <h2>1. Langkah Praktis Pengaturan Gamepad</h2>
+      <ol class="step-list">
+        <li>Nyalakan koneksi Bluetooth di Smart TV atau Android Box milikmu.</li>
+        <li>Hubungkan stik gamepad (seperti stik PS4, Xbox, atau gamepad Bluetooth multifungsi).</li>
+        <li>Buka aplikasi Roblox di TV. Gamepad akan otomatis terdeteksi dengan tombol kontrol analog yang responsif!</li>
+      </ol>
+    `
+  },
+  {
+    slug: "game-roblox-multiplayer-terbaik-mabar-bareng-pasangan-bestie",
+    title: "5 Game Roblox Multiplayer Terbaik untuk Dimainkan Bareng Bestie atau Pasangan",
+    excerpt: "Cari game santai, seru, dan penuh tawa untuk dimainkan berdua? Ini deretan game co-op Roblox terbaik yang bikin hubungan makin akrab dan kompak!",
+    category: "Rekomendasi Game",
+    categoryColor: "#ec4899",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T11:45:00+07:00",
+    author: "Min Rock - Community Editor",
+    readTime: "4 menit baca",
+    views: "26.9K",
+    image: "/meta diamond normal.webp",
+    tags: ["Mabar Roblox", "Game Roblox Berdua", "Roblox Bareng Bestie", "Co-op Roblox Seru"],
+    contentHtml: `
+      <p class="lead">Roblox adalah platform sempurna untuk menghabiskan waktu berkualitas bersama orang terdekat. Baik berdua dengan sahabat sejati maupun pasangan, game-game co-op ini menuntut kerja sama tim yang harmonis dan penuh canda tawa.</p>
+
+      <h2>1. Rekomendasi Game Co-Op Paling Menyenangkan</h2>
+      <ul>
+        <li><strong>It Takes Two Roblox Version (Co-Op Puzzles):</strong> Memecahkan teka-teki rintangan di mana satu pemain membuka pintu dan pemain lain menarik tuas jembatan.</li>
+        <li><strong>Cook Burgers & Restaurant Tycoon:</strong> Mengelola dapur restoran bersama di mana satu orang memasak daging dan yang lainnya melayani pesanan pelanggan.</li>
+        <li><strong>Adopt Me & Livetopia:</strong> Merancang dekorasi rumah impian bersama dan memelihara hewan lucu.</li>
+      </ul>
+    `
+  },
+  {
     slug: "cara-mendapatkan-kitsune-fruit-blox-fruits-kombo-pvp",
     title: "Cara Mendapatkan Kitsune Fruit di Blox Fruits & Trik Kombo PvP Paling Mematikan",
     excerpt: "Kitsune Fruit adalah buah iblis Mythical termahal dan paling lincah di Blox Fruits. Simak lokasi spawn, cara gacha, dan racikan combo PvP auto win di Sea 3!",

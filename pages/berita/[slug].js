@@ -215,13 +215,12 @@ export default function BeritaDetail({ article, relatedArticles }) {
         }
         .article-page-wrapper {
           min-height: 100vh;
-          background-color: #060913;
-          background-image:
+          background-color: #060913 !important;
+          background-image: 
             radial-gradient(ellipse 90% 480px at 50% 0%, #0d1e4a 0%, transparent 80%),
             radial-gradient(circle at 85% 20%, #0b193d 0%, transparent 55%),
-            linear-gradient(180deg, #070d1e 0%, #050811 100%);
+            linear-gradient(180deg, #070d1e 0%, #050811 100%) !important;
           background-attachment: fixed;
-          background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.2) 0%, rgba(13, 22, 48, 0.95) 45%, #060b17 100%);
           color: #f2f5ff;
           font-family: var(--font-poppins), sans-serif;
         }
@@ -291,20 +290,22 @@ export default function BeritaDetail({ article, relatedArticles }) {
           display: flex;
           align-items: center;
           gap: 8px;
-          font-size: 12.5px;
-          color: #64748b;
+          font-size: 13px;
+          color: #93c5fd;
           margin-bottom: 24px;
+          font-weight: 600;
         }
         .breadcrumbs a {
-          color: #8b96b3;
+          color: #60a5fa;
           text-decoration: none;
         }
         .breadcrumbs a:hover {
-          color: #2b4eff;
+          color: #ffffff;
+          text-decoration: underline;
         }
         .breadcrumbs .current {
-          color: #cbd5e1;
-          font-weight: 600;
+          color: #f8fafc;
+          font-weight: 700;
         }
         .article-post-header {
           margin-bottom: 24px;
@@ -329,10 +330,12 @@ export default function BeritaDetail({ article, relatedArticles }) {
         .article-meta-row {
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-size: 12.5px;
-          color: #8b96b3;
+          gap: 10px;
+          font-size: 13.5px;
+          color: #93c5fd;
+          font-weight: 600;
           flex-wrap: wrap;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
         }
         .article-cover-media {
           width: 100%;
