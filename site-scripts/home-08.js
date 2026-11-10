@@ -2008,49 +2008,6 @@ function checkout(){
     } else {
       previewHTML += `<div style="margin:10px 0;padding:9px 12px;border-radius:11px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.28);font-size:11.5px;color:#e9d5ff;line-height:1.45;">🎟️ <b>Info Lucky Spin:</b> Minimal Belanja <b>Rp 50,000 / Tiket</b> otomatis dapat 1x Kupon Spin Grand Prize!</div>`;
     }
-    previewHTML += `
-    <div style="margin:10px 0 12px;padding:12px;border-radius:14px;background:rgba(15,23,42,.92);border:1px solid rgba(111,139,255,.28);text-align:left;">
-      <div style="font-size:11.5px;font-weight:800;color:#cbd5e1;margin-bottom:8px;letter-spacing:.3px;">💳 INSTRUKSI PEMBAYARAN MANUAL (QRIS / DANA / GOPAY):</div>
-      <div style="padding:9px 11px;border-radius:10px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.35);font-size:11.5px;color:#a7f3d0;line-height:1.5;margin-bottom:9px;">
-        💡 <b>Catatan:</b> Bisa bayar di sini langsung lalu kirim bukti ke WA Admin, atau bisa juga minta payment di WA Admin — <b>langsung tekan "✓ Kirim ke Admin" aja!</b>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:10px;background:#0b1120;border:1px solid rgba(148,163,184,.18);margin-bottom:6px;">
-        <div style="display:flex;align-items:center;gap:9px;min-width:0;">
-          <img src="/optimized/payment-qris.webp" alt="QRIS" style="width:32px;height:32px;object-fit:contain;border-radius:7px;background:rgba(255,255,255,.06);padding:2px;flex-shrink:0;">
-          <div style="min-width:0;">
-            <div style="font-size:11.5px;font-weight:800;color:#22d3ee;">QRIS (Semua E-Wallet &amp; Bank)</div>
-            <div style="font-size:10.5px;color:#cbd5e1;">ROCKSTAR.STORE, DIGITAL &amp; KREATIF</div>
-          </div>
-        </div>
-        <div style="display:flex;gap:5px;flex-shrink:0;">
-          <button type="button" onclick="toggleCheckoutQris(this)" style="width:auto;margin:0;padding:5px 9px;border-radius:7px;background:rgba(147,51,234,.25);border:1px solid rgba(168,85,247,.5);color:#e9d5ff;font-size:11px;font-weight:700;cursor:pointer;">Tutup QR</button>
-          <a href="/qris-rockstar-spin.jpg" download="QRIS-RockstarStore.jpg" style="display:inline-flex;align-items:center;padding:5px 9px;border-radius:7px;background:linear-gradient(135deg,#7c3aed,#0891b2);color:#fff;font-weight:700;font-size:11px;text-decoration:none;">⬇️ Unduh</a>
-        </div>
-      </div>
-      <div id="checkoutQrisBox" style="padding:8px;border-radius:10px;background:#0b1120;border:1px solid rgba(168,85,247,.35);text-align:center;margin-bottom:6px;">
-        <img src="/optimized/qris-rockstar-spin.webp" alt="QRIS Rockstar.Store" loading="lazy" decoding="async" style="max-width:165px;width:100%;height:auto;border-radius:8px;border:1px solid rgba(255,255,255,.15);margin:0 auto;display:block;">
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;background:#0b1120;border:1px solid rgba(148,163,184,.18);margin-bottom:6px;">
-        <div style="display:flex;align-items:center;gap:9px;min-width:0;">
-          <img src="/optimized/payment-dana.webp" alt="DANA" style="width:32px;height:32px;object-fit:contain;border-radius:7px;background:rgba(255,255,255,.06);padding:2px;flex-shrink:0;">
-          <div style="min-width:0;">
-            <div style="font-size:11.5px;font-weight:800;color:#22d3ee;">DANA • 0896-6429-9571</div>
-            <div style="font-size:10.5px;color:#cbd5e1;">a/n MOHAMMAD DHIANY FHARELA</div>
-          </div>
-        </div>
-        <button type="button" onclick="copyCheckoutPay('089664299571', this)" style="width:auto;margin:0;padding:5px 10px;border-radius:7px;background:#0f172a;border:1px solid rgba(148,163,184,.3);color:#e2e8f0;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">📋 Salin</button>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;background:#0b1120;border:1px solid rgba(148,163,184,.18);">
-        <div style="display:flex;align-items:center;gap:9px;min-width:0;">
-          <img src="/optimized/payment-gopay.webp" alt="GoPay" style="width:32px;height:32px;object-fit:contain;border-radius:7px;background:rgba(255,255,255,.06);padding:2px;flex-shrink:0;">
-          <div style="min-width:0;">
-            <div style="font-size:11.5px;font-weight:800;color:#22d3ee;">GoPay • 0896-6429-9571</div>
-            <div style="font-size:10.5px;color:#cbd5e1;">a/n MOHAMMAD DHIANY FHARELA</div>
-          </div>
-        </div>
-        <button type="button" onclick="copyCheckoutPay('089664299571', this)" style="width:auto;margin:0;padding:5px 10px;border-radius:7px;background:#0f172a;border:1px solid rgba(148,163,184,.3);color:#e2e8f0;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">📋 Salin</button>
-      </div>
-    </div>`;
   }
 
   const m = document.createElement('div');
@@ -2064,24 +2021,6 @@ function checkout(){
     </div></div>`;
   document.body.appendChild(m);
   m.addEventListener('click', e => { if(e.target === m) closeCheckoutPreview(); });
-}
-
-function toggleCheckoutQris(btn){
-  const box = document.getElementById("checkoutQrisBox");
-  if(!box) return;
-  const open = box.style.display !== "none";
-  box.style.display = open ? "none" : "block";
-  if(btn) btn.textContent = open ? "Lihat QR" : "Tutup QR";
-}
-function copyCheckoutPay(num, btn){
-  try {
-    navigator.clipboard.writeText(num);
-    if(btn){
-      const old = btn.textContent;
-      btn.textContent = "✓ Tersalin";
-      setTimeout(() => { btn.textContent = old; }, 1800);
-    }
-  } catch(e){}
 }
 
 function closeCheckoutPreview(){ const m = document.getElementById('checkoutModal'); if(m) m.remove(); }
