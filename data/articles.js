@@ -1,104 +1,278 @@
 export const ARTICLES = [
   {
-    slug: "syarat-kirim-robux-via-username-panduan-lengkap",
-    title: "Syarat Kirim Robux via Username: Panduan Lengkap, Ketentuan Grup & Tips Cepat Masuk",
-    excerpt: "Ingin kirim atau terima Robux hanya dengan modal Username tanpa password? Pahami syarat wajib join grup 14 hari, metode gamepass, hingga tips transaksi aman 100%.",
-    category: "Tutorial Robux",
-    categoryColor: "#10b981",
+    slug: "item-roblox-paling-laku-dan-dicari-tahun-2026",
+    title: "Daftar Item Roblox Paling Laku & Paling Dicari di 2026 (Nilai Trading Fantastis!)",
+    excerpt: "Dari Kitsune Fruit Blox Fruits, Pet Secret Brainrot & Steal an Egg, hingga Huge Pet Simulator 99. Ini deretan item Roblox paling laris dengan nilai transaksi tertinggi di tahun 2026!",
+    category: "Tren & Pasar",
+    categoryColor: "#ec4899",
     date: "10 November 2026",
-    isoDate: "2026-11-10T08:45:00+07:00",
-    author: "Min Rock - Robux Specialist",
-    readTime: "4 menit baca",
-    views: "7.8K",
-    image: "/ROBUX.webp",
-    tags: ["Robux", "Kirim Robux", "Top Up Robux", "Username Roblox", "Roblox Group Payout", "Gamepass"],
+    isoDate: "2026-11-10T08:55:00+07:00",
+    author: "Min Rock - Market Analyst",
+    readTime: "5 menit baca",
+    views: "12.8K",
+    image: "/ability mega kitsune.webp",
+    tags: ["Item Roblox Terlaris", "Trading Roblox", "Blox Fruits Kitsune", "Brainrot Secret", "Pet Simulator 99 Huge", "Item Roblox 2026"],
     contentHtml: `
-      <p class="lead">Banyak pemain Roblox bertanya: <em>"Apakah bisa kirim Robux langsung ke akun teman atau pembeli hanya dengan memasukkan Username saja tanpa perlu login password?"</em> Jawabannya adalah <strong>BISA BANGET!</strong> Namun, ada aturan dan syarat resmi dari Roblox yang wajib dipatuhi agar proses pengiriman sukses dan akun tetap aman 100%.</p>
+      <p class="lead">Ekonomi dan pasar jual-beli di Roblox semakin berkembang pesat di tahun 2026. Jutaan pemain setiap harinya saling bertukar item langka untuk memperkuat karakter atau sekadar pamer status sebagai 'Sultan' dan 'Sepuh'. Bagi kamu yang penasaran apa saja <strong>item Roblox paling laku, paling dicari, dan bernilai jual paling tinggi di tahun 2026</strong>, berikut ulasan lengkapnya!</p>
 
-      <h2>1. Syarat Utama Kirim Robux via Username (Metode Group Payout)</h2>
-      <p>Metode transfer Robux via username paling populer dan resmi yang disediakan oleh Roblox adalah melalui fitur <strong>Group Payouts (Pembayaran Grup)</strong>. Untuk menggunakan metode ini, berikut syarat mutlaknya:</p>
-      
+      <h2>1. Kitsune & Dragon Fruit (Blox Fruits)</h2>
+      <p>Tidak diragukan lagi, buah iblis tipe Mythical di Blox Fruits masih memegang mahkota item paling laris di pasar trading global. <strong>Physical Kitsune</strong> dan <strong>Dragon Fruit</strong> (terutama pasca rework besar-besaran) memiliki nilai tukar yang luar biasa tinggi.</p>
       <ul>
-        <li><strong>Akun Penerima Wajib Sudah Join Grup Minimal 14 Hari:</strong> Ini adalah aturan sistem keamanan Roblox (<em>14-day Holding Period</em>). Akun baru yang bergabung ke dalam grup tidak bisa langsung menerima payout Robux sebelum masa tunggu 14 hari penuh terpenuhi.</li>
-        <li><strong>Gunakan Username Asli (Bukan Display Name):</strong> Pastikan kamu memberikan <strong>Roblox Username</strong> (yang diawali tanda @ saat login), BUKAN <em>Display Name</em> yang bisa diganti-ganti sesuka hati. Jika salah satu huruf saja keliru, Robux berisiko terkirim ke akun orang lain!</li>
-        <li><strong>TIDAK BUTUH Password Sama Sekali:</strong> Pengiriman via Group Payout hanya membutuhkan nama pengguna publik. Kamu <strong>tidak pernah</strong> diminta memasukkan kata sandi (password), kode OTP, atau verifikasi email.</li>
-        <li><strong>Saldo Grup Mencukupi:</strong> Grup pengirim harus memiliki dana Robux grup (<em>Group Funds</em>) yang sudah berstatus matang (bukan pending).</li>
+        <li><strong>Mengapa Sangat Laku:</strong> Kemampuan transformasi yang sangat overpower untuk PvP, kecepatan mobilitas tertinggi, dan tampilan aura visual yang memukau.</li>
+        <li><strong>Nilai Pasar:</strong> Sering kali dijadikan mata uang standar (*benchmark*) untuk menukar gamepass permanen seperti Dark Blade atau Fruit Notifier.</li>
+      </ul>
+
+      <h2>2. Pet Secret & Mutasi Langka di Map Brainrot (Steal an Egg)</h2>
+      <p>Di komunitas gamer Roblox Indonesia, item dari genre <strong>Brainrot</strong> seperti <em>Steal an Egg, Become a Brainrot, dan Be a Flash</em> menduduki peringkat teratas dalam volume transaksi setiap hari. Pemain rela berburu item langka ini demi mendominasi leaderboard server.</p>
+      <ul>
+        <li><strong>Item Paling Diburu:</strong> Pet tier <em>Secret</em>, varian <em>Yeti Inferno OG</em>, dan mutasi <em>Rainbow / Golden</em> dengan kekuatan jutaan hingga kuadriliun (Qi / Sx).</li>
+        <li><strong>Daya Tarik:</strong> Menghemat ratusan jam waktu menetas manual. Memiliki pet Secret langsung mengangkat status pemain menjadi sepuh disegani di server.</li>
       </ul>
 
       <div class="tip-box">
-        <h4>💡 Mengapa Roblox Menerapkan Aturan Tunggu 14 Hari?</h4>
-        <p>Aturan 14 hari ini dibuat langsung oleh Roblox Corporation untuk mencegah tindak pencucian Robux ilegal dan melindungi akun pemain dari peretasan. Jadi, masa tunggu ini adalah prosedur resmi internasional, bukan aturan yang dibuat-buat oleh penjual.</p>
+        <h4>💡 Fakta Menarik Pasar Roblox:</h4>
+        <p>Item dari map Brainrot memiliki perputaran trading yang jauh lebih cepat dibanding game lain di kawasan Asia Tenggara karena antusiasme komunitas mabar yang sangat aktif setiap hari!</p>
       </div>
 
-      <h2>2. Metode Alternatif: Kirim Robux via Gamepass (Tanpa Tunggu 14 Hari)</h2>
-      <p>Bagaimana jika kamu belum bergabung di grup selama 14 hari tetapi butuh Robux cepat? Kamu bisa menggunakan <strong>Metode Gamepass / VIP Server</strong>:</p>
-      <ol class="step-list">
-        <li><strong>Buat Gamepass di Profil Roblox:</strong> Masuk ke <em>Create / Dashboard</em> di Roblox, pilih pengalamanmu (Place), lalu buat item Gamepass baru.</li>
-        <li><strong>Setel Harga Gamepass (+ Pajak 30%):</strong> Karena Roblox memotong pajak penjualan sebesar 30%, kamu harus menyetel harga Gamepass agar saldo bersih yang kamu terima sesuai dengan nominal Robux yang dibeli.</li>
-        <li><strong>Kirim Link Gamepass / Username:</strong> Penjual akan membeli Gamepass milikmu secara langsung menggunakan saldo Robux mereka.</li>
-        <li><strong>Masa Pending Robux (3 - 5 Hari):</strong> Robux hasil pembelian Gamepass akan masuk ke status <strong>Pending Robux</strong> di akunmu dan otomatis cair ke saldo aktif dalam waktu 3 hingga 5 hari kerja.</li>
-      </ol>
+      <h2>3. Huge & Titanic Pets (Pet Simulator 99)</h2>
+      <p>Bagi pemain setia game koleksi pet, kategori <strong>Huge Pets</strong> (seperti Huge Happy Computer, Huge Dragon, dan Huge Holographic Cat) adalah komoditas likuid yang paling gampang dijual kembali (*easy to flip*).</p>
+      <ul>
+        <li><strong>Titanic Pets:</strong> Menjadi simbol kekayaan mutlak dengan harga jual kembali mencapai puluhan juta gems atau setara jutaan Rupiah di kalangan kolektor global.</li>
+        <li><strong>Faktor Penentu Harga:</strong> Varian <em>Rainbow</em> dan <em>Shiny</em> bisa melipatgandakan nilai pasar hingga 3 sampai 5 kali lipat dibanding versi normal.</li>
+      </ul>
 
-      <h2>3. Perbedaan Vital: Username vs Display Name</h2>
-      <p>Sering kali pengiriman Robux tertunda atau gagal karena salah memberikan nama akun. Perhatikan perbedaannya:</p>
+      <h2>4. Item Avatar Eksklusif: Korblox Deathspeaker & Limited Hype</h2>
+      <p>Bukan hanya item in-game, item avatar di Roblox Marketplace juga mencatatkan angka penjualan fantastis:</p>
       <div class="table-container" style="overflow-x:auto; margin:16px 0;">
         <table style="width:100%; border-collapse:collapse; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden;">
           <thead>
-            <tr style="background:rgba(59,130,246,0.15); text-align:left;">
+            <tr style="background:rgba(236,72,153,0.15); text-align:left;">
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Nama Item</th>
               <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Kategori</th>
-              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Username (@handle)</th>
-              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Display Name</th>
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Alasan Paling Laris</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Sifat</td>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#10b981;">Unik (Hanya 1 di dunia)</td>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#94a3b8;">Bisa sama dengan pemain lain</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold; color:#ec4899;">Korblox Deathspeaker</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Avatar Bundle (17.000 Robux)</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Kaki tengkorak melayang (Korblox Leg) wajib bagi avatar hypebeast.</td>
             </tr>
             <tr>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Tampilan</td>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Contoh: @SultanRoblox99</td>
-              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Contoh: SepuhGaming</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold; color:#3b82f6;">Headless Horseman</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Seasonal Bundle (31.000 Robux)</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Menghilangkan kepala avatar (Headless), simbol kemewahan tertinggi.</td>
             </tr>
             <tr>
-              <td style="padding:10px 14px; font-weight:bold;">Kebutuhan Kirim</td>
-              <td style="padding:10px 14px; color:#3b82f6; font-weight:bold;">WAJIB DIGUNAKAN</td>
-              <td style="padding:10px 14px; color:#ef4444;">JANGAN DIGUNAKAN</td>
+              <td style="padding:10px 14px; font-weight:bold; color:#10b981;">Valkyrie Helmets</td>
+              <td style="padding:10px 14px;">Classic Limited Accessory</td>
+              <td style="padding:10px 14px;">Nilai investasi jangka panjang yang terus naik dari tahun ke tahun.</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="tip-box alert-danger">
-        <h4>🚨 Peringatan Keamanan Terpenting:</h4>
-        <p><strong>JANGAN PERNAH</strong> memberikan password akun Roblox, PIN keamanan, atau kode verifikasi WhatsApp/Email kepada siapa pun yang mengaku ingin mengirimkan Robux. Transaksi kirim Robux resmi dan terpercaya <strong>HANYA MEMBUTUHKAN USERNAME</strong>!</p>
-      </div>
-
-      <h2>4. Cara Cek Robux yang Sedang Pending / Masuk</h2>
-      <p>Jika pengiriman sudah diproses oleh pengirim, kamu bisa langsung memantau status saldo Robux kamu dengan langkah mudah berikut:</p>
-      <ol class="step-list">
-        <li>Buka peramban (browser) di HP atau laptop, lalu buka tautan resmi: <a href="https://www.roblox.com/transactions" target="_blank" rel="noopener noreferrer">roblox.com/transactions</a>.</li>
-        <li>Login ke akun Roblox milikmu.</li>
-        <li>Di bagian <strong>Summary</strong>, perhatikan kolom <strong>Pending Robux</strong>. Angka tersebut menunjukkan Robux yang sedang dalam antrean pencairan sistem Roblox ke dompet akunmu.</li>
-      </ol>
+      <h2>5. Secret Mythic Units (Anime Defenders & Tower Defense)</h2>
+      <p>Game bertema anime tower defense mengalami lonjakan popularitas pesat di tahun 2026. Unit tier <em>Secret Mythic</em> dengan stats SSS dan trait eksklusif selalu ludes dibeli pemain yang ingin menaklukkan tantangan Infinite Mode atau Leaderboard mingguan tanpa kesulitan.</p>
 
       <div class="cta-card robux-theme">
         <div class="cta-content">
-          <h3>💎 Mau Top Up Robux Murah, Legal, & 100% Cepat Masuk?</h3>
-          <p>Dapatkan Robux resmi bergaransi anti-banned dengan harga termurah se-Indonesia hanya di <strong>Rockstar Store</strong>! Proses instan, bisa via grup atau sistem tercepat, dan didampingi Customer Support ramah 24 jam.</p>
+          <h3>👑 Ingin Punya Item-Item Paling Laku Ini Tanpa Gacha Capek?</h3>
+          <p>Grinding berbulan-bulan belum tentu hoki mendapatkan item impian? Di <strong>Rockstar Store</strong>, kamu bisa langsung mendapatkan Akun Sepuh Roblox dengan koleksi item terlaris 2026, Pet Brainrot Secret, hingga Top Up Robux termurah bergaransi anti hackback!</p>
           <div class="cta-actions">
-            <a href="/?tab=topup" class="cta-btn primary">Top Up Robux Sekarang di Rockstar Store ⚡</a>
-            <a href="https://wa.me/6287814408101?text=Halo%20Admin%20Rockstar%20Store,%20mau%20tanya%20top%20up%20Robux%20via%20username" class="cta-btn secondary" target="_blank" rel="noopener noreferrer">Tanya Admin via WhatsApp 💬</a>
+            <a href="/?tab=brainrot" class="cta-btn primary">Cek Koleksi Item Brainrot & Steal an Egg 🔥</a>
+            <a href="/?tab=akun" class="cta-btn secondary">Pilih Akun Sepuh Siap Tempur 🛡️</a>
           </div>
         </div>
       </div>
 
       <h2>Kesimpulan</h2>
-      <p>Mengirim atau menerima Robux via username sangat mudah dan aman asalkan kamu memahami syarat holding period 14 hari untuk grup atau alternatif gamepass. Selalu jaga kerahasiaan kata sandi akunmu dan bertransaksilah di toko tepercaya seperti <strong>Rockstar Store</strong>!</p>
+      <p>Item paling laku di Roblox di tahun 2026 didominasi oleh item yang memberikan keunggulan kompetitif nyata (seperti Kitsune di Blox Fruits dan Pet Secret di Brainrot) serta kosmetik langka yang meningkatkan gengsi pemain. Selalu bertransaksi dengan aman melalui marketplace resmi dan bergaransi seperti <strong>Rockstar Store</strong>!</p>
     `
   },
   {
+    slug: "cara-claim-robux-gratis-resmi-legal-dan-aman",
+    title: "5 Cara Claim Robux Gratis Resmi & Legal (Tanpa Cheat, Anti Banned & Terbukti Masuk)",
+    excerpt: "Mau dapat Robux gratis tanpa keluar uang sepeser pun? Ini panduan resmi claim Robux lewat Microsoft Rewards, game PLS DONATE, hingga trik hindari scam generator palsu.",
+    category: "Tips & Trik",
+    categoryColor: "#06b6d4",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T08:50:00+07:00",
+    author: "Min Rock - Community Guide",
+    readTime: "5 menit baca",
+    views: "9.4K",
+    image: "/ROBUX.webp",
+    tags: ["Robux Gratis", "Free Robux", "Microsoft Rewards", "PLS DONATE", "Klaim Robux", "Roblox Tips"],
+    contentHtml: `
+      <p class="lead">Siapa yang tidak ingin memiliki saldo Robux melimpah untuk membeli avatar keren, animasi eksklusif, atau gamepass langka di Roblox? Namun, jangan sampai kamu terjebak tautan palsu (*scam*) yang menjanjikan ribuan Robux instan. Berikut adalah <strong>cara resmi, legal, dan 100% aman untuk mengklaim Robux gratis</strong> yang telah terbukti berhasil oleh jutaan pemain di seluruh dunia!</p>
+
+      <h2>1. Menggunakan Microsoft Rewards (Metode Resmi Kerjasama Roblox)</h2>
+      <p>Ini adalah cara nomor 1 yang paling direkomendasikan dan 100% didukung langsung oleh Roblox Corporation dan Microsoft. Kamu bisa menukarkan poin aktivitas harian menjadi <strong>Roblox Digital Gift Card</strong> secara cuma-cuma.</p>
+
+      <h3>Langkah-Langkah Klaim Robux via Microsoft Rewards:</h3>
+      <ol class="step-list">
+        <li><strong>Daftar Akun Microsoft:</strong> Masuk ke situs resmi <a href="https://rewards.bing.com/" target="_blank" rel="noopener noreferrer">rewards.bing.com</a> menggunakan akun Outlook atau Hotmail kamu.</li>
+        <li><strong>Kumpulkan Poin Harian:</strong>
+          <ul>
+            <li>Gunakan mesin pencari <strong>Microsoft Bing</strong> di browser PC atau aplikasi Bing di HP untuk mencari info setiap hari.</li>
+            <li>Selesaikan <em>Daily Set</em>, kuis trivia, dan polling singkat di dashboard Microsoft Rewards.</li>
+          </ul>
+        </li>
+        <li><strong>Tukarkan Poin Menjadi Robux Gift Card:</strong> Setelah poin mencukupi (mulai dari 1.500 poin untuk 100 Robux), masuk ke menu <strong>Redeem</strong> dan pilih hadiah <strong>Roblox Digital Card</strong>.</li>
+        <li><strong>Klaim PIN di Roblox:</strong> Kode PIN digital akan dikirimkan ke email kamu. Buka <a href="https://www.roblox.com/redeem" target="_blank" rel="noopener noreferrer">roblox.com/redeem</a>, masukkan kode tersebut, dan saldo Robux akan langsung masuk ke akunmu!</li>
+      </ol>
+
+      <div class="tip-box">
+        <h4>💡 Keuntungan Microsoft Rewards:</h4>
+        <p>Metode ini 100% legal, resmi dari Roblox, tidak berisiko terkena banned, dan tidak meminta password akun Roblox milikmu sama sekali!</p>
+      </div>
+
+      <h2>2. Bermain Game Donasi: PLS DONATE & Hazem</h2>
+      <p>Pernahkah kamu mendengar pemain yang mendapatkan puluhan ribu Robux hanya dengan berdiri di dalam game? Game seperti <strong>PLS DONATE</strong> dan <strong>Starving Artists</strong> memungkinkan pemain saling menyumbangkan Robux secara langsung.</p>
+      <ul>
+        <li><strong>Cara Kerjanya:</strong> Kamu membuat Gamepass murah (misal: 5 Robux, 10 Robux, 50 Robux) di akun Roblox milikmu.</li>
+        <li><strong>Buka Stand / Booth:</strong> Masuk ke game PLS DONATE, klaim salah satu stand kosong, dan pajang teks perkenalan yang menarik atau ramah.</li>
+        <li><strong>Dapatkan Donasi dari Pemain Sultan:</strong> Banyak kreator konten, streamer, dan pemain sultan yang sering berkeliling server untuk membagikan Robux kepada pemain baru. Robux yang didonasikan akan cair ke akunmu dalam 3–5 hari kerja (Holding Period).</li>
+      </ul>
+
+      <h2>3. Membuat Desain Baju Avatar (Clothing Creator)</h2>
+      <p>Bagi kamu yang memiliki bakat mendesain grafis sederhana, membuat pakaian avatar (*Classic T-Shirt* atau *Classic Shirt*) adalah sumber Robux gratis jangka panjang. Kamu bisa mengunggah desain buatanmu ke Roblox Avatar Shop seharga 5 Robux. Setiap kali ada pemain lain yang membeli bajumu, kamu akan menerima bagian Robux sebesar 70% secara terus-menerus!</p>
+
+      <h2>4. Ikut Event Giveaway Resmi & Spin di Rockstar Store</h2>
+      <p>Komunitas gaming terpercaya sering kali mengadakan event apresiasi pemain. Di <strong>Rockstar Store</strong>, kamu bisa mencoba peruntungan melalui fitur harian:</p>
+      <ul>
+        <li><strong>Lucky Spin Harian:</strong> Kunjungi fitur <a href="/spin">Lucky Spin Rockstar Store</a> untuk memenangkan saldo, potongan harga, hingga akun sepuh gratis!</li>
+        <li><strong>Giveaway Komunitas:</strong> Pantau pengumuman promo dan event berkala di saluran resmi kami.</li>
+      </ul>
+
+      <div class="tip-box alert-danger">
+        <h4>🚨 WASPADA PENIPUAN: Kenali Ciri-Ciri Scam "Free Robux" Palsu!</h4>
+        <p>Banyak situs jebakan di internet yang mengaku memiliki "Generator Robux Tanpa Verifikasi". <strong>JANGAN PERNAH PERCAYA!</strong> Roblox Corporation menegaskan bahwa tidak ada cheat, generator, atau file mod APK yang bisa menghasilkan Robux secara ajaib. Situs-situs penipu tersebut hanya ingin:</p>
+        <ul style="margin-top:8px;">
+          <li>Mencuri password dan email akun Roblox kamu (*Phishing*).</li>
+          <li>Menyusupkan virus/malware berbahaya ke HP atau laptopmu.</li>
+          <li>Memaksamu mengisi survei berbayar tanpa pernah memberikan Robux.</li>
+        </ul>
+      </div>
+
+      <div class="cta-card robux-theme">
+        <div class="cta-content">
+          <h3>⚡ Butuh Robux Cepat Tanpa Perlu Nunggu Kumpul Poin Lama?</h3>
+          <p>Jika kamu ingin Robux instan tanpa harus grinding berbulan-bulan, beli saja di <strong>Rockstar Store</strong>! Harga termurah se-Indonesia, garansi legal 100% anti-banned, dan proses kilat langsung masuk via Username.</p>
+          <div class="cta-actions">
+            <a href="/?tab=topup" class="cta-btn primary">Top Up Robux Resmi & Murah Sekarang 💎</a>
+            <a href="/berita/syarat-kirim-robux-via-username-panduan-lengkap" class="cta-btn secondary">Baca Syarat Kirim Robux via Username 📖</a>
+          </div>
+        </div>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>Mendapatkan Robux gratis memang membutuhkan sedikit usaha dan konsistensi, baik melalui program resmi Microsoft Rewards maupun berkarya di game PLS DONATE. Selalu utamakan keamanan akunmu, hindari generator palsu, dan pilih marketplace resmi dan bergaransi seperti <strong>Rockstar Store</strong>!</p>
+    `
+  },
+  {
+    slug: "syarat-kirim-robux-via-username-panduan-lengkap",
+    title: "Update Terbaru! Syarat Kirim Robux via Username Tanpa Delay 14 Hari (Wajib Roblox Premium & 18+)",
+    excerpt: "Kabar gembira! Kini kirim Robux via Username bisa langsung instan tanpa perlu nunggu delay 14 hari. Simak syarat terbarunya: wajib langganan Roblox Premium dan verifikasi ID 18+.",
+    category: "Update & Fitur",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T08:55:00+07:00",
+    author: "Min Rock - Robux Specialist",
+    readTime: "4 menit baca",
+    views: "11.2K",
+    image: "/ROBUX.webp",
+    tags: ["Robux", "Kirim Robux Instan", "Roblox Premium", "Verifikasi 18+", "Username Roblox", "Tanpa Delay 14 Hari"],
+    contentHtml: `
+      <p class="lead">Banyak pemain Roblox selama ini mengeluhkan lamanya proses kirim Robux via grup yang harus menunggu masa penahanan (*delay*) 14 sampai 15 hari. Namun kini ada <strong>update metode terbaru resmi dari Roblox</strong>: kamu bisa mengirim dan menerima Robux langsung lewat Username <strong>SECARA INSTAN TANPA PERLU MENUNGGU 14 HARI</strong>!</p>
+
+      <h2>Update Terbaru: Kirim Robux via Username Tanpa Delay</h2>
+      <p>Roblox telah menghadirkan pembaruan pada ekosistem transfer dan gifting langsung antar pengguna (*Direct User Transfer / Gifting*). Dengan fitur ini, saldo Robux bisa langsung berpindah ke dompet akun penerima dalam hitungan detik hanya dengan memasukkan Username. Namun, ada syarat ketat yang diberlakukan Roblox untuk mencegah penyalahgunaan.</p>
+
+      <h2>Syarat Wajib Kirim Robux via Username Tanpa Delay</h2>
+      <p>Agar fitur pengiriman Robux instan tanpa delay 14 hari ini bisa digunakan, akun harus memenuhi kriteria berikut:</p>
+      
+      <ol class="step-list">
+        <li><strong>Wajib Berlangganan Roblox Premium:</strong> Fitur transfer Robux langsung via username ini adalah hak istimewa (*exclusive privilege*) untuk pengguna dengan status langganan Roblox Premium aktif (Tier 450, 1000, atau 2200).</li>
+        <li><strong>Wajib Lolos Verifikasi Usia 18+ (Age-Verified with ID):</strong> Akun pengirim dan penerima harus sudah terverifikasi berusia minimal 18 tahun menggunakan kartu identitas resmi pemerintah (KTP, Paspor, atau SIM). Kebijakan ini diterapkan Roblox untuk mematuhi regulasi keuangan digital internasional serta melindungi akun anak-anak di bawah umur.</li>
+        <li><strong>Cukup Masukkan Username (@handle):</strong> Kamu hanya membutuhkan <strong>Username Roblox asli</strong> milik penerima. <strong>TIDAK BUTUH PASSWORD</strong> atau akses login sama sekali!</li>
+        <li><strong>Aktifkan Autentikasi 2 Langkah (2SV):</strong> Untuk mendapatkan batas limit transfer Robux yang lebih besar dan mencegah pemblokiran sistem keamanan, akun wajib mengaktifkan 2-Step Verification (via Authenticator App atau Email).</li>
+      </ol>
+
+      <div class="tip-box">
+        <h4>⚡ Keunggulan Metode Baru vs Metode Lama:</h4>
+        <p>Dengan metode terbaru ini, kamu <strong>TIDAK PERLU</strong> repot-repot join grup Roblox terlebih dahulu dan tidak perlu menghitung hari menunggu masa holding 14 hari selesai. Robux masuk detik itu juga!</p>
+      </div>
+
+      <h2>Tabel Perbandingan: Metode Baru vs Metode Lama</h2>
+      <div class="table-container" style="overflow-x:auto; margin:16px 0;">
+        <table style="width:100%; border-collapse:collapse; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden;">
+          <thead>
+            <tr style="background:rgba(59,130,246,0.15); text-align:left;">
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Fitur / Ketentuan</th>
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1); color:#10b981;">Metode Baru (Direct Premium 18+)</th>
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1); color:#94a3b8;">Metode Lawas (Group Payout)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Kecepatan Masuk</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#10b981; font-weight:bold;">INSTAN (0 Menit / Detik itu juga)</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#ef4444;">Wajib nunggu 14 - 15 Hari</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Status Langganan</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#3b82f6; font-weight:bold;">Wajib Roblox Premium</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Tidak wajib Premium</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Verifikasi Usia</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#3b82f6; font-weight:bold;">Wajib ID 18+ (KTP/Paspor)</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Bebas (Semua Usia)</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Syarat Join Grup</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#10b981; font-weight:bold;">TIDAK PERLU JOIN GRUP</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Wajib gabung grup penjual</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; font-weight:bold;">Keamanan Password</td>
+              <td style="padding:10px 14px; color:#10b981; font-weight:bold;">100% AMAN (Hanya Username)</td>
+              <td style="padding:10px 14px; color:#10b981; font-weight:bold;">100% AMAN (Hanya Username)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Cara Mudah Verifikasi Usia 18+ di Akun Roblox</h2>
+      <p>Jika kamu ingin memanfaatkan fitur transfer instan ini, kamu bisa memverifikasi akunmu dengan langkah berikut:</p>
+      <ol class="step-list">
+        <li>Buka aplikasi Roblox atau situs web di browser, masuk ke menu <strong>Settings (Pengaturan) &gt; Account Info</strong>.</li>
+        <li>Di bagian bawah tanggal lahir, klik tombol <strong>Verify My Age</strong>.</li>
+        <li>Siapkan foto fisik KTP, SIM, atau Paspor yang masih berlaku, lalu lakukan pemindaian wajah (*selfie check*) lewat sistem otomatis kamera HP.</li>
+        <li>Proses verifikasi biasanya berlangsung cepat hanya dalam kurun waktu 1 hingga 5 menit hingga tanda centang <em>Age Verified: 18+</em> muncul di profilmu.</li>
+      </ol>
+
+      <div class="tip-box alert-danger">
+        <h4>🚨 Peringatan Keamanan:</h4>
+        <p>Meskipun menggunakan metode instan, <strong>JANGAN PERNAH</strong> membagikan password akun, cookie roblosecurity, atau kode verifikasi SMS kepada siapapun. Pihak yang resmi hanya akan menanyakan <strong>Username (@nama_akun)</strong> kamu!</p>
+      </div>
+
+      <div class="cta-card robux-theme">
+        <div class="cta-content">
+          <h3>💎 Mau Top Up Robux Murah, Legal, & Bebas Ribet?</h3>
+          <p>Butuh Robux cepat tanpa pusing mikirin syarat atau takut kena tipu? Di <strong>Rockstar Store</strong>, kamu bisa top up Robux legal resmi dengan metode paling mudah, garansi anti-banned, dan harga termurah se-Indonesia!</p>
+          <div class="cta-actions">
+            <a href="/?tab=topup" class="cta-btn primary">Top Up Robux Sekarang di Rockstar Store ⚡</a>
+            <a href="https://wa.me/6287814408101?text=Halo%20Admin%20Rockstar%20Store,%20mau%20tanya%20top%20up%20Robux%20terbaru" class="cta-btn secondary" target="_blank" rel="noopener noreferrer">Tanya Admin via WhatsApp 💬</a>
+          </div>
+        </div>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>Update kirim Robux via username tanpa delay 14 hari ini menjadi solusi terbaik bagi pengguna dewasa (18+) dan pelanggan Roblox Premium yang membutuhkan kecepatan transaksi. Bagi yang belum memenuhi syarat 18+, metode grup 14 hari atau pembelian gamepass tetap menjadi alternatif resmi yang dapat diandalkan.</p>
+    `
+  },  {
     slug: "game-roblox-paling-banyak-dimainkan-populer-saat-ini",
     title: "10 Game Roblox Paling Banyak Dimainkan Saat Ini (Wajib Coba & Tips Cepat Jadi Sepuh)",
     excerpt: "Mulai dari Blox Fruits, Steal an Egg & Brainrot Maps, hingga Brookhaven RP. Ini daftar game Roblox paling populer dengan jutaan pemain aktif dan trik mendominasinya.",
