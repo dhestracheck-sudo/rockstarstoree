@@ -7,6 +7,7 @@ import MegaSlider from '../components/MegaSlider';
 import PaymentMethods from '../components/PaymentMethods';
 
 import SiteFooter from '../components/SiteFooter';
+import HomeArticles from '../components/HomeArticles';
 
 
 
@@ -3388,6 +3389,10 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\n"}
 
       </section>
+
+      {"\n\n"}
+
+      <HomeArticles />
 
       {"\n\n"}
 

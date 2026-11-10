@@ -1,5 +1,83 @@
 export const ARTICLES = [
   {
+    slug: "cara-agar-akun-roblox-tidak-di-banned-panduan-keamanan",
+    title: "7 Cara Ampuh Agar Akun Roblox Tidak Kena Banned (Wajib Tahu Pemain & Trader)",
+    excerpt: "Takut akun Roblox kesayangan kena ban permanen atau suspensi? Pelajari penyebab utama hukuman Roblox mulai dari anti-cheat Hyperion, Robux ilegal, hingga tips keamanan akun.",
+    category: "Panduan Keamanan",
+    categoryColor: "#ef4444",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T09:00:00+07:00",
+    author: "Min Rock - Security Team",
+    readTime: "5 menit baca",
+    views: "10.5K",
+    image: "/STEAL A EGG DISPLAY.webp",
+    tags: ["Anti Banned Roblox", "Banned Roblox", "Keamanan Akun", "Anti Cheat Byfron", "Robux Legal", "Tips Roblox"],
+    contentHtml: `
+      <p class="lead">Membangun akun Roblox hingga menjadi 'Sepuh' dengan koleksi item langka, level maksimal di Blox Fruits, dan saldo Robux melimpah membutuhkan waktu dan perjuangan panjang. Menghadapi layar merah bertuliskan <strong>Account Banned</strong> atau <strong>Account Terminated</strong> adalah mimpi buruk setiap gamer. Simak <strong>7 cara ampuh agar akun Roblox tidak terkena banned</strong> berikut ini!</p>
+
+      <h2>1. Jauhi Script Ilegal, Executor, & Mod APK (Anti-Cheat Hyperion)</h2>
+      <p>Roblox kini telah memperkuat sistem anti-cheat global mereka dengan teknologi <strong>Hyperion (Byfron)</strong>. Sistem ini bekerja secara otomatis memindai proses memori di perangkat PC dan Android untuk mendeteksi script pihak ketiga.</p>
+      <ul>
+        <li><strong>Risiko Penggunaan:</strong> Fitur seperti <em>auto-farm</em>, <em>teleport hack</em>, atau <em>kill aura</em> akan langsung terdeteksi server.</li>
+        <li><strong>Tingkatan Hukuman:</strong> Dimulai dari peringatan (*Warning*), suspensi 1 hari, 3 hari, 7 hari, hingga pemblokiran permanen (*Account Deleted*).</li>
+        <li><strong>Tips Aman:</strong> Mainkan game secara murni atau gunakan jasa joki manual terpercaya yang bermain tanpa script berbahaya.</li>
+      </ul>
+
+      <h2>2. Waspada "Poisoned Robux" (Robux Ilegal Hasil Carding)</h2>
+      <p>Banyak penjual nakal di media sosial menawarkan Robux dengan harga yang terlampau murah tidak masuk akal. Hati-hati! Robux tersebut sering kali diperoleh melalui <strong>pencurian kartu kredit (carding)</strong> atau peretasan akun lain.</p>
+      <div class="tip-box alert-danger">
+        <h4>⚠️ Bagaimana Sistem Deteksi Robux Ilegal Bekerja?</h4>
+        <p>Ketika pemilik kartu kredit yang sah melaporkan transaksi penipuan (melakukan <em>Chargeback / Refund</em>), Roblox akan menelusuri ke mana saja aliran Robux tersebut dikirimkan. Akun penerima Robux ilegal tersebut akan langsung <strong>DIBANNED PERMANEN</strong> tanpa kompromi!</p>
+      </div>
+      <p><strong>Solusi:</strong> Selalu beli Robux dari toko bergaransi legal dan terbukti kredibel seperti <strong>Rockstar Store</strong> yang menggunakan metode resmi anti-chargeback.</p>
+
+      <h2>3. Jaga Etika di In-Game Chat & Voice Chat</h2>
+      <p>Sistem moderasi otomatis (*AI Text Moderation*) Roblox sekarang jauh lebih sensitif mendeteksi pelanggaran bahasa:</p>
+      <ul>
+        <li><strong>Bypass Kata Kasar:</strong> Memodifikasi kata kotor dengan angka atau simbol tetap bisa dideteksi oleh AI.</li>
+        <li><strong>Pelanggaran Child Safety:</strong> Menyebarkan nomor WhatsApp, nomor telepon, atau akun Instagram pribadi di chat publik dilarang keras demi melindungi pengguna usia anak-anak.</li>
+        <li><strong>Spam & Harassment:</strong> Mengejek atau memprovokasi pemain lain secara berlebihan dapat memicu tombol <em>Report Abuse</em> yang diproses oleh moderator.</li>
+      </ul>
+
+      <h2>4. Gunakan Akun "Data Polos" & Segera Pasang Proteksi Penuh</h2>
+      <p>Jika kamu membeli akun Roblox siap tempur, pastikan akun tersebut bertipe <strong>Data Polos (Unverified)</strong> tanpa email atau nomor HP penjual yang tertinggal. Segera lakukan pengamanan berikut:</p>
+      <ol class="step-list">
+        <li>Tautkan email pribadi milikmu dan verifikasi sampai berstatus <em>Email Verified</em>.</li>
+        <li>Nyalakan <strong>2-Step Verification (2SV)</strong> menggunakan aplikasi Google Authenticator.</li>
+        <li>Pasang <strong>Parent PIN 4-Digit</strong> untuk mengunci akses perubahan kata sandi.</li>
+      </ol>
+
+      <h2>5. Hindari Tautan Phishing & Jangan Bagikan Cookie Akun</h2>
+      <p>Banyak hacker menyebarkan tautan jebakan (seperti <code>robl0x-trade.link</code> atau <code>roblox-free-event.xyz</code>) yang meminta login akun. Jangan pernah login di situs selain <strong>roblox.com</strong> resmi! Selain itu, jangan pernah memberikan kode token <code>.ROBLOSECURITY</code> kepada siapa pun karena kode tersebut dapat membobol akun tanpa password.</p>
+
+      <h2>6. Jangan Sering Berpindah IP / VPN Ekstrem</h2>
+      <p>Login di akun Roblox dari Indonesia, kemudian 5 menit kemudian login dari server VPN Amerika Serikat atau Eropa dapat memicu alarm sistem deteksi penipuan. Akunmu bisa dikunci sementara (*Locked due to Suspicious Activity*) karena dicurigai sedang diretas.</p>
+
+      <h2>7. Apa yang Harus Dilakukan Jika Akun Kena Ban Salah Sasaran?</h2>
+      <p>Jika kamu merasa tidak melanggar aturan tetapi akunmu terkena banned (*False Ban*), kamu berhak mengajukan banding resmi:</p>
+      <ol class="step-list">
+        <li>Buka situs pusat bantuan resmi: <a href="https://www.roblox.com/support" target="_blank" rel="noopener noreferrer">roblox.com/support</a>.</li>
+        <li>Isi data username dan email yang terdaftar di akun.</li>
+        <li>Di menu kategori bantuan, pilih <strong>Appeals &gt; Moderation</strong>.</li>
+        <li>Jelaskan secara sopan dalam bahasa Inggris bahwa terjadi kesalahan moderasi dan sertakan bukti kepemilikan sah.</li>
+      </ol>
+
+      <div class="cta-card safe-theme">
+        <div class="cta-content">
+          <h3>🛡️ Belanja Aman 100% Anti Banned di Rockstar Store!</h3>
+          <p>Mau main Roblox tenang tanpa waswas akun kena ban? Di <strong>Rockstar Store</strong>, seluruh Akun Sepuh dijamin DATA POLOS dengan garansi anti hackback, dan Top Up Robux diproses lewat jalur resmi 100% legal!</p>
+          <div class="cta-actions">
+            <a href="/?tab=akun" class="cta-btn primary">Pilih Akun Sepuh Aman di Rockstar Store 🛡️</a>
+            <a href="/?tab=topup" class="cta-btn secondary">Top Up Robux Legal Resmi Anti Banned ⚡</a>
+          </div>
+        </div>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>Mencegah jauh lebih baik daripada mengurus akun yang terlanjur hilang. Dengan menghindari script ilegal, tidak membeli Robux carding, dan menjaga keamanan data akun, akun Roblox kesayanganmu akan tetap aman selamanya!</p>
+    `
+  },
+  {
     slug: "item-roblox-paling-laku-dan-dicari-tahun-2026",
     title: "Daftar Item Roblox Paling Laku & Paling Dicari di 2026 (Nilai Trading Fantastis!)",
     excerpt: "Dari Kitsune Fruit Blox Fruits, Pet Secret Brainrot & Steal an Egg, hingga Huge Pet Simulator 99. Ini deretan item Roblox paling laris dengan nilai transaksi tertinggi di tahun 2026!",
