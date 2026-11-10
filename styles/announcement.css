@@ -128,10 +128,37 @@ body .brand-payment-kicker {
 
 body .brand-payment-copy h2 {
   margin: 0 0 12px;
-  color: #f4f5ff;
-  font-size: clamp(30px, 7vw, 40px);
+  font-size: clamp(30px, 7vw, 42px);
   font-weight: 900;
   line-height: 1.1;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  background: linear-gradient(90deg, #ffffff 0%, #7da2ff 25%, #ffffff 50%, #9ddcff 75%, #ffffff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rockstarTitleFloat 3s ease-in-out infinite, rockstarTitleShine 4s linear infinite;
+  will-change: transform;
+}
+
+@keyframes rockstarTitleFloat {
+  0%, 100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 4px 14px rgba(43, 78, 255, 0.4));
+  }
+  50% {
+    transform: translateY(-7px) scale(1.02);
+    filter: drop-shadow(0 8px 24px rgba(111, 139, 255, 0.8));
+  }
+}
+
+@keyframes rockstarTitleShine {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
 }
 
 body .brand-payment-copy p {
