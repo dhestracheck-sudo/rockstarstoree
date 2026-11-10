@@ -207,8 +207,20 @@ export default function BeritaDetail({ article, relatedArticles }) {
       </div>
 
       <style jsx global>{`
+        html, body {
+          background-color: #060913 !important;
+          color: #f2f5ff;
+          margin: 0;
+          padding: 0;
+        }
         .article-page-wrapper {
           min-height: 100vh;
+          background-color: #060913;
+          background-image:
+            radial-gradient(ellipse 90% 480px at 50% 0%, #0d1e4a 0%, transparent 80%),
+            radial-gradient(circle at 85% 20%, #0b193d 0%, transparent 55%),
+            linear-gradient(180deg, #070d1e 0%, #050811 100%);
+          background-attachment: fixed;
           background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.2) 0%, rgba(13, 22, 48, 0.95) 45%, #060b17 100%);
           color: #f2f5ff;
           font-family: var(--font-poppins), sans-serif;

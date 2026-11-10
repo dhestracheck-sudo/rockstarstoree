@@ -2,105 +2,80 @@ import React from "react";
 import { ARTICLES_META } from "../data/articles-meta";
 
 export default function HomeArticles() {
-  // Ambil 6-8 artikel terbaru untuk slider horizontal yang kaya informasi
+  // Ambil artikel terbaru untuk slider horizontal yang kaya informasi
   const articles = ARTICLES_META.slice(0, 8);
 
   return (
     <section className="home-articles-section" aria-labelledby="homeArticlesTitle">
-      <div className="home-articles-container">
-        <div className="home-articles-header">
-          <div className="home-articles-title-wrap">
-            <h2 className="home-articles-title" id="homeArticlesTitle">
-              {"📰 ARTIKEL TERBARU & BERITA GAME"}
-            </h2>
-            <span className="home-articles-swipe-hint">
-              {"👉 Geser untuk lihat artikel"}
-            </span>
-          </div>
-          <p className="home-articles-sub">
-            Dapatkan informasi terbaru seputar dunia game! Temukan panduan lengkap untuk meningkatkan pengalaman bermain, serta berita terkini mengenai promo, update top-up, dan komunitas gamer.
-          </p>
+      <div className="home-articles-header">
+        <div className="home-articles-title-wrap">
+          <h2 className="home-articles-title" id="homeArticlesTitle">
+            {"ARTIKEL TERBARU & BERITA GAME"}
+          </h2>
+          <span className="home-articles-swipe-hint">
+            {"👉 Geser untuk lihat artikel"}
+          </span>
         </div>
+        <p className="home-articles-sub">
+          Dapatkan informasi terbaru seputar dunia game! Temukan panduan lengkap untuk meningkatkan pengalaman bermain, serta berita terkini mengenai promo, update top-up, dan komunitas gamer.
+        </p>
+      </div>
 
-        <div className="home-articles-scroll" role="region" aria-label="Slider Berita Roblox">
-          {articles.map((article) => (
-            <a
-              key={article.slug}
-              href={`/berita/${article.slug}`}
-              className="home-article-card"
-            >
-              <div className="home-article-thumb">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  loading="lazy"
-                  decoding="async"
-                  fetchPriority="low"
-                  width="280"
-                  height="160"
-                />
-                <span
-                  className="home-article-badge"
-                  style={{ background: article.categoryColor || "#2563eb" }}
-                >
-                  {article.category}
-                </span>
-              </div>
+      <div className="home-articles-scroll" role="region" aria-label="Slider Berita Roblox">
+        {articles.map((article) => (
+          <a
+            key={article.slug}
+            href={`/berita/${article.slug}`}
+            className="home-article-card"
+          >
+            <div className="home-article-thumb">
+              <img
+                src={article.image}
+                alt={article.title}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+                width="280"
+                height="160"
+              />
+              <span
+                className="home-article-badge"
+                style={{ background: article.categoryColor || "#2563eb" }}
+              >
+                {article.category}
+              </span>
+            </div>
 
-              <div className="home-article-body">
-                <span className="home-article-author">
-                  {article.author || "Rockstar Store"}
-                </span>
-                <h3 className="home-article-name">{article.title}</h3>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="home-articles-footer">
-          <a href="/berita" className="home-articles-btn">
-            <span>{"Lihat Semua Artikel"}</span>
-            <span className="home-articles-btn-arrow">{"→"}</span>
+            <div className="home-article-body">
+              <span className="home-article-author">
+                {article.author || "Rockstar Store"}
+              </span>
+              <h3 className="home-article-name">{article.title}</h3>
+            </div>
           </a>
-        </div>
+        ))}
+      </div>
+
+      <div className="home-articles-footer">
+        <a href="/berita" className="home-articles-btn">
+          <span>{"Lihat Semua Artikel"}</span>
+          <span className="home-articles-btn-arrow">{"→"}</span>
+        </a>
       </div>
 
       <style jsx>{`
         .home-articles-section {
           max-width: 1040px;
-          margin: 32px auto 24px;
+          margin: 36px auto 24px;
           padding: 0 16px;
           box-sizing: border-box;
           content-visibility: auto;
-          contain-intrinsic-size: 320px;
-        }
-
-        /* ===== Rockstar Store Blue Theme Container ===== */
-        .home-articles-container {
-          background: linear-gradient(165deg, rgba(16, 28, 64, 0.85) 0%, rgba(9, 15, 34, 0.95) 60%, rgba(6, 10, 22, 0.98) 100%);
-          border: 1px solid rgba(59, 130, 246, 0.35);
-          border-radius: 20px;
-          padding: 22px 20px 24px;
-          box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(96, 165, 250, 0.2);
-          position: relative;
-          overflow: hidden;
-        }
-        .home-articles-container::before {
-          content: "";
-          position: absolute;
-          top: -60px;
-          right: -60px;
-          width: 220px;
-          height: 220px;
-          background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
-          pointer-events: none;
+          contain-intrinsic-size: 300px;
         }
 
         .home-articles-header {
           margin-bottom: 16px;
           text-align: left;
-          position: relative;
-          z-index: 1;
         }
         .home-articles-title-wrap {
           display: flex;
@@ -116,29 +91,28 @@ export default function HomeArticles() {
           color: #ffffff;
           letter-spacing: 0.5px;
           margin: 0;
-          text-shadow: 0 0 18px rgba(59, 130, 246, 0.5);
+          text-shadow: 0 0 18px rgba(59, 130, 246, 0.4);
         }
         .home-articles-swipe-hint {
           font-size: 0.74rem;
           color: #60a5fa;
           font-weight: 700;
-          background: rgba(37, 99, 235, 0.18);
-          border: 1px solid rgba(59, 130, 246, 0.35);
-          padding: 4px 10px;
+          background: rgba(37, 99, 235, 0.16);
+          border: 1px solid rgba(59, 130, 246, 0.3);
+          padding: 3px 10px;
           border-radius: 999px;
           display: inline-flex;
           align-items: center;
         }
         .home-articles-sub {
           font-size: 0.82rem;
-          color: #93c5fd;
+          color: #94a3b8;
           line-height: 1.5;
           max-width: 760px;
           margin: 0;
-          opacity: 0.9;
         }
         
-        /* ===== Horizontal Slider Layout (Mirip Flash Sale) ===== */
+        /* ===== Horizontal Slider Layout (Tanpa Grid Kotak Luar) ===== */
         .home-articles-scroll {
           display: flex;
           gap: 14px;
@@ -149,8 +123,6 @@ export default function HomeArticles() {
           margin-bottom: 14px;
           scrollbar-width: thin;
           scrollbar-color: #2563eb rgba(255, 255, 255, 0.05);
-          position: relative;
-          z-index: 1;
         }
         .home-articles-scroll::-webkit-scrollbar {
           height: 6px;
@@ -250,8 +222,6 @@ export default function HomeArticles() {
         /* ===== Tombol "Lihat Semua Artikel" Biru Ala Rockstar Store ===== */
         .home-articles-footer {
           margin-top: 4px;
-          position: relative;
-          z-index: 1;
         }
         .home-articles-btn {
           display: inline-flex;

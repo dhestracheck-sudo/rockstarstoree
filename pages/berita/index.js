@@ -130,9 +130,20 @@ export default function BeritaPortal() {
       </div>
 
       <style jsx global>{`
+        html, body {
+          background-color: #060913 !important;
+          color: #f2f5ff;
+          margin: 0;
+          padding: 0;
+        }
         .news-page-wrapper {
           min-height: 100vh;
-          background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.2) 0%, rgba(13, 22, 48, 0.95) 45%, #060b17 100%);
+          background-color: #060913;
+          background-image: 
+            radial-gradient(ellipse 90% 480px at 50% 0%, #0d1e4a 0%, transparent 80%),
+            radial-gradient(circle at 85% 20%, #0b193d 0%, transparent 55%),
+            linear-gradient(180deg, #070d1e 0%, #050811 100%);
+          background-attachment: fixed;
           color: #f2f5ff;
           font-family: var(--font-poppins), sans-serif;
         }
@@ -140,10 +151,11 @@ export default function BeritaPortal() {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: rgba(4, 8, 20, 0.92);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border-bottom: 1px solid rgba(110, 140, 255, 0.16);
+          background: rgba(6, 10, 22, 0.95);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border-bottom: 1px solid rgba(59, 130, 246, 0.25);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         .news-header-inner {
           max-width: 1140px;
@@ -158,7 +170,7 @@ export default function BeritaPortal() {
           align-items: center;
           gap: 10px;
           text-decoration: none;
-          color: #fff;
+          color: #ffffff;
           font-weight: 800;
           font-size: 16px;
           letter-spacing: 0.5px;
@@ -169,50 +181,54 @@ export default function BeritaPortal() {
         .btn-back-home {
           padding: 8px 16px;
           font-size: 13px;
-          font-weight: 600;
-          color: #8b96b3;
+          font-weight: 700;
+          color: #ffffff;
           border-radius: 99px;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          border: 1px solid #60a5fa;
           text-decoration: none;
-          transition: all 0.15s ease;
+          box-shadow: 0 3px 12px rgba(37, 99, 235, 0.4);
+          transition: all 0.18s ease;
         }
         .btn-back-home:hover {
-          color: #fff;
-          background: rgba(43, 78, 255, 0.25);
-          border-color: #2b4eff;
+          color: #ffffff;
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          box-shadow: 0 5px 18px rgba(37, 99, 235, 0.6);
+          transform: translateY(-1px);
         }
         .news-main-container {
           max-width: 1140px;
           margin: 0 auto;
-          padding: 32px 18px 60px;
+          padding: 36px 18px 60px;
         }
         .news-hero {
           text-align: center;
-          margin-bottom: 40px;
+          margin-bottom: 44px;
         }
         .news-kicker {
           display: inline-block;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 800;
-          color: #6fa0ff;
+          color: #38bdf8;
           letter-spacing: 2px;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
+          text-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
         }
         .news-hero h1 {
           font-size: clamp(26px, 5.5vw, 42px);
           font-weight: 900;
-          margin: 0 0 12px;
-          background: linear-gradient(90deg, #fff, #9ddcff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          margin: 0 0 14px;
+          color: #ffffff;
+          text-shadow: 0 3px 16px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.5);
+          letter-spacing: -0.5px;
         }
         .news-hero p {
-          max-width: 640px;
+          max-width: 660px;
           margin: 0 auto;
-          color: #8b96b3;
-          font-size: 14.5px;
-          line-height: 1.6;
+          color: #cbd5e1;
+          font-size: 15px;
+          line-height: 1.65;
+          text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
         }
         .news-grid {
           display: grid;
@@ -221,18 +237,19 @@ export default function BeritaPortal() {
           margin-bottom: 50px;
         }
         .news-card {
-          background: #0b1120;
-          border: 1px solid rgba(120, 150, 255, 0.16);
+          background: linear-gradient(150deg, #0e1b3d 0%, #081024 100%);
+          border: 1px solid rgba(59, 130, 246, 0.35);
           border-radius: 18px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(96, 165, 250, 0.15);
           transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
         .news-card:hover {
           transform: translateY(-4px);
-          border-color: rgba(43, 78, 255, 0.55);
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+          border-color: #60a5fa;
+          box-shadow: 0 14px 34px rgba(0, 0, 0, 0.6), 0 0 20px rgba(37, 99, 235, 0.4);
         }
         .news-card-media {
           position: relative;
@@ -260,21 +277,23 @@ export default function BeritaPortal() {
           border-radius: 8px;
           color: #fff;
           text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
         .news-card-body {
           padding: 20px;
           display: flex;
           flex-direction: column;
           flex: 1;
+          background: linear-gradient(180deg, #0d1836 0%, #070e1f 100%);
         }
         .news-meta {
           font-size: 12px;
-          color: #8b96b3;
+          color: #93c5fd;
           margin-bottom: 10px;
           display: flex;
           align-items: center;
           gap: 6px;
+          font-weight: 600;
         }
         .news-card-body h2 {
           font-size: 18px;
@@ -283,15 +302,15 @@ export default function BeritaPortal() {
           margin: 0 0 10px;
         }
         .news-card-body h2 a {
-          color: #f2f5ff;
+          color: #ffffff;
           text-decoration: none;
           transition: color 0.15s;
         }
         .news-card-body h2 a:hover {
-          color: #6fa0ff;
+          color: #60a5fa;
         }
         .news-card-body p {
-          color: #8b96b3;
+          color: #cbd5e1;
           font-size: 13.5px;
           line-height: 1.6;
           margin: 0 0 18px;
@@ -302,37 +321,40 @@ export default function BeritaPortal() {
           align-items: center;
           justify-content: space-between;
           padding-top: 14px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          border-top: 1px solid rgba(59, 130, 246, 0.2);
           font-size: 12.5px;
         }
         .news-author {
-          color: #8b96b3;
+          color: #93c5fd;
+          font-weight: 600;
         }
         .news-read-link {
-          color: #6fa0ff;
+          color: #38bdf8;
           font-weight: 700;
           text-decoration: none;
           transition: transform 0.15s ease;
         }
         .news-read-link:hover {
           transform: translateX(3px);
-          color: #9ddcff;
+          color: #93c5fd;
         }
         .news-cta-banner {
-          background: linear-gradient(135deg, rgba(43, 78, 255, 0.22), rgba(18, 34, 94, 0.35));
-          border: 1px solid rgba(110, 140, 255, 0.28);
+          background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(16, 28, 64, 0.9) 100%);
+          border: 1px solid rgba(59, 130, 246, 0.4);
           border-radius: 20px;
           padding: 34px 24px;
           text-align: center;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         .cta-banner-content h2 {
           font-size: clamp(20px, 4.5vw, 28px);
           margin: 0 0 10px;
-          color: #fff;
+          color: #ffffff;
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
         }
         .cta-banner-content p {
-          color: #d7dced;
-          font-size: 14px;
+          color: #cbd5e1;
+          font-size: 14.5px;
           max-width: 580px;
           margin: 0 auto 22px;
         }
@@ -345,8 +367,8 @@ export default function BeritaPortal() {
         }
         .btn-cta-gold {
           background: linear-gradient(90deg, #f59e0b, #d97706);
-          color: #fff;
-          font-weight: 700;
+          color: #ffffff;
+          font-weight: 800;
           font-size: 14px;
           padding: 12px 24px;
           border-radius: 12px;
@@ -355,14 +377,15 @@ export default function BeritaPortal() {
           transition: transform 0.15s;
         }
         .btn-cta-blue {
-          background: #2b4eff;
-          color: #fff;
-          font-weight: 700;
+          background: linear-gradient(135deg, #2563eb, #1d4ed8);
+          border: 1px solid #60a5fa;
+          color: #ffffff;
+          font-weight: 800;
           font-size: 14px;
           padding: 12px 24px;
           border-radius: 12px;
           text-decoration: none;
-          box-shadow: 0 6px 18px rgba(43, 78, 255, 0.4);
+          box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
           transition: transform 0.15s;
         }
         .btn-cta-gold:hover, .btn-cta-blue:hover {
@@ -371,9 +394,9 @@ export default function BeritaPortal() {
         .news-footer {
           text-align: center;
           padding: 30px 18px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          border-top: 1px solid rgba(59, 130, 246, 0.2);
           font-size: 13px;
-          color: #64748b;
+          color: #94a3b8;
         }
       `}</style>
     </>

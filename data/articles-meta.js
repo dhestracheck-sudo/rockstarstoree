@@ -80,11 +80,11 @@ export const ARTICLES_META = [
     "image": "/BABAS DISPLAY.webp"
   },
   {
-    "slug": "cara-jadi-joki-roblox-profesional-hasilkan-uang-sendiri",
-    "title": "Cara Menjadi Joki Roblox Profesional & Hasilkan Uang dari Rumah (Tips Memulai Bisnis Joki)",
-    "category": "Karir & Bisnis Game",
-    "categoryColor": "#10b981",
-    "author": "Min Rock - Business Guide",
+    "slug": "game-roblox-bertema-anime-paling-seru-grafis-memukau",
+    "title": "5 Game Roblox Bertema Anime Paling Seru 2026 (Grafis Memukau & Efek Pertarungan Epik)",
+    "category": "Rekomendasi Game",
+    "categoryColor": "#8b5cf6",
+    "author": "Min Rock - Anime Editor",
     "image": "/permainan lucky block display.webp"
   },
   {

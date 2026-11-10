@@ -290,33 +290,43 @@ export const ARTICLES = [
     `
   },
   {
-    slug: "cara-jadi-joki-roblox-profesional-hasilkan-uang-sendiri",
-    title: "Cara Menjadi Joki Roblox Profesional & Hasilkan Uang dari Rumah (Tips Memulai Bisnis Joki)",
-    excerpt: "Punya skill jago main Blox Fruits atau Steal an Egg? Manfaatkan keahlianmu menjadi ladang cuan! Simak panduan membangun jasa joki Roblox terpercaya dan aman.",
-    category: "Karir & Bisnis Game",
-    categoryColor: "#10b981",
+    slug: "game-roblox-bertema-anime-paling-seru-grafis-memukau",
+    title: "5 Game Roblox Bertema Anime Paling Seru 2026 (Grafis Memukau & Efek Pertarungan Epik)",
+    excerpt: "Pencinta anime merapat! Ini rekomendasi game Roblox bertema anime terbaik dengan jurus memukau, mulai dari Blox Fruits, Anime Defenders, hingga Jujutsu Shenanigans.",
+    category: "Rekomendasi Game",
+    categoryColor: "#8b5cf6",
     date: "10 November 2026",
     isoDate: "2026-11-10T10:00:00+07:00",
-    author: "Min Rock - Business Guide",
+    author: "Min Rock - Anime Editor",
     readTime: "4 menit baca",
-    views: "13.2K",
+    views: "19.3K",
     image: "/permainan lucky block display.webp",
-    tags: ["Joki Roblox", "Jasa Joki Roblox", "Cuan dari Game", "Bisnis Joki Game", "Rockstar Store Joki"],
+    tags: ["Game Anime Roblox", "Anime Roblox Terbaik", "Blox Fruits", "Anime Defenders", "Jujutsu Roblox"],
     contentHtml: `
-      <p class="lead">Bermain game kini bukan sekadar sarana hiburan, melainkan profesi menjanjikan bagi mereka yang memiliki ketekunan dan keahlian di atas rata-rata. Menjadi <strong>joki Roblox</strong> profesional adalah salah satu cara terbaik menghasilkan uang saku sendiri sambil tetap bermain game favorit!</p>
+      <p class="lead">Komunitas penggemar anime di Roblox sangatlah masif. Para pengembang game menghadirkan adaptasi anime legendaris (seperti One Piece, Jujutsu Kaisen, Dragon Ball, hingga Demon Slayer) dengan efek animasi jurus 3D yang sangat memanjakan mata. Berikut adalah <strong>game Roblox bertema anime paling seru dan wajib kamu mainkan di tahun 2026</strong>!</p>
 
-      <h2>1. Kunci Utama Bisnis Joki: Kepercayaan & Kejujuran</h2>
-      <p>Customer mempercayakan akun mereka kepadamu. Jangan pernah menggunakan script cheat berbahaya yang bisa membuat akun pelanggan terkena ban, dan jangan pernah mengutak-atik item pribadi di inventori mereka.</p>
+      <h2>1. Blox Fruits (Petualangan Terbesar Dunia Bajak Laut)</h2>
+      <p>Terinspirasi dari dunia One Piece, Blox Fruits tetap menjadi destinasi utama bagi penggemar petualangan maritim. Bertarung menggunakan Buah Iblis mistis, pedang legendaris, dan gaya bertarung bela diri di tiga lautan luas yang penuh tantangan.</p>
 
-      <h2>2. Tentukan Spesialisasi Map</h2>
-      <p>Fokuslah pada map dengan permintaan jasa leveling tertinggi, seperti:</p>
-      <ul>
-        <li><strong>Joki Blox Fruits:</strong> Leveling Sea 1 ke Sea 3, membuka V4 Awakening, raid boss, dan mencari mastery senjata.</li>
-        <li><strong>Joki Map Brainrot:</strong> Membuka zona baru, mengumpulkan pet Secret, dan menaikkan power karakter.</li>
-      </ul>
+      <h2>2. Jujutsu Shenanigans (Duel Pertarungan Reaksi Cepat)</h2>
+      <p>Bagi penikmat anime Jujutsu Kaisen, game duel ini menyajikan mekanik bertarung tangan kosong yang sangat responsif, hancurnya bangunan sekitar secara realistis (*destructible environment*), dan aktivasi Domain Expansion dengan efek visual sinematik.</p>
 
-      <h2>3. Solusi Joki Cepat & Bergaransi di Rockstar Store</h2>
-      <p>Bagi kamu yang ingin menaikkan level akun tanpa ribet dan dipegang langsung oleh tim joki profesional berpengalaman, percayakan pada layanan <strong>Joki Sepuh Rockstar Store</strong>!</p>
+      <h2>3. Anime Defenders & Anime Vanguards (Tower Defense Epik)</h2>
+      <p>Strategi pertahanan berbasis karakter anime favorit. Kumpulkan unit tier Mythic dan Secret untuk menahan gelombang musuh di berbagai peta menantang.</p>
+
+      <h2>4. Blade Ball (Refleks Pantulan Bola Energi)</h2>
+      <p>Menguji refleks mata dan kecepatan jari memantulkan bola berkecepatan suara dengan skill pedang bertema anime.</p>
+
+      <div class="cta-card safe-theme">
+        <div class="cta-content">
+          <h3>👑 Mau Langsung Punya Akun Sepuh di Game-Game Anime Ini?</h3>
+          <p>Capek grinding berbulan-bulan dari level 1? Dapatkan <strong>Akun Sepuh Blox Fruits Sea 3</strong> siap tempur, unit anime langka, dan Top Up Robux termurah hanya di <strong>Rockstar Store</strong>!</p>
+          <div class="cta-actions">
+            <a href="/?tab=akun" class="cta-btn primary">Pilih Akun Sepuh Roblox di Rockstar Store 🛡️</a>
+            <a href="/?tab=topup" class="cta-btn secondary">Top Up Robux Kilat & Aman ⚡</a>
+          </div>
+        </div>
+      </div>
     `
   },
   {
@@ -564,8 +574,8 @@ export const ARTICLES = [
         <li><strong>Dapatkan Donasi dari Pemain Sultan:</strong> Banyak kreator konten, streamer, dan pemain sultan yang sering berkeliling server untuk membagikan Robux kepada pemain baru. Robux yang didonasikan akan cair ke akunmu dalam 3–5 hari kerja (Holding Period).</li>
       </ul>
 
-      <h2>3. Membuat Desain Baju Avatar (Clothing Creator)</h2>
-      <p>Bagi kamu yang memiliki bakat mendesain grafis sederhana, membuat pakaian avatar (*Classic T-Shirt* atau *Classic Shirt*) adalah sumber Robux gratis jangka panjang. Kamu bisa mengunggah desain buatanmu ke Roblox Avatar Shop seharga 5 Robux. Setiap kali ada pemain lain yang membeli bajumu, kamu akan menerima bagian Robux sebesar 70% secara terus-menerus!</p>
+      <h2>3. Mengikuti Event Resmi Roblox Creator Challenge & Quest</h2>
+      <p>Roblox secara berkala mengadakan event edukasi dan tantangan kuis resmi (seperti <em>Roblox Creator Challenge</em>). Dengan menyelesaikan kuis pengetahuan dasar tentang game dan dunia virtual di map event resmi, pemain akan dihadiahi aksesoris avatar eksklusif, lencana langka (*badges*), hingga hadiah digital tanpa dipungut biaya sepeser pun!</p>
 
       <h2>4. Ikut Event Giveaway Resmi & Spin di Rockstar Store</h2>
       <p>Komunitas gaming terpercaya sering kali mengadakan event apresiasi pemain. Di <strong>Rockstar Store</strong>, kamu bisa mencoba peruntungan melalui fitur harian:</p>
