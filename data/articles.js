@@ -1,5 +1,104 @@
 export const ARTICLES = [
   {
+    slug: "syarat-kirim-robux-via-username-panduan-lengkap",
+    title: "Syarat Kirim Robux via Username: Panduan Lengkap, Ketentuan Grup & Tips Cepat Masuk",
+    excerpt: "Ingin kirim atau terima Robux hanya dengan modal Username tanpa password? Pahami syarat wajib join grup 14 hari, metode gamepass, hingga tips transaksi aman 100%.",
+    category: "Tutorial Robux",
+    categoryColor: "#10b981",
+    date: "10 November 2026",
+    isoDate: "2026-11-10T08:45:00+07:00",
+    author: "Min Rock - Robux Specialist",
+    readTime: "4 menit baca",
+    views: "7.8K",
+    image: "/ROBUX.webp",
+    tags: ["Robux", "Kirim Robux", "Top Up Robux", "Username Roblox", "Roblox Group Payout", "Gamepass"],
+    contentHtml: `
+      <p class="lead">Banyak pemain Roblox bertanya: <em>"Apakah bisa kirim Robux langsung ke akun teman atau pembeli hanya dengan memasukkan Username saja tanpa perlu login password?"</em> Jawabannya adalah <strong>BISA BANGET!</strong> Namun, ada aturan dan syarat resmi dari Roblox yang wajib dipatuhi agar proses pengiriman sukses dan akun tetap aman 100%.</p>
+
+      <h2>1. Syarat Utama Kirim Robux via Username (Metode Group Payout)</h2>
+      <p>Metode transfer Robux via username paling populer dan resmi yang disediakan oleh Roblox adalah melalui fitur <strong>Group Payouts (Pembayaran Grup)</strong>. Untuk menggunakan metode ini, berikut syarat mutlaknya:</p>
+      
+      <ul>
+        <li><strong>Akun Penerima Wajib Sudah Join Grup Minimal 14 Hari:</strong> Ini adalah aturan sistem keamanan Roblox (<em>14-day Holding Period</em>). Akun baru yang bergabung ke dalam grup tidak bisa langsung menerima payout Robux sebelum masa tunggu 14 hari penuh terpenuhi.</li>
+        <li><strong>Gunakan Username Asli (Bukan Display Name):</strong> Pastikan kamu memberikan <strong>Roblox Username</strong> (yang diawali tanda @ saat login), BUKAN <em>Display Name</em> yang bisa diganti-ganti sesuka hati. Jika salah satu huruf saja keliru, Robux berisiko terkirim ke akun orang lain!</li>
+        <li><strong>TIDAK BUTUH Password Sama Sekali:</strong> Pengiriman via Group Payout hanya membutuhkan nama pengguna publik. Kamu <strong>tidak pernah</strong> diminta memasukkan kata sandi (password), kode OTP, atau verifikasi email.</li>
+        <li><strong>Saldo Grup Mencukupi:</strong> Grup pengirim harus memiliki dana Robux grup (<em>Group Funds</em>) yang sudah berstatus matang (bukan pending).</li>
+      </ul>
+
+      <div class="tip-box">
+        <h4>💡 Mengapa Roblox Menerapkan Aturan Tunggu 14 Hari?</h4>
+        <p>Aturan 14 hari ini dibuat langsung oleh Roblox Corporation untuk mencegah tindak pencucian Robux ilegal dan melindungi akun pemain dari peretasan. Jadi, masa tunggu ini adalah prosedur resmi internasional, bukan aturan yang dibuat-buat oleh penjual.</p>
+      </div>
+
+      <h2>2. Metode Alternatif: Kirim Robux via Gamepass (Tanpa Tunggu 14 Hari)</h2>
+      <p>Bagaimana jika kamu belum bergabung di grup selama 14 hari tetapi butuh Robux cepat? Kamu bisa menggunakan <strong>Metode Gamepass / VIP Server</strong>:</p>
+      <ol class="step-list">
+        <li><strong>Buat Gamepass di Profil Roblox:</strong> Masuk ke <em>Create / Dashboard</em> di Roblox, pilih pengalamanmu (Place), lalu buat item Gamepass baru.</li>
+        <li><strong>Setel Harga Gamepass (+ Pajak 30%):</strong> Karena Roblox memotong pajak penjualan sebesar 30%, kamu harus menyetel harga Gamepass agar saldo bersih yang kamu terima sesuai dengan nominal Robux yang dibeli.</li>
+        <li><strong>Kirim Link Gamepass / Username:</strong> Penjual akan membeli Gamepass milikmu secara langsung menggunakan saldo Robux mereka.</li>
+        <li><strong>Masa Pending Robux (3 - 5 Hari):</strong> Robux hasil pembelian Gamepass akan masuk ke status <strong>Pending Robux</strong> di akunmu dan otomatis cair ke saldo aktif dalam waktu 3 hingga 5 hari kerja.</li>
+      </ol>
+
+      <h2>3. Perbedaan Vital: Username vs Display Name</h2>
+      <p>Sering kali pengiriman Robux tertunda atau gagal karena salah memberikan nama akun. Perhatikan perbedaannya:</p>
+      <div class="table-container" style="overflow-x:auto; margin:16px 0;">
+        <table style="width:100%; border-collapse:collapse; background:rgba(255,255,255,0.03); border-radius:8px; overflow:hidden;">
+          <thead>
+            <tr style="background:rgba(59,130,246,0.15); text-align:left;">
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Kategori</th>
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Username (@handle)</th>
+              <th style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.1);">Display Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Sifat</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#10b981;">Unik (Hanya 1 di dunia)</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); color:#94a3b8;">Bisa sama dengan pemain lain</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); font-weight:bold;">Tampilan</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Contoh: @SultanRoblox99</td>
+              <td style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05);">Contoh: SepuhGaming</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 14px; font-weight:bold;">Kebutuhan Kirim</td>
+              <td style="padding:10px 14px; color:#3b82f6; font-weight:bold;">WAJIB DIGUNAKAN</td>
+              <td style="padding:10px 14px; color:#ef4444;">JANGAN DIGUNAKAN</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tip-box alert-danger">
+        <h4>🚨 Peringatan Keamanan Terpenting:</h4>
+        <p><strong>JANGAN PERNAH</strong> memberikan password akun Roblox, PIN keamanan, atau kode verifikasi WhatsApp/Email kepada siapa pun yang mengaku ingin mengirimkan Robux. Transaksi kirim Robux resmi dan terpercaya <strong>HANYA MEMBUTUHKAN USERNAME</strong>!</p>
+      </div>
+
+      <h2>4. Cara Cek Robux yang Sedang Pending / Masuk</h2>
+      <p>Jika pengiriman sudah diproses oleh pengirim, kamu bisa langsung memantau status saldo Robux kamu dengan langkah mudah berikut:</p>
+      <ol class="step-list">
+        <li>Buka peramban (browser) di HP atau laptop, lalu buka tautan resmi: <a href="https://www.roblox.com/transactions" target="_blank" rel="noopener noreferrer">roblox.com/transactions</a>.</li>
+        <li>Login ke akun Roblox milikmu.</li>
+        <li>Di bagian <strong>Summary</strong>, perhatikan kolom <strong>Pending Robux</strong>. Angka tersebut menunjukkan Robux yang sedang dalam antrean pencairan sistem Roblox ke dompet akunmu.</li>
+      </ol>
+
+      <div class="cta-card robux-theme">
+        <div class="cta-content">
+          <h3>💎 Mau Top Up Robux Murah, Legal, & 100% Cepat Masuk?</h3>
+          <p>Dapatkan Robux resmi bergaransi anti-banned dengan harga termurah se-Indonesia hanya di <strong>Rockstar Store</strong>! Proses instan, bisa via grup atau sistem tercepat, dan didampingi Customer Support ramah 24 jam.</p>
+          <div class="cta-actions">
+            <a href="/?tab=topup" class="cta-btn primary">Top Up Robux Sekarang di Rockstar Store ⚡</a>
+            <a href="https://wa.me/6287814408101?text=Halo%20Admin%20Rockstar%20Store,%20mau%20tanya%20top%20up%20Robux%20via%20username" class="cta-btn secondary" target="_blank" rel="noopener noreferrer">Tanya Admin via WhatsApp 💬</a>
+          </div>
+        </div>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>Mengirim atau menerima Robux via username sangat mudah dan aman asalkan kamu memahami syarat holding period 14 hari untuk grup atau alternatif gamepass. Selalu jaga kerahasiaan kata sandi akunmu dan bertransaksilah di toko tepercaya seperti <strong>Rockstar Store</strong>!</p>
+    `
+  },
+  {
     slug: "game-roblox-paling-banyak-dimainkan-populer-saat-ini",
     title: "10 Game Roblox Paling Banyak Dimainkan Saat Ini (Wajib Coba & Tips Cepat Jadi Sepuh)",
     excerpt: "Mulai dari Blox Fruits, Steal an Egg & Brainrot Maps, hingga Brookhaven RP. Ini daftar game Roblox paling populer dengan jutaan pemain aktif dan trik mendominasinya.",
