@@ -686,6 +686,19 @@ function render(){
 
 
 
+
+function isItemAvailable(item){
+  if(!item || !item.name) return false;
+  var nm = String(item.name || "").trim();
+  if(nm.indexOf("CAT:") === 0) return false;
+  if(item.soldout && /^(ya|y|yes|habis|sold)/i.test(String(item.soldout).trim())) return false;
+  if(typeof item.stock !== "undefined"){
+    var s = Number(item.stock);
+    if(!Number.isFinite(s) || s <= 0) return false;
+  }
+  return true;
+}
+
 function searchCatalog(){
 
   const q = document.getElementById("searchInput").value.toLowerCase().trim();
@@ -708,8 +721,7 @@ function searchCatalog(){
 
       c.items.forEach((item, j) => {
 
-        if(!item || item.stock === 0 || (typeof item.stock !== "undefined" && Number(item.stock) <= 0)) return;
-        if(item.soldout && /^(ya|y|yes|habis|sold)/i.test(String(item.soldout).trim())) return;
+        if(!isItemAvailable(item)) return;
         if((c.name + " " + item.name).toLowerCase().includes(q)) out.push({page, i, j, cname: c.name, item});
 
       });
@@ -779,7 +791,7 @@ function sugShow(q, rows){
   if(!box || !rows || !rows.length){ sugHide(); return; }
 
   // Filter ketat: jangan tampilkan produk habis di saran pencarian
-  const availableRows = rows.filter(r => r && r.item && r.item.stock !== 0 && !(typeof r.item.stock !== "undefined" && Number(r.item.stock) <= 0) && !(r.item.soldout && /^(ya|y|yes|habis|sold)/i.test(String(r.item.soldout).trim())));
+  const availableRows = rows.filter(r => r && r.item && isItemAvailable(r.item));
   if(!availableRows.length){ sugHide(); return; }
 
   box.innerHTML = availableRows.map(r => {
@@ -3397,8 +3409,7 @@ function searchSuggestNow(){
         const it = cats[i].items[j];
 
         // Jangan tampilkan produk yang stoknya habis di pencarian
-        if(!it || it.stock === 0 || (typeof it.stock !== "undefined" && Number(it.stock) <= 0)) continue;
-        if(it.soldout && /^(ya|y|yes|habis|sold)/i.test(String(it.soldout).trim())) continue;
+        if(!isItemAvailable(it)) continue;
 
         if((cats[i].name + " " + it.name).toLowerCase().includes(q))
 
