@@ -3235,7 +3235,7 @@ function loadLiveStock(forceNetwork){
     hideLoader();
 
     const lastSync = Number(localStorage.getItem("rs_last_full_sync") || 0);
-    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 45000){
+    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 15000){
       return Promise.resolve(false);
     }
   } catch(e) {}

@@ -3,8 +3,8 @@
      sehingga di-cache permanen (Cache-First) agar hemat kuota egress Supabase Free Tier & instan 0ms.
    - Gambar lokal (/optimized/): Cache-First instan.
    - Naikkan CACHE setiap rilis agar HP membuang file lama yang tersimpan. */
-const CACHE = "rockstar-v25";
-const SB_IMG_CACHE = "rockstar-sb-foto-v1";
+const CACHE = "rockstar-v26";
+const SB_IMG_CACHE = "rockstar-sb-foto-v2";
 const CORE = ["./", "faq/", "manifest.json", "ROCKSTARICON.png"];
 const IMG_MAX = 500; // batasi jumlah gambar cache biar storage HP tidak bengkak
 
@@ -44,12 +44,14 @@ self.addEventListener("fetch", e => {
         caches.open(SB_IMG_CACHE).then(c =>
           c.match(e.request).then(hit => {
             if(hit) return hit;
-            return fetch(e.request).then(r => {
-              if(r && (r.ok || r.type === "opaque")){
+            // Mode CORS (Supabase mengizinkan *) agar status asli terbaca: hanya foto 200 OK yang disimpan,
+            // foto gagal/404 tidak pernah tersangkut di cache dan tidak membengkakkan kuota storage HP.
+            return fetch(new Request(e.request.url, { mode: "cors", credentials: "omit" })).then(r => {
+              if(r && r.ok){
                 c.put(e.request, r.clone()).then(() => trimImageCache(SB_IMG_CACHE)).catch(() => {});
               }
               return r;
-            });
+            }).catch(() => fetch(e.request));
           })
         ).catch(() => fetch(e.request))
       );
