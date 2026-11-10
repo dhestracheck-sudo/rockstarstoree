@@ -1412,6 +1412,20 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             {"\n    "}
 
+            <a href="/berita">
+
+              {"📰 "}
+
+              <span>
+
+                {"Berita"}
+
+              </span>
+
+            </a>
+
+            {"\n    "}
+
             <a href="?tab=akun" onClick={(event) => { goToAkun(); event.preventDefault(); return false; }}>
 
               {"👤 "}
@@ -1703,6 +1717,24 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
           </span>
 
         </button>
+
+        {"\r\n  "}
+
+        <a className="mlink" href="/berita" style={{ textDecoration: "none" }}>
+
+          <span className="lico">
+
+            {"📰"}
+
+          </span>
+
+          <span>
+
+            {"Berita & Tips"}
+
+          </span>
+
+        </a>
 
         {"\r\n  "}
 
