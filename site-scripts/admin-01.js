@@ -1620,7 +1620,40 @@ function infoMap(rows){
   return m;
 }
 
+let _bumpVerTimer = null;
+function bumpCatalogVersion(cause){
+  clearTimeout(_bumpVerTimer);
+  _bumpVerTimer = setTimeout(async function(){
+    const newVer = String(Date.now());
+    try { localStorage.setItem("rs_catalog_ver", newVer); } catch(_) {}
+    try {
+      if (typeof BroadcastChannel !== "undefined") {
+        const bc = new BroadcastChannel("rockstar_catalog_sync_v1");
+        bc.postMessage({ type: "CATALOG_UPDATED", version: newVer, cause: cause || "admin_edit", timestamp: Date.now() });
+        bc.close();
+      }
+    } catch(_) {}
+    try {
+      await fetch(SB_URL + "/rest/v1/info?name=eq.INFO_CATALOG_VERSION", {
+        method: "PATCH",
+        headers: sbH({ Prefer: "return=minimal" }),
+        body: JSON.stringify({ deskripsi: newVer })
+      });
+    } catch(err) {
+      console.warn("[Admin] bumpCatalogVersion error:", err);
+    }
+  }, 250);
+}
+
 async function sbAction(action, tbl, body, signal){
+  var res = await _sbActionInner(action, tbl, body, signal);
+  if(res && res.result === "success" && tbl !== "klik" && tbl !== "orders" && tbl !== "akun_data"){
+    try { bumpCatalogVersion(action + ":" + tbl); } catch(_) {}
+  }
+  return res;
+}
+
+async function _sbActionInner(action, tbl, body, signal){
   if(action === "set"){
     var name = String(body.item_name || body.name || "").trim();
     var col = sbCol(body.col);

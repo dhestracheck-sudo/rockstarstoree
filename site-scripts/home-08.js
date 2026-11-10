@@ -2240,7 +2240,7 @@ function fetchSheet(sheet, cbName){
   const tbl = sbTableOf(sheet);
   // Untuk tabel info di homepage, ambil HANYA INFO_TEKS dan INFO_KURS (jangan unduh ratusan foto testimoni / state spin)
   if(tbl === "info"){
-    return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS)");
+    return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS,INFO_CATALOG_VERSION)");
   }
   return sbGet(tbl + "?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
 }
@@ -3000,6 +3000,7 @@ function applySnap(b, t, a, j, info){
       if (String(io.name || "").trim() === "INFO_TEKS") { infoTeksValue = String(io.deskripsi || "").trim(); }
 
       if (String(io.name || "").trim() === "INFO_KURS") { const k = Number(String(io.deskripsi || "").replace(/[^0-9.]/g, "")); if(k > 0) kursRM = k; }
+      if (String(io.name || "").trim() === "INFO_CATALOG_VERSION") { const cv = String(io.deskripsi || "").trim(); if(cv) window.__lastRemoteCatalogVer = cv; }
 
     }
 
@@ -3217,7 +3218,43 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 
 
 
+
+function updateCatalogUI(preserveScroll){
+  var scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  try { applyLang(); } catch(_) {}
+  try {
+    if(typeof shownCat !== "undefined" && shownCat !== -1){
+      if(typeof paintItems === "function") paintItems(true);
+    } else {
+      if(typeof render === "function") render();
+      if(preserveScroll && scrollY > 0){
+        window.scrollTo({ top: scrollY, behavior: "instant" });
+      }
+    }
+  } catch(_) {}
+  try { if(typeof paintHot === "function") paintHot(); } catch(_) {}
+  try { if(typeof syncWishCount === "function") syncWishCount(); } catch(_) {}
+}
+
+function showCatalogToast(msg){
+  try {
+    var old = document.getElementById("catalogSyncToast");
+    if(old) old.remove();
+    var t = document.createElement("div");
+    t.id = "catalogSyncToast";
+    t.innerHTML = msg || "✨ Ada produk baru! Katalog otomatis diperbarui.";
+    t.style.cssText = "position:fixed;bottom:84px;left:50%;transform:translateX(-50%);z-index:99999;background:linear-gradient(135deg,rgba(11,25,65,0.96),rgba(20,50,130,0.96));border:1px solid rgba(111,139,255,0.6);color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 16px rgba(43,78,255,0.4);pointer-events:none;transition:opacity 0.35s ease,transform 0.35s ease;animation:toastIn 0.35s ease forwards;";
+    document.body.appendChild(t);
+    setTimeout(function(){
+      t.style.opacity = "0";
+      t.style.transform = "translateX(-50%) translateY(12px)";
+      setTimeout(function(){ if(t && t.parentNode) t.remove(); }, 350);
+    }, 3800);
+  } catch(_) {}
+}
+
 function loadLiveStock(forceNetwork){
+
   let hasWarmCache = false;
   try {
     const bCache = loadCached("Brainrot");
@@ -3253,6 +3290,8 @@ function loadLiveStock(forceNetwork){
     const b = res[0] || [], t = res[1] || [], a = res[2] || [], jk = res[3] || [], info = res[4] || [];
 
     try {
+      var prevVer = "";
+      try { prevVer = localStorage.getItem("rs_catalog_ver") || ""; } catch(_) {}
       applySnap(b, t, a, jk, info);
       if (b.length) saveCached("Brainrot", b);
       if (t.length) saveCached("Topup", t);
@@ -3261,6 +3300,14 @@ function loadLiveStock(forceNetwork){
       if (info.length) saveCached("Info", info);
       if (b.length && a.length) {
         try { localStorage.setItem("rs_last_full_sync", String(Date.now())); } catch(e){}
+      }
+      var newVer = window.__lastRemoteCatalogVer || "";
+      if (newVer) {
+        try { localStorage.setItem("rs_catalog_ver", newVer); } catch(_) {}
+      }
+      updateCatalogUI(true);
+      if (prevVer && newVer && prevVer !== newVer) {
+        showCatalogToast("✨ Ada produk baru! Katalog otomatis diperbarui.");
       }
     } catch(e) {}
     return true;
@@ -3371,24 +3418,50 @@ document.getElementById("searchInput").addEventListener("input", searchType); } 
 
 });
 
-// Sinkronisasi otomatis saat tab dibuka kembali di HP/PC
-let lastLiveFetch = Date.now();
+// Sinkronisasi instan real-time saat produk baru diupload di admin
+try {
+  if (typeof BroadcastChannel !== "undefined") {
+    var _catBc = new BroadcastChannel("rockstar_catalog_sync_v1");
+    _catBc.onmessage = function(ev){
+      if(ev && ev.data && ev.data.type === "CATALOG_UPDATED"){
+        loadLiveStock(true);
+      }
+    };
+  }
+} catch(_) {}
+
+var _lastQuickCheck = 0;
+async function checkCatalogVersionQuick(){
+  if(document.visibilityState !== "visible") return;
+  var now = Date.now();
+  if(now - _lastQuickCheck < 5000) return;
+  _lastQuickCheck = now;
+  try {
+    var curLocal = localStorage.getItem("rs_catalog_ver") || "";
+    var res = await fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq.INFO_CATALOG_VERSION", {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
+      cache: "no-store"
+    });
+    if(!res.ok) return;
+    var rows = await res.json();
+    if(Array.isArray(rows) && rows[0]){
+      var remoteVer = String(rows[0].deskripsi || "").trim();
+      if(remoteVer && curLocal && remoteVer !== curLocal){
+        loadLiveStock(true);
+      }
+    }
+  } catch(_) {}
+}
+
 document.addEventListener("visibilitychange", function(){
   if(document.visibilityState === "visible"){
-    if(Date.now() - lastLiveFetch > 180000){
-      lastLiveFetch = Date.now();
-      loadLiveStock().then(function(){
-        try {
-          const savedY = window.scrollY;
-          if(shownCat !== -1){
-            paintItems(true);
-          } else {
-            render();
-            if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
-          }
-          paintHot();
-        } catch(e){}
-      });
-    }
+    checkCatalogVersionQuick();
   }
 });
+window.addEventListener("focus", checkCatalogVersionQuick);
+
+setInterval(function(){
+  if(document.visibilityState === "visible"){
+    checkCatalogVersionQuick();
+  }
+}, 18000);
