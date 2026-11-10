@@ -512,9 +512,10 @@ let _topGamesLoading = false;
 let _lastTopGamesFetch = 0;
 
 function renderTopGames(games){
-  const box = document.getElementById("mnavTopGamesList");
-  if(!box || !Array.isArray(games) || !games.length) return;
-  box.innerHTML = games.map((g, idx) => {
+  const boxM = document.getElementById("mnavTopGamesList");
+  const boxD = document.getElementById("dnavTopGamesList");
+  if((!boxM && !boxD) || !Array.isArray(games) || !games.length) return;
+  const html = games.map((g, idx) => {
     const rank = g.rank || (idx + 1);
     const rankCls = rank === 1 ? "rank-1" : rank === 2 ? "rank-2" : rank === 3 ? "rank-3" : "";
     const p = Number(g.playing) || 0;
@@ -538,6 +539,40 @@ function renderTopGames(games){
       </div>
     </a>`;
   }).join("");
+  if(boxM) boxM.innerHTML = html;
+  if(boxD) boxD.innerHTML = html;
+}
+
+function toggleDnavTopGames(e){
+  if(e){
+    try { e.preventDefault(); e.stopPropagation(); } catch(err){}
+  }
+  const wrap = document.getElementById("dnavTopGamesWrap");
+  if(!wrap) return;
+  const isOpen = wrap.classList.toggle("open");
+  if(isOpen){
+    loadTopRobloxGames();
+  }
+}
+window.toggleDnavTopGames = toggleDnavTopGames;
+
+if(typeof document !== "undefined"){
+  document.addEventListener("click", function(e){
+    const wrap = document.getElementById("dnavTopGamesWrap");
+    if(wrap && !wrap.contains(e.target)){
+      wrap.classList.remove("open");
+    }
+  });
+  setTimeout(function(){
+    try {
+      const wrapEl = document.getElementById("dnavTopGamesWrap");
+      if(wrapEl){
+        wrapEl.addEventListener("mouseenter", function(){
+          loadTopRobloxGames();
+        });
+      }
+    } catch(err){}
+  }, 1000);
 }
 
 function loadTopRobloxGames(){
