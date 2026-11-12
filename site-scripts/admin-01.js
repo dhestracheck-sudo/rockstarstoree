@@ -817,13 +817,47 @@ function fillCatOptions(filter){
   prefillCat();
 }
 
+function setSpeedUI(val){
+  val = Math.max(5, Math.min(60, Number(val) || 22));
+  var slider = document.getElementById("teksSpeedSlider");
+  var inp = document.getElementById("teksSpeedInput");
+  var badge = document.getElementById("speedValBadge");
+  var preview = document.getElementById("adminSpeedPreview");
+  if(slider) slider.value = val;
+  if(inp) inp.value = val;
+  var label = val <= 12 ? "Sangat Cepat" : val <= 18 ? "Cepat" : val <= 26 ? "Normal" : val <= 38 ? "Santai" : "Sangat Lambat";
+  if(badge) badge.textContent = val + " detik (" + label + ")";
+  if(preview) preview.style.animationDuration = val + "s";
+}
+window.setSpeedUI = setSpeedUI;
+
+function onSpeedSliderChange(val){
+  setSpeedUI(val);
+}
+window.onSpeedSliderChange = onSpeedSliderChange;
+
+function onSpeedInputChange(val){
+  setSpeedUI(val);
+}
+window.onSpeedInputChange = onSpeedInputChange;
+
+function setSpeedPreset(val){
+  setSpeedUI(val);
+}
+window.setSpeedPreset = setSpeedPreset;
+
 function loadTeks(){
-  // Ambil hanya baris INFO_TEKS & INFO_KURS agar tidak mengunduh ratusan baris testimoni
-  fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS)", { headers: sbH() })
+  // Ambil baris INFO_TEKS, INFO_KURS, dan INFO_TEKS_SPEED
+  fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS,INFO_TEKS_SPEED)", { headers: sbH() })
     .then(function(r){ return r.json(); }).then(function(arr){
     try {
       var o = (arr || []).find(function(x){ return String(x.name || "").trim() === TEKS_NAME; });
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
+
+      var sp = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_TEKS_SPEED"; });
+      var speedVal = sp && Number(sp.deskripsi) ? Math.max(5, Math.min(60, Number(sp.deskripsi))) : 22;
+      setSpeedUI(speedVal);
+
       var k = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_KURS"; });
       if(k && Number(k.deskripsi)) document.getElementById("kursInput").value = Number(k.deskripsi);
     } catch(e) {}
@@ -1110,39 +1144,53 @@ async function saveServerSettings(){
   } else status.textContent = "Gagal menyimpan: " + String(result && result.result || "koneksi Supabase");
 }
 
-function saveTeks(){
+async function saveTeks(){
   const v = document.getElementById("teksInput").value.trim();
+  const spInput = document.getElementById("teksSpeedInput");
+  const speedVal = spInput && Number(spInput.value) ? Math.max(5, Math.min(60, Number(spInput.value))) : 22;
   const st = document.getElementById("statusTeks");
   const btn = document.getElementById("teksBtn");
   btn.disabled = true;
-  st.textContent = "Menyimpan ke sheet Info...";
-  postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: v, sheet: TEKS_SHEET }, 2).then(function(d){
-    if(d.result === "success"){ st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>'; btn.disabled = false; return; }
-    // Baris belum ada di sheet Info baru -> buat otomatis sekali
-    if(String(d.result || "").indexOf("tidak ketemu") !== -1 || String(d.result || "").indexOf("barang tidak ketemu") !== -1){
-      postRetry({ action: "add", item_name: TEKS_NAME, kategori: "INFO", deskripsi: v, sheet: TEKS_SHEET }, 2).then(function(d2){
-        btn.disabled = false;
-        if(d2.result === "success") st.innerHTML = '<span class="ok">✅ Tersimpan! Refresh web untuk lihat.</span>';
-        else st.innerHTML = '<span class="err">Gagal: ' + (d2.result || "?") + '</span>';
-      });
-      return;
+  st.textContent = "Menyimpan teks & kecepatan ke database...";
+
+  try {
+    // 1. Simpan teks pengumuman
+    var d1 = await postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: v, sheet: TEKS_SHEET }, 2);
+    if(d1 && d1.result && (d1.result.indexOf("tidak ketemu") !== -1 || d1.result.indexOf("barang tidak ketemu") !== -1)){
+      await postRetry({ action: "add", item_name: TEKS_NAME, kategori: "INFO", deskripsi: v, sheet: TEKS_SHEET }, 2);
     }
+
+    // 2. Simpan kecepatan tulisan berjalan
+    var d2 = await postRetry({ action: "set", item_name: "INFO_TEKS_SPEED", col: "deskripsi", value: String(speedVal), sheet: TEKS_SHEET }, 2);
+    if(d2 && d2.result && (d2.result.indexOf("tidak ketemu") !== -1 || d2.result.indexOf("barang tidak ketemu") !== -1)){
+      await postRetry({ action: "add", item_name: "INFO_TEKS_SPEED", kategori: "INFO", deskripsi: String(speedVal), sheet: TEKS_SHEET }, 2);
+    }
+
     btn.disabled = false;
-    st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  });
+    st.innerHTML = '<span class="ok">✅ Teks & Kecepatan (' + speedVal + ' detik) tersimpan! Storefront otomatis diperbarui.</span>';
+  } catch(err){
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal: ' + (err.message || "error") + '</span>';
+  }
 }
 
-function defaultTeks(){
+async function defaultTeks(){
   const st = document.getElementById("statusTeks");
   const btn = document.getElementById("teksDefBtn");
-  if(!confirm("Kembalikan teks berjalan ke bawaan?")) return;
+  if(!confirm("Kembalikan teks berjalan & kecepatan ke bawaan default (22 detik)?")) return;
   btn.disabled = true;
-  st.textContent = "Menyimpan...";
-  postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: "", sheet: TEKS_SHEET }, 2).then(function(d){
+  st.textContent = "Menyimpan default...";
+  try {
+    await postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: "", sheet: TEKS_SHEET }, 2);
+    await postRetry({ action: "set", item_name: "INFO_TEKS_SPEED", col: "deskripsi", value: "22", sheet: TEKS_SHEET }, 2);
     btn.disabled = false;
-    if(d.result === "success"){ document.getElementById("teksInput").value = ""; st.innerHTML = '<span class="ok">✅ Kembali default!</span>'; }
-    else st.innerHTML = '<span class="err">Gagal: ' + (d.result || "?") + '</span>';
-  });
+    document.getElementById("teksInput").value = "";
+    setSpeedUI(22);
+    st.innerHTML = '<span class="ok">✅ Berhasil dikembalikan ke bawaan default (22 detik)!</span>';
+  } catch(err){
+    btn.disabled = false;
+    st.innerHTML = '<span class="err">Gagal: ' + (err.message || "error") + '</span>';
+  }
 }
 
 function saveKurs(){

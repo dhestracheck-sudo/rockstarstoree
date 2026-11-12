@@ -2194,7 +2194,7 @@ function fetchSheet(sheet, cbName){
   const tbl = sbTableOf(sheet);
   // Untuk tabel info di homepage, ambil HANYA INFO_TEKS dan INFO_KURS (jangan unduh ratusan foto testimoni / state spin)
   if(tbl === "info"){
-    return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS,INFO_CATALOG_VERSION)");
+    return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS,INFO_TEKS_SPEED,INFO_CATALOG_VERSION)");
   }
   return sbGet(tbl + "?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
 }
@@ -2885,6 +2885,7 @@ function hasKatArr(arr){
 
 
 let infoTeksValue = "";
+let infoTeksSpeed = 22;
 
 let kursRM = 3600;
 
@@ -2900,32 +2901,26 @@ function rmFmt(rp){
   return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function applyInfoTeks(){
-
   const el = document.getElementById("customrun");
-
   const hd = document.querySelector("header");
-
+  const speed = Math.max(5, Math.min(60, Number(infoTeksSpeed) || 22));
+  try {
+    document.documentElement.style.setProperty("--announce-speed", speed + "s");
+  } catch(e) {}
   if(!el) return;
-
   if(infoTeksValue){
-
-    el.innerHTML = "<span>" + infoTeksValue + " • " + infoTeksValue + "</span>";
-
+    el.innerHTML = '<span style="animation-duration:' + speed + 's;">' + infoTeksValue + " • " + infoTeksValue + "</span>";
     el.style.display = "";
-
     if(hd) hd.style.top = "74px";
-
   } else {
-
     el.style.display = "none";
-
     if(hd) hd.style.top = "37px";
-
   }
-
+  const runEl = document.querySelector(".announce .run");
+  if(runEl){
+    runEl.style.animationDuration = speed + "s";
+  }
 }
-
-
 
 function applySnap(b, t, a, j, info){
 
@@ -2954,6 +2949,7 @@ function applySnap(b, t, a, j, info){
       if (String(io.name || "").trim() === "INFO_TEKS") { infoTeksValue = String(io.deskripsi || "").trim(); }
 
       if (String(io.name || "").trim() === "INFO_KURS") { const k = Number(String(io.deskripsi || "").replace(/[^0-9.]/g, "")); if(k > 0) kursRM = k; }
+      if (String(io.name || "").trim() === "INFO_TEKS_SPEED") { const sp = Number(String(io.deskripsi || "").replace(/[^0-9.]/g, "")); if(sp > 0) infoTeksSpeed = sp; }
       if (String(io.name || "").trim() === "INFO_CATALOG_VERSION") { const cv = String(io.deskripsi || "").trim(); if(cv) window.__lastRemoteCatalogVer = cv; }
 
     }
