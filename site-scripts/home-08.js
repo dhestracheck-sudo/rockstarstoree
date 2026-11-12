@@ -2900,25 +2900,53 @@ function rmFmt(rp){
   const value = rp * rate;
   return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+function applySpeed(speed){
+  const n = Math.max(4, Math.min(60, Number(speed) || 22));
+  const ts = Math.max(6, Math.min(75, Math.round(n * 1.35)));
+  infoTeksSpeed = n;
+  try {
+    localStorage.setItem("rs_teks_speed", String(n));
+    document.documentElement.style.setProperty("--announce-speed", n + "s");
+    document.documentElement.style.setProperty("--trust-speed", ts + "s");
+
+    let st = document.getElementById("dynamicSpeedStyle");
+    if(!st){
+      st = document.createElement("style");
+      st.id = "dynamicSpeedStyle";
+      document.head.appendChild(st);
+    }
+    st.textContent = "\n:root { --announce-speed: " + n + "s !important; --trust-speed: " + ts + "s !important; }\n" +
+      ".announce .run { animation-duration: " + n + "s !important; }\n" +
+      ".announce .customrun > span { animation-duration: " + n + "s !important; }\n" +
+      ".trust-track { animation-duration: " + ts + "s !important; }\n";
+
+    const rEl = document.querySelector(".announce .run");
+    if(rEl) rEl.style.setProperty("animation-duration", n + "s", "important");
+    const cEl = document.querySelector(".announce .customrun > span");
+    if(cEl) cEl.style.setProperty("animation-duration", n + "s", "important");
+    const tEl = document.querySelector(".trust-track");
+    if(tEl) tEl.style.setProperty("animation-duration", ts + "s", "important");
+  } catch(e){}
+}
+window.applySpeed = applySpeed;
+
+try {
+  var cachedSp = localStorage.getItem("rs_teks_speed");
+  if(cachedSp) applySpeed(cachedSp);
+} catch(e){}
+
 function applyInfoTeks(){
   const el = document.getElementById("customrun");
   const hd = document.querySelector("header");
-  const speed = Math.max(5, Math.min(60, Number(infoTeksSpeed) || 22));
-  try {
-    document.documentElement.style.setProperty("--announce-speed", speed + "s");
-  } catch(e) {}
+  applySpeed(infoTeksSpeed);
   if(!el) return;
   if(infoTeksValue){
-    el.innerHTML = '<span style="animation-duration:' + speed + 's;">' + infoTeksValue + " • " + infoTeksValue + "</span>";
+    el.innerHTML = '<span style="animation-duration:' + infoTeksSpeed + 's !important;">' + infoTeksValue + " • " + infoTeksValue + "</span>";
     el.style.display = "";
     if(hd) hd.style.top = "74px";
   } else {
     el.style.display = "none";
     if(hd) hd.style.top = "37px";
-  }
-  const runEl = document.querySelector(".announce .run");
-  if(runEl){
-    runEl.style.animationDuration = speed + "s";
   }
 }
 
@@ -3205,6 +3233,23 @@ function showCatalogToast(msg){
 
 function loadLiveStock(forceNetwork){
 
+  // Live fetch cepat teks & kecepatan langsung dari Supabase tanpa terhalang cache
+  try {
+    fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_TEKS_SPEED)&_t=" + Date.now(), {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Cache-Control": "no-cache" }
+    }).then(r => r.json()).then(arr => {
+      if(Array.isArray(arr) && arr.length){
+        var tObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS");
+        if(tObj) infoTeksValue = String(tObj.deskripsi || "").trim();
+        var sObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS_SPEED");
+        if(sObj){
+          var sp = Number(String(sObj.deskripsi || "").replace(/[^0-9.]/g, ""));
+          if(sp > 0) applySpeed(sp);
+        }
+        applyInfoTeks();
+      }
+    }).catch(function(){});
+  } catch(e){}
   let hasWarmCache = false;
   try {
     const bCache = loadCached("Brainrot");

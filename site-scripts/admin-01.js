@@ -1166,6 +1166,7 @@ async function saveTeks(){
       await postRetry({ action: "add", item_name: "INFO_TEKS_SPEED", kategori: "INFO", deskripsi: String(speedVal), sheet: TEKS_SHEET }, 2);
     }
 
+    try { localStorage.setItem("rs_teks_speed", String(speedVal)); } catch(e){}
     btn.disabled = false;
     st.innerHTML = '<span class="ok">✅ Teks & Kecepatan (' + speedVal + ' detik) tersimpan! Storefront otomatis diperbarui.</span>';
   } catch(err){
