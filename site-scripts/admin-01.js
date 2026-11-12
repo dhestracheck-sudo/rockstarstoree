@@ -818,14 +818,14 @@ function fillCatOptions(filter){
 }
 
 function setSpeedUI(val){
-  val = Math.max(5, Math.min(60, Number(val) || 22));
+  val = Math.max(4, Math.min(60, Number(val) || 22));
   var slider = document.getElementById("teksSpeedSlider");
   var inp = document.getElementById("teksSpeedInput");
   var badge = document.getElementById("speedValBadge");
   var preview = document.getElementById("adminSpeedPreview");
   if(slider) slider.value = val;
   if(inp) inp.value = val;
-  var label = val <= 12 ? "Sangat Cepat" : val <= 18 ? "Cepat" : val <= 26 ? "Normal" : val <= 38 ? "Santai" : "Sangat Lambat";
+  var label = val <= 7 ? "Kilat (Ekstrem)" : val <= 12 ? "Sangat Cepat" : val <= 18 ? "Cepat" : val <= 26 ? "Normal" : val <= 38 ? "Santai" : "Sangat Lambat";
   if(badge) badge.textContent = val + " detik (" + label + ")";
   if(preview) preview.style.animationDuration = val + "s";
 }
@@ -855,7 +855,7 @@ function loadTeks(){
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
 
       var sp = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_TEKS_SPEED"; });
-      var speedVal = sp && Number(sp.deskripsi) ? Math.max(5, Math.min(60, Number(sp.deskripsi))) : 22;
+      var speedVal = sp && Number(sp.deskripsi) ? Math.max(4, Math.min(60, Number(sp.deskripsi))) : 22;
       setSpeedUI(speedVal);
 
       var k = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_KURS"; });
@@ -1147,7 +1147,7 @@ async function saveServerSettings(){
 async function saveTeks(){
   const v = document.getElementById("teksInput").value.trim();
   const spInput = document.getElementById("teksSpeedInput");
-  const speedVal = spInput && Number(spInput.value) ? Math.max(5, Math.min(60, Number(spInput.value))) : 22;
+  const speedVal = spInput && Number(spInput.value) ? Math.max(4, Math.min(60, Number(spInput.value))) : 22;
   const st = document.getElementById("statusTeks");
   const btn = document.getElementById("teksBtn");
   btn.disabled = true;
