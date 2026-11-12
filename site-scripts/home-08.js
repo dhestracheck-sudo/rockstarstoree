@@ -2885,7 +2885,7 @@ function hasKatArr(arr){
 
 
 let infoTeksValue = "";
-let infoTeksSpeed = 5;
+let infoTeksSpeed = 22;
 
 let kursRM = 3600;
 
@@ -2902,7 +2902,7 @@ function rmFmt(rp){
 }
 function applySpeed(speed){
   var n = Number(speed);
-  if(!n || isNaN(n) || n < 1) n = 5;
+  if(!n || isNaN(n) || n < 1) n = 22;
   n = Math.max(1, Math.min(60, n));
   infoTeksSpeed = n;
   try {
@@ -2931,8 +2931,8 @@ window.applySpeed = applySpeed;
 try {
   var cachedSp = localStorage.getItem("rs_teks_speed");
   var cNum = Number(cachedSp);
-  if(cNum && cNum >= 3 && cNum <= 10) applySpeed(cNum);
-  else applySpeed(5);
+  if(cNum && cNum >= 1 && cNum <= 60) applySpeed(cNum);
+  else applySpeed(22);
 } catch(e){}
 
 function applyInfoTeks(){

@@ -1167,6 +1167,7 @@ async function saveTeks(){
     }
 
     try { localStorage.setItem("rs_teks_speed", String(speedVal)); } catch(e){}
+    try { bumpCatalogVersion("teks_speed_update"); } catch(e){}
     btn.disabled = false;
     st.innerHTML = '<span class="ok">✅ Teks & Kecepatan (' + speedVal + ' detik) tersimpan! Storefront otomatis diperbarui.</span>';
   } catch(err){
@@ -1184,6 +1185,7 @@ async function defaultTeks(){
   try {
     await postRetry({ action: "set", item_name: TEKS_NAME, col: "deskripsi", value: "", sheet: TEKS_SHEET }, 2);
     await postRetry({ action: "set", item_name: "INFO_TEKS_SPEED", col: "deskripsi", value: "22", sheet: TEKS_SHEET }, 2);
+    try { bumpCatalogVersion("teks_speed_default"); } catch(e){}
     btn.disabled = false;
     document.getElementById("teksInput").value = "";
     setSpeedUI(22);

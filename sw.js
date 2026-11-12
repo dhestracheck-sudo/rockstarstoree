@@ -3,7 +3,7 @@
      sehingga di-cache permanen (Cache-First) agar hemat kuota egress Supabase Free Tier & instan 0ms.
    - Gambar lokal (/optimized/): Cache-First instan.
    - Naikkan CACHE setiap rilis agar HP membuang file lama yang tersimpan. */
-const CACHE = "rockstar-v38-seamless";
+const CACHE = "rockstar-v39-adminspeed-sync";
 const SB_IMG_CACHE = "rockstar-sb-foto-v2";
 const CORE = ["./", "faq/", "manifest.json", "ROCKSTARICON.png"];
 const IMG_MAX = 500; // batasi jumlah gambar cache biar storage HP tidak bengkak
