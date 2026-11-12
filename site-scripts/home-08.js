@@ -2911,6 +2911,7 @@ function applySpeed(speed){
 
     const animEls = document.querySelectorAll(".announce .run, .announce .customrun > span");
     animEls.forEach(function(el){
+      el.style.paddingLeft = "0";
       el.style.animation = "run " + n + "s linear infinite";
       var anims = el.getAnimations ? el.getAnimations() : [];
       if(anims && anims.length){
@@ -2940,7 +2941,8 @@ function applyInfoTeks(){
   applySpeed(infoTeksSpeed);
   if(!el) return;
   if(infoTeksValue){
-    const expectedText = infoTeksValue + " • " + infoTeksValue;
+    const u = infoTeksValue.trim() + " • ";
+    const expectedText = u + u + u + u;
     const existingSpan = el.querySelector("span");
     if(!existingSpan || existingSpan.textContent !== expectedText){
       el.innerHTML = "<span>" + expectedText + "</span>";
@@ -2953,7 +2955,6 @@ function applyInfoTeks(){
     if(hd) hd.style.top = "37px";
   }
 }
-
 function applySnap(b, t, a, j, info){
 
   infoTeksValue = "";
