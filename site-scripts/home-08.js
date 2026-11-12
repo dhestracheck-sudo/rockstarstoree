@@ -2902,30 +2902,10 @@ function rmFmt(rp){
 }
 function applySpeed(speed){
   const n = Math.max(4, Math.min(60, Number(speed) || 22));
-  const ts = Math.max(6, Math.min(75, Math.round(n * 1.35)));
   infoTeksSpeed = n;
   try {
     localStorage.setItem("rs_teks_speed", String(n));
     document.documentElement.style.setProperty("--announce-speed", n + "s");
-    document.documentElement.style.setProperty("--trust-speed", ts + "s");
-
-    let st = document.getElementById("dynamicSpeedStyle");
-    if(!st){
-      st = document.createElement("style");
-      st.id = "dynamicSpeedStyle";
-      document.head.appendChild(st);
-    }
-    st.textContent = "\n:root { --announce-speed: " + n + "s !important; --trust-speed: " + ts + "s !important; }\n" +
-      ".announce .run { animation-duration: " + n + "s !important; }\n" +
-      ".announce .customrun > span { animation-duration: " + n + "s !important; }\n" +
-      ".trust-track { animation-duration: " + ts + "s !important; }\n";
-
-    const rEl = document.querySelector(".announce .run");
-    if(rEl) rEl.style.setProperty("animation-duration", n + "s", "important");
-    const cEl = document.querySelector(".announce .customrun > span");
-    if(cEl) cEl.style.setProperty("animation-duration", n + "s", "important");
-    const tEl = document.querySelector(".trust-track");
-    if(tEl) tEl.style.setProperty("animation-duration", ts + "s", "important");
   } catch(e){}
 }
 window.applySpeed = applySpeed;
@@ -2941,7 +2921,11 @@ function applyInfoTeks(){
   applySpeed(infoTeksSpeed);
   if(!el) return;
   if(infoTeksValue){
-    el.innerHTML = '<span style="animation-duration:' + infoTeksSpeed + 's !important;">' + infoTeksValue + " • " + infoTeksValue + "</span>";
+    const expectedText = infoTeksValue + " • " + infoTeksValue;
+    const existingSpan = el.querySelector("span");
+    if(!existingSpan || existingSpan.textContent !== expectedText){
+      el.innerHTML = "<span>" + expectedText + "</span>";
+    }
     el.style.display = "";
     if(hd) hd.style.top = "74px";
   } else {
@@ -3240,13 +3224,21 @@ function loadLiveStock(forceNetwork){
     }).then(r => r.json()).then(arr => {
       if(Array.isArray(arr) && arr.length){
         var tObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS");
-        if(tObj) infoTeksValue = String(tObj.deskripsi || "").trim();
+        var newTeks = tObj ? String(tObj.deskripsi || "").trim() : "";
         var sObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS_SPEED");
-        if(sObj){
-          var sp = Number(String(sObj.deskripsi || "").replace(/[^0-9.]/g, ""));
-          if(sp > 0) applySpeed(sp);
+        var newSpeed = sObj ? Number(String(sObj.deskripsi || "").replace(/[^0-9.]/g, "")) : 0;
+        var changed = false;
+        if(newSpeed > 0 && newSpeed !== infoTeksSpeed){
+          applySpeed(newSpeed);
+          changed = true;
         }
-        applyInfoTeks();
+        if(newTeks !== infoTeksValue){
+          infoTeksValue = newTeks;
+          changed = true;
+        }
+        if(changed){
+          applyInfoTeks();
+        }
       }
     }).catch(function(){});
   } catch(e){}
