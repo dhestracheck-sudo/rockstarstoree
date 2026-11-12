@@ -855,7 +855,7 @@ function loadTeks(){
       document.getElementById("teksInput").value = o ? String(o.deskripsi || "") : "";
 
       var sp = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_TEKS_SPEED"; });
-      var speedVal = sp && Number(sp.deskripsi) ? Math.max(4, Math.min(60, Number(sp.deskripsi))) : 22;
+      var speedVal = sp && Number(sp.deskripsi) ? Math.max(1, Math.min(60, Number(sp.deskripsi))) : 22;
       setSpeedUI(speedVal);
 
       var k = (arr || []).find(function(x){ return String(x.name || "").trim() === "INFO_KURS"; });

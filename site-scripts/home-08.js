@@ -2885,7 +2885,7 @@ function hasKatArr(arr){
 
 
 let infoTeksValue = "";
-let infoTeksSpeed = 5;
+let infoTeksSpeed = 1;
 
 let kursRM = 3600;
 
@@ -2901,7 +2901,7 @@ function rmFmt(rp){
   return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function applySpeed(speed){
-  const n = Math.max(3, Math.min(60, Number(speed) || 5));
+  const n = Math.max(1, Math.min(60, Number(speed) || 1));
   infoTeksSpeed = n;
   try {
     localStorage.setItem("rs_teks_speed", String(n));
@@ -2934,7 +2934,7 @@ window.applySpeed = applySpeed;
 try {
   var cachedSp = localStorage.getItem("rs_teks_speed");
   if(cachedSp) applySpeed(cachedSp);
-  else applySpeed(5);
+  else applySpeed(1);
 } catch(e){}
 
 function applyInfoTeks(){
