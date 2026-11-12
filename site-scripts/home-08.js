@@ -2885,7 +2885,7 @@ function hasKatArr(arr){
 
 
 let infoTeksValue = "";
-let infoTeksSpeed = 22;
+let infoTeksSpeed = 5;
 
 let kursRM = 3600;
 
@@ -2901,11 +2901,32 @@ function rmFmt(rp){
   return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function applySpeed(speed){
-  const n = Math.max(4, Math.min(60, Number(speed) || 22));
+  const n = Math.max(3, Math.min(60, Number(speed) || 5));
   infoTeksSpeed = n;
   try {
     localStorage.setItem("rs_teks_speed", String(n));
     document.documentElement.style.setProperty("--announce-speed", n + "s");
+
+    // Retime actively running animations directly
+    const animEls = document.querySelectorAll(".announce .run, .announce .customrun, .announce .customrun > span");
+    animEls.forEach(function(el){
+      var anims = el.getAnimations ? el.getAnimations() : [];
+      if(anims && anims.length){
+        anims.forEach(function(a){
+          try {
+            if(a.effect && a.effect.updateTiming){
+              a.effect.updateTiming({ duration: n * 1000 });
+            }
+          } catch(_){}
+        });
+      } else {
+        try {
+          el.style.animation = "none";
+          void el.offsetHeight;
+          el.style.animation = "run " + n + "s linear infinite";
+        } catch(_){}
+      }
+    });
   } catch(e){}
 }
 window.applySpeed = applySpeed;
@@ -2913,6 +2934,7 @@ window.applySpeed = applySpeed;
 try {
   var cachedSp = localStorage.getItem("rs_teks_speed");
   if(cachedSp) applySpeed(cachedSp);
+  else applySpeed(5);
 } catch(e){}
 
 function applyInfoTeks(){
