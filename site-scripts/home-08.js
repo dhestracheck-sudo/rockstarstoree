@@ -2885,7 +2885,7 @@ function hasKatArr(arr){
 
 
 let infoTeksValue = "";
-let infoTeksSpeed = 1;
+let infoTeksSpeed = 5;
 
 let kursRM = 3600;
 
@@ -2901,15 +2901,17 @@ function rmFmt(rp){
   return "≈ " + info.sym + " " + value.toLocaleString(info.loc, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 function applySpeed(speed){
-  const n = Math.max(1, Math.min(60, Number(speed) || 1));
+  var n = Number(speed);
+  if(!n || isNaN(n) || n < 1) n = 5;
+  n = Math.max(1, Math.min(60, n));
   infoTeksSpeed = n;
   try {
     localStorage.setItem("rs_teks_speed", String(n));
     document.documentElement.style.setProperty("--announce-speed", n + "s");
 
-    // Retime actively running animations directly
-    const animEls = document.querySelectorAll(".announce .run, .announce .customrun, .announce .customrun > span");
+    const animEls = document.querySelectorAll(".announce .run, .announce .customrun > span");
     animEls.forEach(function(el){
+      el.style.animation = "run " + n + "s linear infinite";
       var anims = el.getAnimations ? el.getAnimations() : [];
       if(anims && anims.length){
         anims.forEach(function(a){
@@ -2919,12 +2921,6 @@ function applySpeed(speed){
             }
           } catch(_){}
         });
-      } else {
-        try {
-          el.style.animation = "none";
-          void el.offsetHeight;
-          el.style.animation = "run " + n + "s linear infinite";
-        } catch(_){}
       }
     });
   } catch(e){}
@@ -2933,8 +2929,9 @@ window.applySpeed = applySpeed;
 
 try {
   var cachedSp = localStorage.getItem("rs_teks_speed");
-  if(cachedSp) applySpeed(cachedSp);
-  else applySpeed(1);
+  var cNum = Number(cachedSp);
+  if(cNum && cNum >= 3 && cNum <= 10) applySpeed(cNum);
+  else applySpeed(5);
 } catch(e){}
 
 function applyInfoTeks(){
@@ -2947,6 +2944,7 @@ function applyInfoTeks(){
     const existingSpan = el.querySelector("span");
     if(!existingSpan || existingSpan.textContent !== expectedText){
       el.innerHTML = "<span>" + expectedText + "</span>";
+      applySpeed(infoTeksSpeed);
     }
     el.style.display = "";
     if(hd) hd.style.top = "74px";
