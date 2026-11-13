@@ -1059,6 +1059,7 @@ function chatAdmin(){
 let detailCur = null;
 
 function openDetail(page, i, j){
+  try { if (window.playChocolateSnap) window.playChocolateSnap(); } catch(e){}
 
   detailCur = { page: page, i: i, j: j, k: 0 };
 

@@ -30,7 +30,7 @@
     window.addEventListener(ev, unlockAudio, true);
   });
 
-  // 1. Tactile Click Sound (Untuk tombol navigasi, tab, kategori, menu, back, close)
+  // 1. Tactile Click Sound (Untuk tombol navigasi, tab, menu, back, close modal)
   function playClickSound() {
     try {
       var ctx = getAudioContext();
@@ -88,10 +88,65 @@
     } catch(e){}
   }
 
+  // 3. ASMR Crispy Chocolate Snap Sound (Saat menekan kartu produk)
+  function playChocolateSnap() {
+    try {
+      var ctx = getAudioContext();
+      if (!ctx) return;
+      var now = ctx.currentTime;
+
+      // Layer 1: The Snap / Break Transient (Burst of crisp high-frequency noise)
+      var bufferSize = Math.floor(ctx.sampleRate * 0.05); // 50ms buffer
+      var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      var output = noiseBuffer.getChannelData(0);
+      for (var i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.24));
+      }
+
+      var whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      // Bandpass filter to make it sound like crispy chocolate shell, not harsh static
+      var filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(2900, now);
+      filter.Q.setValueAtTime(2.4, now);
+
+      var noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.32, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.048);
+
+      whiteNoise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+
+      whiteNoise.start(now);
+      whiteNoise.stop(now + 0.048);
+
+      // Layer 2: The Body / Resonant Crunch (Deep bite resonance)
+      var osc = ctx.createOscillator();
+      var oscGain = ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(840, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.075);
+
+      oscGain.gain.setValueAtTime(0.28, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.075);
+    } catch(e){}
+  }
+
   window.playClickSound = playClickSound;
   window.playLuxuryChime = playLuxuryChime;
+  window.playChocolateSnap = playChocolateSnap;
 
-  // 3. Efek Partikel Meluncur ke Keranjang
+  // 4. Efek Partikel Meluncur ke Keranjang
   function triggerCartFly(startX, startY) {
     playLuxuryChime();
 
@@ -128,7 +183,7 @@
   }
   window.triggerCartFly = triggerCartFly;
 
-  // 4. Capture Listener Global pada Window: SETIAP TEKAN TOMBOL PASTI BERBUNYI
+  // 5. Capture Listener Global pada Window: SETIAP KLIK PRODUK & TOMBOL BERBUNYI
   var lastSoundTime = 0;
   function handleGlobalButtonClick(e) {
     var now = Date.now();
@@ -137,30 +192,45 @@
     var target = e.target;
     if (!target) return;
 
-    var btn = target.closest("button, a, input[type='button'], input[type='submit'], [role='button'], .btn, .fab, .fab-main, .tab, .cat-card, .wishbtn, .cartbtn, .ghost, .go, .wa, .danger, .del, .backbtn, [onclick]");
-    if (!btn) return;
-
-    lastSoundTime = now;
-
-    var txt = (btn.innerText || btn.getAttribute("aria-label") || btn.className || "").toLowerCase();
-    var isPurchase = txt.indexOf("keranjang") !== -1 ||
-                     txt.indexOf("beli") !== -1 ||
-                     txt.indexOf("cart") !== -1 ||
-                     txt.indexOf("checkout") !== -1 ||
-                     txt.indexOf("flash") !== -1 ||
-                     btn.classList.contains("wishbtn");
-
-    if (isPurchase) {
+    // 5A. Cek apakah yang diklik adalah tombol beli / keranjang / wishlist
+    var buyBtn = target.closest("button.btn, .wishbtn, .cartbtn, [onclick*='addItem'], [onclick*='flashAdd']");
+    if (buyBtn) {
+      lastSoundTime = now;
       playLuxuryChime();
       if (e.clientX && e.clientY) {
         triggerCartFly(e.clientX, e.clientY);
       }
-    } else {
-      playClickSound();
+      return;
+    }
+
+    // 5B. Cek apakah yang diklik adalah KARTU PRODUK (ASMR Chocolate Snap)
+    var productCard = target.closest(".item, [data-viewname], [onclick*='openDetail']");
+    if (productCard) {
+      lastSoundTime = now;
+      playChocolateSnap();
+      return;
+    }
+
+    // 5C. Tombol & Link navigasi umum lainnya (Tactile Click Pop)
+    var btn = target.closest("button, a, input[type='button'], input[type='submit'], [role='button'], .fab, .fab-main, .tab, .cat-card, .ghost, .go, .wa, .danger, .del, .backbtn, [onclick]");
+    if (btn) {
+      lastSoundTime = now;
+      var txt = (btn.innerText || btn.getAttribute("aria-label") || btn.className || "").toLowerCase();
+      var isPurchase = txt.indexOf("keranjang") !== -1 ||
+                       txt.indexOf("beli") !== -1 ||
+                       txt.indexOf("cart") !== -1 ||
+                       txt.indexOf("checkout") !== -1 ||
+                       txt.indexOf("flash") !== -1;
+
+      if (isPurchase) {
+        playLuxuryChime();
+      } else {
+        playClickSound();
+      }
     }
   }
 
-  // Gunakan Capture Phase di window agar tidak bisa dicegah oleh stopPropagation komponen anak
+  // Capture Phase di window
   window.addEventListener("pointerdown", handleGlobalButtonClick, true);
 
 })();
