@@ -584,6 +584,7 @@ function toggleCurrencyMenu(e){
 }
 
 function formatCurrency(idr){
-  return "Rp " + Math.round(Number(idr) || 0).toLocaleString("id-ID");
+  var num = Math.round(Number(idr) || 0).toLocaleString("id-ID");
+  return '<small class="curr-prefix">Rp</small>' + num;
 }
 

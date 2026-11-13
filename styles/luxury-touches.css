@@ -1,0 +1,71 @@
+/* ===== LUXURY FINISHING TOUCHES ===== */
+
+/* 1. Format Harga: Awalan Rp proporsional dan tidak menabrak angka */
+.now .curr-prefix {
+  font-size: 0.65em;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-right: 3px;
+  vertical-align: baseline;
+  letter-spacing: 0;
+}
+.was .curr-prefix {
+  font-size: 0.85em;
+  opacity: 0.75;
+  margin-right: 2px;
+}
+
+/* 2. Badge Kilat & Garansi Sepuh Mewah */
+.kilat > span {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  background: rgba(14, 22, 40, 0.65) !important;
+  border: 1px solid rgba(111, 139, 255, 0.18) !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  letter-spacing: 0.2px !important;
+}
+.kilat .vbadge {
+  color: #f3d27a !important;
+  border-color: rgba(212, 175, 55, 0.35) !important;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(15, 23, 42, 0.6)) !important;
+}
+.kilat .vbadge i {
+  background: linear-gradient(135deg, #f59e0b, #d4af37) !important;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5) !important;
+  color: #060913 !important;
+}
+
+/* 3. Kilau Cahaya Halus pada Tombol Beli */
+.item .btn,
+.flashsec .btn {
+  position: relative !important;
+  overflow: hidden !important;
+}
+.item .btn::after,
+.flashsec .btn::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: rotate(25deg);
+  pointer-events: none;
+  animation: btnSheen 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes btnSheen {
+  0%, 75% { transform: translateX(0) rotate(25deg); opacity: 0; }
+  80% { opacity: 1; }
+  100% { transform: translateX(450%) rotate(25deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .item .btn::after,
+  .flashsec .btn::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
