@@ -15,7 +15,7 @@
   margin-right: 2px;
 }
 
-/* 2. Badge Kilat & Garansi Sepuh Mewah */
+/* 2. Badge Kilat & Verified: Logo Verified Biru Otentik */
 .kilat > span {
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -28,14 +28,14 @@
   letter-spacing: 0.2px !important;
 }
 .kilat .vbadge {
-  color: #f3d27a !important;
-  border-color: rgba(212, 175, 55, 0.35) !important;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), rgba(15, 23, 42, 0.6)) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(29, 155, 240, 0.35) !important;
+  background: linear-gradient(135deg, rgba(29, 155, 240, 0.12), rgba(15, 23, 42, 0.6)) !important;
 }
 .kilat .vbadge i {
-  background: linear-gradient(135deg, #f59e0b, #d4af37) !important;
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.5) !important;
-  color: #060913 !important;
+  background: #1d9bf0 !important;
+  box-shadow: 0 0 10px rgba(29, 155, 240, 0.7) !important;
+  color: #ffffff !important;
 }
 
 /* 3. Kilau Cahaya Halus pada Tombol Beli */
@@ -67,5 +67,36 @@
   .flashsec .btn::after {
     animation: none !important;
     display: none !important;
+  }
+}
+
+/* 4. Fix Judul Hero Katalog (Brainrot, Akun, Joki) di Layar HP agar tidak putus/patah */
+.joki-title {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 6px 10px !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  max-width: 100% !important;
+}
+.joki-title .jasa {
+  white-space: nowrap !important;
+}
+.joki-title .jokiw {
+  white-space: nowrap !important;
+}
+
+@media (max-width: 600px) {
+  .joki-title {
+    font-size: clamp(18px, 5.2vw, 24px) !important;
+    gap: 4px 8px !important;
+    line-height: 1.25 !important;
+  }
+  .joki-title .jasa,
+  .joki-title .jokiw {
+    white-space: nowrap !important;
+    font-size: inherit !important;
   }
 }
