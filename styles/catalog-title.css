@@ -43,15 +43,18 @@
   margin: 0;
 }
 .cattitle h2 {
-  font-family: var(--font-baloo-2), sans-serif;
-  font-size: clamp(26px, 4.6vw, 44px);
+  font-family: var(--font-poppins), sans-serif;
+  font-size: clamp(22px, 3.5vw, 34px);
+  letter-spacing: -0.02em;
+  color: #ffffff;
   font-weight: 800;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 }
 .cattitle p {
   margin-top: 6px;
-  color: #dbe4ff;
+  color: #cbd5e1;
+  letter-spacing: 0.01em;
   font-size: 14px;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
 }

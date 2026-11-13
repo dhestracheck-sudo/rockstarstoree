@@ -104,7 +104,9 @@
   font-weight: 700 !important;
   line-height: 1.3 !important;
   margin: 0 !important;
-  color: var(--txt, #f2f5ff) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
@@ -132,20 +134,22 @@
 }
 
 .flashsec .itemgrid.flashrow .item > .ibody .price .now {
-  font-size: 16.5px !important;
-  font-weight: 800 !important;
-  color: #ffd166 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #f3d27a !important;
+  font-family: var(--font-poppins), sans-serif !important;
 }
 
 .flashsec .itemgrid.flashrow .item > .ibody .price .was {
   font-size: 11px !important;
-  color: #8b96b3 !important;
+  color: #64748b !important;
   text-decoration: line-through !important;
 }
 
 .flashsec .itemgrid.flashrow .item > .ibody .price .rm {
   font-size: 11px !important;
-  color: #8b96b3 !important;
+  color: #93c5fd !important;
   width: 100% !important;
   margin-top: -2px !important;
 }
