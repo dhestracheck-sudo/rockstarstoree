@@ -30,7 +30,7 @@
     window.addEventListener(ev, unlockAudio, true);
   });
 
-  // 1. Tactile Click Sound (Untuk tombol navigasi, tab, menu, back, close modal)
+  // 1. Tactile Click Sound (Untuk SEMUA kartu produk, tombol navigasi, beranda, tab, menu, filter)
   function playClickSound() {
     try {
       var ctx = getAudioContext();
@@ -44,7 +44,7 @@
       osc.frequency.setValueAtTime(450, now);
       osc.frequency.exponentialRampToValueAtTime(180, now + 0.045);
 
-      gain.gain.setValueAtTime(0.22, now);
+      gain.gain.setValueAtTime(0.25, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
 
       osc.connect(gain);
@@ -88,89 +88,10 @@
     } catch(e){}
   }
 
-  // 3. ULTRA-CRISPY ASMR CHOCOLATE SNAP (Retakan Coklat Super Renyah Garing)
-  function playChocolateSnap() {
-    try {
-      var ctx = getAudioContext();
-      if (!ctx) return;
-      var now = ctx.currentTime;
-
-      // Layer 1: Multi-Fracture Granular Crackle (3 micro-cracks berturut-turut: k-k-KREK!)
-      var duration = 0.075;
-      var bufferSize = Math.floor(ctx.sampleRate * duration);
-      var noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      var data = noiseBuffer.getChannelData(0);
-
-      for (var i = 0; i < bufferSize; i++) {
-        var t = i / ctx.sampleRate;
-        var env1 = Math.exp(-t / 0.007);
-        var env2 = (t > 0.011) ? Math.exp(-(t - 0.011) / 0.008) * 0.90 : 0;
-        var env3 = (t > 0.024) ? Math.exp(-(t - 0.024) / 0.012) * 0.75 : 0;
-        var env = env1 + env2 + env3;
-        data[i] = (Math.random() * 2 - 1) * env;
-      }
-
-      var noiseSource = ctx.createBufferSource();
-      noiseSource.buffer = noiseBuffer;
-
-      // Bandpass di frekuensi 4400Hz (area crispiness tertinggi telinga manusia)
-      var crispFilter = ctx.createBiquadFilter();
-      crispFilter.type = "bandpass";
-      crispFilter.frequency.setValueAtTime(4400, now);
-      crispFilter.Q.setValueAtTime(3.2, now);
-
-      var noiseGain = ctx.createGain();
-      noiseGain.gain.setValueAtTime(0.48, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-      noiseSource.connect(crispFilter);
-      crispFilter.connect(noiseGain);
-      noiseGain.connect(ctx.destination);
-
-      noiseSource.start(now);
-      noiseSource.stop(now + duration);
-
-      // Layer 2: Fast Solid Snap (Patahan batang coklat tebal yang kokoh)
-      var snapOsc = ctx.createOscillator();
-      var snapGain = ctx.createGain();
-
-      snapOsc.type = "sine";
-      snapOsc.frequency.setValueAtTime(1600, now);
-      snapOsc.frequency.exponentialRampToValueAtTime(320, now + 0.035);
-
-      snapGain.gain.setValueAtTime(0.38, now);
-      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
-
-      snapOsc.connect(snapGain);
-      snapGain.connect(ctx.destination);
-
-      snapOsc.start(now);
-      snapOsc.stop(now + 0.035);
-
-      // Layer 3: Sub-Crunch Resonance (Tekstur gigitan coklat)
-      var crunchOsc = ctx.createOscillator();
-      var crunchGain = ctx.createGain();
-
-      crunchOsc.type = "triangle";
-      crunchOsc.frequency.setValueAtTime(720, now + 0.01);
-      crunchOsc.frequency.exponentialRampToValueAtTime(140, now + 0.048);
-
-      crunchGain.gain.setValueAtTime(0.22, now + 0.01);
-      crunchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.048);
-
-      crunchOsc.connect(crunchGain);
-      crunchGain.connect(ctx.destination);
-
-      crunchOsc.start(now + 0.01);
-      crunchOsc.stop(now + 0.048);
-    } catch(e){}
-  }
-
   window.playClickSound = playClickSound;
   window.playLuxuryChime = playLuxuryChime;
-  window.playChocolateSnap = playChocolateSnap;
 
-  // 4. Efek Partikel Meluncur ke Keranjang
+  // 3. Efek Partikel Meluncur ke Keranjang
   function triggerCartFly(startX, startY) {
     playLuxuryChime();
 
@@ -207,16 +128,16 @@
   }
   window.triggerCartFly = triggerCartFly;
 
-  // 5. Capture Listener Global pada Window: SETIAP KLIK PRODUK & TOMBOL BERBUNYI
+  // 4. Capture Listener Global pada Window: SETIAP KLIK PRODUK & TOMBOL BERBUNYI
   var lastSoundTime = 0;
   function handleGlobalButtonClick(e) {
     var now = Date.now();
-    if (now - lastSoundTime < 45) return;
+    if (now - lastSoundTime < 40) return;
 
     var target = e.target;
     if (!target) return;
 
-    // 5A. Cek tombol beli / keranjang / wishlist
+    // 4A. Cek tombol beli / keranjang / wishlist (Chime)
     var buyBtn = target.closest("button.btn, .wishbtn, .cartbtn, [onclick*='addItem'], [onclick*='flashAdd']");
     if (buyBtn) {
       lastSoundTime = now;
@@ -227,15 +148,15 @@
       return;
     }
 
-    // 5B. Cek KARTU PRODUK (ASMR Ultra-Crispy Chocolate Snap)
+    // 4B. Cek KARTU PRODUK -> Disamakan 100% dengan suara tombol beranda (playClickSound)
     var productCard = target.closest(".item, [data-viewname], [onclick*='openDetail']");
     if (productCard) {
       lastSoundTime = now;
-      playChocolateSnap();
+      playClickSound();
       return;
     }
 
-    // 5C. Tombol & Link navigasi umum lainnya (Tactile Click Pop)
+    // 4C. Tombol & Link navigasi umum lainnya (Tactile Click Pop)
     var btn = target.closest("button, a, input[type='button'], input[type='submit'], [role='button'], .fab, .fab-main, .tab, .cat-card, .ghost, .go, .wa, .danger, .del, .backbtn, [onclick]");
     if (btn) {
       lastSoundTime = now;
