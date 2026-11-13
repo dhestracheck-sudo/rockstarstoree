@@ -2016,7 +2016,8 @@ function checkout(){
       <button class="danger" onclick="closeCheckoutPreview()">${tr("batal")}</button>
       <button class="wa" onclick="sendToAdmin()">${tr("kirim")}</button>
     </div></div>`;
-  document.body.appendChild(m);
+  const appContainer = document.querySelector('div[class*="poppins"]') || document.body;
+  appContainer.appendChild(m);
   m.addEventListener('click', e => { if(e.target === m) closeCheckoutPreview(); });
 }
 

@@ -55,9 +55,16 @@ export default function App({ Component, pageProps }) {
 
 
   return (
-
     <>
-
+      <style jsx global>{`
+        :root {
+          --font-poppins: ${poppins.style.fontFamily}, sans-serif;
+          --font-baloo-2: ${baloo.style.fontFamily}, sans-serif;
+        }
+        html, body, input, select, textarea, button {
+          font-family: ${poppins.style.fontFamily}, sans-serif;
+        }
+      `}</style>
       <div className={`${poppins.className} ${poppins.variable} ${baloo.variable}`}>
 
         <div className="snow-flakes" aria-hidden="true">
