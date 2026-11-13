@@ -230,6 +230,7 @@ function flashAdd(page, i, j){
   }
 
   syncCart();
+  try { if (window.triggerCartFly) window.triggerCartFly(); } catch(e){}
 
 }
 
@@ -1777,6 +1778,7 @@ function addItem(i,j){
   }
 
   syncCart();
+  try { if (window.triggerCartFly) window.triggerCartFly(); } catch(e){}
 
 }
 
