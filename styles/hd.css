@@ -1,9 +1,25 @@
-/* HD ringan: teks lebih tajam, gambar tetap hemat. Tanpa ubah layout. */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+/* HD Ringan & Ultra-Tajam: Teks kristal super tajam di layar HP (OLED, AMOLED, Retina) & PC tanpa beban GPU/CPU */
+html, body {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  text-size-adjust: 100% !important;
+  -webkit-text-size-adjust: 100% !important;
 }
+
+/* Pertajam keterbacaan judul dan teks katalog */
+h1, h2, h3, h4, .brand, .item h3, .btn, .now, .was, .kilat, .fomo-toast {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Micro-sharpness: menghilangkan blur tipis pada teks di atas background gelap */
+.item h3, .now, .brand, .btn {
+  letter-spacing: -0.01em;
+}
+
 img {
+  image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
 }

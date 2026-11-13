@@ -15,8 +15,9 @@
   margin-right: 2px;
 }
 
-/* 2. Badge Kilat & Verified: Logo Verified Biru Otentik */
-.kilat > span {
+/* 2. Badge Kilat, Safe, & Verified: Kotak / Grid 100% SAMA RATA DAN SERAGAM */
+.kilat > span,
+.kilat .vbadge {
   font-size: 11px !important;
   font-weight: 600 !important;
   color: #e2e8f0 !important;
@@ -26,16 +27,24 @@
   padding: 4px 8px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
   letter-spacing: 0.2px !important;
-}
-.kilat .vbadge {
-  color: #ffffff !important;
-  border: 1px solid rgba(29, 155, 240, 0.35) !important;
-  background: linear-gradient(135deg, rgba(29, 155, 240, 0.12), rgba(15, 23, 42, 0.6)) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
 }
 .kilat .vbadge i {
   background: #1d9bf0 !important;
-  box-shadow: 0 0 10px rgba(29, 155, 240, 0.7) !important;
+  box-shadow: 0 0 8px rgba(29, 155, 240, 0.6) !important;
   color: #ffffff !important;
+  font-style: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  flex-shrink: 0 !important;
 }
 
 /* 3. Kilau Cahaya Halus pada Tombol Beli */
@@ -98,5 +107,120 @@
   .joki-title .jokiw {
     white-space: nowrap !important;
     font-size: inherit !important;
+  }
+}
+
+/* ===== DOPAMINE BOOSTER STYLES ===== */
+
+/* 1. Fly to Cart Sparkle Particle */
+.dopamine-fly-dot {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 10%, #60a5fa 60%, #2563eb 100%);
+  box-shadow: 0 0 16px 4px rgba(96,165,250,0.85);
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+  will-change: transform, opacity;
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* 2. Cart Bounce Pop Animation */
+.cart-bounce-pop {
+  animation: cartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+@keyframes cartPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+/* 3. Live FOMO Sales Toast */
+.fomo-toast {
+  position: fixed;
+  left: 20px;
+  bottom: 84px;
+  z-index: 92;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(9, 14, 28, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(111, 139, 255, 0.28);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.65), 0 0 20px rgba(43,78,255,0.18), inset 0 1px 0 rgba(255,255,255,0.08);
+  max-width: min(340px, calc(100vw - 40px));
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 20px, 0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, visibility 0.35s;
+  cursor: pointer;
+  user-select: none;
+}
+.fomo-toast.fomo-show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+}
+.fomo-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(37,99,235,0.5);
+}
+.fomo-content {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-poppins), sans-serif;
+  line-height: 1.35;
+}
+.fomo-title {
+  font-size: 12px;
+  color: #ffffff;
+  font-weight: 600;
+}
+.fomo-desc {
+  font-size: 11.5px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fomo-item {
+  color: #f3d27a;
+  font-weight: 600;
+}
+.fomo-time {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 1px;
+}
+.fomo-check {
+  color: #10b981;
+  font-weight: 600;
+}
+.fomo-close {
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+}
+@media (max-width: 600px) {
+  .fomo-toast {
+    left: 12px;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    padding: 8px 12px;
+    max-width: calc(100vw - 24px);
   }
 }
