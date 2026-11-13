@@ -28,8 +28,11 @@
 /*.woff
   Cache-Control: public, max-age=31536000, immutable
 
+/version.json
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+
 /sw.js
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
 /site-scripts/*
-  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0

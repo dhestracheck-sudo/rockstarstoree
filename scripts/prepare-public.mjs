@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readdir, rm } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, rm, writeFile, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,6 +20,24 @@ await Promise.all(['package.json', 'package-lock.json', 'sitemap.xml'].map((name
   rm(path.join(publicDirectory, name), { force: true }),
 ));
 await mkdir(publicSiteScriptsDirectory, { recursive: true });
+
+// 1. Auto-generate build version timestamp untuk instant cache busting & auto-updater
+const buildTimestamp = Date.now();
+const versionData = JSON.stringify({ version: buildTimestamp, buildTime: new Date().toISOString() });
+await writeFile(path.join(projectRoot, 'version.json'), versionData);
+await writeFile(path.join(publicDirectory, 'version.json'), versionData);
+
+// 2. Update Service Worker CACHE constant otomatis setiap build
+try {
+  const swPath = path.join(projectRoot, 'sw.js');
+  let swContent = await readFile(swPath, 'utf8');
+  swContent = swContent.replace(/const CACHE = "rockstar-v[^"]+";/, `const CACHE = "rockstar-v${buildTimestamp}";`);
+  await writeFile(swPath, swContent);
+  await writeFile(path.join(publicDirectory, 'sw.js'), swContent);
+} catch (e) {
+  console.warn("Could not update sw.js version:", e);
+}
+
 const entries = await readdir(projectRoot, { withFileTypes: true });
 let copiedCount = 0;
 
@@ -55,4 +73,4 @@ for (const entry of optimizedAssets) {
   copiedOptimizedCount += 1;
 }
 
-console.log(`Copied ${copiedCount} static site files, ${copiedScriptCount} page scripts and ${copiedOptimizedCount} optimized assets into public/.`);
+console.log(`Copied ${copiedCount} static site files, ${copiedScriptCount} page scripts and ${copiedOptimizedCount} optimized assets into public/. (Version: ${buildTimestamp})`);
