@@ -273,26 +273,26 @@
 
 /* ===== 6. URGENSI TAMPILAN & PSIKOLOGI WARNA (SCARCITY & FOMO TRIGGER) ===== */
 
-/* 6A. Badge Urgensi Stok Menipis pada Thumbnail (Pojok Kiri Bawah - Desain Mini & Compact) */
+/* 6A. Badge Urgensi Stok Menipis pada Thumbnail (Pojok Kiri Bawah - Pas & Jelas Terbaca) */
 .badge-scarcity {
   position: absolute !important;
-  bottom: 6px !important;
-  left: 6px !important;
+  bottom: 7px !important;
+  left: 7px !important;
   top: auto !important;
   right: auto !important;
   z-index: 4 !important;
   background: linear-gradient(135deg, #ff1744, #d50000) !important;
   color: #ffffff !important;
-  font-size: 8px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.15px !important;
-  padding: 1.5px 5px !important;
-  border-radius: 4px !important;
-  box-shadow: 0 0 8px rgba(255, 23, 68, 0.45) !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.2px !important;
+  padding: 2.5px 6.5px !important;
+  border-radius: 5px !important;
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.5) !important;
   animation: scarcityPulse 2s ease-in-out infinite !important;
   white-space: nowrap !important;
   pointer-events: none !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
 }
 
 @keyframes scarcityPulse {
@@ -306,39 +306,39 @@
   }
 }
 
-/* 6B. Badge Terlaris (Social Proof Urgency) - Pojok Kiri Bawah Mini */
+/* 6B. Badge Terlaris (Social Proof Urgency) - Pojok Kiri Bawah */
 .badge-hot {
   position: absolute !important;
-  bottom: 6px !important;
-  left: 6px !important;
+  bottom: 7px !important;
+  left: 7px !important;
   top: auto !important;
   right: auto !important;
   z-index: 4 !important;
   background: linear-gradient(135deg, #ff6d00, #ff9100) !important;
   color: #ffffff !important;
-  font-size: 8px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.15px !important;
-  padding: 1.5px 5px !important;
-  border-radius: 4px !important;
-  box-shadow: 0 0 8px rgba(255, 109, 0, 0.45) !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.2px !important;
+  padding: 2.5px 6.5px !important;
+  border-radius: 5px !important;
+  box-shadow: 0 0 8px rgba(255, 109, 0, 0.5) !important;
   white-space: nowrap !important;
   pointer-events: none !important;
-  line-height: 1.2 !important;
+  line-height: 1.25 !important;
 }
 
-/* 6G. Mini Compact Badges pada Thumbnail Grid (Diskon, Mata View, & Wishlist) agar Foto Produk Lega & Bersih */
+/* 6G. Mini Compact Badges pada Thumbnail Grid (Diskon & Sisa Stok Pas, Mata View Minimalis) */
 .thumb .badge-off,
 .pcard .thumb .badge-off,
 .card .thumb .badge-off {
-  font-size: 8px !important;
-  font-weight: 700 !important;
-  padding: 1.5px 5px !important;
-  border-radius: 4px !important;
-  top: 6px !important;
-  left: 6px !important;
-  line-height: 1.2 !important;
-  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.35) !important;
+  font-size: 9.5px !important;
+  font-weight: 800 !important;
+  padding: 2.5px 6.5px !important;
+  border-radius: 5px !important;
+  top: 7px !important;
+  left: 7px !important;
+  line-height: 1.25 !important;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4) !important;
 }
 
 .thumb .viewpill,
@@ -371,32 +371,34 @@
 @media (max-width: 600px) {
   .thumb .badge-off,
   .pcard .thumb .badge-off {
-    font-size: 7.5px !important;
-    padding: 1px 4px !important;
-    top: 4px !important;
-    left: 4px !important;
+    font-size: 8.5px !important;
+    padding: 2px 5.5px !important;
+    border-radius: 4px !important;
+    top: 5px !important;
+    left: 5px !important;
   }
   .badge-scarcity,
   .badge-hot {
-    font-size: 7px !important;
-    padding: 1px 4px !important;
-    bottom: 4px !important;
-    left: 4px !important;
+    font-size: 8.5px !important;
+    padding: 2px 5.5px !important;
+    border-radius: 4px !important;
+    bottom: 5px !important;
+    left: 5px !important;
   }
   .thumb .viewpill,
   .pcard .thumb .viewpill {
     font-size: 7px !important;
     padding: 1px 4px !important;
-    top: 4px !important;
-    right: 4px !important;
+    top: 5px !important;
+    right: 5px !important;
   }
   .thumb .wishbtn,
   .pcard .thumb .wishbtn {
     width: 22px !important;
     height: 22px !important;
     font-size: 9.5px !important;
-    bottom: 4px !important;
-    right: 4px !important;
+    bottom: 5px !important;
+    right: 5px !important;
   }
 }
 
