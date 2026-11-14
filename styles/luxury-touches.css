@@ -297,11 +297,11 @@
 
 @keyframes scarcityPulse {
   0%, 100% {
-    transform: scale(1);
+    opacity: 1;
     box-shadow: 0 0 6px rgba(255, 23, 68, 0.45);
   }
   50% {
-    transform: scale(1.05);
+    opacity: 0.86;
     box-shadow: 0 0 12px rgba(255, 23, 68, 0.8);
   }
 }
@@ -344,16 +344,16 @@
 .thumb .viewpill,
 .pcard .thumb .viewpill,
 .card .thumb .viewpill {
-  font-size: 7.5px !important;
-  font-weight: 600 !important;
-  padding: 1.5px 5px !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  padding: 1.5px 5.5px !important;
   border-radius: 999px !important;
   top: 6px !important;
   right: 6px !important;
-  background: rgba(4, 7, 18, 0.65) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
+  background: rgba(4, 7, 18, 0.84) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   line-height: 1.2 !important;
 }
 
@@ -464,12 +464,10 @@
 
 @keyframes timerPulse {
   0%, 100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 4px rgba(255,23,68,0.5));
+    opacity: 1;
   }
   50% {
-    transform: scale(1.06);
-    filter: drop-shadow(0 0 10px rgba(255,23,68,0.9));
+    opacity: 0.85;
   }
 }
 

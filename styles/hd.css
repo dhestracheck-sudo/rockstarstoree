@@ -20,6 +20,41 @@ h1, h2, h3, h4, .brand, .item h3, .btn, .now, .was, .kilat, .fomo-toast {
 }
 
 img {
-  image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Matikan filter GPU per-gambar di kartu katalog agar gambar 100% tajam asli & scroll 60 FPS di HP kentang */
+.item .thumb img,
+.catcard .catimgwrap img,
+.rc-btn img {
+  filter: none !important;
+}
+
+/* Hilangkan subpixel blur akibat scale pecahan pada tombol CS Min Rock */
+@keyframes rcCrispFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -3px, 0); }
+}
+.rc-wrap {
+  animation: rcCrispFloat 2.8s ease-in-out infinite !important;
+}
+
+/* Mode Turbo HP Kentang: Matikan blur realtime yang menyedot GPU di layar kecil tanpa mengubah warna & kemewahan */
+@media (max-width: 768px) {
+  .mpanel,
+  .wa-pop,
+  .fomo-toast,
+  .overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .brand img {
+    filter: none !important;
+  }
+  .item .btn::after {
+    animation: none !important;
+    display: none !important;
+  }
 }

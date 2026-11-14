@@ -35,8 +35,8 @@ function b64ToBlob(b64, mime){
 }
 function safeName(s){ return String(s || "foto").replace(/[^\w.\-]+/g, "_").slice(0, 80); }
 function makeThumb(blob, maxEdge, quality){
-  maxEdge = Number(maxEdge) > 0 ? Number(maxEdge) : 480;
-  quality = Number(quality) > 0 ? Number(quality) : 0.82;
+  maxEdge = Number(maxEdge) > 0 ? Number(maxEdge) : 640;
+  quality = Number(quality) > 0 ? Number(quality) : 0.88;
   return new Promise(resolve => {
     try {
       const url = URL.createObjectURL(blob);

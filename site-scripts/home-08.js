@@ -1077,6 +1077,7 @@ function openDetail(page, i, j){
 
     var _c = catsOf(page), _it = _c[i].items[j];
 
+    bumpViewOnce(page, _it);
     logAksi("klik", _it.name, _c[i].name, _it.price, page);
 
     if (typeof gtag === "function"){
@@ -1810,9 +1811,8 @@ function trackSearch(q){
 
 
 
-// Hitung dilihat per produk: tiap card yang tampil di layar +1 (sekali per render).
-
-let viewObs = null;
+// Hitung dilihat hemat kuota Supabase & ramah HP kentang:
+// Hanya kirim PATCH ke Supabase saat produk benar-benar dibuka/diklik (1x per sesi), bukan saat sekadar lewat di scroll.
 const viewedInSession = (function(){
   try {
     const raw = sessionStorage.getItem("rs_viewed_v1");
@@ -1829,63 +1829,35 @@ function markViewedInSession(key){
   } catch(e){}
 }
 
-function watchViews(){
-
+function bumpViewOnce(pg, item){
   try {
+    if(!item || !item.name || pg === "topup") return;
+    const nm = String(item.name).trim();
+    const sessionKey = pg + ":" + nm;
+    if(viewedInSession.has(sessionKey)) return;
+    markViewedInSession(sessionKey);
 
-    if(viewObs) viewObs.disconnect();
+    const cur = Number(item.dilihat) || 0;
+    const nextV = cur + 1;
+    item.dilihat = nextV;
 
-    viewObs = new IntersectionObserver(es => {
-
-      es.forEach(en => {
-
-        if(!en.isIntersecting) return;
-
-        const el = en.target;
-
-        viewObs.unobserve(el);
-
-        const nm = el.dataset.viewname, pg = el.dataset.page;
-
-        if(!nm || pg === "topup") return;
-
-        const sessionKey = pg + ":" + nm;
-        if(viewedInSession.has(sessionKey)) return;
-        markViewedInSession(sessionKey);
-
-        (function(nm, pg, el){
-
-          const tbl = sbTableOf(pg);
-          const r = resolveWish(nm);
-          const cur = (r && r.item && Number(r.item.dilihat)) || 0;
-          const nextV = cur + 1;
-          if(r && r.item) r.item.dilihat = nextV;
-
-          const c = el.querySelector(".viewcount");
-          if(c) c.textContent = "👁 " + Number(nextV).toLocaleString("id-ID");
-          const vp = el.querySelector(".viewpill");
-          if(vp) vp.textContent = "👁 " + Number(nextV).toLocaleString("id-ID");
-
-          const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json", Prefer: "return=minimal" };
-          fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
-            method: "PATCH", headers: H, body: JSON.stringify({ dilihat: nextV }), keepalive: true
-          }).catch(() => {});
-
-        })(nm, pg, el);
-
-      });
-
-    }, { threshold: 0.35 });
-
-    document.querySelectorAll('.item[data-viewname]').forEach(el => {
-      const nm = el.dataset.viewname, pg = el.dataset.page;
-      if(nm && pg && !viewedInSession.has(pg + ":" + nm)){
-        viewObs.observe(el);
+    document.querySelectorAll('.item[data-viewname]').forEach(function(el){
+      if(el.dataset.viewname === nm && el.dataset.page === pg){
+        const vp = el.querySelector(".viewpill");
+        if(vp) vp.textContent = "👁 " + Number(nextV).toLocaleString("id-ID");
       }
     });
 
-  } catch(e) {}
+    const tbl = sbTableOf(pg);
+    const H = { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json", Prefer: "return=minimal" };
+    fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(nm), {
+      method: "PATCH", headers: H, body: JSON.stringify({ dilihat: nextV }), keepalive: true
+    }).catch(function(){});
+  } catch(e){}
+}
 
+function watchViews(){
+  // Dinonaktifkan pada scroll untuk menghemat 95% request PATCH Supabase & menjaga scroll 60 FPS di HP kentang.
 }
 
 
@@ -2220,8 +2192,11 @@ const loggedClicksInSession = new Set();
 function logAksi(aksi, name, kat, price, page){
 
   try {
-    if(aksi === "klik"){
-      const k = String(page || "") + ":" + String(name || "");
+    // Jangan kirim log ke Supabase untuk klik wishlist lokal agar hemat kuota Log Ingestion
+    if(aksi === "wishlist+" || aksi === "wishlist-") return;
+
+    if(aksi === "klik" || aksi === "keranjang"){
+      const k = aksi + ":" + String(page || "") + ":" + String(name || "");
       if(loggedClicksInSession.has(k)) return;
       loggedClicksInSession.add(k);
     }
@@ -3256,33 +3231,6 @@ function showCatalogToast(msg){
 }
 
 function loadLiveStock(forceNetwork){
-
-  // Live fetch cepat teks & kecepatan langsung dari Supabase tanpa terhalang cache
-  try {
-    fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_TEKS_SPEED)", {
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
-      cache: "no-store"
-    }).then(r => r.json()).then(arr => {
-      if(Array.isArray(arr) && arr.length){
-        var tObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS");
-        var newTeks = tObj ? String(tObj.deskripsi || "").trim() : "";
-        var sObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS_SPEED");
-        var newSpeed = sObj ? Number(String(sObj.deskripsi || "").replace(/[^0-9.]/g, "")) : 0;
-        var changed = false;
-        if(newSpeed > 0 && newSpeed !== infoTeksSpeed){
-          applySpeed(newSpeed);
-          changed = true;
-        }
-        if(newTeks !== infoTeksValue){
-          infoTeksValue = newTeks;
-          changed = true;
-        }
-        if(changed){
-          applyInfoTeks();
-        }
-      }
-    }).catch(function(){});
-  } catch(e){}
   let hasWarmCache = false;
   try {
     const bCache = loadCached("Brainrot");
@@ -3291,14 +3239,14 @@ function loadLiveStock(forceNetwork){
     const jCache = loadCached("Joki");
     const iCache = loadCached("Info");
     hasWarmCache = bCache.length > 0 && aCache.length > 0;
-    if (hasWarmCache) {
+    if (hasWarmCache && !forceNetwork) {
       applySnap(bCache, tCache, aCache, jCache, iCache);
       applyLang();
       render();
       try { paintHot(); } catch(e) {}
       try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
       hideLoader();
-    } else {
+    } else if (!forceNetwork) {
       applyLang();
     }
   } catch(e) {}
@@ -3307,7 +3255,7 @@ function loadLiveStock(forceNetwork){
 
   return once().then(res => {
 
-    if (!res[0] || !res[0].length || !res[1] || !res[1].length) return once(); // timeout/gagal: coba sekali lagi
+    if (!res[0] || !res[0].length) return once(); // timeout/gagal pada katalog utama: coba sekali lagi
 
     return res;
 
@@ -3465,11 +3413,12 @@ try {
   });
 } catch(_) {}
 
-var _lastQuickCheck = 0;
+var _lastQuickCheck = Date.now();
 async function checkCatalogVersionQuick(){
   if(document.visibilityState !== "visible") return;
   var now = Date.now();
-  if(now - _lastQuickCheck < 3000) return;
+  // Batasi pengecekan ke Supabase minimal jeda 60 detik agar kuota Log Ingestion & Egress hemat 95%
+  if(now - _lastQuickCheck < 60000) return;
   _lastQuickCheck = now;
   try {
     var curLocal = localStorage.getItem("rs_catalog_ver") || "";
@@ -3496,8 +3445,9 @@ document.addEventListener("visibilitychange", function(){
 });
 window.addEventListener("focus", checkCatalogVersionQuick);
 
+// Cek berkala setiap 3 menit (180 detik) saat tab aktif dibuka (hemat 95% dibanding 8 detik)
 setInterval(function(){
   if(document.visibilityState === "visible"){
     checkCatalogVersionQuick();
   }
-}, 8000);
+}, 180000);
