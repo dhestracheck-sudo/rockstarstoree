@@ -15,58 +15,78 @@
     return audioCtx;
   }
 
-  // Helper agar pemutaran nada selalu ter-resume di HP / Desktop tanpa kena blokir
+  // Auto-unlock audio saat interaksi touch/klik di HP (iOS Safari & Android WebViews)
+  var isAudioUnlocked = false;
+  function unlockAudioEngine() {
+    try {
+      var ctx = getAudioContext();
+      if (!ctx) return;
+      if (ctx.state === "suspended" && typeof ctx.resume === "function") {
+        ctx.resume().catch(function(){});
+      }
+      if (!isAudioUnlocked) {
+        // Mainkan silent buffer untuk unlock audio engine mobile
+        var buf = ctx.createBuffer(1, 1, 22050);
+        var src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.connect(ctx.destination);
+        src.start(0);
+        isAudioUnlocked = true;
+      }
+    } catch(e){}
+  }
+
+  // Pasang listener unlock pada semua gesture interaksi user
+  ["touchstart", "touchend", "pointerdown", "mousedown", "click", "keydown"].forEach(function(ev){
+    window.addEventListener(ev, unlockAudioEngine, { passive: true, capture: true });
+  });
+
+  // Helper pemutaran nada: WAJIB SYNCHRONOUS dalam callstack user gesture agar tidak diblokir browser
   function playTone(callback) {
     try {
       var ctx = getAudioContext();
       if (!ctx) return;
 
-      var play = function() {
-        try {
-          var now = ctx.currentTime;
-          callback(ctx, now);
-        } catch(e){}
-      };
-
-      if (ctx.state === "suspended" || ctx.state === "interrupted") {
-        ctx.resume().then(play).catch(function(){});
-      } else {
-        play();
+      // Resume context secara synchronous
+      if (ctx.state === "suspended" && typeof ctx.resume === "function") {
+        ctx.resume().catch(function(){});
       }
+
+      // Pastikan 'now' valid dan aman untuk penjadwalan Web Audio
+      var now = (ctx.currentTime && ctx.currentTime > 0) ? ctx.currentTime : 0.005;
+      callback(ctx, now);
     } catch(e){}
   }
 
-  // Auto-unlock audio saat interaksi touch/klik di HP
-  var unlockMobile = function() {
-    try {
-      var ctx = getAudioContext();
-      if (ctx && ctx.state === "suspended") {
-        ctx.resume().catch(function(){});
-      }
-    } catch(e){}
-  };
-  ["touchstart", "touchend", "pointerdown", "mousedown", "click"].forEach(function(ev){
-    window.addEventListener(ev, unlockMobile, { passive: true, capture: true });
-  });
-
-  // 1. Tactile Click Sound (Renyah, Puas, & Selalu Bunyi di HP / Desktop)
+  // 1. Tactile Click Sound (Renyah, Jelas, & Sangat Memuaskan di Speaker HP Kentang maupun iPhone)
+  // Menggabungkan transient snap attack (1400Hz -> 500Hz) + warm tactile pop (680Hz -> 320Hz)
   function playClickSound() {
     playTone(function(ctx, now) {
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
+      // Transient snap attack (renyah, terdengar jelas seketika di speaker HP)
+      var oscClick = ctx.createOscillator();
+      var gainClick = ctx.createGain();
+      oscClick.type = "triangle";
+      oscClick.frequency.setValueAtTime(1400, now);
+      oscClick.frequency.exponentialRampToValueAtTime(500, now + 0.018);
+      gainClick.gain.setValueAtTime(0.38, now);
+      gainClick.gain.linearRampToValueAtTime(0.001, now + 0.018);
+      oscClick.connect(gainClick);
+      gainClick.connect(ctx.destination);
+      oscClick.start(now);
+      oscClick.stop(now + 0.018);
 
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(450, now);
-      osc.frequency.exponentialRampToValueAtTime(180, now + 0.045);
-
-      gain.gain.setValueAtTime(0.26, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.045);
+      // Body pop (body bulat & mantap)
+      var oscBody = ctx.createOscillator();
+      var gainBody = ctx.createGain();
+      oscBody.type = "sine";
+      oscBody.frequency.setValueAtTime(680, now);
+      oscBody.frequency.exponentialRampToValueAtTime(320, now + 0.065);
+      gainBody.gain.setValueAtTime(0.42, now);
+      gainBody.gain.linearRampToValueAtTime(0.001, now + 0.065);
+      oscBody.connect(gainBody);
+      gainBody.connect(ctx.destination);
+      oscBody.start(now);
+      oscBody.stop(now + 0.065);
     });
   }
 
@@ -85,8 +105,8 @@
       osc2.frequency.setValueAtTime(1320, now);
       osc2.frequency.exponentialRampToValueAtTime(2640, now + 0.18);
 
-      gain.gain.setValueAtTime(0.30, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+      gain.gain.setValueAtTime(0.36, now);
+      gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
 
       osc1.connect(gain);
       osc2.connect(gain);
@@ -143,7 +163,7 @@
   var lastSoundTime = 0;
   function handleGlobalButtonClick(e) {
     var now = Date.now();
-    if (now - lastSoundTime < 40) return;
+    if (now - lastSoundTime < 65) return;
 
     var target = e.target;
     if (!target) return;
@@ -186,6 +206,10 @@
     }
   }
 
+  // Pasang pada pointerdown, click, dan touchend dengan debounce 65ms
+  // agar 100% jalan di semua tipe browser HP (Chrome Android, Safari iOS, Samsung dsb)
   window.addEventListener("pointerdown", handleGlobalButtonClick, true);
+  window.addEventListener("click", handleGlobalButtonClick, true);
+  window.addEventListener("touchend", handleGlobalButtonClick, true);
 
 })();
