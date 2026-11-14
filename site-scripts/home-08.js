@@ -2196,13 +2196,10 @@ function sbTableOf(sheet){
 }
 
 function sbGet(path){
-  const sep = path.indexOf('?') === -1 ? '?' : '&';
-  return fetch(SB_URL + '/rest/v1/' + path + sep + '_t=' + Date.now(), {
+  return fetch(SB_URL + '/rest/v1/' + path, {
     headers: {
       apikey: SB_KEY,
-      Authorization: 'Bearer ' + SB_KEY,
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache'
+      Authorization: 'Bearer ' + SB_KEY
     },
     cache: 'no-store'
   }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
@@ -2869,9 +2866,9 @@ function wishAdd(page, i, j){
 function loadCached(sheet){
 
   try {
-    if (localStorage.getItem("rs_cache_schema") !== "v20261114_authentic") {
+    if (localStorage.getItem("rs_cache_schema") !== "v20261114_fix_sbget") {
       ["rs_Brainrot","rs_Topup","rs_Akun","rs_Joki","rs_Info","rs_last_full_sync","rs_catalog_ver"].forEach(function(k){ localStorage.removeItem(k); });
-      localStorage.setItem("rs_cache_schema", "v20261114_authentic");
+      localStorage.setItem("rs_cache_schema", "v20261114_fix_sbget");
     }
 
     const raw = localStorage.getItem("rs_" + sheet);
@@ -3262,8 +3259,9 @@ function loadLiveStock(forceNetwork){
 
   // Live fetch cepat teks & kecepatan langsung dari Supabase tanpa terhalang cache
   try {
-    fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_TEKS_SPEED)&_t=" + Date.now(), {
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Cache-Control": "no-cache" }
+    fetch(SB_URL + "/rest/v1/info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_TEKS_SPEED)", {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
+      cache: "no-store"
     }).then(r => r.json()).then(arr => {
       if(Array.isArray(arr) && arr.length){
         var tObj = arr.find(x => String(x.name || "").trim() === "INFO_TEKS");
@@ -3471,8 +3469,8 @@ async function checkCatalogVersionQuick(){
   _lastQuickCheck = now;
   try {
     var curLocal = localStorage.getItem("rs_catalog_ver") || "";
-    var res = await fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq.INFO_CATALOG_VERSION&_t=" + now, {
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Cache-Control": "no-cache" },
+    var res = await fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq.INFO_CATALOG_VERSION", {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
       cache: "no-store"
     });
     if(!res.ok) return;

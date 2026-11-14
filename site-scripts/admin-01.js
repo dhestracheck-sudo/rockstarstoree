@@ -25,7 +25,7 @@ function sbH(extra){
   return h;
 }
 function sbList(sheet){
-  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan&_t=" + Date.now(), { headers: sbH({ "Cache-Control": "no-cache" }), cache: "no-store" })
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan", { headers: sbH(), cache: "no-store" })
     .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
 }
 function b64ToBlob(b64, mime){
