@@ -11,37 +11,68 @@
           audioCtx = new AudioContextClass();
         }
       }
-      if (audioCtx && audioCtx.state === "suspended") {
-        audioCtx.resume();
-      }
     } catch(e){}
     return audioCtx;
   }
 
-  // Auto-unlock audio saat interaksi pertama agar diizinkan oleh sistem browser HP
-  var unlockEvents = ["touchstart", "touchend", "pointerdown", "mousedown", "click"];
-  function unlockAudio() {
-    getAudioContext();
-    unlockEvents.forEach(function(ev){
-      window.removeEventListener(ev, unlockAudio, true);
-    });
+  // Helper agar pemutaran nada selalu ter-resume di HP / Desktop tanpa kena blokir
+  function playTone(callback) {
+    try {
+      var ctx = getAudioContext();
+      if (!ctx) return;
+
+      var play = function() {
+        try {
+          var now = ctx.currentTime;
+          callback(ctx, now);
+        } catch(e){}
+      };
+
+      if (ctx.state === "suspended" || ctx.state === "interrupted") {
+        ctx.resume().then(play).catch(function(){});
+      } else {
+        play();
+      }
+    } catch(e){}
   }
-  unlockEvents.forEach(function(ev){
-    window.addEventListener(ev, unlockAudio, true);
+
+  // Auto-unlock audio saat interaksi touch/klik di HP
+  var unlockMobile = function() {
+    try {
+      var ctx = getAudioContext();
+      if (ctx && ctx.state === "suspended") {
+        ctx.resume().catch(function(){});
+      }
+    } catch(e){}
+  };
+  ["touchstart", "touchend", "pointerdown", "mousedown", "click"].forEach(function(ev){
+    window.addEventListener(ev, unlockMobile, { passive: true, capture: true });
   });
 
-  // 1. Tactile Click Sound (Dinonaktifkan / Dimatikan sesuai permintaan user)
+  // 1. Tactile Click Sound (Renyah, Puas, & Selalu Bunyi di HP / Desktop)
   function playClickSound() {
-    return;
+    playTone(function(ctx, now) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(450, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.045);
+
+      gain.gain.setValueAtTime(0.26, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.045);
+    });
   }
 
   // 2. Crystal Chime Reward Sound (Untuk aksi belanja: Beli, Keranjang, Checkout, Wishlist)
   function playLuxuryChime() {
-    try {
-      var ctx = getAudioContext();
-      if (!ctx) return;
-      var now = ctx.currentTime;
-
+    playTone(function(ctx, now) {
       var osc1 = ctx.createOscillator();
       var osc2 = ctx.createOscillator();
       var gain = ctx.createGain();
@@ -65,7 +96,7 @@
       osc2.start(now);
       osc1.stop(now + 0.25);
       osc2.stop(now + 0.25);
-    } catch(e){}
+    });
   }
 
   window.playClickSound = playClickSound;
