@@ -1348,11 +1348,9 @@ function renderDetail(){
 
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
 
-      <button class="ghost" style="flex:0 0 50px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
+      <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
 
       <button class="go" ${item.stock === 0 ? 'style="opacity:.5;"' : ''} onclick="detailAdd()">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
-
-      ${item.stock > 0 ? `<button class="rs-buy-now-btn" onclick="detailBuyNow()">⚡ Beli Langsung</button>` : ``}
 
     </div>
 
@@ -1400,27 +1398,6 @@ function detailAdd(){
   openCartModal();
 
 }
-
-function detailBuyNow(){
-  if(!detailCur) return;
-  const cats = catsOf(detailCur.page);
-  const item = cats[detailCur.i].items[detailCur.j];
-  if(item.stock === 0){ alert(tr("habis_alert")); return; }
-  const alreadyInCart = cart.some(p => p.name === item.name && p.page === detailCur.page);
-  if(!alreadyInCart){
-    cart.push({...item, categoryImg: cats[detailCur.i].img, category: cats[detailCur.i].name, page: detailCur.page});
-    logAksi("keranjang", item.name, cats[detailCur.i].name, item.price, detailCur.page);
-    if(typeof gtag === "function"){
-      trackGaEcommerce("add_to_cart", item, cats[detailCur.i].name, cats[detailCur.i].name, detailCur.j);
-      if (window.RS_Pixels) RS_Pixels.mapEvent("tambah_keranjang", { nama_produk: item.name, price: item.price, currency: "IDR", kategori: cats[detailCur.i].name });
-    }
-    trackClick("tambah_keranjang", item.name, cats[detailCur.i].name);
-  }
-  syncCart();
-  closeDetail();
-  checkout();
-}
-window.detailBuyNow = detailBuyNow;
 
 
 
@@ -1870,29 +1847,6 @@ function syncCart(){
 
   if(mc) mc.innerText = cart.length;
 
-  try {
-    let bar = document.getElementById("rsStickyCheckoutBar");
-    if(!bar){
-      bar = document.createElement("div");
-      bar.id = "rsStickyCheckoutBar";
-      const appContainer = document.querySelector('div[class*="poppins"]') || document.body;
-      appContainer.appendChild(bar);
-    }
-    if(cart.length > 0){
-      const totalRp = cart.reduce((s, p) => s + (Number(p.price) || 0), 0);
-      bar.innerHTML = `
-        <div class="rs-scb-info" onclick="openCartModal()">
-          <span class="rs-scb-title">🛒 ${cart.length} Item • <b>${formatCurrency(totalRp)}</b></span>
-          <span class="rs-scb-sub">Ketuk untuk atur jumlah (➕/➖) ▴</span>
-        </div>
-        <button type="button" class="rs-scb-btn" onclick="checkout()">⚡ Checkout →</button>
-      `;
-      bar.style.display = "flex";
-    } else {
-      bar.style.display = "none";
-    }
-  } catch(e){}
-
 }
 
 
@@ -2073,77 +2027,19 @@ document.getElementById("serverModal").addEventListener('click', e => {
 
 
 
-function groupCartItems(){
-  const groups = [];
-  const map = {};
-  cart.forEach((item) => {
-    const key = String(item.page || "") + "||" + String(item.name || "");
-    if(!map[key]){
-      map[key] = { key: key, item: item, qty: 0 };
-      groups.push(map[key]);
-    }
-    map[key].qty++;
-  });
-  return groups;
-}
-
-function cartAdjustQty(gIdx, delta){
-  const groups = groupCartItems();
-  const g = groups[gIdx];
-  if(!g) return;
-  if(delta > 0){
-    const maxStock = Number(g.item.stock);
-    if(Number.isFinite(maxStock) && maxStock > 0 && g.qty >= maxStock){
-      alert("Stok maksimal untuk item ini adalah " + maxStock + " item.");
-      return;
-    }
-    cart.push({...g.item});
-  } else if(delta < 0){
-    for(let k = cart.length - 1; k >= 0; k--){
-      if(String(cart[k].page || "") + "||" + String(cart[k].name || "") === g.key){
-        cart.splice(k, 1);
-        break;
-      }
-    }
-  }
-  syncCart();
-  if(cart.length === 0){ closeCartModal(); return; }
-  openCartModal();
-}
-window.cartAdjustQty = cartAdjustQty;
-
-function cartRemoveGroup(gIdx){
-  const groups = groupCartItems();
-  const g = groups[gIdx];
-  if(!g) return;
-  for(let k = cart.length - 1; k >= 0; k--){
-    if(String(cart[k].page || "") + "||" + String(cart[k].name || "") === g.key){
-      cart.splice(k, 1);
-    }
-  }
-  syncCart();
-  if(cart.length === 0){ closeCartModal(); return; }
-  openCartModal();
-}
-window.cartRemoveGroup = cartRemoveGroup;
-
 function checkout(){
 
   if(cart.length==0){ alert(tr("kosong")); return; }
-  try { closeCartModal(); } catch(e){}
 
   let previewHTML = `<h2>${tr("preview")}</h2>`;
 
   let totalPrice = 0;
-  const groups = groupCartItems();
 
-  groups.forEach((g, index) => {
-    const item = g.item;
-    const subTotal = (Number(item.price) || 0) * g.qty;
-    totalPrice += subTotal;
+  cart.forEach((item, index) => {
+
+    totalPrice += item.price;
 
     let itemImage = fixImg(item.img || item.categoryImg);
-    const qtyBadge = g.qty > 1 ? ` <span style="color:#f3d27a;font-weight:800;">×${g.qty}</span>` : ``;
 
     previewHTML += `
 
@@ -2151,7 +2047,7 @@ function checkout(){
 
         <img src="${itemImage}" alt="${item.name}" width="56" height="56" loading="lazy" decoding="async" onerror="imgErr(this)">
 
-        <div class="grow"><strong>${index+1}. ${item.name}${qtyBadge}</strong><br>${formatCurrency(subTotal)}${rmFmt(subTotal) ? `<br><small class="rm">${rmFmt(subTotal)}</small>` : ``}</div>
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br>${formatCurrency(item.price)}${rmFmt(item.price) ? `<br><small class="rm">${rmFmt(item.price)}</small>` : ``}</div>
       </div>`;
 
   });
@@ -2204,11 +2100,7 @@ function sendToAdmin(){
   }
   logAksi("checkout", cart.length + " item", "", cart.reduce((s, p) => s + (p.price || 0), 0), "");
   let text = "Halo saya mau beli:%0A";
-  groupCartItems().forEach(g => {
-    const qtyTxt = g.qty > 1 ? " x" + g.qty : "";
-    const subTotal = (Number(g.item.price) || 0) * g.qty;
-    text += "- " + encodeURIComponent(g.item.name) + qtyTxt + " (Rp " + subTotal.toLocaleString("id-ID") + ")%0A";
-  });
+  cart.forEach(p=>{ text += "- "+p.name+" (Rp "+p.price+")%0A"; });
   if(rbxUser){ text += "Username Roblox: " + encodeURIComponent(rbxUser) + "%0A"; }
   if(cart.length > 3){ catatOrder(rbxUser); closeCheckoutPreview(); window.open("https://wa.me/6289664299571?text="+text); return; }
   // Aturan nomor khusus hanya untuk item non-akun (nama akun mengandung "steal" tapi tetap ke admin utama).
@@ -2269,25 +2161,17 @@ function openCartModal(){
   let html = '';
 
   let totalPrice = 0;
-  const groups = groupCartItems();
 
-  groups.forEach((g, index) => {
-    const item = g.item;
-    const subTotal = (Number(item.price) || 0) * g.qty;
-    totalPrice += subTotal;
-    const itemImage = fixImg(item.img || item.categoryImg);
+  cart.forEach((item, index) => {
+
+    totalPrice += item.price;
 
     html += `
 
       <div class="mrow">
-        <img src="${itemImage}" alt="${item.name}" width="46" height="46" loading="lazy" decoding="async" onerror="imgErr(this)">
-        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(subTotal)}</span>${g.qty > 1 ? ` <small style="color:#94a3b8;">(@${formatCurrency(item.price)})</small>` : ``}${rmFmt(subTotal) ? `<br><small class="rm">${rmFmt(subTotal)}</small>` : ``}</div>
-        <div class="rs-qty-ctrl">
-          <button type="button" class="rs-qty-btn" onclick="cartAdjustQty(${index}, -1)" aria-label="Kurangi jumlah">−</button>
-          <span class="rs-qty-val">${g.qty}</span>
-          <button type="button" class="rs-qty-btn" onclick="cartAdjustQty(${index}, 1)" aria-label="Tambah jumlah">+</button>
-        </div>
-        <button class="del" onclick="cartRemoveGroup(${index})" title="${tr("hapus")}">🗑️</button>
+
+        <div class="grow"><strong>${index+1}. ${item.name}</strong><br><span style="color:var(--blue2);font-weight:600;">${formatCurrency(item.price)}</span>${rmFmt(item.price) ? `<br><small class="rm">${rmFmt(item.price)}</small>` : ``}</div>
+        <button class="del" onclick="removeFromCart(${index})">${tr("hapus")}</button>
 
       </div>`;
 
