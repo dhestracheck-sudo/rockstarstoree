@@ -2204,26 +2204,6 @@ function fetchSheet(sheet, cbName){
   if(tbl === "info"){
     return sbGet("info?select=name,deskripsi&name=in.(INFO_TEKS,INFO_KURS,INFO_TEKS_SPEED,INFO_CATALOG_VERSION)");
   }
-  if(tbl === "brainrot"){
-    // Sinkronisasi otomatis real-time: langsung ambil dari Google Sheet agar setiap kali owner
-    // menambah atau mengedit kategori di Google Sheet, website langsung otomatis ngikut seketika!
-    const controller = (typeof AbortController !== "undefined") ? new AbortController() : null;
-    const timeoutId = controller ? setTimeout(() => controller.abort(), 4500) : null;
-    return fetch(SHEET_URL + "?sheet=Brainrot&_t=" + Date.now(), {
-      signal: controller ? controller.signal : undefined,
-      cache: "no-store"
-    })
-      .then(r => r.json())
-      .then(arr => {
-        if(timeoutId) clearTimeout(timeoutId);
-        if(Array.isArray(arr) && arr.length > 0) return arr;
-        return sbGet("brainrot?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
-      })
-      .catch(() => {
-        if(timeoutId) clearTimeout(timeoutId);
-        return sbGet("brainrot?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
-      });
-  }
   return sbGet(tbl + "?select=name,kategori,price,coret,deskripsi,stock,soldout,image,sold,dilihat,urutan&order=urutan");
 }
 
