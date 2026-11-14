@@ -2866,9 +2866,9 @@ function wishAdd(page, i, j){
 function loadCached(sheet){
 
   try {
-    if (localStorage.getItem("rs_cache_schema") !== "v20261114_fix_sbget") {
+    if (localStorage.getItem("rs_cache_schema") !== "v20261114_fix_pgrst") {
       ["rs_Brainrot","rs_Topup","rs_Akun","rs_Joki","rs_Info","rs_last_full_sync","rs_catalog_ver"].forEach(function(k){ localStorage.removeItem(k); });
-      localStorage.setItem("rs_cache_schema", "v20261114_fix_sbget");
+      localStorage.setItem("rs_cache_schema", "v20261114_fix_pgrst");
     }
 
     const raw = localStorage.getItem("rs_" + sheet);
@@ -3291,20 +3291,23 @@ function loadLiveStock(forceNetwork){
     const jCache = loadCached("Joki");
     const iCache = loadCached("Info");
     hasWarmCache = bCache.length > 0 && aCache.length > 0;
-    applySnap(bCache, tCache, aCache, jCache, iCache);
-
-    applyLang();
-    render();
-    if(hasWarmCache){ try { paintHot(); } catch(e) {} }
-    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
-    hideLoader();
+    if (hasWarmCache) {
+      applySnap(bCache, tCache, aCache, jCache, iCache);
+      applyLang();
+      render();
+      try { paintHot(); } catch(e) {}
+      try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
+      hideLoader();
+    } else {
+      applyLang();
+    }
   } catch(e) {}
 
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
 
   return once().then(res => {
 
-    if (res[0] === null || res[1] === null) return once(); // timeout/gagal: coba sekali lagi
+    if (!res[0] || !res[0].length || !res[1] || !res[1].length) return once(); // timeout/gagal: coba sekali lagi
 
     return res;
 
@@ -3329,10 +3332,11 @@ function loadLiveStock(forceNetwork){
         try { localStorage.setItem("rs_catalog_ver", newVer); } catch(_) {}
       }
       updateCatalogUI(true);
+      hideLoader();
       if (prevVer && newVer && prevVer !== newVer) {
         showCatalogToast("✨ Ada produk baru! Katalog otomatis diperbarui.");
       }
-    } catch(e) {}
+    } catch(e) { hideLoader(); }
     return true;
   });
 
