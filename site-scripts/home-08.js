@@ -859,6 +859,7 @@ function itemCard(categories, i, j){
   const itemImg = item.img || (item.images && item.images[0]) || category.img;
 
   const off = discountOf(item);
+  const scarcityBadge = (item.stock > 0 && item.stock <= 5) ? `<span class="badge-scarcity">🔥 Sisa ${item.stock}!</span>` : (item.sold && Number(item.sold) >= 100 ? `<span class="badge-hot">🔥 TERLARIS</span>` : ``);
 
   const simpleCard = (page !== "brainrot");
 
@@ -867,6 +868,7 @@ function itemCard(categories, i, j){
     <div class="thumb mthumb">
 
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${scarcityBadge}
 
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
 
@@ -893,6 +895,7 @@ function itemCard(categories, i, j){
       <div class="thumb">
 
       ${off ? `<span class="badge-off">-${off}%</span>` : ``}
+      ${scarcityBadge}
 
       ${item.stock === 0 ? `<div class="soldstamp"><b>SOLD</b></div>` : ``}
 
@@ -1227,6 +1230,7 @@ function renderDetail(){
     <h2 style="margin:14px 0 0;">${item.name}</h2>
 
     <div class="stars" style="margin-top:6px;">${starsOf(item)}</div>
+    ${(item.stock > 0 && item.stock <= 5) ? `<div class="detail-scarcity-alert">🔥 <b>PERINGATAN STOK MENIPIS:</b> Tersisa hanya <b>${item.stock} item</b> lagi! Segera checkout sebelum kehabisan.</div>` : ``}
 
     ${item.deskripsi ? `<p class="detaildesc">${item.deskripsi}</p>` : `<p class="detaildesc">${category.name} • ${item.stock === 0 ? tr("habis_txt") : tr("stock") + " " + (item.stock || "-")}${item.sold ? " • 🔥 " + item.sold + " " + tr("sold_w") : ""} • ${tr("kilat")}</p>`}
 

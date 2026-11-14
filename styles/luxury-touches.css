@@ -271,3 +271,131 @@
   letter-spacing: 0.2px !important;
 }
 
+/* ===== 6. URGENSI TAMPILAN & PSIKOLOGI WARNA (SCARCITY & FOMO TRIGGER) ===== */
+
+/* 6A. Badge Urgensi Stok Menipis pada Thumbnail */
+.badge-scarcity {
+  position: absolute !important;
+  top: 6px !important;
+  left: 6px !important;
+  z-index: 4 !important;
+  background: linear-gradient(135deg, #ff1744, #d50000) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+  padding: 3px 7px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.6) !important;
+  animation: scarcityPulse 1.8s ease-in-out infinite !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+
+@keyframes scarcityPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 8px rgba(255, 23, 68, 0.5);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 16px rgba(255, 23, 68, 0.9);
+  }
+}
+
+/* 6B. Badge Terlaris (Social Proof Urgency) */
+.badge-hot {
+  position: absolute !important;
+  top: 6px !important;
+  left: 6px !important;
+  z-index: 4 !important;
+  background: linear-gradient(135deg, #ff6d00, #ff9100) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.3px !important;
+  padding: 3px 7px !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 10px rgba(255, 109, 0, 0.55) !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+
+/* Jika ada badge diskon (-XX%), posisikan badge stok di bawah badge diskon */
+.badge-off ~ .badge-scarcity,
+.badge-off ~ .badge-hot {
+  top: 29px !important;
+}
+
+/* 6C. Teks Stok Menipis di Baris Meta */
+.stock-urgent {
+  color: #ff3355 !important;
+  font-weight: 700 !important;
+  animation: urgentBlink 2s ease-in-out infinite !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+@keyframes urgentBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* 6D. Peringatan Stok Menipis di Modal Detail Produk */
+.detail-scarcity-alert {
+  margin: 10px 0 6px !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, rgba(255, 23, 68, 0.16), rgba(255, 109, 0, 0.14)) !important;
+  border: 1px solid rgba(255, 23, 68, 0.45) !important;
+  color: #fecdd3 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 0 14px rgba(255, 23, 68, 0.25) !important;
+  animation: scarcityAlertPulse 2.4s ease-in-out infinite !important;
+}
+
+@keyframes scarcityAlertPulse {
+  0%, 100% { border-color: rgba(255, 23, 68, 0.45); }
+  50% { border-color: rgba(255, 23, 68, 0.85); box-shadow: 0 0 18px rgba(255, 23, 68, 0.4); }
+}
+
+.detail-scarcity-alert b {
+  color: #ffffff !important;
+}
+
+/* 6E. Flash Sale Header & Timer Berdenyut Urgensi */
+.flashsec .flashhead {
+  border: 1px solid rgba(255, 51, 85, 0.4) !important;
+  background: linear-gradient(90deg, rgba(255, 23, 68, 0.14), rgba(6, 9, 19, 0.95) 45%, rgba(255, 23, 68, 0.14)) !important;
+  box-shadow: 0 0 18px rgba(255, 23, 68, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.flashsec .flashhead .timer {
+  background: linear-gradient(135deg, #ff1744, #d50000) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-family: monospace, var(--font-poppins) !important;
+  letter-spacing: 1px !important;
+  padding: 4px 10px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 12px rgba(255, 23, 68, 0.7) !important;
+  animation: timerPulse 1.6s ease-in-out infinite !important;
+}
+
+@keyframes timerPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px rgba(255,23,68,0.5));
+  }
+  50% {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 10px rgba(255,23,68,0.9));
+  }
+}
+
+
