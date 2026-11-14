@@ -3642,25 +3642,18 @@ setInterval(function(){
   }
 }, 180000);
 
-// Auto-collapse balon teks "Butuh bantuan? Chat Min Rock aja 💬" setelah 6 detik atau saat scroll > 300px
-(function initRcBubbleAutoCollapse(){
+// Balon teks "Butuh bantuan? Chat Min Rock aja 💬" muncul-hilang otomatis setiap 2 detik
+(function initRcBubblePulse(){
   try {
-    var collapsed = false;
-    function collapseRcBubble(){
-      if(collapsed) return;
+    setInterval(function(){
       var bub = document.getElementById("rcBubble");
-      if(bub){
+      if(!bub) return;
+      var waPop = document.getElementById("waPop");
+      if(waPop && waPop.style.display === "flex"){
         bub.classList.add("rc-bubble-compact");
-        collapsed = true;
+        return;
       }
-      window.removeEventListener("scroll", onScrollCollapse);
-    }
-    function onScrollCollapse(){
-      if((window.scrollY || document.documentElement.scrollTop || 0) > 300){
-        collapseRcBubble();
-      }
-    }
-    setTimeout(collapseRcBubble, 6000);
-    window.addEventListener("scroll", onScrollCollapse, { passive: true });
+      bub.classList.toggle("rc-bubble-compact");
+    }, 2000);
   } catch(_) {}
 })();
