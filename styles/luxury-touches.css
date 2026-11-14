@@ -273,18 +273,20 @@
 
 /* ===== 6. URGENSI TAMPILAN & PSIKOLOGI WARNA (SCARCITY & FOMO TRIGGER) ===== */
 
-/* 6A. Badge Urgensi Stok Menipis pada Thumbnail */
+/* 6A. Badge Urgensi Stok Menipis pada Thumbnail (Pojok Kiri Bawah agar tidak menumpuk diskon) */
 .badge-scarcity {
   position: absolute !important;
-  top: 6px !important;
-  left: 6px !important;
+  bottom: 8px !important;
+  left: 8px !important;
+  top: auto !important;
+  right: auto !important;
   z-index: 4 !important;
   background: linear-gradient(135deg, #ff1744, #d50000) !important;
   color: #ffffff !important;
   font-size: 10px !important;
   font-weight: 800 !important;
   letter-spacing: 0.3px !important;
-  padding: 3px 7px !important;
+  padding: 3px 8px !important;
   border-radius: 6px !important;
   box-shadow: 0 0 10px rgba(255, 23, 68, 0.6) !important;
   animation: scarcityPulse 1.8s ease-in-out infinite !important;
@@ -303,28 +305,24 @@
   }
 }
 
-/* 6B. Badge Terlaris (Social Proof Urgency) */
+/* 6B. Badge Terlaris (Social Proof Urgency) - Pojok Kiri Bawah */
 .badge-hot {
   position: absolute !important;
-  top: 6px !important;
-  left: 6px !important;
+  bottom: 8px !important;
+  left: 8px !important;
+  top: auto !important;
+  right: auto !important;
   z-index: 4 !important;
   background: linear-gradient(135deg, #ff6d00, #ff9100) !important;
   color: #ffffff !important;
   font-size: 10px !important;
   font-weight: 800 !important;
   letter-spacing: 0.3px !important;
-  padding: 3px 7px !important;
+  padding: 3px 8px !important;
   border-radius: 6px !important;
   box-shadow: 0 0 10px rgba(255, 109, 0, 0.55) !important;
   white-space: nowrap !important;
   pointer-events: none !important;
-}
-
-/* Jika ada badge diskon (-XX%), posisikan badge stok di bawah badge diskon */
-.badge-off ~ .badge-scarcity,
-.badge-off ~ .badge-hot {
-  top: 29px !important;
 }
 
 /* 6C. Teks Stok Menipis di Baris Meta */
