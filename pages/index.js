@@ -1782,7 +1782,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
           {"\r\n    "}
 
-          <button className="cartbtn" onClick={(event) => { mnavGo(openWishModal) }} style={{ background: "#6d28d9" }}>
+          <button className="cartbtn" onClick={(event) => { mnavGo(openWishModal) }} style={{ background: "rgba(43, 78, 255, 0.16)", border: "1px solid rgba(111, 139, 255, 0.32)" }}>
 
             {"🤍 "}
 
@@ -1948,7 +1948,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         {"\r\n      "}
 
-        <a className="btn-primary" href="/spin" style={{ background: "linear-gradient(135deg,#7c3aed,#ec4899,#f59e0b)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>{"Lucky Spin 🎟️"}</a>
+        <a className="btn-primary" href="/spin" style={{ background: "linear-gradient(135deg, rgba(22, 34, 74, 0.96) 0%, rgba(11, 18, 40, 0.98) 100%)", border: "1px solid rgba(243, 210, 122, 0.55)", color: "#f3d27a", boxShadow: "0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(243, 210, 122, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.16)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "6px" }}>{"Lucky Spin 🎟️"}</a>
 
         <button id="ctaJoki" className="btn-ghost" onClick={(event) => { goToJoki() }} data-i18n="cta_joki">
 
