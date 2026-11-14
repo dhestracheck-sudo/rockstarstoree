@@ -113,24 +113,23 @@
   box-shadow: 0 16px 38px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(147, 51, 234, 0.25) !important;
 }
 
-/* 5. Subtitle: Champagne Gold Micro-Badge */
+/* 5. Subtitle: Clean Luxury Champagne Gold (Bebas Tanpa Bubble / Pill) */
 .banners .banner small {
   position: relative !important;
   z-index: 2 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: block !important;
   font-size: 10.5px !important;
-  font-weight: 800 !important;
-  letter-spacing: 1.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.4px !important;
   text-transform: uppercase !important;
   color: #f3d27a !important;
-  text-shadow: 0 0 10px rgba(243, 210, 122, 0.38) !important;
-  background: rgba(243, 210, 122, 0.08) !important;
-  padding: 4px 10px !important;
-  border-radius: 99px !important;
-  border: 1px solid rgba(243, 210, 122, 0.22) !important;
-  margin-bottom: 8px !important;
+  text-shadow: 0 0 10px rgba(243, 210, 122, 0.35) !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-bottom: 6px !important;
 }
 
 /* 6. Title: Pristine Diamond White Bold */
@@ -184,10 +183,14 @@
   }
   .banners .banner small {
     font-size: 9px !important;
-    letter-spacing: 1.1px !important;
-    padding: 3px 8px !important;
-    margin-bottom: 6px !important;
-    line-height: 1.2 !important;
+    letter-spacing: 1px !important;
+    padding: 0 !important;
+    margin-bottom: 5px !important;
+    line-height: 1.25 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
   }
   .banners .banner h3 {
     font-size: 17.5px !important;
@@ -208,7 +211,10 @@
   .banners .banner small {
     font-size: 8.5px !important;
     letter-spacing: 0.8px !important;
-    padding: 2px 6px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
   }
   .banners .banner h3 {
     font-size: 16px !important;
