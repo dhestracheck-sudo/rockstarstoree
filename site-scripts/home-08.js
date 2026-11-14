@@ -3641,19 +3641,3 @@ setInterval(function(){
     checkCatalogVersionQuick();
   }
 }, 180000);
-
-// Balon teks "Butuh bantuan? Chat Min Rock aja 💬" muncul-hilang otomatis setiap 2 detik
-(function initRcBubblePulse(){
-  try {
-    setInterval(function(){
-      var bub = document.getElementById("rcBubble");
-      if(!bub) return;
-      var waPop = document.getElementById("waPop");
-      if(waPop && waPop.style.display === "flex"){
-        bub.classList.add("rc-bubble-compact");
-        return;
-      }
-      bub.classList.toggle("rc-bubble-compact");
-    }, 2000);
-  } catch(_) {}
-})();

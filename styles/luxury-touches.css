@@ -1162,26 +1162,6 @@ body .testimoni-channel a {
   color: #f3d27a !important;
 }
 
-/* 12E. Animasi Pop-In / Pop-Out Balon Chat Min Rock (#rcBubble) Setiap 2 Detik */
-#rcBubble {
-  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s ease !important;
-  transform-origin: bottom right !important;
-}
-#rcBubble.rc-bubble-compact {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transform: translateY(8px) scale(0.88) !important;
-}
-@media (hover: hover) and (pointer: fine) {
-  #rockchat:hover #rcBubble.rc-bubble-compact {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    transform: translateY(0) scale(1) !important;
-  }
-}
-
 
 
 
