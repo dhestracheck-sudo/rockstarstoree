@@ -325,9 +325,9 @@ function flashHTML(){
 
   <div class="flashsec">
 
-    <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▼</span><span>${tr("flash_click")}</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
+    <div class="flashhead" onclick="toggleFlash()"><h3>${tr("flash_t")}</h3><span class="arrow" id="flasharrow">▲</span><span>${tr("flash_click")}</span><span class="fomo">${tr("flash_fomo")}</span><span class="timer" id="flashtime">--:--:--</span></div>
 
-    <div class="flashbody" id="flashbody" style="display:none;"><button class="fnav fl" aria-label="Geser kiri" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:-350,behavior:'smooth'})">&#10094;</button><div class="itemgrid flashrow">${cards}</div><button class="fnav fr" aria-label="Geser kanan" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:350,behavior:'smooth'})">&#10095;</button></div>
+    <div class="flashbody" id="flashbody"><button class="fnav fl" aria-label="Geser kiri" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:-350,behavior:'smooth'})">&#10094;</button><div class="itemgrid flashrow">${cards}</div><button class="fnav fr" aria-label="Geser kanan" onclick="this.parentElement.querySelector('.flashrow').scrollBy({left:350,behavior:'smooth'})">&#10095;</button></div>
 
   </div>`;
 
@@ -629,9 +629,11 @@ function render(){
 
       </div>
 
+      <div id="rsRecentWrap"></div>
       <div id="flashwrap"></div>`;
 
     document.getElementById("flashwrap").outerHTML = flashHTML();
+    try { paintRecentViewed(); } catch(e){}
 
     if(document.getElementById("flashtime")) startFlashTick();
 
@@ -1172,6 +1174,7 @@ function openDetail(page, i, j){
     if(!Array.isArray(rc)) rc = [];
     rc = [_it.name].concat(rc.filter(x => x !== _it.name)).slice(0, 12);
     localStorage.setItem("rs_recent", JSON.stringify(rc));
+    paintRecentViewed();
   } catch(e) {}
   try { renderDetail(); } catch(e) {
 
@@ -1348,7 +1351,9 @@ function renderDetail(){
 
       <button class="ghost" onclick="closeDetail()">${tr("tutup")}</button>
 
-      <button class="ghost" style="flex:0 0 54px;font-size:20px;" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
+      <button class="ghost" style="flex:0 0 50px;font-size:19px;" title="Wishlist" onclick="toggleWish(detailCur.page,detailCur.i,detailCur.j,this)">${isWished(item.name) ? "❤️" : "🤍"}</button>
+
+      <button class="ghost" style="flex:0 0 50px;font-size:18px;" title="Salin Link Produk" onclick="shareDetailProduct(this)">🔗</button>
 
       <button class="go" ${item.stock === 0 ? 'style="opacity:.5;"' : ''} onclick="detailAdd()">${item.stock === 0 ? tr("sold_out_btn") : tr("add_cart")}</button>
 
@@ -1358,6 +1363,41 @@ function renderDetail(){
 
   paintTogether();
 
+}
+
+function shareDetailProduct(btnEl){
+  if(!detailCur) return;
+  try {
+    const cats = catsOf(detailCur.page);
+    const category = cats[detailCur.i];
+    const item = category.items[detailCur.j];
+    const shareUrl = `https://rockstarstore.id/?tab=${encodeURIComponent(detailCur.page)}&cat=${encodeURIComponent(category.name)}&item=${encodeURIComponent(item.name)}`;
+    const onCopied = function(){
+      if(btnEl){
+        btnEl.innerHTML = "✅";
+        setTimeout(function(){ if(btnEl) btnEl.innerHTML = "🔗"; }, 1500);
+      }
+      if(typeof showCatalogToast === "function"){
+        showCatalogToast("🔗 Link produk berhasil disalin! Siap dikirim ke WA.");
+      }
+    };
+    const fallbackCopy = function(){
+      const ta = document.createElement("textarea");
+      ta.value = shareUrl;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch(e){}
+      ta.remove();
+      onCopied();
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(shareUrl).then(onCopied).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  } catch(e){}
 }
 
 function detailGoto(k){
@@ -1807,20 +1847,46 @@ function applyDeepLink(preserveScrollPosition){
 
     const cat = (p.get("cat") || "").trim();
 
+    const itemParam = (p.get("item") || "").trim();
+
     if(tab && catsOf(tab).length){
 
       currentPage = tab;
 
       render();
 
-      if(cat){
+      const cats = getCurrentCategories();
 
-        const cats = getCurrentCategories();
+      if(cat){
 
         const idx = cats.findIndex(c => c.name.toLowerCase() === cat.toLowerCase());
 
         if(idx >= 0){ shownCat = idx; shownN = 10; paintItems(!!preserveScrollPosition); }
 
+      }
+
+      if(itemParam && !window.__deepLinkItemOpened){
+        const targetLower = itemParam.toLowerCase();
+        let foundCat = -1, foundItem = -1;
+        if(shownCat >= 0 && cats[shownCat]){
+          const jIdx = cats[shownCat].items.findIndex(it => (it.name || "").toLowerCase() === targetLower);
+          if(jIdx >= 0){ foundCat = shownCat; foundItem = jIdx; }
+        }
+        if(foundCat < 0){
+          for(let ci = 0; ci < cats.length; ci++){
+            const ji = cats[ci].items.findIndex(it => (it.name || "").toLowerCase() === targetLower);
+            if(ji >= 0){ foundCat = ci; foundItem = ji; break; }
+          }
+        }
+        if(foundCat >= 0 && foundItem >= 0){
+          window.__deepLinkItemOpened = true;
+          if(shownCat !== foundCat){
+            shownCat = foundCat;
+            shownN = 10;
+            paintItems(!!preserveScrollPosition);
+          }
+          setTimeout(function(){ openDetail(currentPage, foundCat, foundItem); }, 60);
+        }
       }
 
       updateUrl();
@@ -2339,6 +2405,48 @@ function syncWishCount(){
 
   if(a2) a2.textContent = n;
 
+}
+
+function clearRecentViewed(){
+  try { localStorage.removeItem("rs_recent"); } catch(e){}
+  paintRecentViewed();
+}
+
+function paintRecentViewed(){
+  const wrap = document.getElementById("rsRecentWrap");
+  if(!wrap) return;
+  let names = [];
+  try {
+    names = JSON.parse(localStorage.getItem("rs_recent") || "[]");
+    if(!Array.isArray(names)) names = [];
+  } catch(e){ names = []; }
+  const entries = [];
+  for(let k = 0; k < names.length && entries.length < 10; k++){
+    const r = resolveWish(names[k]);
+    if(r && r.item && isItemAvailable(r.item)) entries.push(r);
+  }
+  if(!entries.length){
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.innerHTML = `<section class="rs-recent-sec" aria-label="Terakhir Kamu Lihat">
+    <div class="rs-recent-head">
+      <span class="rs-recent-title">👀 Terakhir Kamu Lihat</span>
+      <button type="button" class="rs-recent-clear" onclick="clearRecentViewed()">Hapus Riwayat</button>
+    </div>
+    <div class="rs-recent-track">
+      ${entries.map(function(r){
+        const img = firstImg(r.item, r.cat.img);
+        return `<div class="rs-recent-card" onclick="openDetail('${r.page}',${r.i},${r.j})">
+          ${thumbTag(img, 'class="rs-recent-img" loading="lazy" decoding="async"')}
+          <div class="rs-recent-info">
+            <div class="rs-recent-name">${r.item.name}</div>
+            <div class="rs-recent-price">${formatCurrency(r.item.price)}</div>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+  </section>`;
 }
 
 function paintHot(){
@@ -3290,6 +3398,7 @@ function updateCatalogUI(preserveScroll){
     }
   } catch(_) {}
   try { if(typeof paintHot === "function") paintHot(); } catch(_) {}
+  try { if(typeof paintRecentViewed === "function") paintRecentViewed(); } catch(_) {}
   try { if(typeof syncWishCount === "function") syncWishCount(); } catch(_) {}
 }
 
@@ -3532,3 +3641,26 @@ setInterval(function(){
     checkCatalogVersionQuick();
   }
 }, 180000);
+
+// Auto-collapse balon teks "Butuh bantuan? Chat Min Rock aja 💬" setelah 6 detik atau saat scroll > 300px
+(function initRcBubbleAutoCollapse(){
+  try {
+    var collapsed = false;
+    function collapseRcBubble(){
+      if(collapsed) return;
+      var bub = document.getElementById("rcBubble");
+      if(bub){
+        bub.classList.add("rc-bubble-compact");
+        collapsed = true;
+      }
+      window.removeEventListener("scroll", onScrollCollapse);
+    }
+    function onScrollCollapse(){
+      if((window.scrollY || document.documentElement.scrollTop || 0) > 300){
+        collapseRcBubble();
+      }
+    }
+    setTimeout(collapseRcBubble, 6000);
+    window.addEventListener("scroll", onScrollCollapse, { passive: true });
+  } catch(_) {}
+})();
