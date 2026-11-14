@@ -12,7 +12,14 @@ const IMG = "";
 
 const FALLBACK_IMG = IMG + "Screenshot 2026-04-14 004434.webp";
 
-function fixImg(f){ return f ? (IMG + f) : FALLBACK_IMG; }
+function fixImg(f){
+  if(!f) return FALLBACK_IMG;
+  f = String(f).trim();
+  if(!f) return FALLBACK_IMG;
+  if(f.indexOf('http') === 0) return f;
+  if(/\.png$/i.test(f)) f = f.replace(/\.png$/i, '.webp');
+  return IMG + f;
+}
 
 /* Thumbnail hemat: sisipkan thumb_ untuk file Storage (fallback ke full bila belum ada) */
 
@@ -2189,13 +2196,16 @@ function sbTableOf(sheet){
 }
 
 function sbGet(path){
-
-  return fetch(SB_URL + "/rest/v1/" + path, {
-
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-
+  const sep = path.indexOf('?') === -1 ? '?' : '&';
+  return fetch(SB_URL + '/rest/v1/' + path + sep + '_t=' + Date.now(), {
+    headers: {
+      apikey: SB_KEY,
+      Authorization: 'Bearer ' + SB_KEY,
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache'
+    },
+    cache: 'no-store'
   }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
-
 }
 
 function fetchSheet(sheet, cbName){
@@ -3288,7 +3298,7 @@ function loadLiveStock(forceNetwork){
     hideLoader();
 
     const lastSync = Number(localStorage.getItem("rs_last_full_sync") || 0);
-    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 15000){
+    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 3000){
       return Promise.resolve(false);
     }
   } catch(e) {}
