@@ -77,7 +77,7 @@ wa_online: "Online", wa_ph: "Ketik pesan...",
 
 wa_greet: "Halo! 👋 Ada yang bisa dibantu? Ketik di bawah, langsung tersambung ke WA admin.",
 
-flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan! Keburu habis:", flash_btn: "⚡ Flash Sale",
+flash_t: "⚡ FLASH SALE", flash_click: "👆 Klik Flash Sale untuk melihat barang diskon", flash_fomo: "🔥 Buruan!", flash_btn: "⚡ Flash Sale",
 
 nav_testi: "Testimoni", rc_bub: "Butuh bantuan? Chat <b>Min Rock</b> aja 💬",
 
@@ -151,7 +151,7 @@ b_joki_t: "🎮 Joki Roblox", b_joki_d: "Jasa joki sepuh berbagai map, cepat & a
 
 lihat: "View", cart_title: "📋 My Cart", lanjut: "Continue Shopping", wish_title: "❤️ My Wishlist",
 
-flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry! Selling out:", flash_btn: "⚡ Flash Sale",
+flash_t: "⚡ FLASH SALE", flash_click: "👆 Click Flash Sale to see discounted items", flash_fomo: "🔥 Hurry!", flash_btn: "⚡ Flash Sale",
 
 nav_testi: "Reviews", rc_bub: "Need help? Just chat <b>Min Rock</b> 💬",
 

@@ -398,4 +398,46 @@
   }
 }
 
+/* 6F. Perbaikan Layout Flashhead di HP agar teks FOMO "🔥 Buruan!" Utuh & Tidak Terpotong */
+@media (max-width: 768px) {
+  body .flashsec .flashhead {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+    padding: 7px 10px !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  body .flashsec .flashhead h3 {
+    font-size: 13.5px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  body .flashsec .flashhead .arrow {
+    font-size: 11px !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+  }
+  body .flashsec .flashhead .fomo {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    display: inline-block !important;
+  }
+  body .flashsec .flashhead .timer {
+    font-size: 12px !important;
+    padding: 3px 6px !important;
+    letter-spacing: 0.5px !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+}
+
+
 
