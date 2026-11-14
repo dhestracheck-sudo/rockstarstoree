@@ -883,7 +883,9 @@ function loadTestimoniAdmin(){
   const wasExpanded = toggle && toggle.getAttribute("aria-expanded") === "true";
   if(toggle){ toggle.disabled = true; toggle.textContent = "Memuat daftar foto..."; }
   box.innerHTML = "";
-  return sbList("Info").then(function(arr){
+  return fetch(SB_URL + "/rest/v1/info?select=name,image,deskripsi,urutan&name=like.INFO_TESTIMONI_*&order=urutan", {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []).then(function(arr){
     TESTIMONI_INFO_ROWS = (arr || []).filter(function(row){
       return String(row.name || "").trim().indexOf("INFO_TESTIMONI_") === 0 && isPublicFotoUrl(row.image);
     }).sort(function(a,b){ return Number(a.urutan || 0) - Number(b.urutan || 0); });
@@ -1187,8 +1189,6 @@ function loadItems(){
       document.getElementById("catSearch").value = "";
       fillProductOptions("");
       fillCatOptions("");
-      loadTeks();
-    loadSpinAdmin();
       muatFotoBackground();
     } catch(e) {}
   });

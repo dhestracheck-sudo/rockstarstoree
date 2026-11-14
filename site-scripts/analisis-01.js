@@ -8,6 +8,7 @@ function sbTable(sheet){
   if(sheet === "akun") return "akun";
   if(sheet === "info") return "info";
   if(sheet === "topup") return "topup";
+  if(sheet === "joki") return "joki";
   return "brainrot";
 }
 function sbList(sheet){
@@ -121,9 +122,9 @@ function loadAktivitas(){
 
 /* ===== inbox order: status baru/lunas/batal + notif + rekap ===== */
 var lastBaru = -1;
-function sbH(){ return { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }; }
-function pinH(){
-  const h = sbH();
+function sbH(extra){ return Object.assign({ apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, extra || {}); }
+function pinH(extra){
+  const h = sbH(extra);
   const p = document.getElementById("pinInput");
   h["x-admin-pin"] = p ? (p.value || "") : "";
   return h;
