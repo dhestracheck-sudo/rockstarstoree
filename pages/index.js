@@ -2671,8 +2671,6 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
           <div className="rc-bubble" id="rcBubble" onClick={(event) => { openWaChat() }} title="Chat WhatsApp Min Rock">
 
-            <img src="/optimized/ROCKSTARLOGO-72.webp" alt="Rockstar" className="rc-corner-icon" width="16" height="16" loading="lazy" />
-
             <span data-i18n-html="rc_bub">
 
               {"Butuh bantuan? Chat "}
