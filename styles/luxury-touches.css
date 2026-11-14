@@ -840,5 +840,22 @@
   }
 }
 
+/* ===== 10. LUXURY SHOWCASE STAGE GLOW (BACKGROUND & GRID AMBIENCE) ===== */
+.banners {
+  position: relative !important;
+}
+.banners::before {
+  content: "" !important;
+  position: absolute !important;
+  top: -20px !important;
+  left: 5% !important;
+  right: 5% !important;
+  bottom: -20px !important;
+  background: radial-gradient(ellipse 75% 55% at 50% 50%, rgba(43, 78, 255, 0.14), transparent 75%) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+
 
 

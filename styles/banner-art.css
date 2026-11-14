@@ -1,59 +1,216 @@
-/* Banner homepage: biru semua + kilau bergerak + gambar kecil. Ringan, tanpa file baru. */
-.banners .banner { position: relative; overflow: hidden; contain: paint; }
+/* ==========================================================================
+   ROCKSTAR.STORE — ULTRA LUXURY CATEGORY BANNERS & GRID
+   Style: Midnight Crystal Obsidian with Specular Gold Rim & Diamond Accents
+   ========================================================================== */
+
+.banners {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 16px !important;
+  margin: 16px 0 28px !important;
+  position: relative !important;
+}
+
+/* 1. Main Luxury Card Container */
+.banners .banner {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 20px !important;
+  padding: 24px 22px !important;
+  cursor: pointer !important;
+  min-height: 154px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  
+  /* Crystal Obsidian Base */
+  background: linear-gradient(155deg, rgba(14, 22, 48, 0.94) 0%, rgba(7, 11, 24, 0.98) 100%) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  
+  /* Specular Hairline Edge with Champagne Gold top glow */
+  border: 1px solid rgba(111, 139, 255, 0.22) !important;
+  border-top: 1px solid rgba(243, 210, 122, 0.42) !important;
+  box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.7),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.4) !important;
+  
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.26s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.26s ease,
+              background 0.26s ease !important;
+  user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 2. Top-Light Reflection Bar (Efek Pantulan Kaca Kristal Mewah) */
 .banners .banner::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  pointer-events: none;
-  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(120, 180, 255, 0.1) 60px 92px, transparent 92px 190px);
-  animation: banner-streak 13s linear infinite;
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(243, 210, 122, 0.8), rgba(255, 255, 255, 0.9), rgba(243, 210, 122, 0.8), transparent) !important;
+  pointer-events: none !important;
+  opacity: 0.85 !important;
+  filter: drop-shadow(0 0 6px rgba(243, 210, 122, 0.6)) !important;
 }
-@keyframes banner-streak {
-  to { transform: translate3d(190px, 0, 0); }
-}
+
+/* 3. Subtle Ambient Aura Backdrop */
 .banners .banner::after {
-  position: absolute;
-  right: -6px;
-  bottom: -20px;
-  font-size: 96px;
-  line-height: 1;
-  opacity: 0.2;
-  transform: rotate(-10deg) translate3d(0, 0, 0);
-  pointer-events: none;
-  text-shadow: 0 0 14px rgba(80, 140, 255, 0.5);
-  animation: banner-float 5s ease-in-out infinite;
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  background: radial-gradient(circle at 50% 0%, rgba(111, 139, 255, 0.14), transparent 70%) !important;
+  pointer-events: none !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.3s ease !important;
 }
-@keyframes banner-float {
-  0%, 100% { transform: rotate(-10deg) translate3d(0, 0, 0); }
-  50% { transform: rotate(-10deg) translate3d(0, -9px, 0); }
-}
+
+/* 4. Luxury Color Identities (Setiap Kategori Punya Aura Khusus yang Elegan) */
+/* 4A. Katalog Brainrot (Amethyst & Royal Navy Aura) */
 .banners .banner:nth-child(1) {
-  background: linear-gradient(135deg, #0a1440 0%, #123a8f 60%, #0b2f7a 100%);
+  background: linear-gradient(155deg, rgba(22, 20, 56, 0.92) 0%, rgba(8, 12, 28, 0.98) 65%, rgba(16, 26, 68, 0.94) 100%) !important;
 }
-.banners .banner:nth-child(1)::after { content: "🧠"; }
+.banners .banner:nth-child(1):hover {
+  border-color: rgba(180, 140, 255, 0.5) !important;
+  border-top-color: rgba(243, 210, 122, 0.8) !important;
+  box-shadow: 0 16px 38px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(138, 92, 246, 0.25) !important;
+}
+
+/* 4B. Top Up (Champagne Gold & Emerald Sapphire Aura) */
 .banners .banner:nth-child(2) {
-  background: linear-gradient(135deg, #081026 0%, #0e2a6e 60%, #1550c0 100%);
+  background: linear-gradient(155deg, rgba(16, 32, 52, 0.92) 0%, rgba(7, 12, 26, 0.98) 65%, rgba(18, 38, 36, 0.94) 100%) !important;
 }
-.banners .banner:nth-child(2)::after { content: "💰"; }
+.banners .banner:nth-child(2):hover {
+  border-color: rgba(243, 210, 122, 0.5) !important;
+  border-top-color: rgba(243, 210, 122, 0.85) !important;
+  box-shadow: 0 16px 38px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(243, 210, 122, 0.22) !important;
+}
+
+/* 4C. Akun Roblox (Deep Royal Sapphire Aura) */
 .banners .banner:nth-child(3) {
-  background: linear-gradient(135deg, #0a1440 0%, #0f2c7d 60%, #1a4fc4 100%);
+  background: linear-gradient(155deg, rgba(14, 28, 68, 0.92) 0%, rgba(6, 11, 26, 0.98) 65%, rgba(12, 34, 82, 0.94) 100%) !important;
 }
-.banners .banner:nth-child(3)::after { content: "👤"; }
+.banners .banner:nth-child(3):hover {
+  border-color: rgba(43, 78, 255, 0.55) !important;
+  border-top-color: rgba(243, 210, 122, 0.8) !important;
+  box-shadow: 0 16px 38px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(43, 78, 255, 0.3) !important;
+}
+
+/* 4D. Joki Roblox (Obsidian Electric Purple Aura) */
 .banners .banner:nth-child(4) {
-  background: linear-gradient(135deg, #060a24 0%, #0c2060 60%, #0e3aa0 100%);
+  background: linear-gradient(155deg, rgba(24, 16, 52, 0.92) 0%, rgba(7, 10, 24, 0.98) 65%, rgba(18, 24, 58, 0.94) 100%) !important;
 }
-.banners .banner:nth-child(4)::after { content: "🎮"; }
-.banners .banner small,
-.banners .banner h3,
-.banners .banner p { position: relative; z-index: 1; }
-.banners .banner { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-.banners .banner:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5); }
-@media (max-width: 760px) {
-  .banners .banner::after { font-size: 72px; bottom: -14px; }
-  /* Matikan animasi diagonal tak terbatas di kartu pada layar HP agar scroll 60FPS mulus */
-  .banners .banner::before { animation: none; }
+.banners .banner:nth-child(4):hover {
+  border-color: rgba(147, 51, 234, 0.5) !important;
+  border-top-color: rgba(243, 210, 122, 0.8) !important;
+  box-shadow: 0 16px 38px -4px rgba(0, 0, 0, 0.8), 0 0 24px rgba(147, 51, 234, 0.25) !important;
 }
-@media (prefers-reduced-motion: reduce) {
-  .banners .banner::before, .banners .banner::after { animation: none; }
-  .banners .banner:hover { transform: none; }
+
+/* 5. Subtitle: Champagne Gold Micro-Badge */
+.banners .banner small {
+  position: relative !important;
+  z-index: 2 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 10.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
+  text-transform: uppercase !important;
+  color: #f3d27a !important;
+  text-shadow: 0 0 10px rgba(243, 210, 122, 0.38) !important;
+  background: rgba(243, 210, 122, 0.08) !important;
+  padding: 4px 10px !important;
+  border-radius: 99px !important;
+  border: 1px solid rgba(243, 210, 122, 0.22) !important;
+  margin-bottom: 8px !important;
+}
+
+/* 6. Title: Pristine Diamond White Bold */
+.banners .banner h3 {
+  position: relative !important;
+  z-index: 2 !important;
+  font-family: var(--font-poppins), sans-serif !important;
+  font-size: 21px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.3px !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+/* 7. Description (Desktop): Refined Slate */
+.banners .banner p {
+  position: relative !important;
+  z-index: 2 !important;
+  color: #94a3b8 !important;
+  font-size: 12.5px !important;
+  line-height: 1.5 !important;
+  margin: 6px 0 0 !important;
+}
+
+/* 8. Hover & Active Tactile Physics */
+.banners .banner:hover {
+  transform: translateY(-4px) scale(1.01) !important;
+}
+.banners .banner:active {
+  transform: scale(0.975) !important;
+  transition: transform 0.1s ease !important;
+}
+
+/* 9. Mobile Responsive Perfection (<= 768px) */
+@media (max-width: 768px) {
+  .banners {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    margin: 10px 0 22px !important;
+  }
+  .banners .banner {
+    padding: 16px 10px !important;
+    min-height: 128px !important;
+    border-radius: 16px !important;
+  }
+  .banners .banner small {
+    font-size: 9px !important;
+    letter-spacing: 1.1px !important;
+    padding: 3px 8px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
+  }
+  .banners .banner h3 {
+    font-size: 17.5px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+  }
+  .banners .banner p {
+    display: none !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .banners .banner {
+    padding: 14px 8px !important;
+    min-height: 122px !important;
+    border-radius: 14px !important;
+  }
+  .banners .banner small {
+    font-size: 8.5px !important;
+    letter-spacing: 0.8px !important;
+    padding: 2px 6px !important;
+  }
+  .banners .banner h3 {
+    font-size: 16px !important;
+  }
 }
