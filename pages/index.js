@@ -11,7 +11,7 @@ import HomeArticles from '../components/HomeArticles';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261114", "/site-scripts/home-08.js?v=1794667400000", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261114", "/site-scripts/home-08.js?v=1794671900000", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
 
 
 
@@ -1146,7 +1146,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
         <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261114" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=1794664285873" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=1794671900000" />
 
         {"\r\n"}
 
@@ -1495,6 +1495,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
           <div className="searchwrap">
 
             <input type="text" id="searchInput" placeholder="Cari item, misal: moon bloom, robux..." data-i18n-ph="search_ph" autoComplete="off" onKeyDown={(event) => { if(event.key==='Enter')closeMnav() }} />
+
+            <button type="button" id="searchClearBtn" className="search-clear-btn" aria-label="Hapus pencarian" style={{ display: "none" }} onClick={() => { if (typeof window !== "undefined" && window.clearSearchInput) window.clearSearchInput(); }}>{"✕"}</button>
 
             <div id="searchSug" style={{ display: "none" }} />
 
