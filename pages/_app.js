@@ -24,7 +24,7 @@ const GOOGLE_ANALYTICS_ID = "G-8CKBS3MNXH";
 
 const poppins = Poppins({
 
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 
   subsets: ["latin"],
 

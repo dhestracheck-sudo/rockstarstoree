@@ -2,7 +2,7 @@
 body .topwrap .announce {
   display: block;
   overflow: hidden;
-  padding: 7px 0;
+  padding: 4px 0;
   text-align: left;
   white-space: normal;
 }
@@ -30,10 +30,10 @@ body .topwrap .announce a {
 
 body .topwrap .announce .customrun {
   width: 100%;
-  height: 30px;
+  height: 24px;
   overflow: hidden;
   padding: 0;
-  line-height: 29px;
+  line-height: 23px;
   white-space: nowrap;
 }
 
@@ -45,8 +45,8 @@ body .topwrap .announce .customrun {
 
 @media (max-width: 760px) {
   body .topwrap .announce {
-    padding: 6px 0;
-    font-size: 12px;
+    padding: 4px 0;
+    font-size: 11.5px;
   }
 
   body .topwrap .announce a {
@@ -55,8 +55,8 @@ body .topwrap .announce .customrun {
   }
 
   body .topwrap .announce .customrun {
-    height: 27px;
-    line-height: 26px;
+    height: 22px;
+    line-height: 21px;
   }
 }
 
@@ -406,10 +406,10 @@ body .site-footer-copy strong {
   }
 
   body .mega-slide {
-    height: 180px !important;
-    min-height: 180px !important;
-    max-height: 180px !important;
-    padding: 8px 10px 22px !important;
+    height: 154px !important;
+    min-height: 154px !important;
+    max-height: 154px !important;
+    padding: 6px 10px 18px !important;
     overflow: hidden !important;
     display: none;
     align-items: center;
@@ -567,9 +567,9 @@ body .site-footer-copy strong {
   }
 
   body .s4 .mega-step {
-    font-size: clamp(6.8px, 1.9vw, 8.2px) !important;
-    line-height: 1.25 !important;
-    padding: 4px 7px !important;
+    font-size: clamp(6.4px, 1.75vw, 7.6px) !important;
+    line-height: 1.2 !important;
+    padding: 3px 6px !important;
     border-radius: 6px !important;
     background: rgba(6, 18, 55, 0.9) !important;
     border: 1px solid rgba(111, 139, 255, 0.45) !important;
@@ -620,29 +620,29 @@ body .site-footer-copy strong {
   }
 
   body .mega-title-w {
-    font-size: clamp(12px, 3.6vw, 15px) !important;
-    line-height: 1.1 !important;
+    font-size: clamp(11px, 3.2vw, 14px) !important;
+    line-height: 1.08 !important;
     margin: 0 !important;
     letter-spacing: 0.3px;
   }
 
   body .mega-title-g {
-    font-size: clamp(18px, 5.2vw, 25px) !important;
-    line-height: 1.05 !important;
+    font-size: clamp(16px, 4.7vw, 22px) !important;
+    line-height: 1.04 !important;
     margin: 1px 0 2px !important;
   }
 
   body .mega-sub {
-    font-size: clamp(8.5px, 2.3vw, 10.5px) !important;
-    letter-spacing: 0.4px;
+    font-size: clamp(8px, 2.15vw, 10px) !important;
+    letter-spacing: 0.35px;
     margin: 1px 0 0 !important;
-    line-height: 1.2;
+    line-height: 1.15;
   }
 
   body .mega-tag {
-    font-size: clamp(8px, 2.2vw, 10px) !important;
+    font-size: clamp(7.5px, 2.05vw, 9.5px) !important;
     margin: 2px 0 0 !important;
-    line-height: 1.2;
+    line-height: 1.15;
   }
 
   body .mega-badges {
@@ -706,8 +706,8 @@ body .site-footer-copy strong {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    gap: 22px;
-    padding: 32px 16px 12px;
+    gap: 6px;
+    padding: 10px 14px 8px;
   }
 
   body .hero-text,
@@ -719,7 +719,7 @@ body .site-footer-copy strong {
 
   body .hero h1 {
     max-width: 100%;
-    font-size: clamp(30px, 8vw, 40px);
+    font-size: clamp(26px, 7.2vw, 34px);
     line-height: 1.08;
     overflow-wrap: anywhere;
   }
@@ -781,7 +781,7 @@ body .site-footer-copy strong {
   }
 }
 
-/* Desktop: Kembalikan seperti semula (tidak terpotong), min-height 380px, max-height none */
+/* Desktop: Proposional & compact (min-height 270px) agar katalog cepat terlihat above-the-fold */
 @media (min-width: 761px) {
   body .mega {
     width: 100vw;
@@ -792,10 +792,61 @@ body .site-footer-copy strong {
   }
 
   body .mega-slide {
-    min-height: 380px !important;
+    min-height: 270px !important;
     max-height: none !important;
-    padding: 20px 30px 40px !important;
+    padding: 14px 28px 32px !important;
     overflow: hidden;
+  }
+
+  body .mega-title-w {
+    font-size: clamp(20px, 2.3vw, 28px) !important;
+    line-height: 1.06 !important;
+  }
+
+  body .mega-title-g {
+    font-size: clamp(30px, 3.6vw, 46px) !important;
+    line-height: 1.02 !important;
+    margin: 2px 0 4px !important;
+  }
+
+  body .mega-sub {
+    font-size: clamp(12px, 1.25vw, 15px) !important;
+    margin-top: 3px !important;
+  }
+
+  body .mega-tag {
+    font-size: clamp(11.5px, 1.15vw, 14px) !important;
+    margin-top: 4px !important;
+  }
+
+  body .mega-badges {
+    margin-top: 8px !important;
+    gap: 8px !important;
+  }
+
+  body .mega-cta {
+    margin-top: 10px !important;
+  }
+
+  body .mega-cta a,
+  body .mega-cta button {
+    padding: 9px 18px !important;
+    font-size: 13px !important;
+  }
+
+  body .mega-fig img,
+  body .s6 .mega-char img,
+  body .s7 .mega-char img {
+    max-height: 235px !important;
+    width: auto !important;
+    object-fit: contain !important;
+  }
+
+  body .s6 .mega-phone img,
+  body .s7 .mega-phone img {
+    max-height: 220px !important;
+    width: auto !important;
+    object-fit: contain !important;
   }
 
   body .mega-logo {
@@ -864,7 +915,7 @@ body .site-footer-copy strong {
   }
 
   body .s4 .mega-char img {
-    max-height: 320px !important;
+    max-height: 228px !important;
     width: auto !important;
     object-fit: contain !important;
   }
@@ -873,7 +924,7 @@ body .site-footer-copy strong {
     display: flex !important;
     flex-direction: column !important;
     flex: 1 1 42% !important;
-    gap: 12px !important;
+    gap: 8px !important;
     min-width: 0 !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -883,8 +934,8 @@ body .site-footer-copy strong {
     background: linear-gradient(135deg, rgba(8, 18, 50, 0.9), rgba(16, 36, 96, 0.9)) !important;
     border: 1px solid rgba(111, 139, 255, 0.45) !important;
     border-radius: 12px !important;
-    padding: 12px 18px !important;
-    font-size: 13.5px !important;
+    padding: 9px 14px !important;
+    font-size: 12.5px !important;
     color: #fff !important;
     font-weight: 700 !important;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4) !important;

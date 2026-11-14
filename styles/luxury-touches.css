@@ -512,7 +512,7 @@
   }
 }
 
-/* ===== 7. MIN ROCK CHAT BUBBLE (MINIMALIS, SUPER COMPACT & RINGAN) ===== */
+/* ===== 7. MIN ROCK CHAT BUBBLE (SIDE-DOCKED, PERMANENT & RINGAN) ===== */
 
 /* 7A. Animasi Mengapung Halus pada Bubble (Compositor Thread - 0% CPU Overhead) */
 @keyframes rcBubbleFloat {
@@ -520,60 +520,67 @@
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(0, -4px, 0);
+    transform: translate3d(0, -3px, 0);
   }
 }
 
-#rcBubbleWrap {
+html body #rcBubbleWrap {
   animation: rcBubbleFloat 3s ease-in-out infinite !important;
   will-change: transform !important;
+  position: fixed !important;
+  z-index: 94 !important;
+  left: auto !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-/* 7B. Styling Bubble Min Rock Mungil & Bersih (Tanpa Line Gold) */
-.rc-bubble {
+/* 7B. Styling Bubble Min Rock Mungil & Bersih (Side-Left Dock agar Hemat Tinggi Vertikal) */
+html body .rc-bubble {
   position: relative !important;
-  background: rgba(9, 14, 31, 0.95) !important;
-  border: 1px solid rgba(111, 139, 255, 0.22) !important; /* Line biru/obsidian natural, NO gold */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5) !important;
-  border-radius: 12px 12px 3px 12px !important;
-  padding: 6px 10px !important;
-  font-size: 11px !important;
+  background: rgba(9, 14, 31, 0.96) !important;
+  border: 1px solid rgba(111, 139, 255, 0.28) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.52) !important;
+  border-radius: 14px 14px 4px 14px !important;
+  padding: 8px 12px !important;
+  font-size: 11.5px !important;
   line-height: 1.35 !important;
-  max-width: 170px !important;
+  max-width: 190px !important;
+  text-align: left !important;
   color: #f1f5f9 !important;
   transition: transform 0.2s ease, border-color 0.2s ease !important;
 }
 
-.rc-bubble:hover {
-  border-color: rgba(111, 139, 255, 0.45) !important;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6) !important;
+html body .rc-bubble:hover {
+  border-color: rgba(243, 210, 122, 0.55) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.62) !important;
 }
 
-.rc-bubble b {
-  color: #6f8bff !important; /* Royal Blue konsisten, bukan gold */
+html body .rc-bubble b {
+  color: #f3d27a !important;
   font-weight: 700 !important;
 }
 
-/* 7C. Responsif Mobile & HP Kentang (Super Mungil, Hemat Ruang) */
-@media (max-width: 768px) {
-  .rc-bubble {
-    max-width: 105px !important;
-    font-size: 8.5px !important;
-    padding: 4px 7px !important;
-    border-radius: 10px 10px 3px 10px !important;
+/* 7C. Responsif Mobile & HP Kentang (Super Mungil, Hemat Ruang & Bebas Bentrok) */
+@media (max-width: 900px) {
+  html body .rc-bubble {
+    max-width: 124px !important;
+    font-size: 9px !important;
+    padding: 5px 8px !important;
+    border-radius: 11px 11px 3px 11px !important;
     line-height: 1.25 !important;
     background: rgba(8, 12, 26, 0.97) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-  .rc-bubble b {
-    font-size: 8.5px !important;
+  html body .rc-bubble b {
+    font-size: 9px !important;
   }
 }
 
 /* 7D. Menghormati Mode Hemat Baterai Pengguna */
 @media (prefers-reduced-motion: reduce) {
-  #rcBubbleWrap {
+  html body #rcBubbleWrap {
     animation: none !important;
   }
 }
@@ -778,33 +785,39 @@
   }
 }
 
-/* ===== 9. LINGKARAN TOMBOL KERANJANG DI MODE MOBILE (UKURAN PAS, MENCOLOK & MUDAH DITEKAN) ===== */
+/* ===== 9. LINGKARAN TOMBOL KERANJANG DI MODE MOBILE (UKURAN PAS, MUDAH DITEKAN & BADGE 0 DISEMBUNYIKAN) ===== */
+html body .fab .fab-main b[data-count="0"],
+html body #total[data-count="0"] {
+  display: none !important;
+}
+
 @media (max-width: 900px) {
-  body .fab,
+  html body .fab,
   .fab {
-    left: 18px !important;
-    bottom: calc(78px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    right: auto !important;
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
   }
-  body .fab .fab-main,
+  html body .fab .fab-main,
   .fab .fab-main {
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    max-width: 60px !important;
-    font-size: 28px !important;
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    font-size: 23px !important;
     line-height: 1 !important;
-    box-shadow: 0 8px 24px rgba(43, 78, 255, 0.48) !important;
+    box-shadow: 0 8px 22px rgba(43, 78, 255, 0.48) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     padding: 0 !important;
     border-radius: 50% !important;
   }
-  body .fab .fab-main b,
+  html body .fab .fab-main b,
   .fab .fab-main b {
-    min-width: 23px !important;
-    height: 23px !important;
-    font-size: 12px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
     top: -3px !important;
     right: -3px !important;
@@ -814,25 +827,25 @@
 }
 
 @media (max-width: 480px) {
-  body .fab,
+  html body .fab,
   .fab {
-    left: 16px !important;
-    bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+    left: 12px !important;
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
   }
-  body .fab .fab-main,
+  html body .fab .fab-main,
   .fab .fab-main {
-    width: 58px !important;
-    height: 58px !important;
-    min-width: 58px !important;
-    max-width: 58px !important;
-    font-size: 27px !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    font-size: 22px !important;
     line-height: 1 !important;
   }
-  body .fab .fab-main b,
+  html body .fab .fab-main b,
   .fab .fab-main b {
-    min-width: 22px !important;
-    height: 22px !important;
-    font-size: 11.5px !important;
+    min-width: 20px !important;
+    height: 20px !important;
+    font-size: 11px !important;
     top: -3px !important;
     right: -3px !important;
   }
@@ -1161,6 +1174,391 @@ body .testimoni-channel a {
   font-weight: 800 !important;
   color: #f3d27a !important;
 }
+
+/* ===== 13. LUXURY CHROME, HEADER ANTI-COLLISION, ABOVE-THE-FOLD & 5-BTN BOTNAV ===== */
+
+/* 13A. Pastikan konten utama selalu berada di atas .snow-flakes */
+html body .mega,
+html body .hero,
+html body .trust-marquee,
+html body .hot-product-banner,
+html body main.section,
+html body .faq-section,
+html body .home-articles-section,
+html body .brand-payment,
+html body footer.site-footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* 13B. Midnight Sapphire + Champagne Gold Announcement Bar */
+html body .topwrap .announce {
+  background: linear-gradient(90deg, #050918 0%, #0e1d4a 50%, #050918 100%) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.28) !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+}
+
+html body .topwrap .announce a {
+  color: #f3d27a !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid rgba(243, 210, 122, 0.5) !important;
+}
+
+html body .topwrap .announce .customrun {
+  background: rgba(3, 6, 15, 0.58) !important;
+  border-top: 1px solid rgba(243, 210, 122, 0.16) !important;
+  color: #cbd5e1 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+}
+
+@media (max-width: 760px) {
+  html body .topwrap .announce .customrun {
+    font-size: 10.5px !important;
+  }
+}
+
+/* 13C. Trust Marquee & Hero Highlight Emas */
+html body .trust-marquee {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  margin-top: 2px !important;
+  margin-bottom: 6px !important;
+}
+
+html body .hero h1 span {
+  background: linear-gradient(135deg, #f3d27a 0%, #ffffff 52%, #60a5fa 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* 13D. Desktop (>= 901px): Anti-Tabrakan Header, Sembunyikan Botnav/FAB Duplikat, Compact Above-the-Fold */
+@media (min-width: 901px) {
+  html body #botnav,
+  html body .botnav,
+  html body .fab {
+    display: none !important;
+  }
+
+  html body {
+    padding-bottom: 18px !important;
+  }
+
+  html body header {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: clamp(6px, 0.85vw, 10px) !important;
+    padding: 0 clamp(12px, 1.5vw, 22px) !important;
+    height: 56px !important;
+  }
+
+  html body header .brand {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+  }
+
+  html body header .headnav {
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+  }
+
+  html body header .headnav a {
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    padding: 6px 8px !important;
+    gap: 4px !important;
+    border-radius: 9px !important;
+    white-space: nowrap !important;
+  }
+
+  html body header .searchwrap {
+    display: flex !important;
+    flex: 1 1 150px !important;
+    min-width: 135px !important;
+    max-width: 260px !important;
+    margin: 0 auto !important;
+  }
+
+  html body header #searchInput {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    padding: 7px 28px 7px 32px !important;
+    font-size: 13px !important;
+  }
+
+  html body header .headicons {
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+    margin-left: 0 !important;
+    gap: 5px !important;
+  }
+
+  html body header .headicons .cartbtn {
+    display: inline-flex !important;
+    align-items: center !important;
+    flex: 0 0 auto !important;
+    padding: 6px 9px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+    height: 34px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Compact Hero agar Trust Marquee + Hot Product langsung masuk fold pertama */
+  html body .hero {
+    min-height: 0 !important;
+    max-width: min(1320px, 95vw) !important;
+    padding: 14px 36px 14px !important;
+    gap: 24px !important;
+  }
+
+  html body .hero-kicker {
+    font-size: 11px !important;
+    padding: 5px 14px !important;
+    margin-bottom: 10px !important;
+  }
+
+  html body .hero h1 {
+    font-size: clamp(32px, 3.6vw, 48px) !important;
+    line-height: 1.08 !important;
+    margin: 0 0 10px !important;
+  }
+
+  html body .hero p {
+    font-size: clamp(14px, 1.25vw, 16px) !important;
+    line-height: 1.55 !important;
+    margin: 0 0 14px !important;
+    max-width: 650px !important;
+  }
+
+  html body .hero .channel-link {
+    margin-bottom: 12px !important;
+    padding: 6px 14px !important;
+    font-size: 12.5px !important;
+  }
+
+  html body .hero-cta {
+    gap: 8px !important;
+  }
+
+  html body .hero-cta .btn-primary,
+  html body .hero-cta .btn-ghost {
+    font-size: 13px !important;
+    padding: 10px 15px !important;
+    border-radius: 11px !important;
+    white-space: nowrap !important;
+  }
+
+  html body .hero-visual {
+    flex: 0.45 !important;
+  }
+
+  html body .hero-visual img.hero-logo {
+    width: min(180px, 70%) !important;
+  }
+
+  /* Desktop Min Rock & Bubble side-docked di pojok kanan bawah (rendah, anti-nutup Flash Sale) */
+  html body #rockchat,
+  html body .rockchat {
+    right: 18px !important;
+    bottom: 18px !important;
+    left: auto !important;
+    z-index: 93 !important;
+  }
+
+  html body .rc-wrap,
+  html body .rc-btn {
+    width: 110px !important;
+    height: 110px !important;
+  }
+
+  html body #rcBubbleWrap {
+    right: 134px !important;
+    bottom: 26px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1480px) {
+  html body header .headnav .hnico {
+    display: none !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1380px) {
+  html body header {
+    gap: 6px !important;
+    padding: 0 14px !important;
+  }
+
+  html body header .brand img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  html body header .brand .brandshine {
+    font-size: 14px !important;
+  }
+
+  html body header .headnav a {
+    font-size: 11.5px !important;
+    padding: 5px 5.5px !important;
+  }
+
+  html body header .searchwrap {
+    flex: 1 1 120px !important;
+    min-width: 115px !important;
+    max-width: 185px !important;
+  }
+
+  html body header #searchInput {
+    padding: 6px 24px 6px 28px !important;
+    font-size: 12px !important;
+    height: 32px !important;
+  }
+
+  html body header .headicons {
+    gap: 4px !important;
+  }
+
+  html body header .headicons .cartbtn {
+    padding: 5px 7px !important;
+    font-size: 11px !important;
+    height: 31px !important;
+    gap: 3px !important;
+  }
+
+  html body header .headicons .cartbtn small {
+    min-width: 18px !important;
+    height: 18px !important;
+    font-size: 10.5px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1199px) {
+  html body header .headnav a.headnav-extra {
+    display: none !important;
+  }
+}
+
+/* 13E. Mobile (<= 900px): Botnav 5 Tombol Lega + Min Rock Side-Docked + Hero Compact */
+@media (max-width: 900px) {
+  html body {
+    padding-bottom: 84px !important;
+  }
+
+  html body #botnav,
+  html body .botnav {
+    display: flex !important;
+    background: linear-gradient(180deg, rgba(6, 10, 24, 0.92), rgba(4, 7, 18, 0.98)) !important;
+    border-top: 1px solid rgba(212, 175, 55, 0.24) !important;
+    padding: 4px 6px calc(6px + env(safe-area-inset-bottom)) !important;
+    box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.55) !important;
+  }
+
+  html body #botnav .bnitem {
+    min-height: 46px !important;
+    padding: 4px 4px !important;
+    gap: 3px !important;
+  }
+
+  html body #botnav .bnitem .bnico {
+    font-size: 19px !important;
+    line-height: 1 !important;
+  }
+
+  html body #botnav .bnitem .bnlbl {
+    font-size: clamp(9.5px, 2.5vw, 11px) !important;
+    letter-spacing: 0 !important;
+    font-weight: 600 !important;
+    margin-top: 1px !important;
+  }
+
+  html body #botnav .bnhome-bubble {
+    width: 42px !important;
+    height: 42px !important;
+    border: 1px solid rgba(212, 175, 55, 0.38) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55) !important;
+  }
+
+  html body #botnav .bnitem.bnitem-home {
+    top: -8px !important;
+  }
+
+  html body #rockchat,
+  html body .rockchat {
+    right: 8px !important;
+    bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+    left: auto !important;
+    z-index: 93 !important;
+  }
+
+  html body .rc-wrap,
+  html body .rc-btn {
+    width: 78px !important;
+    height: 78px !important;
+  }
+
+  html body #rcBubbleWrap {
+    right: 90px !important;
+    bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html body .hero-visual {
+    display: none !important;
+  }
+
+  html body .hero-kicker {
+    font-size: 9px !important;
+    padding: 3px 9px !important;
+    margin: 0 auto 5px !important;
+    line-height: 1.25 !important;
+  }
+
+  html body .hero h1 {
+    font-size: clamp(24px, 6.6vw, 31px) !important;
+    margin: 0 0 5px !important;
+  }
+
+  html body .hero p {
+    font-size: 12px !important;
+    line-height: 1.42 !important;
+    margin: 0 auto 6px !important;
+  }
+
+  html body .hero .channel-link {
+    margin: 0 auto 6px !important;
+    padding: 5px 11px !important;
+    font-size: 11px !important;
+  }
+
+  html body .hero-cta {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  html body .hero-cta .btn-primary,
+  html body .hero-cta .btn-ghost {
+    width: 100% !important;
+    padding: 8px 6px !important;
+    font-size: 11.5px !important;
+    border-radius: 10px !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
 
 
 

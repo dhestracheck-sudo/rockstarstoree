@@ -14,29 +14,29 @@ export default function MegaSlider() {
               {"★ ROCKSTAR.STORE ★"}
             </div>
             <p className="mega-title-w" data-i18n="sl1_t">
-              {"MALU SAMA TEMAN?"}
+              {"KOLEKSI EKSKLUSIF"}
             </p>
-            <p className="mega-title-g" style={{ fontSize: "clamp(34px,6.5vw,70px)" }} data-i18n="sl1_g">
-              {"KACUNG DI ROBLOX?"}
+            <p className="mega-title-g" style={{ fontSize: "clamp(32px,6vw,64px)" }} data-i18n="sl1_g">
+              {"KELAS SULTAN ROBLOX"}
             </p>
             <p className="mega-sub" data-i18n-html="sl1_sub">
-              {"TENANG, ROCKSTAR.STORE "}
+              {"KURASI "}
               <span className="mega-blue">
-                {"SOLUSINYA"}
+                {"PREMIUM & PRIORITAS"}
               </span>
             </p>
             <p className="mega-tag" data-i18n-html="sl1_tag">
-              {"ITEM "}
-              <b>
-                {"PREMIUM"}
-              </b>
-              {" DIJAMIN LANGSUNG "}
+              {"AKUN "}
               <b>
                 {"SEPUH"}
               </b>
-              {" DAN BIKIN "}
+              {", BRAINROT "}
               <b>
-                {"PERCAYA DIRI"}
+                {"LANGKA"}
+              </b>
+              {" & JOKI "}
+              <b>
+                {"BERGENGSI"}
               </b>
             </p>
             <div className="mega-cta" style={{ justifyContent: "center" }}>

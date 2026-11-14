@@ -1905,13 +1905,16 @@ function applyDeepLink(preserveScrollPosition){
 
 function syncCart(){
 
-  document.getElementById("cartCount").innerText = cart.length;
+  const n = cart.length;
+  const cc = document.getElementById("cartCount");
+  if(cc){ cc.innerText = n; cc.setAttribute("data-count", String(n)); }
 
-  document.getElementById("total").innerText = cart.length;
+  const tot = document.getElementById("total");
+  if(tot){ tot.innerText = n; tot.setAttribute("data-count", String(n)); }
 
   const mc = document.getElementById("mnavCartCount");
 
-  if(mc) mc.innerText = cart.length;
+  if(mc) mc.innerText = n;
 
 }
 

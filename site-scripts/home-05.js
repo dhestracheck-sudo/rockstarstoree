@@ -302,11 +302,11 @@ function fitMega(){
 
     if(!max) return;
 
-    const H = Math.max(max, 380);
+    const H = Math.max(max, 270);
 
     slides.forEach(function(s){
       s.style.height = H + "px";
-      s.style.minHeight = "380px";
+      s.style.minHeight = "270px";
       s.style.maxHeight = "none";
     });
 

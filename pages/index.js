@@ -11,7 +11,7 @@ import HomeArticles from '../components/HomeArticles';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261103", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261114", "/site-scripts/home-08.js?v=1794674500000", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261115", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261115", "/site-scripts/home-08.js?v=20261115a", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
 
 
 
@@ -1145,8 +1145,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
 
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
-        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261114" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=1794674500000" />
+        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261115" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261115a" />
 
         {"\r\n"}
 
@@ -1406,7 +1406,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             <a href="/" onClick={(event) => { goHome(); event.preventDefault(); return false; }}>
 
-              {"🏠 "}
+              <span className="hnico" aria-hidden="true">{"🏠 "}</span>
 
               <span data-i18n="nav_home">
 
@@ -1418,9 +1418,9 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             {"\n    "}
 
-            <a href="/faq">
+            <a href="/faq" className="headnav-extra">
 
-              {"❓ "}
+              <span className="hnico" aria-hidden="true">{"❓ "}</span>
 
               <span>
 
@@ -1432,9 +1432,9 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             {"\n    "}
 
-            <a href="/berita">
+            <a href="/berita" className="headnav-extra">
 
-              {"📰 "}
+              <span className="hnico" aria-hidden="true">{"📰 "}</span>
 
               <span>
 
@@ -1448,7 +1448,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             <a href="?tab=akun" onClick={(event) => { goToAkun(); event.preventDefault(); return false; }}>
 
-              {"👤 "}
+              <span className="hnico" aria-hidden="true">{"👤 "}</span>
 
               <span data-i18n="nav_akun">
 
@@ -1462,7 +1462,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             <a href="?tab=brainrot" onClick={(event) => { goToBrainrot(); event.preventDefault(); return false; }}>
 
-              {"🧠 "}
+              <span className="hnico" aria-hidden="true">{"🧠 "}</span>
 
               <span data-i18n="nav_brainrot_bn">
 
@@ -1476,7 +1476,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             <a href="?tab=joki" onClick={(event) => { goToJoki(); event.preventDefault(); return false; }}>
 
-              {"🏆 "}
+              <span className="hnico" aria-hidden="true">{"🏆 "}</span>
 
               <span data-i18n="nav_joki">
 
@@ -1866,7 +1866,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             </span>
 
-            {" KAMU 🇮🇩🇲🇾"}
+            {" KAMU"}
 
           </h1>
 
@@ -1874,41 +1874,15 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
       <p data-i18n-html="hero_p">
 
-        {"Rockstar Store menyediakan brainrot "}
+        {"Pusat "}
 
-        <b style={{ color: "var(--blue2)" }}>premium</b>
+        <b style={{ color: "var(--gold2)" }}>{"Brainrot Langka"}</b>
 
-        {", akun "}
+        {", "}
 
-        <b style={{ color: "var(--blue2)" }}>premium</b>
+        <b style={{ color: "var(--gold2)" }}>{"Akun Sepuh"}</b>
 
-        {", dan jasa joki "}
-
-        <b style={{ color: "var(--blue2)" }}>profesional</b>
-
-        {" yang bikin Roblox-mu makin "}
-
-        <b style={{ color: "var(--blue2)" }}>sepuh</b>
-
-        {" dan berkelas "}
-
-        <b style={{ color: "var(--blue2)" }}>
-
-          {"sultan"}
-
-        </b>
-
-        {", serta membantumu "}
-
-        <b style={{ color: "var(--blue2)" }}>menang</b>
-
-        {" di setiap map yang kamu mainkan. Sudah pasti bikin temanmu iri dan kepanasan. "}
-
-        <b style={{ color: "var(--blue2)" }}>
-
-          {"Waktunya naik kelas dan mendominasi setiap permainan! 🚀"}
-
-        </b>
+        {", Top Up Robux & Joki Profesional — garansi aman 100%, proses kilat, dan siap mendominasi setiap map."}
 
       </p>
 
@@ -2570,17 +2544,12 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\r\n  "}
         <button className="bnitem" data-page="akun" onClick={(event) => { bnGo('akun') }} title="Beli Akun Sepuh Roblox">
           <span className="bnico">{"👤"}</span>
-          <span className="bnlbl" data-i18n="nav_akun_bn">{"Akun Sepuh"}</span>
+          <span className="bnlbl" data-i18n="nav_akun_bn">{"Akun"}</span>
         </button>
         {"\r\n  "}
         <button className="bnitem" data-page="brainrot" onClick={(event) => { bnGo('brainrot') }} title="Brainrot">
           <span className="bnico">{"🧠"}</span>
           <span className="bnlbl" data-i18n="nav_brainrot_bn">{"Brainrot"}</span>
-        </button>
-        {"\r\n  "}
-        <button className="bnitem flash" data-page="flash" onClick={(event) => { goFlash() }} title="Flash Sale">
-          <span className="bnico">{"⚡"}</span>
-          <span className="bnlbl" data-i18n="nav_flash_bn">{"Flash Sale"}</span>
         </button>
         {"\r\n  "}
         <button className="bnitem bnitem-home" data-page="home" onClick={(event) => { bnGo('home') }} title="Beranda">
@@ -2592,18 +2561,13 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\r\n  "}
         <button className="bnitem" data-page="joki" onClick={(event) => { bnGo('joki') }} title="Joki Sepuh Roblox">
           <span className="bnico">{"🏆"}</span>
-          <span className="bnlbl" data-i18n="nav_joki_bn">{"Joki Sepuh"}</span>
+          <span className="bnlbl" data-i18n="nav_joki_bn">{"Joki"}</span>
         </button>
         {"\r\n  "}
         <a className="bnitem" data-page="spin" href="/spin" style={{ textDecoration: "none" }} title="Lucky Spin Grand Prize">
           <span className="bnico">{"🎟️"}</span>
           <span className="bnlbl" style={{ color: "#f3d27a", fontWeight: 700 }}>{"Spin"}</span>
         </a>
-        {"\r\n  "}
-        <button className="bnitem" data-page="faq" onClick={(event) => { bnGo('faq') }} title="FAQ">
-          <span className="bnico">{"❓"}</span>
-          <span className="bnlbl">{"FAQ"}</span>
-        </button>
         {"\r\n  "}
         <div className="wapop" id="testiPop" style={{ display: "none" }}>
 
@@ -2651,7 +2615,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
           {"🛒"}
 
-          <b id="total">
+          <b id="total" data-count="0">
 
             {"0"}
 
