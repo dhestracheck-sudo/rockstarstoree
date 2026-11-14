@@ -514,5 +514,130 @@
   }
 }
 
+/* ===== 7. MIN ROCK CHAT BUBBLE DENGAN ANIMASI FLOATING & LOGO ROCKSTAR (RINGAN HP KENTANG) ===== */
+
+/* 7A. Animasi Mengapung Halus pada Bubble (Compositor Thread - 0% CPU Overhead) */
+@keyframes rcBubbleFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+#rcBubbleWrap {
+  animation: rcBubbleFloat 3s ease-in-out infinite !important;
+  will-change: transform !important;
+}
+
+/* 7B. Styling Bubble Min Rock dengan Border Mewah */
+.rc-bubble {
+  background: linear-gradient(145deg, rgba(13, 20, 38, 0.94), rgba(6, 8, 19, 0.96)) !important;
+  border: 1px solid rgba(111, 139, 255, 0.3) !important;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.6), 0 0 16px rgba(43, 78, 255, 0.16) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.rc-bubble:hover {
+  border-color: rgba(243, 210, 122, 0.5) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(243, 210, 122, 0.22) !important;
+}
+
+/* 7C. Baris Header Brand Rockstar & Status Online */
+.rc-bubble-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  margin-bottom: 5px !important;
+  padding-bottom: 4px !important;
+  border-bottom: 1px solid rgba(111, 139, 255, 0.16) !important;
+}
+
+.rc-brand-icon {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 3px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+  animation: rcStarShine 3s ease-in-out infinite !important;
+}
+
+@keyframes rcStarShine {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 3px rgba(243, 210, 122, 0.4));
+  }
+  50% {
+    transform: scale(1.1) rotate(4deg);
+    filter: drop-shadow(0 0 8px rgba(243, 210, 122, 0.9));
+  }
+}
+
+.rc-brand-name {
+  font-size: 9.5px !important;
+  font-weight: 700 !important;
+  color: #f3d27a !important;
+  letter-spacing: 0.3px !important;
+  white-space: nowrap !important;
+  text-transform: uppercase !important;
+}
+
+.rc-live-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 6px #10b981 !important;
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  animation: rcLivePulse 2s ease-in-out infinite !important;
+}
+
+@keyframes rcLivePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+/* 7D. Responsif Mobile & HP Kentang */
+@media (max-width: 768px) {
+  .rc-bubble {
+    max-width: 135px !important;
+    font-size: 10px !important;
+    padding: 7px 9px !important;
+    backdrop-filter: none !important; /* Nonaktifkan blur GPU berat di HP agar hemat baterai */
+    -webkit-backdrop-filter: none !important;
+    background: rgba(8, 12, 26, 0.96) !important;
+  }
+  .rc-brand-icon {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  .rc-brand-name {
+    font-size: 8.5px !important;
+  }
+  .rc-live-dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+}
+
+/* 7E. Menghormati Mode Hemat Baterai Pengguna */
+@media (prefers-reduced-motion: reduce) {
+  #rcBubbleWrap,
+  .rc-brand-icon,
+  .rc-live-dot {
+    animation: none !important;
+  }
+}
+
 
 

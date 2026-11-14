@@ -1001,7 +1001,7 @@ function getHomeSeo(query = {}) {
 
   const rawCategory = String(firstQueryValue(query.cat) || "")
 
-    .replace(/[<> -]/g, "")
+    .replace(/[<>\x00-\x1f]/g, "")
 
     .trim()
 
@@ -2670,6 +2670,16 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         <div id="rcBubbleWrap">
 
           <div className="rc-bubble" id="rcBubble" onClick={(event) => { openWaChat() }} title="Chat WhatsApp Min Rock">
+
+            <div className="rc-bubble-brand">
+
+              <img src="/optimized/ROCKSTARLOGO-72.webp" alt="Rockstar" className="rc-brand-icon" width="14" height="14" loading="lazy" />
+
+              <span className="rc-brand-name">Rockstar CS</span>
+
+              <span className="rc-live-dot" title="Online" />
+
+            </div>
 
             <span data-i18n-html="rc_bub">
 
