@@ -780,5 +780,63 @@
   }
 }
 
+/* ===== 9. LINGKARAN TOMBOL KERANJANG DI MODE MOBILE (LEBIH MUNGIL, SLEEK & COMPACT) ===== */
+@media (max-width: 900px) {
+  body .fab,
+  .fab {
+    left: 16px !important;
+    bottom: calc(78px + env(safe-area-inset-bottom)) !important;
+  }
+  body .fab .fab-main,
+  .fab .fab-main {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    max-width: 48px !important;
+    font-size: 19px !important;
+    box-shadow: 0 8px 22px rgba(43, 78, 255, 0.45) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+  }
+  body .fab .fab-main b,
+  .fab .fab-main b {
+    min-width: 19px !important;
+    height: 19px !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    top: -2px !important;
+    right: -2px !important;
+    padding: 0 4px !important;
+    box-shadow: 0 2px 6px rgba(244, 63, 94, 0.5) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body .fab,
+  .fab {
+    left: 14px !important;
+    bottom: calc(76px + env(safe-area-inset-bottom)) !important;
+  }
+  body .fab .fab-main,
+  .fab .fab-main {
+    width: 45px !important;
+    height: 45px !important;
+    min-width: 45px !important;
+    max-width: 45px !important;
+    font-size: 18px !important;
+  }
+  body .fab .fab-main b,
+  .fab .fab-main b {
+    min-width: 18px !important;
+    height: 18px !important;
+    font-size: 9.5px !important;
+    top: -2px !important;
+    right: -2px !important;
+  }
+}
+
 
 
