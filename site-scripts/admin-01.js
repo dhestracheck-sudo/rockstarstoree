@@ -25,7 +25,7 @@ function sbH(extra){
   return h;
 }
 function sbList(sheet){
-  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan", { headers: sbH() })
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan&_t=" + Date.now(), { headers: sbH({ "Cache-Control": "no-cache" }), cache: "no-store" })
     .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
 }
 function b64ToBlob(b64, mime){
@@ -788,7 +788,7 @@ function catList(){
   ALL_ITEMS.forEach(o => {
     const nm = String(o.name || "").trim();
     if (nm.indexOf("INFO_") === 0) return;
-    const k = String(o.kategori || "").trim();
+    const k = String(o.kategori || (nm.indexOf("CAT:") === 0 ? nm.slice(4) : "")).trim();
     if (k && k !== "INFO" && cats.indexOf(k) === -1) cats.push(k);
   });
   cats.sort();
@@ -1625,7 +1625,10 @@ function bumpCatalogVersion(cause){
   clearTimeout(_bumpVerTimer);
   _bumpVerTimer = setTimeout(async function(){
     const newVer = String(Date.now());
-    try { localStorage.setItem("rs_catalog_ver", newVer); } catch(_) {}
+    try {
+      ["rs_Brainrot","rs_Topup","rs_Akun","rs_Joki","rs_Info","rs_last_full_sync"].forEach(k => localStorage.removeItem(k));
+      localStorage.setItem("rs_catalog_ver", newVer);
+    } catch(_) {}
     try {
       if (typeof BroadcastChannel !== "undefined") {
         const bc = new BroadcastChannel("rockstar_catalog_sync_v1");
@@ -1634,15 +1637,23 @@ function bumpCatalogVersion(cause){
       }
     } catch(_) {}
     try {
-      await fetch(SB_URL + "/rest/v1/info?name=eq.INFO_CATALOG_VERSION", {
+      const r = await fetch(SB_URL + "/rest/v1/info?name=eq.INFO_CATALOG_VERSION", {
         method: "PATCH",
-        headers: sbH({ Prefer: "return=minimal" }),
+        headers: sbH({ Prefer: "return=representation" }),
         body: JSON.stringify({ deskripsi: newVer })
       });
+      const updated = r.ok ? await r.json() : [];
+      if (!Array.isArray(updated) || updated.length === 0) {
+        await fetch(SB_URL + "/rest/v1/info", {
+          method: "POST",
+          headers: sbH({ Prefer: "return=minimal" }),
+          body: JSON.stringify({ name: "INFO_CATALOG_VERSION", kategori: "INFO", price: 0, coret: 0, deskripsi: newVer, stock: 0, soldout: "", image: "", sold: 0, dilihat: 0 })
+        });
+      }
     } catch(err) {
       console.warn("[Admin] bumpCatalogVersion error:", err);
     }
-  }, 250);
+  }, 150);
 }
 
 async function sbAction(action, tbl, body, signal){

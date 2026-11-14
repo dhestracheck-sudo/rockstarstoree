@@ -2869,6 +2869,10 @@ function wishAdd(page, i, j){
 function loadCached(sheet){
 
   try {
+    if (localStorage.getItem("rs_cache_schema") !== "v20261114_authentic") {
+      ["rs_Brainrot","rs_Topup","rs_Akun","rs_Joki","rs_Info","rs_last_full_sync","rs_catalog_ver"].forEach(function(k){ localStorage.removeItem(k); });
+      localStorage.setItem("rs_cache_schema", "v20261114_authentic");
+    }
 
     const raw = localStorage.getItem("rs_" + sheet);
 
@@ -3296,11 +3300,6 @@ function loadLiveStock(forceNetwork){
     if(hasWarmCache){ try { paintHot(); } catch(e) {} }
     try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
     hideLoader();
-
-    const lastSync = Number(localStorage.getItem("rs_last_full_sync") || 0);
-    if(!forceNetwork && hasWarmCache && (Date.now() - lastSync) < 3000){
-      return Promise.resolve(false);
-    }
   } catch(e) {}
 
   const once = () => Promise.all([fetchSheet("Brainrot", "__stockCb"), fetchSheet("Topup", "__topupCb"), fetchSheet("Akun", "__akunCb"), fetchSheet("Joki", "__jokiCb"), fetchSheet("Info", "__infoCb")]);
@@ -3447,7 +3446,7 @@ document.getElementById("searchInput").addEventListener("input", searchType); } 
 
 });
 
-// Sinkronisasi instan real-time saat produk baru diupload di admin
+// Sinkronisasi instan real-time saat produk/kategori baru diupload di admin
 try {
   if (typeof BroadcastChannel !== "undefined") {
     var _catBc = new BroadcastChannel("rockstar_catalog_sync_v1");
@@ -3457,25 +3456,31 @@ try {
       }
     };
   }
+  window.addEventListener("storage", function(ev){
+    if(ev && ev.key === "rs_catalog_ver" && ev.newValue && ev.newValue !== ev.oldValue){
+      loadLiveStock(true);
+    }
+  });
 } catch(_) {}
 
 var _lastQuickCheck = 0;
 async function checkCatalogVersionQuick(){
   if(document.visibilityState !== "visible") return;
   var now = Date.now();
-  if(now - _lastQuickCheck < 5000) return;
+  if(now - _lastQuickCheck < 3000) return;
   _lastQuickCheck = now;
   try {
     var curLocal = localStorage.getItem("rs_catalog_ver") || "";
-    var res = await fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq.INFO_CATALOG_VERSION", {
-      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY },
+    var res = await fetch(SB_URL + "/rest/v1/info?select=deskripsi&name=eq.INFO_CATALOG_VERSION&_t=" + now, {
+      headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Cache-Control": "no-cache" },
       cache: "no-store"
     });
     if(!res.ok) return;
     var rows = await res.json();
     if(Array.isArray(rows) && rows[0]){
       var remoteVer = String(rows[0].deskripsi || "").trim();
-      if(remoteVer && curLocal && remoteVer !== curLocal){
+      if(remoteVer && remoteVer !== curLocal){
+        localStorage.setItem("rs_catalog_ver", remoteVer);
         loadLiveStock(true);
       }
     }
@@ -3493,4 +3498,4 @@ setInterval(function(){
   if(document.visibilityState === "visible"){
     checkCatalogVersionQuick();
   }
-}, 18000);
+}, 8000);

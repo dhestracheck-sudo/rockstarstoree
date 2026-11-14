@@ -11,7 +11,7 @@ const oswald = Oswald({
 });
 
 const pageScripts = [
-  '/site-scripts/admin-01.js?v=clean-orig-20261113-1',
+  '/site-scripts/admin-01.js?v=sb-sync-authentic-20261114',
   '/site-scripts/admin-02.js?v=admin-sold-20261110-6',
 ];
 
