@@ -30,29 +30,9 @@
     window.addEventListener(ev, unlockAudio, true);
   });
 
-  // 1. Tactile Click Sound (Untuk SEMUA kartu produk, tombol navigasi, beranda, tab, menu, filter)
+  // 1. Tactile Click Sound (Dinonaktifkan / Dimatikan sesuai permintaan user)
   function playClickSound() {
-    try {
-      var ctx = getAudioContext();
-      if (!ctx) return;
-      var now = ctx.currentTime;
-
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(450, now);
-      osc.frequency.exponentialRampToValueAtTime(180, now + 0.045);
-
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.045);
-    } catch(e){}
+    return;
   }
 
   // 2. Crystal Chime Reward Sound (Untuk aksi belanja: Beli, Keranjang, Checkout, Wishlist)
