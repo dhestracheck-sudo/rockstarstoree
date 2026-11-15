@@ -12,7 +12,7 @@ import { fetchTableCatalog, formatRupiah } from '../lib/catalog-ssr';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261115", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261115", "/site-scripts/home-08.js?v=20261115a", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
+const pageScripts = ["/site-scripts/home-02.js?v=perf-20261026", "/site-scripts/home-03.js?v=perf-20261026", "/site-scripts/home-04.js", "/site-scripts/home-05.js?v=desktop-fix-20261115", "/site-scripts/home-06.js", "/site-scripts/home-07.js?v=autoupdate-20261114", "/site-scripts/home-08-lang.js?v=lang-restore-20261115b", "/site-scripts/home-08.js?v=20261115a", "/site-scripts/backnav-01.js?v=backnav-20261031", "/site-scripts/confetti-01.js?v=confetti-20261031b", "/site-scripts/dopamine-booster.js?v=smooth-dopamine-v8"];
 
 
 
@@ -1286,7 +1286,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
 
         <link rel="preload" as="image" href="/optimized/bg.webp" fetchPriority="high" />
-        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-fomo-fix-20261115" />
+        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=lang-restore-20261115b" />
         <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261115a" />
 
         {"\r\n"}
@@ -2003,7 +2003,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             </span>
 
-            {" KAMU"}
+            {" KAMU 🇮🇩🇲🇾"}
 
           </h1>
 
@@ -2011,15 +2011,41 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
       <p data-i18n-html="hero_p">
 
-        {"Pusat "}
+        {"Rockstar Store menyediakan brainrot "}
 
-        <b style={{ color: "var(--gold2)" }}>{"Brainrot Langka"}</b>
+        <b style={{ color: "var(--blue2)" }}>premium</b>
 
-        {", "}
+        {", akun "}
 
-        <b style={{ color: "var(--gold2)" }}>{"Akun Sepuh"}</b>
+        <b style={{ color: "var(--blue2)" }}>premium</b>
 
-        {", Top Up Robux & Joki Profesional — garansi aman 100%, proses kilat, dan siap mendominasi setiap map."}
+        {", dan jasa joki "}
+
+        <b style={{ color: "var(--blue2)" }}>profesional</b>
+
+        {" yang bikin Roblox-mu makin "}
+
+        <b style={{ color: "var(--blue2)" }}>sepuh</b>
+
+        {" dan berkelas "}
+
+        <b style={{ color: "var(--blue2)" }}>
+
+          {"sultan"}
+
+        </b>
+
+        {", serta membantumu "}
+
+        <b style={{ color: "var(--blue2)" }}>menang</b>
+
+        {" di setiap map yang kamu mainkan. Sudah pasti bikin temanmu iri dan kepanasan. "}
+
+        <b style={{ color: "var(--blue2)" }}>
+
+          {"Waktunya naik kelas dan mendominasi setiap permainan! 🚀"}
+
+        </b>
 
       </p>
 
