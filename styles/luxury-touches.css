@@ -1559,10 +1559,102 @@ html body .hero h1 span {
   }
 }
 
+/* ===== 14. OBSIDIAN SAPPHIRE & CHAMPAGNE GOLD BACKGROUND HARMONY (NON-JOKI SLIDES + QUIET CANVAS) ===== */
 
+/* 14A. Kanvas Utama Lebih Tenang & Nyaman Dipandang Lama (Redam Siluet Ramai bg.webp di Area Scroll) */
+html body::before {
+  background:
+    radial-gradient(900px 320px at 50% -60px, rgba(212, 175, 55, 0.055), transparent 58%),
+    radial-gradient(850px 360px at 88% -40px, rgba(43, 78, 255, 0.13), transparent 62%),
+    radial-gradient(720px 320px at 8% 4%, rgba(30, 64, 175, 0.09), transparent 62%),
+    linear-gradient(180deg, rgba(5, 8, 18, 0.91) 0%, rgba(5, 8, 18, 0.96) 52%, rgba(4, 7, 16, 0.985) 100%),
+    url("/optimized/bg.webp") center top / cover no-repeat,
+    #050812 !important;
+}
 
+/* 14B. Bingkai & Background Hero Banner Slider (Semua Slide KECUALI Slide Joki .s5 tetap utuh) */
+html body .mega-track {
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  box-shadow: 0 22px 64px rgba(0, 0, 0, 0.68), 0 0 28px rgba(43, 78, 255, 0.14) !important;
+}
 
+html body .mega-slide:not(.s5) {
+  background:
+    radial-gradient(660px 280px at 50% 18%, rgba(212, 175, 55, 0.11), transparent 64%),
+    radial-gradient(760px 340px at 72% 16%, rgba(43, 78, 255, 0.2), transparent 64%),
+    radial-gradient(520px 280px at 14% 88%, rgba(56, 130, 246, 0.1), transparent 64%),
+    linear-gradient(120deg, #040712 0%, #08122c 48%, #0c1b44 70%, #040712 100%) !important;
+}
 
+html body .mega-slide.s2:not(.s5) {
+  background:
+    radial-gradient(660px 280px at 50% 18%, rgba(243, 210, 122, 0.1), transparent 64%),
+    radial-gradient(740px 320px at 72% 14%, rgba(139, 92, 246, 0.22), transparent 62%),
+    radial-gradient(500px 280px at 16% 88%, rgba(217, 70, 239, 0.1), transparent 62%),
+    linear-gradient(120deg, #050713 0%, #120d2d 48%, #191240 70%, #050713 100%) !important;
+}
 
+html body .mega-slide.s3:not(.s5) {
+  background:
+    radial-gradient(660px 280px at 50% 18%, rgba(243, 210, 122, 0.1), transparent 64%),
+    radial-gradient(740px 320px at 72% 14%, rgba(16, 185, 129, 0.18), transparent 62%),
+    radial-gradient(500px 280px at 16% 88%, rgba(45, 212, 191, 0.09), transparent 62%),
+    linear-gradient(120deg, #040812 0%, #06191e 48%, #092629 70%, #040812 100%) !important;
+}
 
+html body .mega-slide:not(.s5)::before {
+  background: repeating-linear-gradient(115deg, transparent 0 60px, rgba(147, 197, 253, 0.04) 60px 92px, transparent 92px 190px) !important;
+}
+
+/* Tipografi & Pill Slide Non-Joki: Kontras Pearl-Champagne Gold Tajam di Atas Obsidian */
+html body .mega-slide:not(.s5) .mega-brand {
+  color: #f3d27a !important;
+  text-shadow: 0 0 12px rgba(243, 210, 122, 0.28) !important;
+}
+
+html body .mega-slide:not(.s5) .mega-title-g,
+html body .mega-slide:not(.s5) .mega-gold {
+  background: linear-gradient(180deg, #ffffff 0%, #fff4d1 28%, #f3d27a 60%, #d4af37 86%, #fbe8a6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+html body .mega-slide:not(.s5) .mega-blue {
+  color: #8ab8ff !important;
+  -webkit-text-fill-color: #8ab8ff !important;
+}
+
+html body .mega-slide:not(.s5) .mega-badge:not(.join) {
+  background: rgba(6, 10, 24, 0.72) !important;
+  border: 1px solid rgba(243, 210, 122, 0.44) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+}
+
+html body .mega-dots .mega-dot.on,
+html body .mega-dots i.on {
+  background: linear-gradient(90deg, #f3d27a, #d4af37) !important;
+  box-shadow: 0 0 10px rgba(243, 210, 122, 0.55) !important;
+}
+
+/* 14C. Harmoni Hero Kicker, Trust Marquee & Hot Product Banner */
+html body .hero-kicker {
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(243, 210, 122, 0.34) !important;
+  background: linear-gradient(135deg, rgba(16, 28, 66, 0.74), rgba(7, 11, 24, 0.88)) !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+html body .trust-marquee {
+  background: linear-gradient(90deg, rgba(4, 7, 16, 0.96), rgba(13, 24, 58, 0.65) 50%, rgba(4, 7, 16, 0.96)) !important;
+  border-top: 1px solid rgba(212, 175, 55, 0.18) !important;
+  border-bottom: 1px solid rgba(111, 139, 255, 0.18) !important;
+}
+
+html body .hot-product-banner {
+  background: linear-gradient(120deg, rgba(7, 11, 24, 0.96) 0%, rgba(14, 24, 56, 0.88) 50%, rgba(7, 11, 24, 0.96) 100%) !important;
+  border: 1px solid rgba(111, 139, 255, 0.24) !important;
+  border-top: 1px solid rgba(243, 210, 122, 0.36) !important;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
 
