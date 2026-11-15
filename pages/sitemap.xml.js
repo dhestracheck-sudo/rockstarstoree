@@ -1,4 +1,5 @@
 import { ARTICLES } from "../data/articles";
+import { getArticleUpdatedIso } from "../data/article-enhancements";
 
 const SUPABASE_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
@@ -59,13 +60,13 @@ export async function getServerSideProps({ res }) {
 
   const mainPages = [
     { loc: "https://rockstarstore.id/", changefreq: "daily", priority: "1.0" },
+    { loc: "https://rockstarstore.id/brainrot", changefreq: "daily", priority: "0.95" },
+    { loc: "https://rockstarstore.id/akun-sepuh", changefreq: "daily", priority: "0.95" },
+    { loc: "https://rockstarstore.id/joki-roblox", changefreq: "daily", priority: "0.95" },
+    { loc: "https://rockstarstore.id/topup-robux", changefreq: "daily", priority: "0.95" },
     { loc: "https://rockstarstore.id/berita", changefreq: "daily", priority: "0.9" },
-    { loc: "https://rockstarstore.id/?tab=brainrot", changefreq: "daily", priority: "0.8" },
-    { loc: "https://rockstarstore.id/?tab=topup", changefreq: "daily", priority: "0.8" },
-    { loc: "https://rockstarstore.id/?tab=akun", changefreq: "daily", priority: "0.8" },
-    { loc: "https://rockstarstore.id/?tab=joki", changefreq: "daily", priority: "0.8" },
-    { loc: "https://rockstarstore.id/faq", changefreq: "monthly", priority: "0.6" },
-    { loc: "https://rockstarstore.id/spin", changefreq: "weekly", priority: "0.6" },
+    { loc: "https://rockstarstore.id/faq", changefreq: "monthly", priority: "0.7" },
+    { loc: "https://rockstarstore.id/spin", changefreq: "weekly", priority: "0.7" },
     { loc: "https://rockstarstore.id/llms.txt", changefreq: "weekly", priority: "0.4" },
     { loc: "https://rockstarstore.id/llms-full.txt", changefreq: "weekly", priority: "0.4" },
   ];
@@ -74,7 +75,10 @@ export async function getServerSideProps({ res }) {
     loc: `https://rockstarstore.id/berita/${a.slug}`,
     changefreq: "weekly",
     priority: "0.8",
-    lastmod: a.isoDate ? a.isoDate.slice(0, 10) : lastmod,
+    lastmod: (() => {
+      const updated = getArticleUpdatedIso(a.slug, a.isoDate);
+      return updated ? updated.slice(0, 10) : lastmod;
+    })(),
   }));
 
   const categories = (await Promise.all(PUBLIC_CATALOGS.map(categoryUrls))).flat();

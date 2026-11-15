@@ -742,12 +742,97 @@ export default function SpinPage() {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#060913" />
-        <title>Lucky Spin Grand Prize | Rockstar.Store</title>
+        <title>Lucky Spin Grand Prize Roblox (Tiket Rp 5.000) | Rockstar.Store</title>
         <meta
           name="description"
-          content="Tiket Lucky Spin Grand Prize Rockstar.Store - Menangkan 1.000 Robux atau Secret Brainrot!"
+          content="Ikut Lucky Spin Grand Prize Rockstar.Store hanya Rp 5.000/tiket! Berkesempatan menang 1.000 Robux atau item/pet Secret Brainrot Roblox dengan sistem undian adil & transparan."
         />
+        <meta
+          name="robots"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
+        <link rel="canonical" href="https://rockstarstore.id/spin" />
+        <link rel="alternate" hrefLang="id" href="https://rockstarstore.id/spin" />
+        <link rel="alternate" hrefLang="x-default" href="https://rockstarstore.id/spin" />
+        <link rel="preconnect" href="https://cdn.tailwindcss.com" crossOrigin="anonymous" />
         <link rel="icon" type="image/png" href="/ROCKSTARICON.png" sizes="192x192" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="id_ID" />
+        <meta property="og:site_name" content="Rockstar.Store" />
+        <meta property="og:title" content="Lucky Spin Grand Prize | Rockstar.Store" />
+        <meta
+          property="og:description"
+          content="Tiket Lucky Spin Grand Prize Rockstar.Store hanya Rp 5.000/tiket — Menangkan 1.000 Robux atau Secret Brainrot!"
+        />
+        <meta property="og:url" content="https://rockstarstore.id/spin" />
+        <meta property="og:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Lucky Spin Grand Prize | Rockstar.Store" />
+        <meta
+          name="twitter:description"
+          content="Tiket Lucky Spin Grand Prize Rockstar.Store hanya Rp 5.000/tiket — Menangkan 1.000 Robux atau Secret Brainrot!"
+        />
+        <meta name="twitter:image" content="https://rockstarstore.id/ROCKSTARLOGO.png" />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "BreadcrumbList",
+                  itemListElement: [
+                    { "@type": "ListItem", position: 1, name: "Beranda", item: "https://rockstarstore.id/" },
+                    { "@type": "ListItem", position: 2, name: "Lucky Spin Grand Prize", item: "https://rockstarstore.id/spin" },
+                  ],
+                },
+                {
+                  "@type": "WebPage",
+                  "@id": "https://rockstarstore.id/spin#webpage",
+                  url: "https://rockstarstore.id/spin",
+                  name: "Lucky Spin Grand Prize | Rockstar.Store",
+                  description:
+                    "Tiket Lucky Spin Grand Prize Rockstar.Store — Menangkan 1.000 Robux atau Secret Brainrot dengan sistem peluang proporsional transparan.",
+                  inLanguage: "id-ID",
+                  isPartOf: { "@id": "https://rockstarstore.id/#website" },
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://rockstarstore.id/spin#faq",
+                  mainEntity: [
+                    {
+                      "@type": "Question",
+                      name: "Berapa harga 1 tiket Lucky Spin Grand Prize di Rockstar.Store?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Harga 1 tiket Lucky Spin Grand Prize adalah Rp 5.000 tanpa syarat minimal pembelian produk lainnya.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Bagaimana cara perhitungan peluang menang di Lucky Spin Rockstar.Store?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Setiap tiket memperbesar potongan roda (slice) peserta secara proporsional terhadap total tiket yang terkumpul pada ronde aktif. Semua peserta dan persentase peluang dapat dilihat secara terbuka sebelum roda diputar.",
+                      },
+                    },
+                    {
+                      "@type": "Question",
+                      name: "Apakah hadiah Lucky Spin 1.000 Robux atau Secret Brainrot dikirim langsung?",
+                      acceptedAnswer: {
+                        "@type": "Answer",
+                        text: "Ya. Pemenang resmi akan langsung dihubungi dan diproses pengirimannya oleh Admin Rock melalui WhatsApp resmi Rockstar.Store (+62-896-6429-9571).",
+                      },
+                    },
+                  ],
+                },
+              ],
+            }),
+          }}
+        />
         <script src="https://cdn.tailwindcss.com"></script>
       </Head>
 
@@ -1011,6 +1096,76 @@ export default function SpinPage() {
               </div>
             </div>
           </div>
+
+          {/* SEO & GEO: Ringkasan Transparansi & FAQ Lucky Spin (cocok dengan FAQPage JSON-LD) */}
+          <section
+            aria-labelledby="spin-faq-title"
+            className="mt-10 bg-[#0E1628]/90 border border-slate-800 rounded-3xl p-6 sm:p-8"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div>
+                <h2 id="spin-faq-title" className="text-xl sm:text-2xl font-black text-white m-0">
+                  Panduan & Pertanyaan Umum Lucky Spin Grand Prize
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1 mb-0">
+                  Mekanisme tiket transparan oleh Rockstar.Store — Solusi Sepuh Roblox Indonesia & Malaysia.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href="/brainrot"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:border-blue-400 no-underline"
+                >
+                  Katalog Brainrot
+                </a>
+                <a
+                  href="/akun-sepuh"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:border-blue-400 no-underline"
+                >
+                  Akun Sepuh
+                </a>
+                <a
+                  href="/topup-robux"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:border-blue-400 no-underline"
+                >
+                  Top Up Robux
+                </a>
+                <a
+                  href="/berita"
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-slate-200 hover:border-blue-400 no-underline"
+                >
+                  Berita & Guide
+                </a>
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              <details className="bg-[#060913] border border-slate-800 rounded-2xl p-4" open>
+                <summary className="cursor-pointer font-bold text-sm text-white">
+                  Berapa harga 1 tiket Lucky Spin Grand Prize di Rockstar.Store?
+                </summary>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 mb-0">
+                  Harga 1 tiket Lucky Spin Grand Prize adalah Rp 5.000 tanpa syarat minimal pembelian produk lainnya.
+                </p>
+              </details>
+              <details className="bg-[#060913] border border-slate-800 rounded-2xl p-4">
+                <summary className="cursor-pointer font-bold text-sm text-white">
+                  Bagaimana cara perhitungan peluang menang di Lucky Spin Rockstar.Store?
+                </summary>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 mb-0">
+                  Setiap tiket memperbesar potongan roda (slice) peserta secara proporsional terhadap total tiket yang terkumpul pada ronde aktif. Semua peserta dan persentase peluang dapat dilihat secara terbuka sebelum roda diputar.
+                </p>
+              </details>
+              <details className="bg-[#060913] border border-slate-800 rounded-2xl p-4">
+                <summary className="cursor-pointer font-bold text-sm text-white">
+                  Apakah hadiah Lucky Spin 1.000 Robux atau Secret Brainrot dikirim langsung?
+                </summary>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 mb-0">
+                  Ya. Pemenang resmi akan langsung dihubungi dan diproses pengirimannya oleh Admin Rock melalui WhatsApp resmi Rockstar.Store (+62-896-6429-9571).
+                </p>
+              </details>
+            </div>
+          </section>
         </main>
 
         {/* ========================================== */}

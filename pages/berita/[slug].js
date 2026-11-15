@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { getArticleBySlug, getAllArticleSlugs } from "../../data/articles";
 import { ARTICLES_META } from "../../data/articles-meta";
+import { enhanceArticle } from "../../data/article-enhancements";
 
 export async function getStaticPaths() {
   const slugs = getAllArticleSlugs();
@@ -10,11 +11,23 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const article = getArticleBySlug(params.slug);
-  if (!article) {
+  const rawArticle = getArticleBySlug(params.slug);
+  if (!rawArticle) {
     return { notFound: true };
   }
-  const relatedArticles = ARTICLES_META.filter((a) => a.slug !== params.slug).slice(0, 2);
+  const article = enhanceArticle(rawArticle);
+  const sameCategory = ARTICLES_META.filter(
+    (a) => a.slug !== params.slug && a.category === article.category
+  );
+  const others = ARTICLES_META.filter(
+    (a) => a.slug !== params.slug && a.category !== article.category
+  );
+  const relatedArticles = [...sameCategory, ...others]
+    .slice(0, 4)
+    .map((rel) => ({
+      ...rel,
+      image: String(rel.image || "").replace(/\+/g, "%2B"),
+    }));
   return {
     props: {
       article,
@@ -28,6 +41,7 @@ export default function BeritaDetail({ article, relatedArticles }) {
   const canonicalUrl = `https://rockstarstore.id/berita/${article.slug}`;
   const fullImageUrl = `https://rockstarstore.id${article.image}`;
 
+  const modifiedDate = article.updatedAt || article.isoDate;
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -35,13 +49,13 @@ export default function BeritaDetail({ article, relatedArticles }) {
     "description": article.excerpt,
     "image": [fullImageUrl],
     "datePublished": article.isoDate,
-    "dateModified": article.isoDate,
+    "dateModified": modifiedDate,
     "inLanguage": "id-ID",
     "articleSection": article.category,
     "keywords": article.tags ? article.tags.join(", ") : "",
     "author": {
-      "@type": "Person",
-      "name": article.author,
+      "@type": "Organization",
+      "name": article.author ? `Rockstar.Store Editorial (${article.author})` : "Rockstar.Store Editorial",
       "url": "https://rockstarstore.id"
     },
     "publisher": {
@@ -50,7 +64,9 @@ export default function BeritaDetail({ article, relatedArticles }) {
       "url": "https://rockstarstore.id",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://rockstarstore.id/ROCKSTARLOGO.webp"
+        "url": "https://rockstarstore.id/ROCKSTARLOGO.png",
+        "width": 512,
+        "height": 512
       }
     },
     "mainEntityOfPage": {
@@ -84,6 +100,24 @@ export default function BeritaDetail({ article, relatedArticles }) {
     ]
   };
 
+  const faqList = Array.isArray(article.faqs) ? article.faqs : [];
+  const faqJsonLd =
+    faqList.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "@id": `${canonicalUrl}#faq`,
+          mainEntity: faqList.map((f) => ({
+            "@type": "Question",
+            name: f.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: f.answer,
+            },
+          })),
+        }
+      : null;
+
   const shareWaUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     `🔥 Baca berita Roblox terbaru: *${article.title}*\n\nBaca selengkapnya di: ${canonicalUrl}`
   )}`;
@@ -96,6 +130,8 @@ export default function BeritaDetail({ article, relatedArticles }) {
         <meta name="keywords" content={`${(article.tags || []).join(", ")}, berita roblox, update roblox, trik roblox, rockstar store`} />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         <link rel="canonical" href={canonicalUrl} />
+        <link rel="alternate" hrefLang="id" href={canonicalUrl} />
+        <link rel="alternate" hrefLang="x-default" href={canonicalUrl} />
         <meta property="og:site_name" content="Rockstar.Store" />
         <meta property="og:locale" content="id_ID" />
         <meta property="og:type" content="article" />
@@ -106,7 +142,7 @@ export default function BeritaDetail({ article, relatedArticles }) {
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="675" />
         <meta property="article:published_time" content={article.isoDate} />
-        <meta property="article:modified_time" content={article.isoDate} />
+        <meta property="article:modified_time" content={modifiedDate} />
         <meta property="article:section" content={article.category} />
         <meta property="article:author" content={article.author} />
         {(article.tags || []).map((t) => (
@@ -119,6 +155,9 @@ export default function BeritaDetail({ article, relatedArticles }) {
         <meta name="twitter:image" content={fullImageUrl} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+        {faqJsonLd && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        )}
       </Head>
 
       <div className="article-page-wrapper">
@@ -157,7 +196,7 @@ export default function BeritaDetail({ article, relatedArticles }) {
               <div className="article-meta-row">
                 <span>✍️ {article.author}</span>
                 <span className="dot">•</span>
-                <span>📅 {article.date}</span>
+                <span>📅 Diperbarui {article.updatedLabel || article.date}</span>
                 <span className="dot">•</span>
                 <span>⏱️ {article.readTime}</span>
                 <span className="dot">•</span>
@@ -177,10 +216,31 @@ export default function BeritaDetail({ article, relatedArticles }) {
               />
             </div>
 
+            {article.quickAnswer && (
+              <section className="article-quick-answer" aria-label="Ringkasan Cepat">
+                <div className="qa-label">⚡ Jawaban Singkat & Poin Kunci</div>
+                <p>{article.quickAnswer}</p>
+              </section>
+            )}
+
             <div
               className="article-body"
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
+
+            {faqList.length > 0 && (
+              <section className="article-faq-section" aria-labelledby="article-faq-heading">
+                <h2 id="article-faq-heading">Pertanyaan Umum Seputar Panduan Ini</h2>
+                <div className="article-faq-list">
+                  {faqList.map((f) => (
+                    <details key={f.question} className="article-faq-item">
+                      <summary>{f.question}</summary>
+                      <p>{f.answer}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <footer className="article-post-footer">
               <div className="article-tags">
@@ -208,14 +268,17 @@ export default function BeritaDetail({ article, relatedArticles }) {
                 Dapatkan kebutuhan Robux kilat termurah, Pet Secret & Koin Steal an Egg, Buah Mythical Blox Fruits, hingga Akun Sultan Bergaransi 100% Anti Hackback hanya di Rockstar Store!
               </p>
               <div className="store-banner-actions">
-                <Link href="/?tab=topup" className="btn-banner-gold">
+                <Link href="/topup-robux" className="btn-banner-gold">
                   🛒 Top Up Robux Murah
                 </Link>
-                <Link href="/?tab=brainrot" className="btn-banner-blue">
-                  🥚 Item & Pet Steal an Egg
+                <Link href="/brainrot" className="btn-banner-blue">
+                  🧠 Item & Pet Brainrot
                 </Link>
-                <Link href="/" className="btn-banner-outline">
-                  Lihat Katalog Lengkap →
+                <Link href="/akun-sepuh" className="btn-banner-outline">
+                  👑 Akun Sepuh Data Polos
+                </Link>
+                <Link href="/joki-roblox" className="btn-banner-outline">
+                  🏆 Joki Manual Anti-Ban
                 </Link>
               </div>
             </div>
@@ -349,6 +412,9 @@ export default function BeritaDetail({ article, relatedArticles }) {
           font-weight: 700;
         }
         .article-post-header {
+          display: block;
+          height: auto;
+          padding: 0;
           margin-bottom: 24px;
         }
         .article-category-badge {
@@ -471,6 +537,72 @@ export default function BeritaDetail({ article, relatedArticles }) {
           border-collapse: collapse;
           text-align: left;
           background: #090e1c;
+        }
+        .code-table caption {
+          caption-side: top;
+          text-align: left;
+          padding: 12px 16px;
+          font-size: 13px;
+          font-weight: 800;
+          color: #f3d27a;
+          background: #0d162c;
+          border-bottom: 1px solid rgba(120, 150, 255, 0.16);
+        }
+        .article-quick-answer {
+          background: linear-gradient(135deg, rgba(243, 210, 122, 0.1), rgba(43, 78, 255, 0.14));
+          border: 1px solid rgba(243, 210, 122, 0.36);
+          border-radius: 16px;
+          padding: 16px 20px;
+          margin-bottom: 28px;
+        }
+        .qa-label {
+          font-size: 12px;
+          font-weight: 800;
+          color: #fde68a;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          margin-bottom: 6px;
+        }
+        .article-quick-answer p {
+          margin: 0;
+          font-size: 14.5px;
+          line-height: 1.65;
+          color: #f8fafc;
+        }
+        .article-faq-section {
+          margin: 34px 0 8px;
+          padding: 22px;
+          border-radius: 16px;
+          background: rgba(11, 20, 42, 0.85);
+          border: 1px solid rgba(96, 165, 250, 0.24);
+        }
+        .article-faq-section h2 {
+          margin: 0 0 14px;
+          font-size: 20px;
+          font-weight: 800;
+          color: #ffffff;
+        }
+        .article-faq-list {
+          display: grid;
+          gap: 10px;
+        }
+        .article-faq-item {
+          background: #070d1d;
+          border: 1px solid rgba(120, 150, 255, 0.2);
+          border-radius: 12px;
+          padding: 13px 16px;
+        }
+        .article-faq-item summary {
+          cursor: pointer;
+          font-weight: 700;
+          font-size: 14.5px;
+          color: #f8fafc;
+        }
+        .article-faq-item p {
+          margin: 10px 0 0;
+          font-size: 13.5px;
+          line-height: 1.6;
+          color: #cbd5e1;
         }
         .code-table th {
           background: #111a33;

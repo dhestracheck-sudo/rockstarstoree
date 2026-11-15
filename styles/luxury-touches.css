@@ -1246,7 +1246,7 @@ html body .hero h1 span {
     padding-bottom: 18px !important;
   }
 
-  html body header {
+  html body header:not(.rs-cat-header):not(.article-header):not(.article-post-header):not(.news-header):not(.sticky) {
     display: flex !important;
     flex-wrap: nowrap !important;
     align-items: center !important;
@@ -1393,7 +1393,7 @@ html body .hero h1 span {
 }
 
 @media (min-width: 901px) and (max-width: 1380px) {
-  html body header {
+  html body header:not(.rs-cat-header):not(.article-header):not(.article-post-header):not(.news-header):not(.sticky) {
     gap: 6px !important;
     padding: 0 14px !important;
   }

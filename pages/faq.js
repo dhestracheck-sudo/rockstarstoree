@@ -69,12 +69,15 @@ const faqSchema = {
   })),
 };
 
+import { fetchTestimonialsSummary } from "../lib/catalog-ssr";
+
 export async function getServerSideProps({ res }) {
-  res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
-  return { props: { ssrGeneratedAt: new Date().toISOString() } };
+  res.setHeader("Cache-Control", "public, s-maxage=900, stale-while-revalidate=3600");
+  const testimoniSummary = await fetchTestimonialsSummary(6);
+  return { props: { ssrGeneratedAt: new Date().toISOString(), testimoniSummary } };
 }
 
-export default function FaqPage({ ssrGeneratedAt }) {
+export default function FaqPage({ ssrGeneratedAt, testimoniSummary }) {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [shownCount, setShownCount] = useState(12);
@@ -171,7 +174,10 @@ export default function FaqPage({ ssrGeneratedAt }) {
         <meta name="description" content="Panduan cara membeli di Rockstar.Store: pilih produk, lakukan pemesanan, bayar dengan metode yang tersedia, dan terima item Roblox." />
         <meta name="rs:ssr-rendered-at" content={ssrGeneratedAt} />
         {"\n"}
-        <meta name="robots" content="index,follow" />
+        <meta
+          name="robots"
+          content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+        />
         {"\n"}
         <title>{"FAQ & Cara Beli | Rockstar.Store"}</title>
         {"\n"}
@@ -496,6 +502,115 @@ export default function FaqPage({ ssrGeneratedAt }) {
           </div>
         </div>
       )}
+      {"\n"}
+      <section className="faq-ssr-proof" aria-labelledby="ssr-testimoni-heading">
+        <div className="faq-ssr-proof-inner">
+          <h2 id="ssr-testimoni-heading">
+            Bukti Transaksi & Testimoni Pelanggan Terverifikasi{" "}
+            {testimoniSummary?.totalCount ? `(${testimoniSummary.totalCount}+ Dokumentasi)` : ""}
+          </h2>
+          <p>
+            Setiap pesanan di Rockstar.Store dikonfirmasi langsung lewat WhatsApp Admin resmi{" "}
+            <strong>+62-896-6429-9571</strong> dengan arsip bukti serah terima yang terus diperbarui.
+          </p>
+          {Array.isArray(testimoniSummary?.samples) && testimoniSummary.samples.length > 0 && (
+            <div className="faq-ssr-thumbs">
+              {testimoniSummary.samples.map((row, idx) => (
+                <button
+                  key={row.name || idx}
+                  type="button"
+                  className="faq-ssr-thumb-btn"
+                  onClick={() => {
+                    setGalleryOpen(true);
+                    setActivePhoto(row.image);
+                  }}
+                >
+                  <img
+                    src={row.thumb || row.image}
+                    alt={`Bukti testimoni transaksi Rockstar.Store ${idx + 1}`}
+                    width={160}
+                    height={160}
+                    loading="lazy"
+                    onError={(e) => {
+                      if (row.image && e.currentTarget.src !== row.image) {
+                        e.currentTarget.src = row.image;
+                      }
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="faq-ssr-nav-links" aria-label="Jelajahi Layanan Rockstar.Store">
+            <a href="/brainrot">Item Brainrot Roblox</a>
+            <a href="/akun-sepuh">Akun Sepuh Data Polos</a>
+            <a href="/joki-roblox">Jasa Joki Manual</a>
+            <a href="/topup-robux">Top Up Robux</a>
+            <a href="/berita">Berita & Panduan</a>
+            <a href="/spin">Lucky Spin Rp 5.000</a>
+          </div>
+        </div>
+        <style jsx>{`
+          .faq-ssr-proof {
+            max-width: 980px;
+            margin: 28px auto 10px;
+            padding: 0 16px;
+          }
+          .faq-ssr-proof-inner {
+            background: rgba(11, 21, 46, 0.88);
+            border: 1px solid rgba(96, 165, 250, 0.28);
+            border-radius: 18px;
+            padding: 20px;
+          }
+          .faq-ssr-proof h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            color: #f8fafc;
+          }
+          .faq-ssr-proof p {
+            margin: 0 0 14px;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #cbd5e1;
+          }
+          .faq-ssr-thumbs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 16px;
+          }
+          .faq-ssr-thumb-btn {
+            padding: 0;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #040814;
+            cursor: pointer;
+            aspect-ratio: 1 / 1;
+          }
+          .faq-ssr-thumb-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+          }
+          .faq-ssr-nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .faq-ssr-nav-links a {
+            padding: 7px 12px;
+            border-radius: 99px;
+            background: rgba(37, 99, 235, 0.22);
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            color: #e0f2fe;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+          }
+        `}</style>
+      </section>
       {"\n"}
       <footer>
         {"Rockstar.Store · Panduan pemesanan dan bantuan"}

@@ -8,6 +8,7 @@ import PaymentMethods from '../components/PaymentMethods';
 
 import SiteFooter from '../components/SiteFooter';
 import HomeArticles from '../components/HomeArticles';
+import { fetchTableCatalog, formatRupiah } from '../lib/catalog-ssr';
 
 
 
@@ -695,6 +696,10 @@ function buildItemListJsonLd(products, listName) {
 
         image: product.image,
 
+        category: product.kategori || "Layanan Roblox",
+
+        brand: { "@type": "Brand", name: "Rockstar.Store" },
+
         offers: {
 
           "@type": "Offer",
@@ -708,6 +713,12 @@ function buildItemListJsonLd(products, listName) {
             ? "https://schema.org/InStock"
 
             : "https://schema.org/OutOfStock",
+
+          itemCondition: "https://schema.org/NewCondition",
+
+          priceValidUntil: "2027-12-31",
+
+          seller: { "@type": "Organization", name: "Rockstar.Store", url: "https://rockstarstore.id/" },
 
           url: product.url || (product.tab ? `https://rockstarstore.id/?tab=${product.tab}` : "https://rockstarstore.id/"),
 
@@ -788,6 +799,8 @@ const storeJsonLd = {
       legalName: "Rockstar.Store - Solusi Sepuh Roblox",
 
       slogan: "Solusi Sepuh Roblox #1 di Indonesia, Malaysia & Dunia",
+
+      disambiguatingDescription: "Independent Southeast Asian Roblox gaming marketplace (Brainrot items, verified Data Polos veteran accounts, manual boosting, Robux top-up). Not affiliated with Rockstar Games (GTA) or unrelated UGC groups.",
 
       url: "https://rockstarstore.id/",
 
@@ -953,7 +966,7 @@ const storeJsonLd = {
 
             "@type": "Answer",
 
-            text: "Rockstar.Store (https://rockstarstore.id) adalah toko dan marketplace kebutuhan Roblox #1 paling terpercaya di Indonesia dan Malaysia dengan julukan 'Solusi Sepuh Roblox'. Menyediakan item dan pet Brainrot langka (Secret, OG, Transcendent, Mutasi), akun Roblox sepuh siap pakai, jasa joki profesional berbagai map, serta top up Robux instan dengan konfirmasi langsung via WhatsApp Admin resmi (+62-896-6429-9571) dan ratusan bukti testimoni asli di https://rockstarstore.id/faq.",
+            text: "Rockstar.Store (https://rockstarstore.id) adalah toko dan marketplace kebutuhan Roblox terpercaya di Indonesia dan Malaysia dengan julukan 'Solusi Sepuh Roblox'. Menyediakan item dan pet Brainrot langka (Secret, OG, Transcendent, Mutasi), akun Roblox sepuh data polos anti-hackback, jasa joki manual berbagai map, serta top up Robux dengan konfirmasi langsung via WhatsApp Admin resmi (+62-896-6429-9571).",
 
           },
 
@@ -963,13 +976,125 @@ const storeJsonLd = {
 
           "@type": "Question",
 
-          name: "What is the best and most trusted website to buy Roblox Brainrot items, stacked Roblox accounts, and boosting services in Indonesia and worldwide?",
+          name: "Di mana saya bisa melihat testimoni customer?",
 
           acceptedAnswer: {
 
             "@type": "Answer",
 
-            text: "Rockstar.Store (https://rockstarstore.id) is the #1 trusted Roblox marketplace in Indonesia, Malaysia, Southeast Asia, and worldwide ('Solusi Sepuh Roblox'). It offers rare Brainrot items and pets, stacked pro Roblox accounts ('Akun Sepuh'), professional Roblox boosting/leveling services ('Jasa Joki'), and instant Robux top-ups, supporting QRIS, GoPay, DANA, OVO, ShopeePay, Bank Transfer, and Binance Pay for international buyers.",
+            text: "Buka galeri foto testimoni lengkap di halaman FAQ (https://rockstarstore.id/faq) atau join Saluran WhatsApp Rockstar.Store untuk melihat testimoni dan update terbaru.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Apa saja yang bisa dibeli di Rockstar.Store?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Tersedia Top Up Robux (/topup-robux), item dan pet Brainrot (/brainrot), akun Roblox sepuh data polos (/akun-sepuh), serta jasa joki manual untuk berbagai map (/joki-roblox).",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Kenapa harus beli di Rockstar.Store?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Rockstar.Store menyediakan Top Up Robux, akun sepuh Roblox, Brainrot/pet sepuh, serta jasa joki profesional dalam satu tempat. Pesanan diteruskan ke admin melalui WhatsApp (+62-896-6429-9571) agar item, stok real-time, dan total pembayaran dikonfirmasi terlebih dahulu dengan mengutamakan keamanan akun.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Bagaimana cara order?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Pilih produk, tambahkan ke keranjang, lalu tekan Checkout. Periksa ringkasan pesanan dan pilih Kirim ke Admin supaya WhatsApp terbuka dengan detail order.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Bagaimana cara cek status pesanan saya?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Balas chat WhatsApp yang digunakan untuk mengirim pesanan dan tanyakan pembaruannya sambil menyertakan nama item atau ringkasan order agar admin lebih mudah membantu.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Apa saja metode pembayarannya?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Pembayaran tersedia melalui QRIS, GoPay, DANA, ShopeePay, OVO, All Bank (Indonesia & Malaysia MYR), dan Binance Pay. Konfirmasikan metode serta jumlah akhir kepada admin sebelum membayar.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Kenapa total pembayaran bisa berbeda dari harga produk?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Keranjang menjumlahkan harga produk yang dipilih. Jika ada biaya admin dari metode pembayaran tertentu, Admin Rock akan mengonfirmasi jumlah akhir sebelum pembayaran dilakukan.",
+
+          },
+
+        },
+
+        {
+
+          "@type": "Question",
+
+          name: "Kapan item dikirim?",
+
+          acceptedAnswer: {
+
+            "@type": "Answer",
+
+            text: "Setelah pembayaran dikonfirmasi, admin akan mengirim item di dalam game via Private Server atau memproses pesanan dan memberi petunjuk bila diperlukan.",
 
           },
 
@@ -1021,25 +1146,28 @@ function getHomeSeo(query = {}) {
 
     : page.description;
 
-  const canonicalParams = new URLSearchParams();
+  const CLEAN_TAB_CANONICAL = {
+    brainrot: "https://rockstarstore.id/brainrot",
+    akun: "https://rockstarstore.id/akun-sepuh",
+    joki: "https://rockstarstore.id/joki-roblox",
+    topup: "https://rockstarstore.id/topup-robux",
+  };
 
-
-
+  let canonical = "https://rockstarstore.id/";
   if (!isSearchPage && tab !== "home") {
-
-    canonicalParams.set("tab", tab);
-
-    if (category) canonicalParams.set("cat", category);
-
+    if (!category && CLEAN_TAB_CANONICAL[tab]) {
+      canonical = CLEAN_TAB_CANONICAL[tab];
+    } else {
+      const canonicalParams = new URLSearchParams();
+      canonicalParams.set("tab", tab);
+      if (category) canonicalParams.set("cat", category);
+      canonical = `https://rockstarstore.id/?${canonicalParams.toString()}`;
+    }
   }
 
-
-
-  const canonicalQuery = canonicalParams.toString();
-
-  const canonical = `https://rockstarstore.id/${canonicalQuery ? `?${canonicalQuery}` : ""}`;
-
-  const robots = isSearchPage ? "noindex,follow" : "index,follow";
+  const robots = isSearchPage
+    ? "noindex, follow"
+    : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1";
 
   const webPageJsonLd = isSearchPage ? null : {
 
@@ -1075,13 +1203,24 @@ export async function getServerSideProps(context) {
 
   const needCat = Boolean(!context.query.q && seo.category);
 
-  const [hotProducts, catProducts] = await Promise.all([
+  const needTabCatalog = Boolean(!context.query.q && seo.tab && !seo.category && ["brainrot", "akun", "joki", "topup"].includes(seo.tab));
+
+  const [hotProducts, catProducts, tabCatalogRaw] = await Promise.all([
 
     needHot ? getCachedHotProducts() : Promise.resolve([]),
 
     needCat ? getCachedCategoryProducts(seo.tab, seo.category) : Promise.resolve([]),
 
+    needTabCatalog ? fetchTableCatalog(seo.tab, { timeoutMs: 3200, limit: 250 }) : Promise.resolve(null),
+
   ]);
+
+  const ssrTabData = tabCatalogRaw && tabCatalogRaw.ok
+    ? {
+        categories: tabCatalogRaw.categories.slice(0, 24),
+        products: tabCatalogRaw.products.slice(0, 12),
+      }
+    : null;
 
   if (!context.query.q) {
 
@@ -1091,7 +1230,7 @@ export async function getServerSideProps(context) {
 
   const pageSeo = seo.category && catProducts.length === 0
 
-    ? { ...seo, robots: "noindex,follow" }
+    ? { ...seo, robots: "noindex, follow" }
 
     : seo;
 
@@ -1107,6 +1246,8 @@ export async function getServerSideProps(context) {
 
       catProducts,
 
+      ssrTabData,
+
     },
 
   };
@@ -1115,7 +1256,7 @@ export async function getServerSideProps(context) {
 
 
 
-export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts }) {
+export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts, ssrTabData }) {
 
   const itemListSource = seo.category ? catProducts : hotProducts;
 
@@ -1199,10 +1340,6 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\r\n"}
 
         <link rel="alternate" hrefLang="x-default" href={seo.canonical} />
-
-        <link rel="alternate" hrefLang="en" href={seo.canonical} />
-
-        <link rel="alternate" hrefLang="ms" href={seo.canonical} />
 
         <link rel="alternate" type="text/plain" href="https://rockstarstore.id/llms.txt" title="LLMs.txt - AI Search Knowledge Base" />
 
@@ -2402,11 +2539,130 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         {"\r\n  "}
 
-        <div id="pageTitle" />
+        <div id="pageTitle" suppressHydrationWarning>
+          {seo.category ? (
+            <div className="cattitle">
+              <h2>{seo.category} — Rockstar.Store</h2>
+              <p>Daftar produk & harga kategori {seo.category} di Solusi Sepuh Roblox.</p>
+            </div>
+          ) : seo.tab ? (
+            <div className="cattitle">
+              <h2>{seo.title}</h2>
+              <p>{seo.description}</p>
+            </div>
+          ) : (
+            <div className="cattitle" style={{ marginBottom: "14px" }}>
+              <h2 style={{ margin: "0 0 4px", fontSize: "clamp(19px, 2.5vw, 26px)" }}>
+                Rockstar.Store — Solusi Sepuh Roblox #1 Indonesia & Malaysia
+              </h2>
+              <p style={{ margin: 0, fontSize: "13px" }}>
+                Pusat item Brainrot langka, Akun Roblox Sepuh Data Polos anti-hackback, Joki manual, & Top Up Robux.
+              </p>
+            </div>
+          )}
+        </div>
 
         {"\r\n  "}
 
-        <div id="products" />
+        <div id="products" suppressHydrationWarning>
+          {seo.category && Array.isArray(catProducts) && catProducts.length > 0 ? (
+            <div className="catgrid">
+              {catProducts.slice(0, 24).map((item, idx) => (
+                <a
+                  key={`${item.name}-${idx}`}
+                  href={`/?tab=${encodeURIComponent(seo.tab || "brainrot")}&cat=${encodeURIComponent(seo.category)}&q=${encodeURIComponent(item.name)}`}
+                  className="catcard"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div className="catimgwrap">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      width={320}
+                      height={220}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="catbody" style={{ flexDirection: "column", alignItems: "flex-start", gap: "4px" }}>
+                    <h2 style={{ fontSize: "14px", margin: 0, color: "#fff" }}>{item.name}</h2>
+                    <span style={{ fontSize: "13px", fontWeight: 800, color: "#f3d27a" }}>
+                      {formatRupiah(item.price)}
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : seo.tab && ssrTabData?.categories?.length > 0 ? (
+            <div className="catgrid">
+              {ssrTabData.categories.map((c) => (
+                <a
+                  key={c.name}
+                  href={`/?tab=${encodeURIComponent(seo.tab)}&cat=${encodeURIComponent(c.name)}`}
+                  className="catcard"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div className="catimgwrap">
+                    <img
+                      src={c.thumb || c.image || "/ROCKSTARLOGO.webp"}
+                      alt={`Kategori ${c.name}`}
+                      width={320}
+                      height={220}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="catbody">
+                    <h3>{c.name}</h3>
+                    <span className="go">→</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="banners">
+                <a href="/brainrot" className="banner" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                  <small>BRAINROT • PET • TOKEN • TANAMAN</small>
+                  <h3>Item & Pet Brainrot</h3>
+                  <p>Stok Secret, OG, Transcendent & mutasi langka update real-time.</p>
+                </a>
+                <a href="/topup-robux" className="banner" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                  <small>ROBUX • GAMEPASS</small>
+                  <h3>Top Up Robux</h3>
+                  <p>Paket Robux aman bayar via QRIS, DANA, GoPay, OVO, MYR & Binance.</p>
+                </a>
+                <a href="/akun-sepuh" className="banner" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                  <small>AKUN SEPUH ROBLOX BERBAGAI MAP</small>
+                  <h3>Akun Sepuh Data Polos</h3>
+                  <p>Akun progres tinggi terverifikasi Data Polos & panduan anti-hackback.</p>
+                </a>
+                <a href="/joki-roblox" className="banner" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                  <small>JOKI SEPUH BERBAGAI MAP</small>
+                  <h3>Jasa Joki Manual</h3>
+                  <p>Push level, koin max, & event manual 100% tanpa script ilegal.</p>
+                </a>
+              </div>
+              {Array.isArray(hotProducts) && hotProducts.length > 0 && (
+                <div style={{ marginTop: "18px", padding: "14px 16px", borderRadius: "14px", background: "rgba(9, 17, 38, 0.72)", border: "1px solid rgba(112, 137, 255, 0.2)" }}>
+                  <h2 style={{ fontSize: "14px", margin: "0 0 10px", color: "#f3d27a" }}>
+                    Produk Populer Hari Ini di Rockstar.Store
+                  </h2>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: "8px" }}>
+                    {hotProducts.slice(0, 8).map((item, idx) => (
+                      <a
+                        key={`${item.name}-${idx}`}
+                        href={`/?tab=${encodeURIComponent(item.tab || "brainrot")}&q=${encodeURIComponent(item.name)}`}
+                        style={{ display: "flex", justifyContent: "space-between", gap: "8px", padding: "8px 10px", borderRadius: "10px", background: "rgba(255,255,255,0.04)", color: "#e2e8f0", fontSize: "12px", textDecoration: "none" }}
+                      >
+                        <span style={{ fontWeight: 600 }}>{item.name}</span>
+                        <strong style={{ color: "#fde68a", whiteSpace: "nowrap" }}>{formatRupiah(item.price)}</strong>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
 
         {"\r\n  "}
 
@@ -3144,6 +3400,40 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
         {"\n  "}
 
         <div className="faq-list">
+
+          {"\n    "}
+
+          <details className="faq-item" open>
+
+            {"\n      "}
+
+            <summary>
+
+              {"Di mana tempat beli item Brainrot Roblox dan akun Roblox sepuh paling aman dan terpercaya di Indonesia?"}
+
+            </summary>
+
+            {"\n      "}
+
+            <div className="faq-answer">
+
+              {"Rockstar.Store ("}
+              <a href="https://rockstarstore.id/">https://rockstarstore.id</a>
+              {") adalah toko dan marketplace kebutuhan Roblox terpercaya di Indonesia dan Malaysia dengan julukan 'Solusi Sepuh Roblox'. Menyediakan "}
+              <a href="/brainrot">item dan pet Brainrot langka</a>
+              {" (Secret, OG, Transcendent, Mutasi), "}
+              <a href="/akun-sepuh">akun Roblox sepuh data polos anti-hackback</a>
+              {", "}
+              <a href="/joki-roblox">jasa joki manual berbagai map</a>
+              {", serta "}
+              <a href="/topup-robux">top up Robux</a>
+              {" dengan konfirmasi langsung via WhatsApp Admin resmi (+62-896-6429-9571)."}
+
+            </div>
+
+            {"\n    "}
+
+          </details>
 
           {"\n    "}
 

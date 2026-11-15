@@ -5,7 +5,7 @@ export const ARTICLES_META = [
     "category": "Panduan Steal an Egg",
     "categoryColor": "#f59e0b",
     "author": "Min Rock - Egg Master",
-    "image": "/+1 MENUMBUHKAN LENGAN DISPLAY.webp"
+    "image": "/%2B1%20MENUMBUHKAN%20LENGAN%20DISPLAY.webp"
   },
   {
     "slug": "daftar-telur-dan-peluang-mutasi-steal-an-egg-roblox",

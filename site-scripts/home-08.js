@@ -1749,19 +1749,41 @@ function syncSeoMetadata(){
 
       : page.description;
 
-    const canonicalParams = new URLSearchParams();
+    const cleanTabPaths = {
 
-    if(!isSearchPage && currentPage !== "home"){
+      brainrot: "/brainrot",
 
-      canonicalParams.set("tab", currentPage);
+      akun: "/akun-sepuh",
 
-      if(cat) canonicalParams.set("cat", cat.name);
+      joki: "/joki-roblox",
 
-    }
+      topup: "/topup-robux"
 
-    const canonicalUrl = new URL(location.pathname, location.origin);
+    };
 
-    canonicalUrl.search = canonicalParams.toString();
+    const canonicalUrl = (!isSearchPage && currentPage !== "home" && !cat && cleanTabPaths[currentPage])
+
+      ? new URL(cleanTabPaths[currentPage], location.origin)
+
+      : (() => {
+
+          const canonicalParams = new URLSearchParams();
+
+          if(!isSearchPage && currentPage !== "home"){
+
+            canonicalParams.set("tab", currentPage);
+
+            if(cat) canonicalParams.set("cat", cat.name);
+
+          }
+
+          const u = new URL(location.pathname, location.origin);
+
+          u.search = canonicalParams.toString();
+
+          return u;
+
+        })();
 
     let canonical = document.head.querySelector('link[rel="canonical"]');
 
@@ -1773,7 +1795,7 @@ function syncSeoMetadata(){
 
     setMetaName("description", description);
 
-    setMetaName("robots", isSearchPage ? "noindex,follow" : "index,follow");
+    setMetaName("robots", isSearchPage ? "noindex, follow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1");
 
     setMetaProperty("og:title", title);
 

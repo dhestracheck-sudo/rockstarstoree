@@ -1,10 +1,13 @@
 const sitemap = [
   { label: "Beranda", href: "/", icon: "⌂" },
+  { label: "Brainrot", href: "/brainrot", icon: "🧠" },
+  { label: "Akun Sepuh", href: "/akun-sepuh", icon: "👤" },
+  { label: "Joki Sepuh", href: "/joki-roblox", icon: "🏆" },
+  { label: "Top Up Robux", href: "/topup-robux", icon: "💎" },
+  { label: "Berita & Guide", href: "/berita", icon: "📰" },
+  { label: "Lucky Spin", href: "/spin", icon: "🎡" },
   { label: "FAQ & Cara Beli", href: "/faq", icon: "?" },
-  { label: "Akun Sepuh", href: "/?tab=akun", icon: "👤" },
-  { label: "Top Up Robux", href: "/?tab=topup", icon: "💎" },
-  { label: "Brainrot", href: "/?tab=brainrot", icon: "🧠" },
-  { label: "Joki Sepuh", href: "/?tab=joki", icon: "🏆" },
+  { label: "llms.txt (AI)", href: "/llms.txt", icon: "🤖" },
 ];
 
 export default function SiteFooter() {
