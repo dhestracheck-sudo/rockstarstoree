@@ -512,7 +512,7 @@
   }
 }
 
-/* ===== 7. MIN ROCK CHAT BUBBLE (SIDE-DOCKED, PERMANENT & RINGAN) ===== */
+/* ===== 7. MIN ROCK CHAT BUBBLE (DI ATAS KEPALA MIN ROCK - POSISI SEMULA) ===== */
 
 /* 7A. Animasi Mengapung Halus pada Bubble (Compositor Thread - 0% CPU Overhead) */
 @keyframes rcBubbleFloat {
@@ -520,7 +520,7 @@
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(0, -3px, 0);
+    transform: translate3d(0, -4px, 0);
   }
 }
 
@@ -530,23 +530,28 @@ html body #rcBubbleWrap {
   position: fixed !important;
   z-index: 94 !important;
   left: auto !important;
+  right: 18px !important;
+  bottom: 132px !important;
   display: block !important;
   opacity: 1 !important;
   visibility: visible !important;
+  pointer-events: none !important;
 }
 
-/* 7B. Styling Bubble Min Rock Mungil & Bersih (Side-Left Dock agar Hemat Tinggi Vertikal) */
+/* 7B. Styling Bubble Min Rock Mungil & Bersih (Posisi Semula di Atas Foto Min Rock) */
 html body .rc-bubble {
   position: relative !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
   background: rgba(9, 14, 31, 0.96) !important;
   border: 1px solid rgba(111, 139, 255, 0.28) !important;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.52) !important;
-  border-radius: 14px 14px 4px 14px !important;
-  padding: 8px 12px !important;
-  font-size: 11.5px !important;
+  border-radius: 12px 12px 3px 12px !important;
+  padding: 6px 10px !important;
+  font-size: 11px !important;
   line-height: 1.35 !important;
-  max-width: 190px !important;
-  text-align: left !important;
+  max-width: 170px !important;
+  text-align: center !important;
   color: #f1f5f9 !important;
   transition: transform 0.2s ease, border-color 0.2s ease !important;
 }
@@ -561,20 +566,20 @@ html body .rc-bubble b {
   font-weight: 700 !important;
 }
 
-/* 7C. Responsif Mobile & HP Kentang (Super Mungil, Hemat Ruang & Bebas Bentrok) */
+/* 7C. Responsif Mobile & HP Kentang (Super Mungil, Tepat di Atas Min Rock) */
 @media (max-width: 900px) {
   html body .rc-bubble {
-    max-width: 124px !important;
-    font-size: 9px !important;
-    padding: 5px 8px !important;
-    border-radius: 11px 11px 3px 11px !important;
+    max-width: 108px !important;
+    font-size: 8.5px !important;
+    padding: 4px 7px !important;
+    border-radius: 10px 10px 3px 10px !important;
     line-height: 1.25 !important;
     background: rgba(8, 12, 26, 0.97) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
   html body .rc-bubble b {
-    font-size: 9px !important;
+    font-size: 8.5px !important;
   }
 }
 
@@ -1367,7 +1372,7 @@ html body .hero h1 span {
     width: min(180px, 70%) !important;
   }
 
-  /* Desktop Min Rock & Bubble side-docked di pojok kanan bawah (rendah, anti-nutup Flash Sale) */
+  /* Desktop Min Rock & Bubble di pojok kanan bawah (bubble tepat di atas kepala Min Rock) */
   html body #rockchat,
   html body .rockchat {
     right: 18px !important;
@@ -1383,8 +1388,8 @@ html body .hero h1 span {
   }
 
   html body #rcBubbleWrap {
-    right: 134px !important;
-    bottom: 26px !important;
+    right: 18px !important;
+    bottom: 132px !important;
   }
 }
 
@@ -1509,8 +1514,8 @@ html body .hero h1 span {
   }
 
   html body #rcBubbleWrap {
-    right: 90px !important;
-    bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+    right: 8px !important;
+    bottom: calc(72px + env(safe-area-inset-bottom) + 80px) !important;
   }
 }
 
