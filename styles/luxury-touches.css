@@ -1180,9 +1180,11 @@ body .testimoni-channel a {
 /* 13A. Pastikan konten utama selalu berada di atas .snow-flakes */
 html body .mega,
 html body .hero,
+html body .stats,
 html body .trust-marquee,
 html body .hot-product-banner,
 html body main.section,
+html body section.section,
 html body .faq-section,
 html body .home-articles-section,
 html body .brand-payment,
@@ -1561,15 +1563,24 @@ html body .hero h1 span {
 
 /* ===== 14. OBSIDIAN SAPPHIRE & CHAMPAGNE GOLD BACKGROUND HARMONY (NON-JOKI SLIDES + QUIET CANVAS) ===== */
 
-/* 14A. Kanvas Utama Lebih Tenang & Nyaman Dipandang Lama (Redam Siluet Ramai bg.webp di Area Scroll) */
+/* 14A. Kanvas Psikologis Abyssal Sapphire Velvet (Tanpa bg.webp agar 100% Bebas Noise, Fokus Tinggi & Mewah) */
+html body {
+  background-color: #060916;
+}
+
 html body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
-    radial-gradient(900px 320px at 50% -60px, rgba(212, 175, 55, 0.055), transparent 58%),
-    radial-gradient(850px 360px at 88% -40px, rgba(43, 78, 255, 0.13), transparent 62%),
-    radial-gradient(720px 320px at 8% 4%, rgba(30, 64, 175, 0.09), transparent 62%),
-    linear-gradient(180deg, rgba(5, 8, 18, 0.91) 0%, rgba(5, 8, 18, 0.96) 52%, rgba(4, 7, 16, 0.985) 100%),
-    url("/optimized/bg.webp") center top / cover no-repeat,
-    #050812 !important;
+    radial-gradient(900px 360px at 50% -70px, rgba(212, 175, 55, 0.045), transparent 60%),
+    radial-gradient(960px 440px at 84% -40px, rgba(37, 99, 235, 0.14), transparent 64%),
+    radial-gradient(760px 380px at 12% 8%, rgba(30, 64, 175, 0.10), transparent 64%),
+    radial-gradient(1200px 720px at 50% 42%, rgba(15, 25, 56, 0.42), transparent 72%),
+    radial-gradient(100% 100% at 50% 50%, transparent 56%, rgba(3, 5, 13, 0.78) 100%),
+    linear-gradient(180deg, #070b18 0%, #0a1022 44%, #070b17 82%, #050812 100%) !important;
 }
 
 /* 14B. Bingkai & Background Hero Banner Slider (Semua Slide KECUALI Slide Joki .s5 tetap utuh) */

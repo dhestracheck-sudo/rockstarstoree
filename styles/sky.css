@@ -8,7 +8,7 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.42;
+  opacity: 0.72;
   contain: strict;
 }
 .snow-flakes i,
@@ -85,15 +85,15 @@
 @media (max-width: 768px) {
   .snow-flakes,
   .sakura-petals {
-    opacity: 0.24;
+    opacity: 0.62;
   }
   .snow-flakes i,
   .sakura-petals i {
-    width: calc(var(--s, 20px) * 0.9);
-    height: calc(var(--s, 20px) * 0.9);
+    width: calc(var(--s, 20px) * 1.0);
+    height: calc(var(--s, 20px) * 1.0);
   }
-  .snow-flakes i:nth-child(n + 8),
-  .sakura-petals i:nth-child(n + 8) { display: none; }
+  .snow-flakes i:nth-child(3n),
+  .sakura-petals i:nth-child(3n) { display: none; }
   .stars-back i:nth-child(n + 8) { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
