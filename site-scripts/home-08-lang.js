@@ -21,7 +21,7 @@ foot_wa: "No WA Admin:", back: "← Kembali", back_home: "← Beranda",
 
 nav_home: "Beranda", nav_akun: "Akun Sepuh", nav_topup: "Top Up Robux", nav_joki: "Joki Sepuh",
 
-  nav_akun_bn: "Akun", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Joki", nav_flash_bn: "Flash Sale",
+  nav_akun_bn: "Akun Sepuh", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Joki Sepuh", nav_flash_bn: "Flash Sale",
 
 cat_brainrot: "Katalog Brainrot", cat_akun: "Katalog Akun", cat_topup: "Top Up", cat_joki: "Joki",
 
@@ -101,7 +101,7 @@ foot_wa: "Admin WA:", back: "← Back", back_home: "← Home",
 
 nav_home: "Home", nav_akun: "Pro Accounts", nav_topup: "Robux Top Up", nav_joki: "Boosting",
 
-  nav_akun_bn: "Accounts", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Boosting", nav_flash_bn: "Flash Sale",
+  nav_akun_bn: "Sepuh Account", nav_brainrot_bn: "Brainrot", nav_joki_bn: "Sepuh Boost", nav_flash_bn: "Flash Sale",
 
 cat_brainrot: "Brainrot Catalog", cat_akun: "Account Catalog", cat_topup: "Top Up", cat_joki: "Joki",
 
