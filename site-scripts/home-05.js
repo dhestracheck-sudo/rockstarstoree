@@ -15,7 +15,7 @@ var megaMotionPreference = window.matchMedia ? window.matchMedia("(prefers-reduc
 
       l.className = "mega-logo";
 
-      l.innerHTML = '<img src="ROCKSTARLOGO.webp" srcset="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="18px" alt="Rockstar.Store" width="500" height="500" loading="lazy"><span>rockstar.store</span>';
+      l.innerHTML = '<img src="/optimized/ROCKSTARLOGO-72.webp" alt="Rockstar.Store" width="18" height="18" loading="lazy" decoding="async"><span>rockstar.store</span>';
 
       s.insertBefore(l, s.firstChild);
 
@@ -180,6 +180,11 @@ function brainrotHeroHTML(){
 
 }
 
+function revealMegaDeferredBg(){
+  const s5 = document.querySelector("#megaTrack .mega-slide.s5");
+  if (s5 && !s5.classList.contains("s5-bg")) s5.classList.add("s5-bg");
+}
+
 function megaPaint(){
 
   const slides = document.querySelectorAll("#megaTrack .mega-slide");
@@ -187,6 +192,7 @@ function megaPaint(){
   slides.forEach((s, i) => s.classList.toggle("on", i === megaIdx));
 
   const nextIdx = (megaIdx + 1) % slides.length;
+  if (megaIdx >= 3 || nextIdx >= 5) revealMegaDeferredBg();
 
   slides.forEach((slide, i) => {
 
@@ -222,6 +228,7 @@ function megaGo(i, manual){
   megaIdx = ((i % n) + n) % n;
 
   megaPaint();
+  scheduleFitMega(true);
 
   if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
 
@@ -239,9 +246,12 @@ function megaAuto(){
 
 }
 
-/* Semua slide dikasih tinggi SAMA PERSIS supaya banner auto-slide tidak loncat ukurannya tiap ganti (HP & PC) */
+/* Semua slide dikasih tinggi SAMA PERSIS tanpa un-hide semua slide di frame awal (cegah forced reflow & fetch 8 slide) */
 
-function fitMega(){
+var __megaMaxH = 0;
+var __megaRaf = 0;
+
+function fitMega(measureAll){
 
   try{
 
@@ -259,53 +269,40 @@ function fitMega(){
         s.style.minHeight = "";
         s.style.maxHeight = "";
       });
+      __megaMaxH = 0;
       return;
     }
 
-    let max = 0;
-
-    const originalStyles = slides.map(function(slide){
-
+    const targets = measureAll ? slides : [slides[megaIdx] || slides[0]].filter(Boolean);
+    const originalStyles = targets.map(function(slide){
       return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight, maxHeight: slide.style.maxHeight };
-
     });
 
-    slides.forEach(function(slide){
-
+    targets.forEach(function(slide){
       slide.style.display = "flex";
-
       slide.style.height = "auto";
-
       slide.style.minHeight = "0";
-
       slide.style.maxHeight = "none";
-
     });
 
-    slides.forEach(function(slide){
-
+    let max = __megaMaxH;
+    targets.forEach(function(slide){
       max = Math.max(max, Math.ceil(slide.getBoundingClientRect().height));
-
     });
 
-    slides.forEach(function(slide, index){
-
+    targets.forEach(function(slide, index){
       slide.style.display = originalStyles[index].display;
-
       slide.style.height = originalStyles[index].height;
-
       slide.style.minHeight = originalStyles[index].minHeight;
-
       slide.style.maxHeight = originalStyles[index].maxHeight;
-
     });
 
     if(!max) return;
 
-    const H = Math.max(max, 270);
+    __megaMaxH = Math.max(max, 270);
 
     slides.forEach(function(s){
-      s.style.height = H + "px";
+      s.style.height = __megaMaxH + "px";
       s.style.minHeight = "270px";
       s.style.maxHeight = "none";
     });
@@ -314,17 +311,30 @@ function fitMega(){
 
 }
 
-fitMega();
+function scheduleFitMega(measureAll){
+  if(__megaRaf) cancelAnimationFrame(__megaRaf);
+  __megaRaf = requestAnimationFrame(function(){
+    __megaRaf = 0;
+    fitMega(Boolean(measureAll));
+  });
+}
+
+scheduleFitMega(false);
 
 let megaFitT;
 
-window.addEventListener("resize", function(){ clearTimeout(megaFitT); megaFitT = setTimeout(fitMega, 150); });
+window.addEventListener("resize", function(){ clearTimeout(megaFitT); __megaMaxH = 0; megaFitT = setTimeout(function(){ scheduleFitMega(false); }, 150); }, { passive: true });
 
-fitMega(); setTimeout(fitMega, 1200);
-
-if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ fitMega(); });
+if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ scheduleFitMega(false); });
 
 const megaTrackEl = document.getElementById("megaTrack");
 
-if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ fitMega(); }, true);
+if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ scheduleFitMega(false); }, true);
+
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    revealMegaDeferredBg();
+    scheduleFitMega(true);
+  }, 2000);
+}, { once: true });
 

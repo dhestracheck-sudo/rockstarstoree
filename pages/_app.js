@@ -16,7 +16,7 @@ import Script from "next/script";
 
 import { useRouter } from "next/router";
 
-import { Baloo_2, Poppins } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 
 
@@ -24,25 +24,13 @@ const GOOGLE_ANALYTICS_ID = "G-8CKBS3MNXH";
 
 const poppins = Poppins({
 
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 
   subsets: ["latin"],
 
   display: "swap",
 
   variable: "--font-poppins",
-
-});
-
-const baloo = Baloo_2({
-
-  weight: ["600", "700", "800"],
-
-  subsets: ["latin"],
-
-  display: "swap",
-
-  variable: "--font-baloo-2",
 
 });
 
@@ -59,13 +47,12 @@ export default function App({ Component, pageProps }) {
       <style jsx global>{`
         :root {
           --font-poppins: ${poppins.style.fontFamily}, sans-serif;
-          --font-baloo-2: ${baloo.style.fontFamily}, sans-serif;
         }
         html, body, input, select, textarea, button {
           font-family: ${poppins.style.fontFamily}, sans-serif;
         }
       `}</style>
-      <div className={`${poppins.className} ${poppins.variable} ${baloo.variable}`}>
+      <div className={`${poppins.className} ${poppins.variable}`}>
 
         <div className="snow-flakes" aria-hidden="true">
 

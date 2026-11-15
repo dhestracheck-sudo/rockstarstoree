@@ -288,21 +288,22 @@
   letter-spacing: 0.2px !important;
   padding: 2.5px 6.5px !important;
   border-radius: 5px !important;
-  box-shadow: 0 0 8px rgba(255, 23, 68, 0.5) !important;
+  box-shadow: 0 0 10px rgba(255, 23, 68, 0.6) !important;
   animation: scarcityPulse 2s ease-in-out infinite !important;
   white-space: nowrap !important;
   pointer-events: none !important;
   line-height: 1.25 !important;
+  will-change: opacity, transform !important;
 }
 
 @keyframes scarcityPulse {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 6px rgba(255, 23, 68, 0.45);
+    transform: scale3d(1, 1, 1);
   }
   50% {
-    opacity: 0.86;
-    box-shadow: 0 0 12px rgba(255, 23, 68, 0.8);
+    opacity: 0.84;
+    transform: scale3d(1.02, 1.02, 1);
   }
 }
 
@@ -423,7 +424,7 @@
   padding: 8px 12px !important;
   border-radius: 10px !important;
   background: linear-gradient(135deg, rgba(255, 23, 68, 0.16), rgba(255, 109, 0, 0.14)) !important;
-  border: 1px solid rgba(255, 23, 68, 0.45) !important;
+  border: 1px solid rgba(255, 23, 68, 0.6) !important;
   color: #fecdd3 !important;
   font-size: 12px !important;
   line-height: 1.4 !important;
@@ -435,8 +436,8 @@
 }
 
 @keyframes scarcityAlertPulse {
-  0%, 100% { border-color: rgba(255, 23, 68, 0.45); }
-  50% { border-color: rgba(255, 23, 68, 0.85); box-shadow: 0 0 18px rgba(255, 23, 68, 0.4); }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.84; }
 }
 
 .detail-scarcity-alert b {

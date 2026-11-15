@@ -1298,7 +1298,7 @@ function renderDetail(){
 
     <div style="position:relative;">
 
-      <img class="detailimg" src="${fixImg(files[k])}" alt="${item.name}" loading="lazy" decoding="async" onerror="imgErr(this)">
+      <img class="detailimg" src="${fixImg(files[k])}" width="480" height="480" alt="${item.name}" loading="lazy" decoding="async" onerror="imgErr(this)">
 
       <span class="viewpill">👁 ${Number(item.dilihat || 0).toLocaleString("id-ID")}</span>
 
@@ -2463,7 +2463,7 @@ function paintRecentViewed(){
       ${entries.map(function(r){
         const img = firstImg(r.item, r.cat.img);
         return `<div class="rs-recent-card" onclick="openDetail('${r.page}',${r.i},${r.j})">
-          ${thumbTag(img, 'class="rs-recent-img" loading="lazy" decoding="async"')}
+          ${thumbTag(img, `class="rs-recent-img" alt="${String(r.item.name || "Produk Rockstar.Store").replace(/"/g, "&quot;")}" loading="lazy" decoding="async"`)}
           <div class="rs-recent-info">
             <div class="rs-recent-name">${r.item.name}</div>
             <div class="rs-recent-price">${formatCurrency(r.item.price)}</div>
@@ -2529,7 +2529,9 @@ function paintHot(){
         image.src = tinyOf(fullImage);
         image.dataset.thumb = thumbOf(fullImage);
         image.dataset.full = fullImage;
-        image.alt = "";
+        image.alt = String(item.name || "Produk Rockstar.Store");
+        image.width = 68;
+        image.height = 68;
         image.loading = "lazy";
         image.decoding = "async";
         image.onerror = function(){

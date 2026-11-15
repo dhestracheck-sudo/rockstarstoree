@@ -9,7 +9,7 @@ const oswald = Oswald({
   variable: "--font-oswald",
 });
 
-const pageScripts = ["/site-scripts/kantor-01.js"];
+const pageScripts = ["/site-scripts/kantor-01.js?v=20261115ps"];
 
 export default function KantorPage() {
   return (

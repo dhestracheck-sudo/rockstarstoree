@@ -4,7 +4,7 @@ export default function MegaSlider() {
       <div className="mega-track" id="megaTrack" aria-live="off">
         <div className="mega-slide s0 on" role="group" aria-roledescription="slide" aria-label="Slide 1 dari 8">
           <div className="mega-fig left">
-            <img src="figur-8062.webp" srcSet="/optimized/figur-8062-260.webp 260w, /optimized/figur-8062-400.webp 400w, /figur-8062.webp 524w" sizes="(max-width: 768px) 130px, 300px" alt="Rockstar" width="524" height="700" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
+            <img src="figur-8062.webp" srcSet="/optimized/figur-8062-260.webp 260w, /optimized/figur-8062-400.webp 400w, /figur-8062.webp 524w" sizes="(max-width: 768px) 130px, 200px" alt="Rockstar" width="524" height="700" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
           </div>
           <div className="mega-fig right">
             <img src="figur-3.webp" srcSet="/optimized/figur-3-240.webp 240w, /optimized/figur-3-400.webp 400w, /figur-3.webp 474w" sizes="(max-width: 768px) 130px, 240px" alt="Roblox" width="474" height="445" loading="eager" fetchPriority="high" decoding="async" onError={(event) => { event.currentTarget.parentElement.style.display = "none"; }} />
