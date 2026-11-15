@@ -13,7 +13,7 @@ import { HOME_INLINE_CSS } from '../lib/home-inline-css.generated';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=20261115ps", "/site-scripts/home-03.js?v=20261115ps", "/site-scripts/home-04.js?v=20261115ps", "/site-scripts/home-05.js?v=20261115ps", "/site-scripts/home-06.js?v=20261115ps", "/site-scripts/home-07.js?v=20261115ps", "/site-scripts/home-08-lang.js?v=20261115ps", "/site-scripts/home-08.js?v=20261115ps", "/site-scripts/backnav-01.js?v=20261115ps", "/site-scripts/confetti-01.js?v=20261115ps", "/site-scripts/dopamine-booster.js?v=20261115ps"];
+const pageScripts = ["/site-scripts/home-02.js?v=20261115ps2", "/site-scripts/home-03.js?v=20261115ps2", "/site-scripts/home-04.js?v=20261115ps2", "/site-scripts/home-05.js?v=20261115ps2", "/site-scripts/home-06.js?v=20261115ps2", "/site-scripts/home-07.js?v=20261115ps2", "/site-scripts/home-08-lang.js?v=20261115ps2", "/site-scripts/home-08.js?v=20261115ps2", "/site-scripts/backnav-01.js?v=20261115ps2", "/site-scripts/confetti-01.js?v=20261115ps2", "/site-scripts/dopamine-booster.js?v=20261115ps2"];
 
 
 
@@ -1286,8 +1286,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
 
-        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=20261115ps" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261115ps" />
+        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=20261115ps2" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261115ps2" />
 
         {"\r\n"}
 
@@ -1459,7 +1459,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
       <div id="loader" className="hide">
 
-        <img src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-220.webp 220w, /optimized/ROCKSTARLOGO-400.webp 400w, /ROCKSTARLOGO.webp 500w" sizes="110px" alt="Rockstar" width="110" height="110" />
+        <img src="/optimized/ROCKSTARLOGO-72.webp" alt="" width="110" height="110" loading="lazy" decoding="async" />
 
         <div className="spin" />
 
@@ -1523,7 +1523,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
           <a className="brand" href="/" onClick={(event) => { goHome(); event.preventDefault(); return false; }} title="Rockstar.Store — Beranda" aria-label="Rockstar.Store — Beranda">
 
-            <img src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="34px" alt="Rockstar.Store" width="34" height="34" />
+            <img src="ROCKSTARLOGO.webp" srcSet="/optimized/ROCKSTARLOGO-72.webp 72w, /optimized/ROCKSTARLOGO-220.webp 220w, /ROCKSTARLOGO.webp 500w" sizes="34px" alt="" width="34" height="34" />
 
             {" "}
 
@@ -2965,7 +2965,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             {"\r\n      "}
 
-            <img src="figur-8064.webp" srcSet="/optimized/figur-8064-220.webp 220w, /figur-8064.webp 524w" sizes="110px" alt="Min Rock" width="110" height="110" loading="lazy" />
+            <img src="figur-8064.webp" srcSet="/optimized/figur-8064-220.webp 220w, /optimized/figur-8064-260.webp 260w, /optimized/figur-8064-400.webp 400w, /figur-8064.webp 524w" sizes="(max-width: 760px) 110px, 184px" alt="Min Rock" width="110" height="110" loading="lazy" decoding="async" />
 
             {"\r\n    "}
 
@@ -2987,7 +2987,7 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
             <span className="walogo">
 
-              <img src="figur-8064.webp" srcSet="/optimized/figur-8064-220.webp 220w, /figur-8064.webp 524w" sizes="40px" alt="Min Rock" width="110" height="110" loading="lazy" onError={(event) => { event.currentTarget.style.display='none';event.currentTarget.parentNode.classList.add('nolabel'); }} />
+              <img src="/optimized/figur-8064-220.webp" alt="" width="110" height="110" loading="lazy" decoding="async" onError={(event) => { event.currentTarget.style.display='none';event.currentTarget.parentNode.classList.add('nolabel'); }} />
 
             </span>
 

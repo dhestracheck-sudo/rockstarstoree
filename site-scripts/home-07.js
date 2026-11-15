@@ -86,7 +86,8 @@ if("serviceWorker" in navigator){
   try {
     currentVersion = sessionStorage.getItem("rs_app_ver") || null;
   } catch(e){}
-  checkForAppUpdate();
+  // Tunda pengecekan versi awal agar tidak memblokir network/main-thread saat first paint
+  setTimeout(checkForAppUpdate, 3000);
 
   // Cek saat pembeli kembali membuka tab website
   document.addEventListener("visibilitychange", function(){
@@ -125,6 +126,7 @@ function pwaInstall(){
 
 function brandLetters(){
   try {
+    if (window.innerWidth <= 760) return;
     const el = document.querySelector(".brandshine");
     if(!el) return;
     const txt = el.textContent;
@@ -139,7 +141,10 @@ function brandLetters(){
   } catch(e) {}
 }
 
-try { brandLetters(); setInterval(function(){ if(document.visibilityState === 'visible') brandLetters(); }, 7000); } catch(e) {}
+try {
+  setTimeout(function(){ if(document.visibilityState === 'visible') brandLetters(); }, 800);
+  setInterval(function(){ if(document.visibilityState === 'visible') brandLetters(); }, 7000);
+} catch(e) {}
 
 (function pwaInit(){
   try {

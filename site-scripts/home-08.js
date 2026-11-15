@@ -1929,14 +1929,12 @@ function syncCart(){
 
   const n = cart.length;
   const cc = document.getElementById("cartCount");
-  if(cc){ cc.innerText = n; cc.setAttribute("data-count", String(n)); }
-
+  const nStr = String(n);
+  if(cc){ cc.textContent = nStr; cc.setAttribute("data-count", nStr); }
   const tot = document.getElementById("total");
-  if(tot){ tot.innerText = n; tot.setAttribute("data-count", String(n)); }
-
+  if(tot){ tot.textContent = nStr; tot.setAttribute("data-count", nStr); }
   const mc = document.getElementById("mnavCartCount");
-
-  if(mc) mc.innerText = n;
+  if(mc) mc.textContent = nStr;
 
 }
 
@@ -3412,21 +3410,25 @@ function hideLoader(){ const l = document.getElementById("loader"); if(l) l.clas
 
 
 function updateCatalogUI(preserveScroll){
-  var scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  var scrollY = preserveScroll && userMoved ? (window.scrollY || document.documentElement.scrollTop || 0) : 0;
   try { applyLang(); } catch(_) {}
   try {
     if(typeof shownCat !== "undefined" && shownCat !== -1){
       if(typeof paintItems === "function") paintItems(true);
     } else {
       if(typeof render === "function") render();
-      if(preserveScroll && scrollY > 0){
+      if(scrollY > 0){
         window.scrollTo({ top: scrollY, behavior: "instant" });
       }
     }
   } catch(_) {}
-  try { if(typeof paintHot === "function") paintHot(); } catch(_) {}
-  try { if(typeof paintRecentViewed === "function") paintRecentViewed(); } catch(_) {}
-  try { if(typeof syncWishCount === "function") syncWishCount(); } catch(_) {}
+  /* Pecah tugas UI sekunder ke frame berikutnya agar main thread tidak freeze (cegah long task TBT & jaga kelancaran HP kentang) */
+  var deferUI = typeof requestAnimationFrame === "function" ? requestAnimationFrame : function(fn){ setTimeout(fn, 0); };
+  deferUI(function(){
+    try { if(typeof paintHot === "function") paintHot(); } catch(_) {}
+    try { if(typeof paintRecentViewed === "function") paintRecentViewed(); } catch(_) {}
+    try { if(typeof syncWishCount === "function") syncWishCount(); } catch(_) {}
+  });
 }
 
 function showCatalogToast(msg){
@@ -3542,18 +3544,8 @@ try {
 
 loadLiveStock().then((didRefetch) => {
   if(didRefetch !== false){
-    try {
-      const savedY = window.scrollY;
-      applyLang();
-      if(shownCat !== -1){
-        try { paintItems(true); } catch(e) {}
-      } else {
-        try { render(); } catch(e) {}
-        if(savedY > 0) window.scrollTo({ top: savedY, behavior: "instant" });
-      }
-      try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
-    } catch(e) {}
-    try { paintHot(); } catch(e) {}
+    /* updateCatalogUI() di dalam loadLiveStock() sudah me-render katalog & UI secara bertahap */
+    try { if(!applyDeepLink(false)) updateUrl(); } catch(e) {}
   }
   try { syncWishCount(); } catch(e) {}
   try { let searchTimer = null;

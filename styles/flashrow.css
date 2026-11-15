@@ -201,12 +201,13 @@
   font-weight: 700;
   color: #9fc4ff;
   white-space: nowrap;
+  will-change: transform, opacity;
   animation: swipe-hint 1.8s ease-in-out infinite;
 }
 
 @keyframes swipe-hint {
-  0%, 100% { transform: translateX(0); opacity: 0.85; }
-  50% { transform: translateX(6px); opacity: 1; }
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.85; }
+  50% { transform: translate3d(6px, 0, 0); opacity: 1; }
 }
 
 @media (min-width: 901px) {

@@ -75,11 +75,12 @@
   border-radius: 50%;
   background: #dfeaff;
   opacity: 0.25;
+  will-change: transform, opacity;
   animation: star-twinkle var(--d, 3.5s) ease-in-out var(--dl, 0s) infinite;
 }
 @keyframes star-twinkle {
-  0%, 100% { opacity: 0.15; transform: scale(0.8); }
-  50% { opacity: 0.9; transform: scale(1.2); }
+  0%, 100% { opacity: 0.15; transform: scale3d(0.8, 0.8, 1); }
+  50% { opacity: 0.9; transform: scale3d(1.2, 1.2, 1); }
 }
 
 @media (max-width: 768px) {

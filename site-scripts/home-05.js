@@ -228,7 +228,7 @@ function megaGo(i, manual){
   megaIdx = ((i % n) + n) % n;
 
   megaPaint();
-  scheduleFitMega(true);
+  scheduleFitMega();
 
   if(manual){ if(megaTimer) clearInterval(megaTimer); megaAuto(); }
 
@@ -246,12 +246,12 @@ function megaAuto(){
 
 }
 
-/* Semua slide dikasih tinggi SAMA PERSIS tanpa un-hide semua slide di frame awal (cegah forced reflow & fetch 8 slide) */
+/* Ukur slide aktif di desktop saja tanpa un-hide slide tersembunyi (cegah forced reflow & fetch 8 slide) */
 
 var __megaMaxH = 0;
 var __megaRaf = 0;
 
-function fitMega(measureAll){
+function fitMega(){
 
   try{
 
@@ -273,33 +273,15 @@ function fitMega(measureAll){
       return;
     }
 
-    const targets = measureAll ? slides : [slides[megaIdx] || slides[0]].filter(Boolean);
-    const originalStyles = targets.map(function(slide){
-      return { display: slide.style.display, height: slide.style.height, minHeight: slide.style.minHeight, maxHeight: slide.style.maxHeight };
-    });
+    const activeSlide = track.querySelector(".mega-slide.on") || slides[megaIdx] || slides[0];
+    if(!activeSlide) return;
 
-    targets.forEach(function(slide){
-      slide.style.display = "flex";
-      slide.style.height = "auto";
-      slide.style.minHeight = "0";
-      slide.style.maxHeight = "none";
-    });
+    const h = Math.ceil(activeSlide.getBoundingClientRect().height);
+    if(!h) return;
 
-    let max = __megaMaxH;
-    targets.forEach(function(slide){
-      max = Math.max(max, Math.ceil(slide.getBoundingClientRect().height));
-    });
-
-    targets.forEach(function(slide, index){
-      slide.style.display = originalStyles[index].display;
-      slide.style.height = originalStyles[index].height;
-      slide.style.minHeight = originalStyles[index].minHeight;
-      slide.style.maxHeight = originalStyles[index].maxHeight;
-    });
-
-    if(!max) return;
-
-    __megaMaxH = Math.max(max, 270);
+    const nextMax = Math.max(__megaMaxH, h, 380);
+    if(nextMax === __megaMaxH && slides[0].style.height === nextMax + "px") return;
+    __megaMaxH = nextMax;
 
     slides.forEach(function(s){
       s.style.height = __megaMaxH + "px";
@@ -311,30 +293,23 @@ function fitMega(measureAll){
 
 }
 
-function scheduleFitMega(measureAll){
+function scheduleFitMega(){
   if(__megaRaf) cancelAnimationFrame(__megaRaf);
   __megaRaf = requestAnimationFrame(function(){
     __megaRaf = 0;
-    fitMega(Boolean(measureAll));
+    fitMega();
   });
 }
 
-scheduleFitMega(false);
-
 let megaFitT;
 
-window.addEventListener("resize", function(){ clearTimeout(megaFitT); __megaMaxH = 0; megaFitT = setTimeout(function(){ scheduleFitMega(false); }, 150); }, { passive: true });
+window.addEventListener("resize", function(){ clearTimeout(megaFitT); __megaMaxH = 0; megaFitT = setTimeout(function(){ scheduleFitMega(); }, 150); }, { passive: true });
 
-if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ scheduleFitMega(false); });
-
-const megaTrackEl = document.getElementById("megaTrack");
-
-if(megaTrackEl) megaTrackEl.addEventListener("load", function(){ scheduleFitMega(false); }, true);
+if(document.fonts && document.fonts.ready && document.fonts.ready.then) document.fonts.ready.then(function(){ scheduleFitMega(); });
 
 window.addEventListener("load", function(){
   setTimeout(function(){
     revealMegaDeferredBg();
-    scheduleFitMega(true);
-  }, 2000);
+  }, 4500);
 }, { once: true });
 
