@@ -1,135 +1,176 @@
-
-const ADMIN_PIN = "112233"; // Samakan dengan konfigurasi panel admin.
+const ADMIN_PIN = "112233";
+const ADMIN_SESSION_PIN_KEY = "rs_admin_unlocked_pin_v1";
+const ANALISIS_TAB_KEY = "rs_analisis_active_tab_v1";
 const SB_URL = "https://mvzlmjgfctdxnjxveuoo.supabase.co";
 const SB_KEY = "sb_publishable_ZJIbLAyJKztU0Z14ZyQpGA_9_QooXth";
 
-function sbTable(sheet){
+function sbTable(sheet) {
   sheet = String(sheet || "").toLowerCase();
-  if(sheet === "akun") return "akun";
-  if(sheet === "info") return "info";
-  if(sheet === "topup") return "topup";
-  if(sheet === "joki") return "joki";
+  if (sheet === "akun") return "akun";
+  if (sheet === "info") return "info";
+  if (sheet === "topup") return "topup";
+  if (sheet === "joki") return "joki";
   return "brainrot";
 }
-function sbList(sheet){
-  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=*&order=urutan", {
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
-}
-function escHtml(s){ return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
-function unlock(){
-  if(document.getElementById("pinInput").value === ADMIN_PIN){
-    document.getElementById("pinCard").style.display = "none";
-    document.getElementById("mainCard").style.display = "block";
-    loadAnalisis();
-    loadOrders(true);
-    loadRekap();
-    loadAsisten();
-    if(window.__orderTimer) clearInterval(window.__orderTimer);
-    window.__orderTimer = setInterval(function(){ loadOrders(false); }, 20000);
-  } else {
-    alert("PIN salah.");
-  }
+function sbH(extra) {
+  return Object.assign({ apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, extra || {});
 }
 
-function loadAnalisis(){
-  const box = document.getElementById("analBox");
-  const btn = document.getElementById("analBtn");
-  btn.disabled = true;
-  box.textContent = "Menghitung...";
-  Promise.all([sbList("Brainrot"), sbList("Akun"), sbList("Topup"), sbList("Joki")]).then(function(rs){
-    btn.disabled = false;
-    try {
-      const tabs = ["Brainrot", "Akun", "Topup", "Joki"];
-      const all = [];
-      rs.forEach(function(arr, ti){
-        (arr || []).forEach(function(o){
-          const nm = String(o.name || "").trim();
-          if(!nm || nm.indexOf("CAT:") === 0) return;
-          all.push({ tab: tabs[ti], name: nm,
-            kat: String(o.kategori || "-").trim() || "-",
-            lihat: Number(o.dilihat) || 0, stok: Number(o.stock),
-            laku: Number(o.sold) || 0 });
-        });
-      });
-      const totLihat = all.reduce(function(s, o){ return s + o.lihat; }, 0);
-      const top = all.slice().sort(function(a, b){ return b.lihat - a.lihat; }).slice(0, 10);
-      const perKat = {};
-      all.forEach(function(o){ const k = o.tab + " / " + o.kat; perKat[k] = (perKat[k] || 0) + o.lihat; });
-      const topKat = Object.keys(perKat).map(function(k){ return { k: k, v: perKat[k] }; })
-        .sort(function(a, b){ return b.v - a.v; }).slice(0, 5);
-      const tipis = all.filter(function(o){ return o.stok > 0 && o.stok <= 3; })
-        .sort(function(a, b){ return a.stok - b.stok; }).slice(0, 10);
-      const maxV = top.length ? top[0].lihat : 0;
-      function bar(v){
-        const p = maxV ? Math.max(4, Math.round(v / maxV * 100)) : 0;
-        return '<div style="height:8px;background:#1a2440;border-radius:99px;margin:4px 0 8px;"><i style="display:block;height:100%;width:' + p + '%;background:linear-gradient(90deg,var(--blue),var(--blue2));border-radius:99px;"></i></div>';
-      }
-      let h = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">' +
-        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:var(--font-oswald),sans-serif;font-size:26px;">' + totLihat.toLocaleString("id-ID") + '</div><div style="color:var(--mut);font-size:12px;">Total dilihat</div></div>' +
-        '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:var(--font-oswald),sans-serif;font-size:26px;">' + all.length + '</div><div style="color:var(--mut);font-size:12px;">Produk aktif</div></div></div>';
-      h += '<b>🔥 Paling sering dilihat</b>';
-      if(!top.length || !maxV) h += '<p class="hint">Belum ada data (counter masih 0).</p>';
-      top.forEach(function(o, i){
-        h += '<div style="margin-top:8px;">' + (i + 1) + '. ' + escHtml(o.name).slice(0, 60) +
-          ' <span style="color:var(--mut);">(' + escHtml(o.tab) + ' • 👁 ' + o.lihat.toLocaleString("id-ID") + ' • terjual ' + o.laku.toLocaleString("id-ID") + ')</span>' + bar(o.lihat) + '</div>';
-      });
-      h += '<b style="display:block;margin-top:14px;">📂 Kategori terlaris dilihat</b><p>' +
-        (topKat.length ? topKat.map(function(k, i){ return (i + 1) + ". " + escHtml(k.k) + " — 👁 " + k.v.toLocaleString("id-ID"); }).join("<br>") : '<span class="hint">Belum ada data.</span>') + '</p>';
-      h += '<b>⚠️ Stok menipis (≤3)</b><p>' +
-        (tipis.length ? tipis.map(function(o){ return "• " + escHtml(o.name).slice(0, 55) + " — sisa " + o.stok; }).join("<br>") : "Aman, tidak ada stok menipis.") + '</p>';
-      h += '<b>🛒 Aktivitas 7 hari</b><p id="analAct">Memuat...</p>';
-      box.innerHTML = h;
-      loadAktivitas();
-    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung.</span>'; }
-  }).catch(function(){ btn.disabled = false; box.innerHTML = '<span class="err">Gagal ambil data, cek koneksi.</span>'; });
-}
-
-function loadAktivitas(){
-  const el = document.getElementById("analAct");
-  if(!el) return;
-  const since = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
-  fetch(SB_URL + "/rest/v1/klik?select=aksi,name,price&order=waktu.desc&limit=5000&waktu=gte." + encodeURIComponent(since), {
-    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
-  }).then(r => r.json()).then(function(rows){
-    try {
-      rows = Array.isArray(rows) ? rows : [];
-      const cnt = { klik: 0, keranjang: 0, checkout: 0, "wishlist+": 0 };
-      const topKlik = {}, topKer = {}, topWish = {};
-      rows.forEach(function(o){
-        const a = String(o.aksi || "");
-        if(cnt[a] !== undefined) cnt[a]++;
-        const nm = String(o.name || "").slice(0, 55);
-        if(a === "klik" && nm) topKlik[nm] = (topKlik[nm] || 0) + 1;
-        if(a === "keranjang" && nm) topKer[nm] = (topKer[nm] || 0) + 1;
-        if(a === "wishlist+" && nm) topWish[nm] = (topWish[nm] || 0) + 1;
-      });
-      function toplist(m, n){
-        return Object.keys(m).map(function(k){ return { k: k, v: m[k] }; })
-          .sort(function(a, b){ return b.v - a.v; }).slice(0, n);
-      }
-      let h = '👁 Diklik: <b>' + cnt.klik + '</b> • 🛒 Masuk keranjang: <b>' + cnt.keranjang + '</b> • 💬 Checkout: <b>' + cnt.checkout + '</b> • ❤️ Difavoritkan: <b>' + cnt["wishlist+"] + '</b><br>';
-      h += '<span style="color:var(--mut);">Corong: ' + cnt.klik + ' → ' + cnt.keranjang + ' → ' + cnt.checkout + '</span>';
-      const tk = toplist(topKlik, 5), tc = toplist(topKer, 5), tw = toplist(topWish, 5);
-      h += '<br><br><b>Paling diklik:</b><br>' + (tk.length ? tk.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
-      h += '<br><br><b>Paling dimasukkan keranjang:</b><br>' + (tc.length ? tc.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
-      h += '<br><br><b>Paling difavoritkan ❤️:</b><br>' + (tw.length ? tw.map(function(o, i){ return (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)"; }).join("<br>") : '<span style="color:var(--mut);">belum ada</span>');
-      el.innerHTML = h;
-    } catch(e){ el.textContent = "Gagal hitung aktivitas."; }
-  }).catch(function(){ el.textContent = "Gagal ambil aktivitas."; });
-}
-
-/* ===== inbox order: status baru/lunas/batal + notif + rekap ===== */
-var lastBaru = -1;
-function sbH(extra){ return Object.assign({ apikey: SB_KEY, Authorization: "Bearer " + SB_KEY, "Content-Type": "application/json" }, extra || {}); }
-function pinH(extra){
+function pinH(extra) {
   const h = sbH(extra);
   const p = document.getElementById("pinInput");
   h["x-admin-pin"] = p ? (p.value || "") : "";
   return h;
 }
-function orderBeep(){
+
+function sbList(sheet) {
+  return fetch(SB_URL + "/rest/v1/" + sbTable(sheet) + "?select=name,kategori,stock,dilihat,sold&order=urutan", {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
+}
+
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+let CACHED_CATALOG_PROMISE = null;
+function fetchCatalogOnce(force) {
+  if (!force && CACHED_CATALOG_PROMISE) return CACHED_CATALOG_PROMISE;
+  const tabs = ["Brainrot", "Akun", "Topup", "Joki"];
+  CACHED_CATALOG_PROMISE = Promise.all(tabs.map(t => sbList(t).then(rows => ({ tab: t, rows }))))
+    .catch(() => tabs.map(t => ({ tab: t, rows: [] })));
+  return CACHED_CATALOG_PROMISE;
+}
+
+const lazyLoaded = { omzet: false, produk: false };
+window.ANALISIS_ORDER_FILTER = "baru";
+let CACHED_ORDERS_LIST = [];
+let lastBaru = -1;
+
+function openAnalisisTab(tabName) {
+  const valid = ["orders", "omzet", "produk"];
+  const next = valid.includes(tabName) ? tabName : "orders";
+  document.querySelectorAll(".an-tab-btn").forEach(btn => {
+    const active = btn.dataset.antab === next;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-selected", String(active));
+  });
+  document.querySelectorAll(".an-tab-panel").forEach(p => {
+    p.classList.toggle("active", p.id === "antab-" + next);
+  });
+  try { sessionStorage.setItem(ANALISIS_TAB_KEY, next); } catch (_) {}
+
+  if (next === "omzet" && !lazyLoaded.omzet) {
+    lazyLoaded.omzet = true;
+    loadRekap();
+  } else if (next === "produk" && !lazyLoaded.produk) {
+    lazyLoaded.produk = true;
+    loadAnalisis(false);
+  }
+}
+window.openAnalisisTab = openAnalisisTab;
+
+function setOrderFilter(mode) {
+  window.ANALISIS_ORDER_FILTER = ["all", "baru", "lunas"].includes(mode) ? mode : "baru";
+  renderOrdersList();
+}
+window.setOrderFilter = setOrderFilter;
+
+function refreshAllAnalisis() {
+  const btn = document.getElementById("analBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "Memuat..."; }
+  lazyLoaded.omzet = false;
+  lazyLoaded.produk = false;
+  CACHED_CATALOG_PROMISE = null;
+  Promise.all([loadOrders(false), loadBriefing()]).finally(() => {
+    if (btn) { btn.disabled = false; btn.textContent = "🔄 Muat Ulang"; }
+    let cur = "orders";
+    try { cur = sessionStorage.getItem(ANALISIS_TAB_KEY) || "orders"; } catch (_) {}
+    if (cur === "omzet") { lazyLoaded.omzet = true; loadRekap(); }
+    if (cur === "produk") { lazyLoaded.produk = true; loadAnalisis(true); }
+  });
+}
+window.refreshAllAnalisis = refreshAllAnalisis;
+
+function unlock() {
+  const pinEl = document.getElementById("pinInput");
+  const errEl = document.getElementById("pinError");
+  const val = pinEl ? pinEl.value : "";
+  if (val === ADMIN_PIN) {
+    if (errEl) errEl.textContent = "";
+    try { sessionStorage.setItem(ADMIN_SESSION_PIN_KEY, val); } catch (_) {}
+    const pinCard = document.getElementById("pinCard");
+    if (pinCard) pinCard.style.display = "none";
+    const mainCard = document.getElementById("mainCard");
+    if (mainCard) mainCard.style.display = "block";
+    const btn = document.getElementById("analBtn");
+    if (btn) btn.style.display = "inline-flex";
+    const lbtn = document.getElementById("lockAnalisisBtn");
+    if (lbtn) lbtn.style.display = "inline-flex";
+
+    loadOrders(true);
+    loadBriefing();
+
+    let cur = "orders";
+    try { cur = sessionStorage.getItem(ANALISIS_TAB_KEY) || "orders"; } catch (_) {}
+    openAnalisisTab(cur);
+
+    if (window.__orderTimer) clearInterval(window.__orderTimer);
+    window.__orderTimer = setInterval(function () { loadOrders(false); }, 20000);
+  } else {
+    if (errEl) errEl.textContent = "PIN salah. Coba lagi.";
+    else alert("PIN salah.");
+    if (pinEl) { pinEl.focus(); pinEl.select(); }
+  }
+}
+window.unlock = unlock;
+
+function lockAnalisis() {
+  try { sessionStorage.removeItem(ADMIN_SESSION_PIN_KEY); } catch (_) {}
+  if (window.__orderTimer) clearInterval(window.__orderTimer);
+  lazyLoaded.omzet = false;
+  lazyLoaded.produk = false;
+  const pinEl = document.getElementById("pinInput");
+  if (pinEl) pinEl.value = "";
+  const errEl = document.getElementById("pinError");
+  if (errEl) errEl.textContent = "";
+  const mainCard = document.getElementById("mainCard");
+  if (mainCard) mainCard.style.display = "none";
+  const btn = document.getElementById("analBtn");
+  if (btn) btn.style.display = "none";
+  const lbtn = document.getElementById("lockAnalisisBtn");
+  if (lbtn) lbtn.style.display = "none";
+  const pinCard = document.getElementById("pinCard");
+  if (pinCard) pinCard.style.display = "block";
+  if (pinEl) pinEl.focus();
+}
+window.lockAnalisis = lockAnalisis;
+
+function loadBriefing() {
+  const box = document.getElementById("asistenBox");
+  if (!box) return Promise.resolve();
+  return fetchCatalogOnce(false).then(tabs => {
+    let habisLaris = 0, tipis = 0;
+    tabs.forEach(t => (t.rows || []).forEach(o => {
+      const nm = String(o.name || "").trim();
+      if (!nm || nm.indexOf("CAT:") === 0 || nm.indexOf("INFO_") === 0) return;
+      const st = Number(o.stock);
+      if (st === 0 && (Number(o.dilihat) || 0) > 10) habisLaris++;
+      else if (st > 0 && st <= 3) tipis++;
+    }));
+    const baruTxt = lastBaru > 0 ? lastBaru + " order menunggu" : "Semua order aman";
+    const stokTxt = (habisLaris ? habisLaris + " produk habis" : (tipis ? tipis + " stok menipis" : "Stok aman"));
+    box.innerHTML =
+      '<div class="an-brief-stats">' +
+        '<span class="an-chip ' + (lastBaru > 0 ? "warn" : "good") + '">📦 ' + baruTxt + '</span>' +
+        '<span class="an-chip">' + (habisLaris || tipis ? "⚠️ " : "✅ ") + stokTxt + '</span>' +
+      '</div>' +
+      '<button type="button" class="an-pill-btn" onclick="openAnalisisTab(\'produk\')">Lihat detail →</button>';
+  }).catch(() => {});
+}
+
+function orderBeep() {
   try {
     var C = window.AudioContext || window.webkitAudioContext;
     var c = new C(), o = c.createOscillator(), g = c.createGain();
@@ -137,122 +178,274 @@ function orderBeep(){
     o.frequency.value = 880; g.gain.value = 0.08; o.start();
     g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.6);
     o.stop(c.currentTime + 0.6);
-  } catch(e) {}
+  } catch (_) {}
 }
+
 var stkJobs = [];
-function orderItemsHtml(o, oid){
+function orderItemsHtml(o, oid) {
   let det = [];
-  try { det = JSON.parse(o.items) || []; } catch(e) {}
-  if(!Array.isArray(det) || !det.length) return escHtml(o.items).slice(0, 300);
+  try { det = JSON.parse(o.items) || []; } catch (_) {}
+  if (!Array.isArray(det) || !det.length) return escHtml(o.items).slice(0, 300);
   const rbxUser = (det[0] && det[0].u) ? String(det[0].u).trim() : "";
   const userHtml = rbxUser
-    ? '<div style="margin:4px 0 6px;padding:4px 10px;background:rgba(43,78,255,0.22);border:1px solid rgba(114,151,255,0.45);border-radius:8px;display:inline-block;">' +
-      '👤 Username Roblox: <b style="color:#70e1ff;">' + escHtml(rbxUser) + '</b></div><br>'
+    ? '<div class="an-order-buyer">👤 Roblox: <b>' + escHtml(rbxUser) + '</b></div>'
     : '';
-  return userHtml + det.map(function(d, ix){
+  const listHtml = det.map(function (d, ix) {
     stkJobs.push({ id: "stk-" + oid + "-" + ix, tbl: sbTable(d.p), nm: d.n, q: Number(d.q) || 0 });
-    return "• " + escHtml(d.n).slice(0, 55) + " ×" + (Number(d.q) || 0) +
-      ' <span id="stk-' + oid + '-' + ix + '" style="color:var(--mut);">cek stok...</span>';
+    return "• " + escHtml(d.n).slice(0, 58) + " ×" + (Number(d.q) || 0) +
+      ' <span id="stk-' + oid + '-' + ix + '" style="color:var(--mut);font-size:12px;">cek stok...</span>';
   }).join("<br>");
+  return userHtml + '<div class="an-order-items">' + listHtml + '</div>';
 }
-function refreshOrderStocks(){
-  stkJobs.forEach(function(job){
+
+function refreshOrderStocks() {
+  stkJobs.forEach(function (job) {
     fetch(SB_URL + "/rest/v1/" + job.tbl + "?select=stock&name=eq." + encodeURIComponent(job.nm), { headers: sbH() })
-    .then(r => r.json()).then(function(rr){
-      const el = document.getElementById(job.id);
-      if(!el) return;
-      if(!(rr && rr[0] && rr[0].stock !== undefined && rr[0].stock !== null)){
-        el.textContent = "(produk tidak ketemu di database!)";
-        el.style.color = "var(--red)";
-        return;
-      }
-      el.textContent = "(stok kini: " + rr[0].stock + ")";
-    }).catch(function(){});
+      .then(r => r.json()).then(function (rr) {
+        const el = document.getElementById(job.id);
+        if (!el) return;
+        if (!(rr && rr[0] && rr[0].stock !== undefined && rr[0].stock !== null)) {
+          el.textContent = "(produk tidak ketemu)";
+          el.style.color = "#fca5a5";
+          return;
+        }
+        el.textContent = "(stok kini: " + rr[0].stock + ")";
+      }).catch(() => {});
   });
   stkJobs = [];
 }
-function orderWaktu(s){
+
+function orderWaktu(s) {
   try { return new Date(s).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }); }
-  catch(e){ return ""; }
-}
-function loadOrders(first){
-  const box = document.getElementById("orderBox");
-  // hitung SEMUA (tanpa limit) biar angka benar, daftar tetap 30 terbaru
-  fetch(SB_URL + "/rest/v1/orders?select=status", { headers: sbH() })
-  .then(r => r.json()).then(function(all){
-    try {
-      const nBaruAll = (Array.isArray(all) ? all : []).filter(o => String(o.status) === "baru").length;
-      if(!first && lastBaru >= 0 && nBaruAll > lastBaru){
-        orderBeep();
-        try {
-          if(window.Notification && Notification.permission === "granted")
-            new Notification("Order baru!", { body: nBaruAll + " menunggu diproses" });
-        } catch(e) {}
-      }
-      lastBaru = nBaruAll;
-      document.title = (nBaruAll ? "(" + nBaruAll + ") " : "") + "Analisis — Rockstar.Store";
-    } catch(e) {}
-  }).catch(function(){});
-  fetch(SB_URL + "/rest/v1/orders?select=*&order=waktu.desc&limit=30", { headers: sbH() })
-  .then(r => r.json()).then(function(rows){
-    try {
-      rows = Array.isArray(rows) ? rows : [];
-      const nBatal = rows.filter(o => String(o.status) === "batal").length;
-      rows = rows.filter(o => String(o.status) !== "batal");
-      const today = new Date().toDateString();
-      let rekapN = 0, rekapRp = 0;
-      rows.forEach(function(o){
-        try {
-          if(String(o.status) === "lunas" && new Date(o.waktu).toDateString() === today){
-            rekapN++; rekapRp += Number(o.total) || 0;
-          }
-        } catch(e) {}
-      });
-      const stBadge = { baru: "var(--blue2)", lunas: "var(--green)", batal: "var(--mut)" };
-      stkJobs = [];
-      let h = '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
-        '<b style="font-size:16px;">📦 Order masuk' + (lastBaru > 0 ? ' (' + lastBaru + ' baru)' : '') + '</b>' +
-        '<button onclick="notifOn()" style="width:auto;margin:0;padding:8px 14px;font-size:13px;">🔔 Notif</button>' +
-        '<button onclick="loadOrders(false)" style="width:auto;margin:0;padding:8px 14px;font-size:13px;background:#232c44;">🔄</button></div>';
-      h += '<p class="hint">Hari ini: <b style="color:var(--txt);">' + rekapN + ' lunas</b> • Rp ' + rekapRp.toLocaleString("id-ID") + ' • ' + (lastBaru < 0 ? "…" : lastBaru) + ' menunggu</p>';
-      if(!rows.length) h += '<p class="hint">Belum ada order.</p>';
-      if(nBatal) h += '<p class="hint">' + nBatal + ' order batal disembunyikan.</p>';
-      rows.slice(0, 20).forEach(function(o){
-        const st = String(o.status || "baru");
-        const col = stBadge[st] || "var(--mut)";
-        h += '<div style="background:var(--bg2);border:1px solid var(--line);border-left:4px solid ' + col +
-          ';border-radius:12px;padding:10px 12px;margin-top:8px;font-size:13px;">' +
-          '<div><b>#' + o.id + '</b> <span style="color:' + col + ';font-weight:700;">' + escHtml(st.toUpperCase()) + '</span>' +
-          ' <span style="color:var(--mut);">• ' + orderWaktu(o.waktu) + ' • Rp ' + Number(o.total || 0).toLocaleString("id-ID") + '</span></div>' +
-          '<div style="margin-top:4px;">' + orderItemsHtml(o, o.id) + '</div>' +
-          (st === "lunas" ? '<div data-cred="' + o.id + '"></div>' : '');
-        if(st === "baru")
-          h += '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">' +
-            '<button onclick="orderSet(' + o.id + ',\'lunas\')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--green);">✅ Lunas</button>' +
-            '<button onclick="triggerAutoTrade(' + o.id + ')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--blue);">🤖 Auto-Trade</button>' +
-            '<button onclick="orderSet(' + o.id + ',\'batal\')" style="flex:1;margin:0;padding:9px;font-size:13px;background:var(--red);">✖ Batal</button></div>';
-        h += '</div>';
-      });
-      box.innerHTML = h;
-      refreshOrderStocks();
-      refreshOrderCreds();
-    } catch(e){ box.innerHTML = '<span class="err">Gagal tampilkan order.</span>'; }
-  }).catch(function(){ if(first) box.innerHTML = '<span class="err">Gagal ambil order.</span>'; });
-}
-function notifOn(){
-  try {
-    if(!window.Notification){ alert("Browser tidak dukung notifikasi."); return; }
-    Notification.requestPermission().then(function(p){ alert(p === "granted" ? "Notifikasi aktif ✅" : "Notifikasi ditolak."); });
-  } catch(e){ alert("Browser tidak dukung notifikasi."); }
+  catch (_) { return ""; }
 }
 
-/* ===== rekap uang: omzet lunas per periode ===== */
-function loadRekap(){
+function renderOrdersList() {
+  const box = document.getElementById("orderBox");
+  if (!box) return;
+  const rows = CACHED_ORDERS_LIST || [];
+  const today = new Date().toDateString();
+  let rekapN = 0, rekapRp = 0, nBaru = 0, nLunas = 0;
+
+  rows.forEach(o => {
+    const st = String(o.status || "baru");
+    if (st === "baru") nBaru++;
+    if (st === "lunas") {
+      nLunas++;
+      try {
+        if (new Date(o.waktu).toDateString() === today) {
+          rekapN++;
+          rekapRp += Number(o.total) || 0;
+        }
+      } catch (_) {}
+    }
+  });
+
+  const filter = window.ANALISIS_ORDER_FILTER || "baru";
+  // Jika filter 'baru' kosong tetapi ada order lunas/all, tampilkan info bersih
+  const filtered = rows.filter(o => filter === "all" || String(o.status || "baru") === filter);
+
+  let h = '<div class="an-toolbar">' +
+    '<div class="an-filter-pills">' +
+      '<button type="button" class="an-filter-btn ' + (filter === "baru" ? "active" : "") + '" onclick="setOrderFilter(\'baru\')">Menunggu (' + nBaru + ')</button>' +
+      '<button type="button" class="an-filter-btn ' + (filter === "lunas" ? "active" : "") + '" onclick="setOrderFilter(\'lunas\')">Lunas (' + nLunas + ')</button>' +
+      '<button type="button" class="an-filter-btn ' + (filter === "all" ? "active" : "") + '" onclick="setOrderFilter(\'all\')">Semua (' + rows.length + ')</button>' +
+    '</div>' +
+    '<div style="display:flex;gap:6px;align-items:center;">' +
+      '<span class="an-chip good">Hari ini: ' + rekapN + ' • Rp ' + rekapRp.toLocaleString("id-ID") + '</span>' +
+      '<button type="button" class="an-pill-btn" onclick="notifOn()">🔔 Notif</button>' +
+    '</div>' +
+  '</div>';
+
+  if (!filtered.length) {
+    h += '<p class="hint">' + (filter === "baru" ? "Tidak ada order menunggu saat ini." : "Belum ada order di filter ini.") + '</p>';
+  }
+
+  const stCol = { baru: "#60a5fa", lunas: "#22c55e", batal: "#64748b" };
+  stkJobs = [];
+  filtered.slice(0, 25).forEach(function (o) {
+    const st = String(o.status || "baru");
+    const col = stCol[st] || "#94a3b8";
+    h += '<div class="an-order-card" style="border-left-color:' + col + ';">' +
+      '<div class="an-order-head">' +
+        '<div><span class="an-order-id">#' + o.id + '</span> <span style="color:' + col + ';font-size:12px;font-weight:700;margin-left:6px;">' + escHtml(st.toUpperCase()) + '</span>' +
+        '<span style="color:var(--mut);font-size:12px;margin-left:8px;">' + orderWaktu(o.waktu) + '</span></div>' +
+        '<div class="an-order-price">Rp ' + Number(o.total || 0).toLocaleString("id-ID") + '</div>' +
+      '</div>' +
+      orderItemsHtml(o, o.id) +
+      (st === "lunas" ? '<div data-cred="' + o.id + '"></div>' : '') +
+      (st === "baru"
+        ? '<div class="an-order-actions">' +
+            '<button type="button" class="btn-lunas" onclick="orderSet(' + o.id + ',\'lunas\')">✅ Lunas</button>' +
+            '<button type="button" class="btn-batal" onclick="orderSet(' + o.id + ',\'batal\')">✖ Batal</button>' +
+          '</div>'
+        : '') +
+    '</div>';
+  });
+
+  box.innerHTML = h;
+  refreshOrderStocks();
+  refreshOrderCreds();
+}
+
+function loadOrders(first) {
+  const box = document.getElementById("orderBox");
+  const pCount = fetch(SB_URL + "/rest/v1/orders?select=status", { headers: sbH() })
+    .then(r => r.json()).then(all => {
+      try {
+        const nBaruAll = (Array.isArray(all) ? all : []).filter(o => String(o.status) === "baru").length;
+        if (!first && lastBaru >= 0 && nBaruAll > lastBaru) {
+          orderBeep();
+          try {
+            if (window.Notification && Notification.permission === "granted") {
+              new Notification("Order baru!", { body: nBaruAll + " menunggu diproses" });
+            }
+          } catch (_) {}
+        }
+        lastBaru = nBaruAll;
+        document.title = (nBaruAll ? "(" + nBaruAll + ") " : "") + "Analisis — Rockstar.Store";
+        loadBriefing();
+      } catch (_) {}
+    }).catch(() => {});
+
+  const pRows = fetch(SB_URL + "/rest/v1/orders?select=*&order=waktu.desc&limit=40", { headers: sbH() })
+    .then(r => r.json()).then(rows => {
+      CACHED_ORDERS_LIST = (Array.isArray(rows) ? rows : []).filter(o => String(o.status) !== "batal");
+      renderOrdersList();
+    }).catch(() => {
+      if (first && box) box.innerHTML = '<span class="err">Gagal ambil order.</span>';
+    });
+
+  return Promise.all([pCount, pRows]);
+}
+
+function notifOn() {
+  try {
+    if (!window.Notification) { alert("Browser tidak dukung notifikasi."); return; }
+    Notification.requestPermission().then(function (p) { alert(p === "granted" ? "Notifikasi aktif ✅" : "Notifikasi ditolak."); });
+  } catch (_) { alert("Browser tidak dukung notifikasi."); }
+}
+window.notifOn = notifOn;
+
+function orderSet(id, st) {
+  if (st === "batal" && !confirm("Batalkan order #" + id + "? Data akun kembali READY.")) return;
+  if (st === "lunas" && !confirm("Lunaskan order #" + id + "? Stok berkurang dan akun otomatis diambil.")) return;
+
+  fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
+    .then(r => r.json()).then(function (rows) {
+      const o = (rows && rows[0]) || null;
+      if (!o) return;
+      return fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
+        method: "PATCH",
+        headers: sbH(),
+        body: JSON.stringify({ status: st })
+      }).then(function () {
+        let det = [];
+        try { det = JSON.parse(o.items) || []; } catch (_) {}
+        if (!Array.isArray(det)) det = [];
+
+        if (st === "lunas") {
+          det.forEach(function (d) {
+            const tbl = sbTable(d.p);
+            const q = Number(d.q) || 0;
+            const isAkun = String(d.p || "").toLowerCase() === "akun";
+            if (isAkun) {
+              for (let k = 0; k < q; k++) {
+                fetch(SB_URL + "/rest/v1/akun_data?select=id&product=eq." + encodeURIComponent(d.n) + "&status=eq.ready&order=id&limit=1", { headers: pinH() })
+                  .then(r => r.json()).then(function (rr) {
+                    if (!(rr && rr[0])) return;
+                    const rid = rr[0].id;
+                    fetch(SB_URL + "/rest/v1/akun_data?id=eq." + rid + "&status=eq.ready", {
+                      method: "PATCH", headers: pinH({ Prefer: "return=representation" }),
+                      body: JSON.stringify({ status: "sold", order_id: id })
+                    }).then(r => r.json()).then(function (ok) {
+                      if (!(ok && ok[0])) return;
+                      fetch(SB_URL + "/rest/v1/" + tbl + "?select=sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+                        .then(r => r.json()).then(function (sr) {
+                          const curT = (sr && sr[0]) ? Number(sr[0].sold) || 0 : 0;
+                          fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+                            method: "PATCH", headers: sbH(), body: JSON.stringify({ sold: curT + 1 })
+                          }).catch(() => {});
+                        }).catch(() => {});
+                    }).catch(() => {});
+                  }).catch(() => {});
+              }
+            } else {
+              fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock,sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
+                .then(r => r.json()).then(function (rr) {
+                  if (!(rr && rr[0])) return;
+                  const curS = Number(rr[0].stock) || 0;
+                  const curT = Number(rr[0].sold) || 0;
+                  fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
+                    method: "PATCH", headers: sbH(),
+                    body: JSON.stringify({ stock: Math.max(0, curS - q), sold: curT + q })
+                  }).catch(() => {});
+                }).catch(() => {});
+            }
+          });
+        }
+
+        if (st === "batal") {
+          fetch(SB_URL + "/rest/v1/akun_data?select=id&order_id=eq." + id, { headers: pinH() })
+            .then(r => r.json()).then(function (rr) {
+              (rr || []).forEach(function (x) {
+                fetch(SB_URL + "/rest/v1/akun_data?id=eq." + x.id, {
+                  method: "PATCH", headers: pinH(),
+                  body: JSON.stringify({ status: "ready", order_id: null })
+                }).catch(() => {});
+              });
+            }).catch(() => {});
+        }
+
+        loadOrders(false);
+        if (lazyLoaded.omzet) loadRekap();
+      });
+    }).catch(() => { alert("Gagal ubah status."); });
+}
+window.orderSet = orderSet;
+
+function copyTxt(t, el) {
+  const done = function () { if (el) { const o = el.textContent; el.textContent = "✅ Tersalin"; setTimeout(function () { el.textContent = o; }, 1200); } };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(t).then(done).catch(() => { fallbackCopy(t); done(); });
+    } else { fallbackCopy(t); done(); }
+  } catch (_) { fallbackCopy(t); done(); }
+}
+window.copyTxt = copyTxt;
+
+function fallbackCopy(t) {
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); document.body.removeChild(ta);
+  } catch (_) {}
+}
+
+function refreshOrderCreds() {
+  document.querySelectorAll("[data-cred]").forEach(function (el) {
+    const oid = el.getAttribute("data-cred");
+    fetch(SB_URL + "/rest/v1/akun_data?select=product,akun_id,akun_pw&order_id=eq." + oid + "&order=id", { headers: pinH() })
+      .then(r => r.json()).then(function (rr) {
+        if (!rr || !rr.length) return;
+        el.innerHTML = rr.map(function (x) {
+          const cred = String(x.akun_id) + " / " + String(x.akun_pw);
+          const escCred = escHtml(cred);
+          const safeJs = cred.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+          return '<div class="an-cred-box">🔑 ' + escHtml(String(x.product)).slice(0, 48) +
+            '<br><b>' + escCred + '</b><br>' +
+            '<button type="button" onclick="copyTxt(\'' + safeJs + '\',this)">📋 Copy Akun</button></div>';
+        }).join("");
+      }).catch(() => {});
+  });
+}
+
+function loadRekap() {
   const box = document.getElementById("rekapBox");
-  box.innerHTML = '<p class="hint">Menghitung rekap...</p>';
+  if (!box) return;
+  box.innerHTML = '<p class="hint">Menghitung omzet...</p>';
   fetch(SB_URL + "/rest/v1/orders?select=status,total,waktu&order=waktu.desc&limit=5000", { headers: sbH() })
-  .then(r => r.json()).then(function(rows){
-    try {
+    .then(r => r.json()).then(function (rows) {
       rows = Array.isArray(rows) ? rows : [];
       const now = new Date();
       const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -260,219 +453,129 @@ function loadRekap(){
       const start30 = startDay - 29 * 86400000;
       const P = { day: { n: 0, rp: 0 }, w7: { n: 0, rp: 0 }, m30: { n: 0, rp: 0 }, all: { n: 0, rp: 0 } };
       let hutang = 0, hutangRp = 0;
-      rows.forEach(function(o){
-        if(String(o.status) !== "lunas"){
-          if(String(o.status) === "baru"){ hutang++; hutangRp += Number(o.total) || 0; }
+      rows.forEach(function (o) {
+        if (String(o.status) !== "lunas") {
+          if (String(o.status) === "baru") { hutang++; hutangRp += Number(o.total) || 0; }
           return;
         }
         const t = new Date(o.waktu).getTime();
         const rp = Number(o.total) || 0;
         P.all.n++; P.all.rp += rp;
-        if(t >= start30){ P.m30.n++; P.m30.rp += rp; }
-        if(t >= start7){ P.w7.n++; P.w7.rp += rp; }
-        if(t >= startDay){ P.day.n++; P.day.rp += rp; }
+        if (t >= start30) { P.m30.n++; P.m30.rp += rp; }
+        if (t >= start7) { P.w7.n++; P.w7.rp += rp; }
+        if (t >= startDay) { P.day.n++; P.day.rp += rp; }
       });
-      function card(t, p){
-        return '<div style="flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;">' +
-          '<div style="font-family:var(--font-oswald),sans-serif;font-size:20px;color:var(--green);">Rp ' + p.rp.toLocaleString("id-ID") + '</div>' +
-          '<div style="font-size:12.5px;">' + p.n + ' order</div>' +
-          '<div style="color:var(--mut);font-size:12px;">' + t + '</div></div>';
+      function card(t, p) {
+        return '<div class="an-kpi-card">' +
+          '<div class="an-kpi-val money">Rp ' + p.rp.toLocaleString("id-ID") + '</div>' +
+          '<div class="an-kpi-sub">' + p.n + ' order lunas</div>' +
+          '<div class="an-kpi-lbl">' + t + '</div></div>';
       }
-      box.innerHTML = '<b style="font-size:16px;">💰 Rekap omzet (lunas)</b>' +
-        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0;">' +
-        card("Hari ini", P.day) + card("7 hari", P.w7) + card("30 hari", P.m30) + card("Semua", P.all) + '</div>' +
-        '<p class="hint">⏳ Menunggu bayar: <b style="color:var(--txt);">' + hutang + ' order (Rp ' + hutangRp.toLocaleString("id-ID") + ')</b> — tagih via WA sebelum stok dibuka lagi.</p>';
-    } catch(e){ box.innerHTML = '<span class="err">Gagal hitung rekap.</span>'; }
-  }).catch(function(){ box.innerHTML = '<span class="err">Gagal ambil rekap.</span>'; });
+      box.innerHTML = '<div class="an-kpi-grid">' +
+        card("Hari Ini", P.day) + card("7 Hari Terakhir", P.w7) + card("30 Hari Terakhir", P.m30) + card("Semua Waktu", P.all) +
+        '</div>' +
+        '<p class="hint" style="margin-top:12px;">⏳ Menunggu pembayaran: <b style="color:var(--txt);">' + hutang + ' order (Rp ' + hutangRp.toLocaleString("id-ID") + ')</b></p>';
+    }).catch(() => { box.innerHTML = '<span class="err">Gagal ambil rekap.</span>'; });
 }
 
-/* ===== asisten admin: briefing + pengingat + aksi ===== */
-function loadAsisten(){
-  const box = document.getElementById("asistenBox");
-  box.innerHTML = '<p class="hint">Asisten memeriksa...</p>';
-  const H = sbH();
-  const qOrders = fetch(SB_URL + "/rest/v1/orders?select=status,total,waktu&order=waktu.desc&limit=200", { headers: H })
-    .then(r => r.json()).then(a => Array.isArray(a) ? a : []).catch(() => []);
-  const qProds = Promise.all(["Brainrot", "Akun", "Topup", "Joki"].map(s =>
-    fetch(SB_URL + "/rest/v1/" + sbTable(s) + "?select=name,kategori,stock,dilihat,sold", { headers: H })
-    .then(r => r.json()).then(a => ({ tab: s, rows: Array.isArray(a) ? a : [] })).catch(() => ({ tab: s, rows: [] }))
-  ));
-  Promise.all([qOrders, qProds]).then(function(res){
-    try {
-      const orders = res[0], tabs = res[1];
-      const now = Date.now();
-      const baru = orders.filter(o => String(o.status) === "baru");
-      const tua = baru.filter(o => { try { return now - new Date(o.waktu).getTime() > 24 * 3600 * 1000; } catch(e){ return false; } });
-      const all = [];
-      tabs.forEach(t => (t.rows || []).forEach(o => {
+function loadAnalisis(force) {
+  const box = document.getElementById("analBox");
+  if (!box) return;
+  box.innerHTML = '<p class="hint">Menghitung statistik...</p>';
+  fetchCatalogOnce(force).then(function (tabs) {
+    const all = [];
+    tabs.forEach(function (t) {
+      (t.rows || []).forEach(function (o) {
         const nm = String(o.name || "").trim();
-        if(!nm || nm.indexOf("CAT:") === 0) return;
-        all.push({ tab: t.tab, name: nm, stok: Number(o.stock), lihat: Number(o.dilihat) || 0, laku: Number(o.sold) || 0 });
-      }));
-      const habisLaris = all.filter(o => o.stok === 0).sort((a, b) => b.lihat - a.lihat).slice(0, 5);
-      const tipis = all.filter(o => o.stok > 0 && o.stok <= 3).sort((a, b) => a.stok - b.stok).slice(0, 5);
-      const startDay = new Date(); startDay.setHours(0, 0, 0, 0);
-      let omzet = 0, nLunas = 0;
-      orders.forEach(o => {
-        try {
-          if(String(o.status) === "lunas" && new Date(o.waktu).getTime() >= startDay.getTime()){
-            nLunas++; omzet += Number(o.total) || 0;
-          }
-        } catch(e) {}
-      });
-      let h = '<div style="background:linear-gradient(135deg,rgba(43,78,255,.22),rgba(43,78,255,.06));border:1px solid rgba(111,139,255,.4);border-radius:14px;padding:14px 16px;">' +
-        '<b style="font-size:15px;">🤖 Asisten Hari Ini</b>';
-      const tasks = [];
-      if(baru.length) tasks.push({ hot: true, t: "📦 " + baru.length + " order menunggu diproses" + (tua.length ? " (" + tua.length + " sudah >24 jam — tagih!" : "") + (tua.length ? ")" : ""), a: "scrollOrder" });
-      if(habisLaris.length) tasks.push({ hot: true, t: "🔥 Restock prioritas: " + habisLaris.slice(0, 3).map(o => o.name.slice(0, 30)).join(", "), a: "" });
-      else if(tipis.length) tasks.push({ hot: false, t: "⚠️ " + tipis.length + " produk stok ≤3", a: "" });
-      tasks.push({ hot: false, t: "💰 Hari ini: " + nLunas + " lunas • Rp " + omzet.toLocaleString("id-ID"), a: "" });
-      if(!tasks.length || (tasks.length === 1 && !baru.length && !habisLaris.length && !tipis.length))
-        h += '<p style="margin:8px 0 0;">✅ Semua beres! Tidak ada order menunggu, stok aman.</p>';
-      else
-        h += '<div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">' + tasks.map(t =>
-          '<div style="display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.25);border-radius:10px;padding:8px 12px;font-size:13px;">' +
-          '<span style="flex:1;">' + t.t + '</span>' +
-          (t.a ? '<button onclick="' + t.a + '()" style="width:auto;margin:0;padding:7px 12px;font-size:12px;">Lihat →</button>' : '') + '</div>'
-        ).join("") + '</div>';
-      h += '</div>';
-      box.innerHTML = h;
-    } catch(e){ box.innerHTML = ""; }
-  }).catch(function(){ box.innerHTML = ""; });
-}
-function scrollOrder(){
-  const el = document.getElementById("orderBox");
-  if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-function orderSet(id, st){
-  const box = document.getElementById("orderBox");
-  if(st === "batal" && !confirm("Batalkan order #" + id + "? Data akun kembali READY.")) return;
-  if(st === "lunas" && !confirm("Lunaskan order #" + id + "? Stok berkurang, terjual bertambah, akun diambilkan.")) return;
-  // ambil detail dulu
-  fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
-  .then(r => r.json()).then(function(rows){
-    const o = (rows && rows[0]) || null;
-    if(!o) return;
-    fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
-      method: "PATCH", headers: sbH(), body: JSON.stringify((function(){ try { var d = JSON.parse(o.items) || []; if(st === "lunas" && d[0]){ d[0].autotrade_ts = Date.now(); return { status: st, items: JSON.stringify(d) }; } } catch(e){} return { status: st }; })())
-    }).then(function(){
-      let det = [];
-      try { det = JSON.parse(o.items) || []; } catch(e) {}
-      if(!Array.isArray(det)) det = [];
-      if(st === "lunas"){
-        det.forEach(function(d){
-          const tbl = sbTable(d.p);
-          const q = Number(d.q) || 0;
-          const isAkun = String(d.p || "").toLowerCase() === "akun";
-          if(isAkun){
-            // ambilkan data READY tertua (maks q), sold +1, stok ikut trigger
-            for(let k = 0; k < q; k++){
-              fetch(SB_URL + "/rest/v1/akun_data?select=id&product=eq." + encodeURIComponent(d.n) + "&status=eq.ready&order=id&limit=1", { headers: pinH() })
-              .then(r => r.json()).then(function(rr){
-                if(!(rr && rr[0])) return;
-                const rid = rr[0].id;
-                fetch(SB_URL + "/rest/v1/akun_data?id=eq." + rid + "&status=eq.ready", {
-                  method: "PATCH", headers: pinH({ Prefer: "return=representation" }),
-                  body: JSON.stringify({ status: "sold", order_id: id })
-                }).then(r => r.json()).then(function(ok){
-                  if(!(ok && ok[0])) return;
-                  fetch(SB_URL + "/rest/v1/" + tbl + "?select=sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
-                  .then(r => r.json()).then(function(sr){
-                    const curT = (sr && sr[0]) ? Number(sr[0].sold) || 0 : 0;
-                    fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
-                      method: "PATCH", headers: sbH(), body: JSON.stringify({ sold: curT + 1 })
-                    }).catch(function(){});
-                  }).catch(function(){});
-                }).catch(function(){});
-              }).catch(function(){});
-            }
-          } else {
-            fetch(SB_URL + "/rest/v1/" + tbl + "?select=stock,sold&name=eq." + encodeURIComponent(d.n), { headers: sbH() })
-            .then(r => r.json()).then(function(rr){
-              if(!(rr && rr[0])) return;
-              const curS = Number(rr[0].stock) || 0;
-              const curT = Number(rr[0].sold) || 0;
-              fetch(SB_URL + "/rest/v1/" + tbl + "?name=eq." + encodeURIComponent(d.n), {
-                method: "PATCH", headers: sbH(),
-                body: JSON.stringify({ stock: Math.max(0, curS - q), sold: curT + q })
-              }).catch(function(){});
-            }).catch(function(){});
-          }
+        if (!nm || nm.indexOf("CAT:") === 0 || nm.indexOf("INFO_") === 0) return;
+        all.push({
+          tab: t.tab, name: nm,
+          kat: String(o.kategori || "-").trim() || "-",
+          lihat: Number(o.dilihat) || 0,
+          stok: Number(o.stock),
+          laku: Number(o.sold) || 0
         });
-      }
-      if(st === "batal"){
-        // kembalikan data akun order ini ke READY (trigger betulkan stok otomatis)
-        fetch(SB_URL + "/rest/v1/akun_data?select=id&order_id=eq." + id, { headers: pinH() })
-        .then(r => r.json()).then(function(rr){
-          (rr || []).forEach(function(x){
-            fetch(SB_URL + "/rest/v1/akun_data?id=eq." + x.id, {
-              method: "PATCH", headers: pinH(),
-              body: JSON.stringify({ status: "ready", order_id: null })
-            }).catch(function(){});
-          });
-        }).catch(function(){});
-      }
-      loadOrders(false);
+      });
     });
-  }).catch(function(){ alert("Gagal ubah status."); });
-}
-function copyTxt(t, el){
-  const done = function(){ if(el){ const o = el.textContent; el.textContent = "✅"; setTimeout(function(){ el.textContent = o; }, 1200); } };
-  try {
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(t).then(done).catch(function(){ fallbackCopy(t); done(); });
-    } else { fallbackCopy(t); done(); }
-  } catch(e){ fallbackCopy(t); done(); }
-}
-function fallbackCopy(t){
-  try {
-    const ta = document.createElement("textarea");
-    ta.value = t; document.body.appendChild(ta); ta.select();
-    document.execCommand("copy"); document.body.removeChild(ta);
-  } catch(e) {}
-}
-function refreshOrderCreds(){
-  document.querySelectorAll("[data-cred]").forEach(function(el){
-    const oid = el.getAttribute("data-cred");
-    fetch(SB_URL + "/rest/v1/akun_data?select=product,akun_id,akun_pw&order_id=eq." + oid + "&order=id", { headers: pinH() })
-    .then(r => r.json()).then(function(rr){
-      if(!rr || !rr.length) return;
-      el.innerHTML = rr.map(function(x){
-        const tag = escHtml(String(x.akun_id)) + " / " + escHtml(String(x.akun_pw));
-        return '<div style="background:#0a2a16;border:1px solid rgba(46,204,113,.4);border-radius:8px;padding:6px 10px;margin-top:6px;font-size:13px;">🔑 ' +
-          escHtml(String(x.product)).slice(0, 45) + '<br><b>' + tag + '</b> ' +
-          '<button onclick="copyTxt(\'' + String(x.akun_id).replace(/\\/g, "\\\\").replace(/\'/g, "\\'") + " / " + String(x.akun_pw).replace(/\\/g, "\\\\").replace(/\'/g, "\\'") + '\',this)" style="width:auto;margin:4px 0 0;padding:6px 12px;font-size:12px;">📋 Copy</button></div>';
-      }).join("");
-    }).catch(function(){});
-  });
+
+    const totLihat = all.reduce((s, o) => s + o.lihat, 0);
+    const top = all.slice().sort((a, b) => b.lihat - a.lihat).slice(0, 10);
+    const perKat = {};
+    all.forEach(o => { const k = o.tab + " / " + o.kat; perKat[k] = (perKat[k] || 0) + o.lihat; });
+    const topKat = Object.keys(perKat).map(k => ({ k, v: perKat[k] })).sort((a, b) => b.v - a.v).slice(0, 5);
+    const habisLaris = all.filter(o => o.stok === 0).sort((a, b) => b.lihat - a.lihat).slice(0, 8);
+    const tipis = all.filter(o => o.stok > 0 && o.stok <= 3).sort((a, b) => a.stok - b.stok).slice(0, 10);
+    const maxV = top.length ? top[0].lihat : 0;
+
+    let h = '<div class="an-kpi-grid">' +
+      '<div class="an-kpi-card"><div class="an-kpi-val">' + totLihat.toLocaleString("id-ID") + '</div><div class="an-kpi-lbl">Total Produk Dilihat</div></div>' +
+      '<div class="an-kpi-card"><div class="an-kpi-val">' + all.length + '</div><div class="an-kpi-lbl">Produk Aktif</div></div>' +
+      '<div class="an-kpi-card"><div class="an-kpi-val">' + tipis.length + '</div><div class="an-kpi-lbl">Stok Menipis (≤3)</div></div>' +
+      '<div class="an-kpi-card"><div class="an-kpi-val">' + habisLaris.length + '</div><div class="an-kpi-lbl">Perlu Restock (Habis)</div></div>' +
+    '</div>';
+
+    h += '<div class="an-two-col">';
+    h += '<div class="an-panel-box"><h3>🔥 Top 10 Paling Dilihat</h3>';
+    if (!top.length || !maxV) h += '<p class="hint">Belum ada data lihat.</p>';
+    top.forEach((o, i) => {
+      const p = maxV ? Math.max(4, Math.round(o.lihat / maxV * 100)) : 0;
+      h += '<div><b>' + (i + 1) + '.</b> ' + escHtml(o.name).slice(0, 50) +
+        ' <span style="color:var(--mut);font-size:12px;">(' + escHtml(o.tab) + ' • 👁 ' + o.lihat.toLocaleString("id-ID") + ' • terjual ' + o.laku.toLocaleString("id-ID") + ')</span>' +
+        '<div class="an-bar-track"><span class="an-bar-fill" style="width:' + p + '%;"></span></div></div>';
+    });
+    h += '</div>';
+
+    h += '<div style="display:flex;flex-direction:column;gap:14px;">';
+    h += '<div class="an-panel-box"><h3>⚠️ Stok Menipis &amp; Restock</h3>' +
+      (habisLaris.length ? '<div style="margin-bottom:8px;"><b style="color:#fca5a5;">Habis paling banyak dicari:</b><br>' + habisLaris.slice(0, 5).map(o => "• " + escHtml(o.name).slice(0, 45) + " (👁 " + o.lihat + ")").join("<br>") + '</div>' : '') +
+      (tipis.length ? '<div><b style="color:#fde047;">Stok tersisa ≤3:</b><br>' + tipis.map(o => "• " + escHtml(o.name).slice(0, 45) + " — sisa " + o.stok).join("<br>") + '</div>' : '<span class="ok">✅ Tidak ada stok menipis.</span>') +
+      '</div>';
+
+    h += '<div class="an-panel-box"><h3>📂 Kategori Terlaris</h3>' +
+      (topKat.length ? topKat.map((k, i) => (i + 1) + ". " + escHtml(k.k) + " — 👁 " + k.v.toLocaleString("id-ID")).join("<br>") : '<span class="hint">Belum ada data.</span>') +
+      '</div>';
+
+    h += '<div class="an-panel-box"><h3>🛒 Aktivitas Pengunjung (7 Hari)</h3><div id="analAct"><span class="hint">Memuat aktivitas...</span></div></div>';
+    h += '</div></div>';
+
+    box.innerHTML = h;
+    loadAktivitas();
+  }).catch(() => { box.innerHTML = '<span class="err">Gagal ambil statistik produk.</span>'; });
 }
 
-
-function triggerAutoTrade(id){
-  fetch(SB_URL + "/rest/v1/orders?select=*&id=eq." + id, { headers: sbH() })
-  .then(r => r.json()).then(function(rows){
-    const o = (rows && rows[0]) || null;
-    if(!o){ alert("Order tidak ditemukan."); return; }
-    let det = [];
-    try { det = JSON.parse(o.items) || []; } catch(e) {}
-    if(!Array.isArray(det) || !det.length){ alert("Data item order kosong."); return; }
-    const nowTs = Date.now();
-    det[0].autotrade_ts = nowTs;
-    const buyer = String(det[0].u || "").trim() || "Pembeli";
-    const item = String(det[0].n || "").trim();
-    const qty = Number(det[0].q) || 1;
-    fetch(SB_URL + "/rest/v1/orders?id=eq." + id, {
-      method: "PATCH",
-      headers: sbH(),
-      body: JSON.stringify({ items: JSON.stringify(det) })
-    }).then(function(res){
-      if(res.ok){
-        alert("🚀 Sinyal Auto-Trade untuk Order #" + id + " (" + buyer + " — " + item + " x" + qty + ") berhasil dikirim!\n\nPastikan Anda sudah membuka 'Jalankan-Bot-AutoTrade.bat' dan jendela game Roblox sedang terbuka di PC Anda.");
-      } else {
-        alert("Gagal mengirim sinyal Auto-Trade ke database.");
-      }
-    }).catch(function(){
-      alert("Gagal koneksi saat mengirim sinyal Auto-Trade.");
+function loadAktivitas() {
+  const el = document.getElementById("analAct");
+  if (!el) return;
+  const since = new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+  fetch(SB_URL + "/rest/v1/klik?select=aksi,name,price&order=waktu.desc&limit=5000&waktu=gte." + encodeURIComponent(since), {
+    headers: { apikey: SB_KEY, Authorization: "Bearer " + SB_KEY }
+  }).then(r => r.json()).then(function (rows) {
+    rows = Array.isArray(rows) ? rows : [];
+    const cnt = { klik: 0, keranjang: 0, checkout: 0, "wishlist+": 0 };
+    const topKlik = {}, topKer = {}, topWish = {};
+    rows.forEach(o => {
+      const a = String(o.aksi || "");
+      if (cnt[a] !== undefined) cnt[a]++;
+      const nm = String(o.name || "").slice(0, 50);
+      if (a === "klik" && nm) topKlik[nm] = (topKlik[nm] || 0) + 1;
+      if (a === "keranjang" && nm) topKer[nm] = (topKer[nm] || 0) + 1;
+      if (a === "wishlist+" && nm) topWish[nm] = (topWish[nm] || 0) + 1;
     });
-  }).catch(function(){ alert("Gagal mengambil detail order."); });
+    const toplist = (m, n) => Object.keys(m).map(k => ({ k, v: m[k] })).sort((a, b) => b.v - a.v).slice(0, n);
+    let h = '<div>👁 Klik: <b>' + cnt.klik + '</b> → 🛒 Keranjang: <b>' + cnt.keranjang + '</b> → 💬 Checkout: <b>' + cnt.checkout + '</b> • ❤️ Favorit: <b>' + cnt["wishlist+"] + '</b></div>';
+    const tk = toplist(topKlik, 5), tc = toplist(topKer, 5), tw = toplist(topWish, 5);
+    h += '<div style="margin-top:8px;"><b>Paling diklik:</b><br>' + (tk.length ? tk.map((o, i) => (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)").join("<br>") : '<span class="hint">belum ada</span>') + '</div>';
+    h += '<div style="margin-top:8px;"><b>Paling masuk keranjang:</b><br>' + (tc.length ? tc.map((o, i) => (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)").join("<br>") : '<span class="hint">belum ada</span>') + '</div>';
+    h += '<div style="margin-top:8px;"><b>Paling difavoritkan ❤️:</b><br>' + (tw.length ? tw.map((o, i) => (i + 1) + ". " + escHtml(o.k) + " (" + o.v + "x)").join("<br>") : '<span class="hint">belum ada</span>') + '</div>';
+    el.innerHTML = h;
+  }).catch(() => { el.textContent = "Gagal ambil aktivitas."; });
 }
+
+(function autoRestoreAnalisisSession() {
+  try {
+    if (sessionStorage.getItem(ADMIN_SESSION_PIN_KEY) === ADMIN_PIN) {
+      const pinEl = document.getElementById("pinInput");
+      if (pinEl) { pinEl.value = ADMIN_PIN; unlock(); }
+    }
+  } catch (_) {}
+})();
