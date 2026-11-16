@@ -76,30 +76,59 @@ function show_(id){
 }
 
 /* tinggi bar Tab Sheet + nav lengket (biar konten anchor tidak ketutup) */
+const ADMIN_SESSION_PIN_KEY = "rs_admin_unlocked_pin_v1";
 function stickSync(){
-  var bh = document.getElementById("sheetBar").offsetHeight || 0;
-  var nh = document.getElementById("miniNav").offsetHeight || 0;
+  var sb = document.getElementById("sheetBar");
+  var mn = document.getElementById("miniNav");
+  var bh = sb ? (sb.offsetHeight || 0) : 0;
+  var nh = mn ? (mn.offsetHeight || 0) : 0;
   document.documentElement.style.setProperty("--barh", bh + "px");
   document.documentElement.style.setProperty("--stickh", (bh + nh) + "px");
 }
 window.addEventListener("resize", stickSync);
 
 function unlock(){
-  if(document.getElementById("pinInput").value === ADMIN_PIN){
-    document.getElementById("pinCard").style.display = "none";
-    ["analTopBtn","miniNav","sheetCard","teksCard","sectSpin","spinAdminCard","sectTestimoni","testimoniCard","sectServerConfig","serverConfigCard","sectAkun","akunDataCard","sectProd","sectCat","sectAdd","productEditorCard","mainCard","prevCard","slideCard","catCard","editCard","renameCard","renameCatCard","addCard"].forEach(show_);
-    document.getElementById("featMenu").style.display = "grid";
-    document.getElementById("sheetBar").style.display = "flex";
+  const pinEl = document.getElementById("pinInput");
+  const errEl = document.getElementById("pinError");
+  const val = pinEl ? pinEl.value : "";
+  if(val === ADMIN_PIN){
+    if(errEl) errEl.textContent = "";
+    try { sessionStorage.setItem(ADMIN_SESSION_PIN_KEY, val); } catch(_){}
+    const pinCard = document.getElementById("pinCard");
+    if(pinCard) pinCard.style.display = "none";
+    const ab = document.getElementById("analTopBtn");
+    if(ab) ab.style.display = "inline-flex";
+    const lb = document.getElementById("lockAdminBtn");
+    if(lb) lb.style.display = "inline-flex";
+    const sb = document.getElementById("sheetBar");
+    if(sb) sb.style.display = "flex";
+    const ws = document.getElementById("adminWorkspace");
+    if(ws) ws.style.display = "block";
     stickSync();
-    loadTeks();
-    loadSpinAdmin();
     loadItems();
-    loadAkunProds();
-    loadTestimoniAdmin();
-    loadServerSettings();
+    let curTab = "produk";
+    try { curTab = sessionStorage.getItem("rs_admin_active_tab_v1") || "produk"; } catch(_){}
+    if(typeof window.openAdminTab === "function") window.openAdminTab(curTab);
   } else {
-    alert("PIN salah.");
+    if(errEl) errEl.textContent = "PIN salah. Coba lagi.";
+    else alert("PIN salah.");
+    if(pinEl){ pinEl.focus(); pinEl.select(); }
   }
+}
+
+function lockAdmin(){
+  try { sessionStorage.removeItem(ADMIN_SESSION_PIN_KEY); } catch(_){}
+  if(typeof window.resetAdminLazyCache === "function") window.resetAdminLazyCache();
+  const pinEl = document.getElementById("pinInput");
+  if(pinEl) pinEl.value = "";
+  const errEl = document.getElementById("pinError");
+  if(errEl) errEl.textContent = "";
+  const ws = document.getElementById("adminWorkspace"); if(ws) ws.style.display = "none";
+  const sb = document.getElementById("sheetBar"); if(sb) sb.style.display = "none";
+  const ab = document.getElementById("analTopBtn"); if(ab) ab.style.display = "none";
+  const lb = document.getElementById("lockAdminBtn"); if(lb) lb.style.display = "none";
+  const pc = document.getElementById("pinCard"); if(pc) pc.style.display = "block";
+  if(pinEl) pinEl.focus();
 }
 
 /* ===== brankas data akun (PIN-gated, pengunjung tidak bisa baca) ===== */
@@ -287,29 +316,32 @@ const FALLBACK_IMG_MAP = {"KOTAK GULUNG UNTUK BRAINROT - 1 BRAINROT RANDOM LV MA
 function prefill(){
   const name = document.getElementById("itemSel").value;
   const o = ALL_ITEMS.find(x => String(x.name).trim() === name);
+  const setT = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
   if(o){
+    const kat = String(o.kategori || "").trim();
+    const nameIn = document.getElementById("nameInput"); if(nameIn) nameIn.value = name || "";
+    const editCat = document.getElementById("editCatSel"); if(editCat && kat) editCat.value = kat;
     document.getElementById("priceInput").value = o.price || "";
     document.getElementById("stockInput").value = (o.stock === 0 || o.stock) ? o.stock : "";
     document.getElementById("soldInput").value = (o.sold === 0 || o.sold) ? o.sold : "";
     document.getElementById("coretInput").value = (o.coret > 0) ? o.coret : "";
     document.getElementById("descInput").value = String(o.deskripsi || "");
-    document.getElementById("catInfo").textContent = String(o.kategori || "-").trim() || "-";
-    document.getElementById("catInfo2").textContent = String(o.kategori || "-").trim() || "-";
-    document.getElementById("curProdSlide").textContent = name;
-    document.getElementById("curProdEdit").textContent = name;
-    document.getElementById("curProdRename").textContent = name;
+    setT("catInfo", kat || "-");
+    setT("catInfo2", kat || "-");
+    setT("curProdSlide", name);
+    setT("curProdEdit", name);
+    setT("curProdRename", name);
     renderPreview(name, o);
     renderSlides();
   } else {
-    document.getElementById("catInfo").textContent = "-";
-    document.getElementById("catInfo2").textContent = "-";
-    document.getElementById("curProdSlide").textContent = "-";
-    document.getElementById("curProdEdit").textContent = "-";
-    document.getElementById("curProdRename").textContent = "-";
+    const nameIn = document.getElementById("nameInput"); if(nameIn) nameIn.value = "";
+    setT("catInfo", "-"); setT("catInfo2", "-");
+    setT("curProdSlide", "-"); setT("curProdEdit", "-"); setT("curProdRename", "-");
     renderPreview("", null);
     renderSlides();
   }
   updateProductCatalogSelection();
+  if(typeof window.updateLivePreview === "function") window.updateLivePreview();
 }
 
 function postSet(col, value, stEl, btn, okMsg){
@@ -345,7 +377,7 @@ function addLocalRow(o){
     sel.appendChild(op);
   }
   const k = String(o.kategori || "").trim();
-  ["catSel","catRenameSel","addCatSel"].forEach(id => {
+  ["catSel","catRenameSel","addCatSel","editCatSel"].forEach(id => {
     const s = document.getElementById(id);
     if(s && k && !Array.from(s.options).some(p => p.value === k)){
       const op = document.createElement("option");
@@ -464,8 +496,9 @@ function deleteCategory(){
     btn.disabled = false;
     if(okCount > 0){
       ALL_ITEMS = ALL_ITEMS.filter(o => !(String(o.kategori || "").trim() === kat || String(o.name).trim() === "CAT:" + kat));
-      ["catSel","catRenameSel","addCatSel"].forEach(id => {
+      ["catSel","catRenameSel","addCatSel","editCatSel"].forEach(id => {
         const s = document.getElementById(id);
+        if(!s) return;
         const opt = Array.from(s.options).find(p => p.value === kat);
         if(opt) opt.remove();
       });
@@ -546,12 +579,14 @@ function saveAll(){
   const st = document.getElementById("statusAll");
   const btn = document.getElementById("saveAllBtn");
   if(!name){ st.innerHTML = '<span class="err">Pilih barang dulu.</span>'; return; }
+  const curObj = ALL_ITEMS.find(x => String(x.name || "").trim() === name);
   const priceRaw = document.getElementById("priceInput").value;
   const stockRaw = document.getElementById("stockInput").value;
   const soldRaw = document.getElementById("soldInput").value;
   const coretRaw = document.getElementById("coretInput").value;
   const descRaw = document.getElementById("descInput").value.trim();
   const newName = document.getElementById("nameInput").value.trim();
+  const newCat = (document.getElementById("editCatSel")?.value || "").trim();
   const jobs = [];
   if(priceRaw !== ""){
     if(!(Number(priceRaw) > 0)){ st.innerHTML = '<span class="err">Harga tidak valid.</span>'; return; }
@@ -568,11 +603,15 @@ function saveAll(){
   if(coretRaw !== ""){
     if(isNaN(Number(coretRaw)) || Number(coretRaw) < 0){ st.innerHTML = '<span class="err">Harga coret tidak valid.</span>'; return; }
     jobs.push({ col: "coret", value: Number(coretRaw), label: "coret" });
+  } else if(curObj && Number(curObj.coret) > 0){
+    jobs.push({ col: "coret", value: 0, label: "coret" });
   }
   jobs.push({ col: "deskripsi", value: descRaw, label: "deskripsi" });
-  if(newName) jobs.push({ col: 1, value: newName, label: "nama" });
+  if(newCat && curObj && newCat !== String(curObj.kategori || "").trim()){
+    jobs.push({ col: "kategori", value: newCat, label: "kategori" });
+  }
+  if(newName && newName !== name) jobs.push({ col: 1, value: newName, label: "nama" });
   if(!jobs.length){ st.innerHTML = '<span class="err">Tidak ada perubahan (isi dulu yang mau diganti).</span>'; return; }
-  if(!confirm("Simpan berbarengan (" + jobs.map(j => j.label).join(", ") + ") untuk:\n" + name + " ?")) return;
   btn.disabled = true;
   st.textContent = "Menyimpan 1/" + jobs.length + "...";
   let chain = Promise.resolve(true);
@@ -612,8 +651,9 @@ function saveAll(){
         else if(jb.col === "sold") updItem(finalName, { sold: jb.value });
         else if(jb.col === "coret") updItem(finalName, { coret: jb.value });
         else if(jb.col === "deskripsi") updItem(finalName, { deskripsi: jb.value });
+        else if(jb.col === "kategori") updItem(finalName, { kategori: jb.value });
       });
-      document.getElementById("nameInput").value = "";
+      document.getElementById("nameInput").value = finalName;
       syncAfterProduct(finalName);
     } else {
       st.innerHTML = '<span class="err">Gagal: ' + gagal.join(" | ") + ' — tekan 🔄 Muat ulang lalu coba lagi.</span>';
@@ -663,8 +703,10 @@ function updateProductCatalogSelection(){
   const fallbackEl = document.getElementById("productCatalogSelectedFallback");
   if(!nameEl || !metaEl || !priceEl || !imageEl || !fallbackEl) return;
 
+  const stk = product ? Number(product.stock) : 0;
+  const soldOut = product ? ((Number.isFinite(stk) && stk <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(product.soldout || "").trim())) : false;
   nameEl.textContent = name || "Pilih produk";
-  metaEl.textContent = product ? (String(product.kategori || "").trim() || "Tanpa kategori") : "Pilih katalog produk";
+  metaEl.textContent = product ? ((String(product.kategori || "").trim() || "Tanpa kategori") + " • Stok: " + (Number.isFinite(stk) ? stk : 0) + (soldOut ? " (HABIS)" : "")) : "Pilih katalog produk";
   priceEl.textContent = product ? "Rp " + (Number(product.price) || 0).toLocaleString("id-ID") : "";
   const src = product ? imgRawOf(name).v.split("|").map(s => s.trim()).filter(Boolean)[0] || "" : "";
   if(src){
@@ -688,10 +730,15 @@ function renderProductCatalog(filter){
   if(!grid || !count || !empty) return;
 
   const query = String(filter || "").trim().toLowerCase();
+  const stockFilter = (typeof window !== "undefined" && window.ADMIN_STOCK_FILTER) ? window.ADMIN_STOCK_FILTER : "all";
   const selectedName = document.getElementById("itemSel")?.value || "";
   const products = ALL_ITEMS.filter(o => {
     const name = String(o.name || "").trim();
     if(!name || name.indexOf("CAT:") === 0 || name.indexOf("INFO_") === 0) return false;
+    const stk = Number(o.stock);
+    const isSold = (Number.isFinite(stk) && stk <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+    if(stockFilter === "ready" && isSold) return false;
+    if(stockFilter === "sold" && !isSold) return false;
     const category = String(o.kategori || "").trim();
     return !query || name.toLowerCase().includes(query) || category.toLowerCase().includes(query);
   });
@@ -730,11 +777,19 @@ function renderProductCatalog(filter){
     const meta = document.createElement("span");
     meta.className = "product-catalog-item-meta";
     meta.textContent = String(o.kategori || "").trim() || "Tanpa kategori";
+    const stk = Number(o.stock);
+    const isSold = (Number.isFinite(stk) && stk <= 0) || /^(ya|y|yes|habis|sold)/i.test(String(o.soldout || "").trim());
+    const rightCol = document.createElement("span");
+    rightCol.className = "product-catalog-item-right";
     const price = document.createElement("span");
     price.className = "product-catalog-item-price";
     price.textContent = "Rp " + (Number(o.price) || 0).toLocaleString("id-ID");
-    copy.append(title, meta, price);
-    button.append(media, copy);
+    const badge = document.createElement("span");
+    badge.className = "stock-pill " + (isSold ? "sold" : "ok");
+    badge.textContent = isSold ? "HABIS" : ("Stok " + (Number.isFinite(stk) ? stk : 0));
+    rightCol.append(price, badge);
+    copy.append(title, meta);
+    button.append(media, copy, rightCol);
     button.addEventListener("click", () => chooseCatalogProduct(name));
     grid.appendChild(button);
   });
@@ -797,8 +852,9 @@ function catList(){
 
 function fillCatOptions(filter){
   const cats = catList().filter(k => !filter || k.toLowerCase().indexOf(filter) !== -1);
-  ["catSel","catRenameSel","addCatSel"].forEach(id => {
+  ["catSel","catRenameSel","addCatSel","editCatSel"].forEach(id => {
     const s = document.getElementById(id);
+    if(!s) return;
     const cur = s.value;
     s.innerHTML = "";
     cats.forEach(k => {
@@ -809,12 +865,22 @@ function fillCatOptions(filter){
     });
     if(cur && cats.indexOf(cur) !== -1) s.value = cur;
   });
-  document.getElementById("catRenameSel").onchange = () => {
-    document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
+  const syncSelectedCat = () => {
+    const kat = document.getElementById("catSel")?.value || "";
+    const rSel = document.getElementById("catRenameSel");
+    if(rSel && kat) rSel.value = kat;
+    const oldLbl = document.getElementById("catRenameOldName");
+    if(oldLbl) oldLbl.textContent = kat || "-";
+    prefillCat();
   };
-  document.getElementById("catRenameOldName").textContent = document.getElementById("catRenameSel").value || "-";
-  document.getElementById("catSel").onchange = prefillCat;
-  prefillCat();
+  const catSelEl = document.getElementById("catSel");
+  if(catSelEl) catSelEl.onchange = syncSelectedCat;
+  const rSelEl = document.getElementById("catRenameSel");
+  if(rSelEl) rSelEl.onchange = () => {
+    const oldLbl = document.getElementById("catRenameOldName");
+    if(oldLbl) oldLbl.textContent = rSelEl.value || "-";
+  };
+  syncSelectedCat();
 }
 
 function loadTeks(){
@@ -1173,11 +1239,15 @@ function saveKurs(){
 function muatUlang(){
   const st = document.getElementById("statusReload");
   const btn = document.getElementById("reloadBtn");
+  if(typeof window.resetAdminLazyCache === "function") window.resetAdminLazyCache();
   btn.disabled = true;
   st.textContent = "Memuat...";
   loadItems().then(() => {
     btn.disabled = false;
-    st.textContent = "✅ Daftar termuat (" + document.getElementById("itemSel").options.length + " barang).";
+    st.textContent = "✅ " + document.getElementById("itemSel").options.length + " barang";
+    let curTab = "produk";
+    try { curTab = sessionStorage.getItem("rs_admin_active_tab_v1") || "produk"; } catch(_){}
+    if(curTab !== "produk" && typeof window.openAdminTab === "function") window.openAdminTab(curTab);
   });
 }
 
@@ -1910,8 +1980,9 @@ function renameCat(){
       if(String(o.kategori || "").trim() === oldKat) o.kategori = newKat;
       if(String(o.name).trim() === "CAT:" + oldKat) o.name = "CAT:" + newKat;
     });
-    ["catSel","catRenameSel","addCatSel"].forEach(id => {
+    ["catSel","catRenameSel","addCatSel","editCatSel"].forEach(id => {
       const s = document.getElementById(id);
+      if(!s) return;
       Array.from(s.options).forEach(p => { if(p.value === oldKat){ p.value = newKat; p.textContent = newKat.slice(0, 70); } });
       s.value = newKat;
     });
@@ -2408,3 +2479,12 @@ function triggerLiveSpinFromAdmin(){
     }, 6200);
   });
 }
+
+(function autoRestoreAdminSession(){
+  try {
+    if(sessionStorage.getItem(ADMIN_SESSION_PIN_KEY) === ADMIN_PIN){
+      const pinEl = document.getElementById("pinInput");
+      if(pinEl){ pinEl.value = ADMIN_PIN; unlock(); }
+    }
+  } catch(_){}
+})();
