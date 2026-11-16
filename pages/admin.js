@@ -519,21 +519,28 @@ const productEditorStyles = `
     letter-spacing: 0.06em;
   }
   .product-editor-actions {
-    position: sticky;
-    bottom: 10px;
-    z-index: 45;
+    position: static;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 16px;
-    padding: 12px 14px;
+    margin-top: 18px;
+    padding: 14px 16px;
     border-radius: 14px;
-    background: rgba(8, 15, 29, 0.96);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(153, 178, 255, 0.28);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+    background: rgba(8, 15, 29, 0.65);
+    border: 1px solid rgba(153, 178, 255, 0.22);
+  }
+  .wrap button.succ {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+  }
+  .wrap select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5l4 3.5 4-3.5' fill='none' stroke='%239bb2ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 14px center !important;
+    padding-right: 38px !important;
   }
   .product-editor-actions #saveAllBtn {
     flex: 1 1 200px;
