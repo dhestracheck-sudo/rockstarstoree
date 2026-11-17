@@ -1697,7 +1697,7 @@ function goToJoki(){ goToCatalogPage('joki'); }
 
 const SEO_PAGES = {
 
-  home: { title: "Rockstar.Store | Solusi Sepuh Roblox", description: "Solusi sepuh Roblox di Rockstar.Store! Tersedia akun Roblox sepuh, item Brainrot, jasa joki, dan kebutuhan Roblox lengkap. Lihat pilihan produk, harga, dan cara pemesanan." },
+  home: { title: "Rockstar.Store | Solusi Sepuh Roblox", description: "Rockstar.Store — Solusi sepuh Roblox Indonesia & Malaysia! Jual item & pet Brainrot, akun sepuh data polos, top up Robux & jasa joki aman, proses kilat." },
 
   brainrot: { title: "Item Brainrot Roblox | Rockstar.Store", description: "Jelajahi item Brainrot Roblox dari berbagai map. Lihat kategori, detail produk, dan harga di katalog Rockstar.Store." },
 

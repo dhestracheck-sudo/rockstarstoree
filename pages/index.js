@@ -13,7 +13,7 @@ import { HOME_INLINE_CSS } from '../lib/home-inline-css.generated';
 
 
 
-const pageScripts = ["/site-scripts/home-02.js?v=20261115ps2", "/site-scripts/home-03.js?v=20261115ps2", "/site-scripts/home-04.js?v=20261115ps2", "/site-scripts/home-05.js?v=20261115ps2", "/site-scripts/home-06.js?v=20261115ps2", "/site-scripts/home-07.js?v=20261115ps2", "/site-scripts/home-08-lang.js?v=20261115ps2", "/site-scripts/home-08.js?v=20261115ps2", "/site-scripts/backnav-01.js?v=20261115ps2", "/site-scripts/confetti-01.js?v=20261115ps2", "/site-scripts/dopamine-booster.js?v=20261115ps2"];
+const pageScripts = ["/site-scripts/home-02.js?v=20261115ps2", "/site-scripts/home-03.js?v=20261115ps2", "/site-scripts/home-04.js?v=20261115ps2", "/site-scripts/home-05.js?v=20261115ps2", "/site-scripts/home-06.js?v=20261115ps2", "/site-scripts/home-07.js?v=20261115ps2", "/site-scripts/home-08-lang.js?v=20261118seo1", "/site-scripts/home-08.js?v=20261118seo1", "/site-scripts/backnav-01.js?v=20261115ps2", "/site-scripts/confetti-01.js?v=20261115ps2", "/site-scripts/dopamine-booster.js?v=20261115ps2"];
 
 
 
@@ -23,7 +23,7 @@ const SEO_PAGES = {
 
     title: "Rockstar.Store | Solusi Sepuh Roblox",
 
-    description: "Solusi sepuh Roblox di Rockstar.Store! Tersedia akun Roblox sepuh, item Brainrot, jasa joki, dan kebutuhan Roblox lengkap. Lihat pilihan produk, harga, dan cara pemesanan.",
+    description: "Rockstar.Store — Solusi sepuh Roblox Indonesia & Malaysia! Jual item & pet Brainrot, akun sepuh data polos, top up Robux & jasa joki aman, proses kilat.",
 
   },
 
@@ -1286,8 +1286,8 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
         <link rel="dns-prefetch" href="https://mvzlmjgfctdxnjxveuoo.supabase.co" />
 
-        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=20261115ps2" />
-        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261115ps2" />
+        <link rel="preload" as="script" href="/site-scripts/home-08-lang.js?v=20261118seo1" />
+        <link rel="preload" as="script" href="/site-scripts/home-08.js?v=20261118seo1" />
 
         {"\r\n"}
 
@@ -2011,19 +2011,23 @@ export default function HomePage({ ssrGeneratedAt, seo, hotProducts, catProducts
 
       <p data-i18n-html="hero_p">
 
-        {"Rockstar Store menyediakan brainrot "}
+        {"Rockstar.Store, toko Roblox terpercaya Indonesia & Malaysia, menyediakan item & pet Brainrot "}
 
         <b style={{ color: "var(--blue2)" }}>premium</b>
 
-        {", akun "}
+        {", "}
 
-        <b style={{ color: "var(--blue2)" }}>premium</b>
+        <b style={{ color: "var(--blue2)" }}>akun Roblox sepuh</b>
+
+        {", "}
+
+        <b style={{ color: "var(--blue2)" }}>top up Robux</b>
 
         {", dan jasa joki "}
 
         <b style={{ color: "var(--blue2)" }}>profesional</b>
 
-        {" yang bikin Roblox-mu makin "}
+        {" yang bikin akun Roblox-mu makin "}
 
         <b style={{ color: "var(--blue2)" }}>sepuh</b>
 
